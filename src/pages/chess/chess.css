@@ -91,16 +91,9 @@
 .piece {
   z-index: 10;
   transition: transform 0.2s;
-  line-height: 1;
-}
-
-.piece-white {
-  color: #fff;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
-
-.piece-black {
-  color: #222;
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
 }
 
 .piece:active {

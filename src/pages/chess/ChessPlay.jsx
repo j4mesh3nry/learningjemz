@@ -4,9 +4,22 @@ import { useGame } from '../../contexts/GameContext';
 import { RotateCw, Flag, Play } from 'lucide-react';
 import './chess.css';
 
-const PIECE_UNICODE = {
-  w: { p: '♙', n: '♘', b: '♗', r: '♖', q: '♕', k: '♔' },
-  b: { p: '♟', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚' }
+import w_p from '../../assets/pieces/w_p.svg';
+import w_n from '../../assets/pieces/w_n.svg';
+import w_b from '../../assets/pieces/w_b.svg';
+import w_r from '../../assets/pieces/w_r.svg';
+import w_q from '../../assets/pieces/w_q.svg';
+import w_k from '../../assets/pieces/w_k.svg';
+import b_p from '../../assets/pieces/b_p.svg';
+import b_n from '../../assets/pieces/b_n.svg';
+import b_b from '../../assets/pieces/b_b.svg';
+import b_r from '../../assets/pieces/b_r.svg';
+import b_q from '../../assets/pieces/b_q.svg';
+import b_k from '../../assets/pieces/b_k.svg';
+
+const PIECE_IMAGES = {
+  w: { p: w_p, n: w_n, b: w_b, r: w_r, q: w_q, k: w_k },
+  b: { p: b_p, n: b_n, b: b_b, r: b_r, q: b_q, k: b_k }
 };
 
 export default function ChessPlay() {
@@ -165,9 +178,11 @@ export default function ChessPlay() {
                     onClick={() => handleSquareClick(squareLabel)}
                   >
                     {piece && (
-                      <div className={`piece ${piece.color === 'w' ? 'piece-white' : 'piece-black'}`}>
-                        {PIECE_UNICODE[piece.color][piece.type]}
-                      </div>
+                      <img 
+                        src={PIECE_IMAGES[piece.color][piece.type]} 
+                        alt={`${piece.color} ${piece.type}`} 
+                        className="piece" 
+                      />
                     )}
                     {isLegal && <div className="legal-move-dot" />}
                   </div>
