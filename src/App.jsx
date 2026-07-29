@@ -1,11 +1,13 @@
 /* src/App.jsx */
 import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import Home from './pages/Home.jsx';
 import Profile from './pages/Profile.jsx';
 import ChessHome from './pages/chess/ChessHome.jsx';
 import GeoHome from './pages/geo/GeoHome.jsx';
 import ReadingHome from './pages/reading/ReadingHome.jsx';
 import SpaceHome from './pages/space/SpaceHome.jsx';
+import SplashScreen from './components/SplashScreen.jsx';
 import './index.css';
 
 function BottomNav() {
@@ -41,6 +43,12 @@ function BottomNav() {
 }
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  if (showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  }
+
   return (
     <Router>
       <div style={{ paddingBottom: '56px' }}>
