@@ -1,95 +1,33 @@
-/* ─── Splash container ─────────────────────────────────────── */
 .splash-container {
   position: fixed;
   inset: 0;
   z-index: 9999;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
-  /* container itself doesn't need a bg – the .splash-bg handles that */
+  transition: opacity 0.6s ease;
 }
 
-/* ─── Background overlay ───────────────────────────────────── */
-.splash-bg {
-  position: absolute;
-  inset: 0;
-  background: #ffffff;
-  transition: opacity 0.55s ease;
-  opacity: 1;
-}
-
-/* fade-out the bg when flying */
-.splash-phase-fly   .splash-bg,
-.splash-phase-done  .splash-bg {
+.splash-fade-out {
   opacity: 0;
+  pointer-events: none;
 }
 
-/* ─── Title base ───────────────────────────────────────────── */
 .splash-title {
-  position: relative;   /* stacks above .splash-bg */
-  z-index: 1;
   margin: 0;
-
-  /* Typography – matches the Home h1 exactly */
   font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 2.4rem;
   font-weight: 800;
+  text-align: center;
   background: linear-gradient(135deg, #1c7c54, #4caf50);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-
-  /* Start at center, large */
-  font-size: 2.4rem;
-  text-align: center;
-
-  /* Smooth spring-like fly */
-  transition:
-    font-size   0.65s cubic-bezier(0.4, 0, 0.2, 1),
-    transform   0.65s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity     0.55s ease;
-}
-
-/* ─── Phase: intro ─────────────────────────────────────────── */
-.splash-title-intro {
-  /* Pop-in animation on load */
   animation: splashPop 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 
 @keyframes splashPop {
   0%   { opacity: 0; transform: scale(0.6); }
   100% { opacity: 1; transform: scale(1); }
-}
-
-/* ─── Phase: fly (transition to header) ───────────────────── */
-/*
- * The Home page header sits at approx:
- *   top: 24px from the top of the page
- *   left: 16px (content padding)
- *   font-size: 1.8rem
- *
- * Starting position: element is centered in viewport (50vw, 50vh).
- * We need to move it to the header position.
- *
- * Using translate to move the element's top-left corner to
- * match the header's position. We anchor the transform origin
- * to top-left so the shrink happens from there.
- *
- * translateX = -(50vw - 16px - half-element-width)
- * translateY = -(50vh - 24px - half-element-height)
- * approximated with calc().
- */
-.splash-title-fly {
-  font-size: 1.8rem;
-  transform: translate(
-    calc(-50vw + 16px + 5rem),   /* push left toward header start */
-    calc(-50vh + 24px + 1.1rem)  /* push up toward header top */
-  );
-  transform-origin: top left;
-}
-
-/* ─── Phase: done ──────────────────────────────────────────── */
-.splash-title-done {
-  opacity: 0;
-  font-size: 1.8rem;
 }
