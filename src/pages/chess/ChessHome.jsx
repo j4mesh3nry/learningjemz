@@ -1,11 +1,48 @@
 import React from 'react';
-import { Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
-import { Target, Gamepad2, GraduationCap, Crown } from 'lucide-react';
+import { Routes, Route, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Target, Gamepad2, GraduationCap, Crown, ChevronRight } from 'lucide-react';
 import ChessPlay from './ChessPlay';
 import ChessPuzzles from './ChessPuzzles';
 import ChessLessons from './ChessLessons';
 import './chess.css';
+import './chess.css';
 
+function ChessMenu() {
+  const navigate = useNavigate();
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem' }}>
+      <button 
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '1rem', color: '#fff', cursor: 'pointer' }}
+        onClick={() => navigate('play')}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '1.2rem', fontWeight: 'bold' }}>
+          <Gamepad2 size={24} color="#4caf50" /> Play with Bots
+        </div>
+        <ChevronRight />
+      </button>
+
+      <button 
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '1rem', color: '#fff', cursor: 'pointer' }}
+        onClick={() => navigate('puzzles')}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '1.2rem', fontWeight: 'bold' }}>
+          <Target size={24} color="#ffeb3b" /> Puzzles
+        </div>
+        <ChevronRight />
+      </button>
+
+      <button 
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '1rem', color: '#fff', cursor: 'pointer' }}
+        onClick={() => navigate('lessons')}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '1.2rem', fontWeight: 'bold' }}>
+          <GraduationCap size={24} color="#2196f3" /> Lessons
+        </div>
+        <ChevronRight />
+      </button>
+    </div>
+  );
+}
 export default function ChessHome() {
   const location = useLocation();
   
@@ -45,7 +82,7 @@ export default function ChessHome() {
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Routes>
-          <Route path="/" element={<Navigate to="play" replace />} />
+          <Route path="/" element={<ChessMenu />} />
           <Route path="play" element={<ChessPlay />} />
           <Route path="puzzles" element={<ChessPuzzles />} />
           <Route path="lessons" element={<ChessLessons />} />
