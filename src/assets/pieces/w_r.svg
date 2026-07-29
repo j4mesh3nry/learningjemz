@@ -36,6 +36,6 @@ details[open] { background: #970302; color: #dfdedd; }
 <p>Too many requests (76af2b0)</p>
 </div>
 </div>
-<div class="footer"><p>If you report this error to the Wikimedia System Administrators, please include the details below.</p><p class="text-muted"><code>Request served via cp5025 cp5025, Varnish XID 894181499<br>Upstream caches: cp5025 int<br>Error: 429, Too many requests (76af2b0) at Wed, 29 Jul 2026 17:22:41 GMT<br><details><summary>Sensitive client information</summary>IP address: 143.44.192.38</details></code></p>
+<div class="footer"><p>If you report this error to the Wikimedia System Administrators, please include the details below.</p><p class="text-muted"><code>Request served via cp5025 cp5025, Varnish XID 900734667<br>Upstream caches: cp5025 int<br>Error: 429, Too many requests (76af2b0) at Wed, 29 Jul 2026 17:26:34 GMT<br><details><summary>Sensitive client information</summary>IP address: 143.44.192.38</details></code></p>
 </div>
 </html>
