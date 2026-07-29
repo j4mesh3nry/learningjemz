@@ -1,0 +1,229 @@
+.chess-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: var(--bg-chess, #1e3a2f);
+  color: white;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.chess-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.chess-nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+}
+
+.chess-nav a {
+  color: #ccc;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+}
+
+.chess-nav a.active {
+  background: #4caf50;
+  color: white;
+}
+
+.board-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  border: 4px solid #333;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: clamp(2rem, 10vw, 3rem);
+  cursor: pointer;
+  user-select: none;
+}
+
+.square.light {
+  background-color: #f0d9b5;
+}
+
+.square.dark {
+  background-color: #b58863;
+}
+
+.square.selected {
+  background-color: rgba(255, 255, 0, 0.5);
+}
+
+.square.last-move {
+  background-color: rgba(255, 255, 0, 0.3);
+}
+
+.legal-move-dot {
+  position: absolute;
+  width: 25%;
+  height: 25%;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.square:hover .legal-move-dot {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.piece {
+  z-index: 10;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+
+.piece:active {
+  transform: scale(1.1);
+}
+
+.difficulty-selector {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.difficulty-pill {
+  padding: 0.25rem 1rem;
+  border-radius: 1rem;
+  background: #333;
+  border: 1px solid #555;
+  color: white;
+  cursor: pointer;
+}
+
+.difficulty-pill.active {
+  background: #4caf50;
+  border-color: #4caf50;
+}
+
+.game-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: #4caf50;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn.danger {
+  background: #f44336;
+}
+
+.history-panel {
+  margin-top: 1rem;
+  background: rgba(0,0,0,0.2);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  max-height: 100px;
+  overflow-y: auto;
+  font-family: monospace;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.captured-pieces {
+  display: flex;
+  gap: 0.25rem;
+  min-height: 2rem;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+/* Lesson styles */
+.lesson-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 0;
+  position: relative;
+}
+
+.lesson-tree::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  background: #333;
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+.lesson-card {
+  position: relative;
+  z-index: 1;
+  background: #2a2a2a;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #444;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.lesson-card:active {
+  transform: scale(0.95);
+}
+
+.lesson-card.completed {
+  border-color: #4caf50;
+  background: #1b5e20;
+}
+
+.lesson-card.in-progress {
+  border-color: #ff9800;
+  background: #e65100;
+}
+
+.lesson-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.puzzle-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.puzzle-prompt {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffeb3b;
+}
