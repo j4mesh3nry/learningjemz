@@ -141,15 +141,6 @@ export default function ChessPlay() {
       )}
 
       <div className="chess-play-layout">
-        <div className="legend-panel">
-          <div className="legend-piece black">♜</div>
-          <div className="legend-piece black">♞</div>
-          <div className="legend-piece black">♝</div>
-          <div className="legend-piece black">♛</div>
-          <div className="legend-piece black">♚</div>
-          <div className="legend-piece black">♟</div>
-        </div>
-
         <div className="board-outer-wrapper">
           <div className="board-labels-left">
             {[8, 7, 6, 5, 4, 3, 2, 1].map(num => (
@@ -157,50 +148,39 @@ export default function ChessPlay() {
             ))}
           </div>
           
-          <div style={{ position: 'relative', width: '100%' }}>
-            <div className="board-container">
-              {board.map((row, rIndex) => {
-                const displayRow = isFlipped ? [...row].reverse() : row;
+          <div className="board-container">
+            {board.map((row, rIndex) => {
+              const displayRow = isFlipped ? [...row].reverse() : row;
+              
+              return displayRow.map((piece, cIndex) => {
+                const squareLabel = getSquareLabel(rIndex, cIndex);
+                const isLight = (rIndex + cIndex) % 2 === 0;
+                const isSelected = selectedSquare === squareLabel;
+                const isLegal = legalMoves.some(m => m.to === squareLabel);
                 
-                return displayRow.map((piece, cIndex) => {
-                  const squareLabel = getSquareLabel(rIndex, cIndex);
-                  const isLight = (rIndex + cIndex) % 2 === 0;
-                  const isSelected = selectedSquare === squareLabel;
-                  const isLegal = legalMoves.some(m => m.to === squareLabel);
-                  
-                  return (
-                    <div 
-                      key={squareLabel}
-                      className={`square ${isLight ? 'light' : 'dark'} ${isSelected ? 'selected' : ''}`}
-                      onClick={() => handleSquareClick(squareLabel)}
-                    >
-                      {piece && (
-                        <div className={`piece ${piece.color === 'w' ? 'piece-white' : 'piece-black'}`}>
-                          {PIECE_UNICODE[piece.color][piece.type]}
-                        </div>
-                      )}
-                      {isLegal && <div className="legal-move-dot" />}
-                    </div>
-                  );
-                });
-              })}
-            </div>
-            
-            <div className="board-labels-bottom">
-              {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map(letter => (
-                <span key={letter}>{isFlipped ? String.fromCharCode(201 - letter.charCodeAt(0)) : letter}</span>
-              ))}
-            </div>
+                return (
+                  <div 
+                    key={squareLabel}
+                    className={`square ${isLight ? 'light' : 'dark'} ${isSelected ? 'selected' : ''}`}
+                    onClick={() => handleSquareClick(squareLabel)}
+                  >
+                    {piece && (
+                      <div className={`piece ${piece.color === 'w' ? 'piece-white' : 'piece-black'}`}>
+                        {PIECE_UNICODE[piece.color][piece.type]}
+                      </div>
+                    )}
+                    {isLegal && <div className="legal-move-dot" />}
+                  </div>
+                );
+              });
+            })}
           </div>
-        </div>
-
-        <div className="legend-panel">
-          <div className="legend-piece white">♙</div>
-          <div className="legend-piece white">♔</div>
-          <div className="legend-piece white">♕</div>
-          <div className="legend-piece white">♗</div>
-          <div className="legend-piece white">♘</div>
-          <div className="legend-piece white">♖</div>
+          
+          <div className="board-labels-bottom">
+            {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map(letter => (
+              <span key={letter}>{isFlipped ? String.fromCharCode(201 - letter.charCodeAt(0)) : letter}</span>
+            ))}
+          </div>
         </div>
       </div>
 

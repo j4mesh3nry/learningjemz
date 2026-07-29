@@ -44,7 +44,7 @@
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
   grid-template-rows: repeat(8, minmax(0, 1fr));
-  border: 2px solid #6b533e;
+  border: none;
   box-sizing: border-box;
 }
 
@@ -111,66 +111,56 @@
 .chess-play-layout {
   display: flex;
   justify-content: center;
-  align-items: stretch;
-  gap: 0.5rem;
+  align-items: center;
   margin: 1rem 0;
   width: 100%;
 }
 
 .board-outer-wrapper {
-  background-color: #9c7b5a;
-  padding: 0.5rem 0.5rem 1.5rem 1.5rem;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  background-color: #a68364; /* Matching the darker border */
+  padding: 0 0 1rem 1rem; /* 1rem space on bottom and left for labels */
   position: relative;
-  display: flex;
-  flex: 1;
+  width: 100%;
   max-width: 420px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
 .board-labels-left {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  color: #fff;
-  font-weight: bold;
-  font-size: 0.75rem;
-  padding-right: 0.5rem;
-  padding-bottom: 1rem;
-}
-
-.board-labels-bottom {
-  display: flex;
-  justify-content: space-around;
-  color: #fff;
-  font-weight: bold;
-  font-size: 0.75rem;
   position: absolute;
-  bottom: 0.25rem;
-  left: 1.5rem;
-  right: 0.5rem;
-}
-
-.legend-panel {
+  top: 0;
+  left: 0;
+  width: 1rem;
+  bottom: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 1rem 0 2rem 0;
-  font-size: clamp(1.5rem, 6vw, 2rem);
 }
 
-.legend-piece {
+.board-labels-left span {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.legend-piece.white {
+  font-size: 0.7rem;
   color: #fff;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
-.legend-piece.black {
-  color: #222;
+.board-labels-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 0;
+  height: 1rem;
+  display: flex;
+}
+
+.board-labels-bottom span {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #fff;
 }
 
 .difficulty-selector {
