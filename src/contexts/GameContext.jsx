@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from './AuthContext';
+import { ACHIEVEMENTS } from '../utils/achievements';
 
 const GameContext = createContext();
 
@@ -19,7 +20,8 @@ const defaultState = {
   readingMinutes: 0,
   flashcardsMastered: 0,
   booksReading: 0,
-  quizHighScore: 0
+  quizHighScore: 0,
+  achievements: []
 };
 
 function getLocalState() {
@@ -53,11 +55,12 @@ export function GameProvider({ children }) {
       }
 
       // User is logged in, fetch from Supabase
-      const { data, error } = await supabase
-        .from('game_progress')
-        .select('*')
-        .eq('id', user.id)
-        .single();
+      const [progressResponse, achievementsResponse] = await Promise.all([
+        supabase.from('game_progress').select('*').eq('id', user.id).single(),
+        supabase.from('achievements').select('*').eq('user_id', user.id)
+      ]);
+      const { data, error } = progressResponse;
+      const achievementsData = achievementsResponse.data || [];
 
       if (!isMounted) return;
 
@@ -75,7 +78,8 @@ export function GameProvider({ children }) {
           readingMinutes: data.reading_minutes,
           flashcardsMastered: data.flashcards_mastered,
           booksReading: data.books_reading,
-          quizHighScore: data.quiz_high_score
+          quizHighScore: data.quiz_high_score,
+          achievements: achievementsData.map(a => ({ id: a.achievement_id, unlockedAt: a.unlocked_at }))
         };
         setState(remoteState);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(remoteState));
@@ -157,6 +161,32 @@ export function GameProvider({ children }) {
       supabase.from('game_progress').update(dbPayload).eq('id', user.id).then();
     }
   }, [state, user]);
+
+  const unlockAchievement = async (achievementId) => {
+    if (state.achievements.some(a => a.id === achievementId)) return;
+    
+    const newAchievement = { id: achievementId, unlockedAt: new Date().toISOString() };
+    setState(prev => ({ ...prev, achievements: [...prev.achievements, newAchievement] }));
+    
+    if (user) {
+      await supabase.from('achievements').insert([{
+        user_id: user.id,
+        achievement_id: achievementId,
+        unlocked_at: newAchievement.unlockedAt
+      }]);
+    }
+  };
+
+  // Auto-evaluate achievements
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    
+    ACHIEVEMENTS.forEach(ach => {
+      if (ach.condition(state) && !state.achievements.some(a => a.id === ach.id)) {
+        unlockAchievement(ach.id);
+      }
+    });
+  }, [state]);
 
   const addXp = (amount) => {
     setState(prev => {

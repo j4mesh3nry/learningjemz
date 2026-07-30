@@ -1,18 +1,8 @@
 /* src/pages/Profile.jsx */
 import { useGame } from '../contexts/GameContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { ACHIEVEMENTS } from '../utils/achievements.js';
 import '../index.css';
-
-const achievements = [
-  { id: 'first_win', name: 'First Win', icon: '🏆', desc: 'Win your first chess game', condition: (s) => s.chessWins >= 1 },
-  { id: 'puzzle_10', name: 'Puzzle Solver', icon: '🧩', desc: 'Solve 10 chess puzzles', condition: (s) => s.puzzlesSolved >= 10 },
-  { id: 'map_master', name: 'Map Master', icon: '🗺️', desc: 'Identify 40 provinces correctly', condition: (s) => s.provincesCorrect >= 40 },
-  { id: 'bookworm', name: 'Bookworm', icon: '📚', desc: 'Read for 30 minutes total', condition: (s) => s.readingMinutes >= 30 },
-  { id: 'star_gazer', name: 'Star Gazer', icon: '⭐', desc: 'Master 15 space flashcards', condition: (s) => s.flashcardsMastered >= 15 },
-  { id: 'streak_7', name: 'On Fire', icon: '🔥', desc: 'Reach a 7-day streak', condition: (s) => s.maxStreak >= 7 },
-  { id: 'level_5', name: 'Scholar', icon: '🎓', desc: 'Reach Level 5', condition: (s) => s.level >= 5 },
-  { id: 'level_10', name: 'Master', icon: '👑', desc: 'Reach Level 10', condition: (s) => s.level >= 10 },
-];
 
 export default function Profile() {
   const stats = useGame();
@@ -146,8 +136,9 @@ export default function Profile() {
       {/* Achievements */}
       <h3 style={{ fontFamily: 'var(--font-heading)', marginTop: 24, marginBottom: 12 }}>Achievements</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
-        {achievements.map(a => {
-          const unlocked = a.condition(stats);
+        {ACHIEVEMENTS.map(a => {
+          const unlockedData = stats.achievements?.find(ach => ach.id === a.id);
+          const unlocked = !!unlockedData;
           return (
             <div key={a.id} style={{
               textAlign: 'center', padding: 10, borderRadius: 10,
@@ -158,6 +149,11 @@ export default function Profile() {
             }}>
               <div style={{ fontSize: '1.5rem' }}>{a.icon}</div>
               <div style={{ fontSize: '0.65rem', fontWeight: 600, marginTop: 4 }}>{a.name}</div>
+              {unlocked && (
+                <div style={{ fontSize: '0.55rem', color: 'var(--color-muted)', marginTop: 2 }}>
+                  {new Date(unlockedData.unlockedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                </div>
+              )}
             </div>
           );
         })}
