@@ -132,6 +132,36 @@ function GeoDashboard() {
             </div>
           </div>
         </div>
+
+        {/* Dummy options for scrolling */}
+        <div style={{ background: 'linear-gradient(135deg, #8bc34a, #558b2f)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Target size={32} color="#fff" /></div>
+            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Flag Guesser</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+          </div>
+        </div>
+
+        <div style={{ background: 'linear-gradient(135deg, #00bcd4, #00838f)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Landmark size={32} color="#fff" /></div>
+            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Landmark Finder</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+          </div>
+        </div>
+
+        <div style={{ background: 'linear-gradient(135deg, #ff9800, #ef6c00)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Search size={32} color="#fff" /></div>
+            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Population Sorter</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+          </div>
+        </div>
+
+        <div style={{ background: 'linear-gradient(135deg, #e91e63, #c2185b)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Target size={32} color="#fff" /></div>
+            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Geo Daily Challenge</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

@@ -143,6 +143,35 @@ const SpaceHub = () => {
           </div>
           <ChevronRight size={28} />
         </div>
+
+        {/* Dummy options for scrolling */}
+        <div style={{ background: 'linear-gradient(135deg, #3f51b5, #283593)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Compass size={32} color="#fff" /></div>
+            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Constellation Guide</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+          </div>
+        </div>
+
+        <div style={{ background: 'linear-gradient(135deg, #4caf50, #2e7d32)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><BookOpen size={32} color="#fff" /></div>
+            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Telescope View</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+          </div>
+        </div>
+
+        <div style={{ background: 'linear-gradient(135deg, #e91e63, #c2185b)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Compass size={32} color="#fff" /></div>
+            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Galaxy Mapper</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+          </div>
+        </div>
+
+        <div style={{ background: 'linear-gradient(135deg, #ff9800, #ef6c00)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><HelpCircle size={32} color="#fff" /></div>
+            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Mars Rover Sim</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+          </div>
+        </div>
       </div>
     </div>
   );

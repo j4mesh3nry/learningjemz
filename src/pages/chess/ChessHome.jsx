@@ -127,6 +127,35 @@ function ChessMenu() {
         </div>
         <ChevronRight size={28} />
       </div>
+
+      {/* Dummy options for scrolling */}
+      <div style={{ background: 'linear-gradient(135deg, #9c27b0, #6a1b9a)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Crown size={32} color="#fff" /></div>
+          <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Grandmaster Tournaments</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        </div>
+      </div>
+
+      <div style={{ background: 'linear-gradient(135deg, #ff9800, #f57c00)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Target size={32} color="#fff" /></div>
+          <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Endgame Practice</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        </div>
+      </div>
+
+      <div style={{ background: 'linear-gradient(135deg, #00bcd4, #0097a7)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Gamepad2 size={32} color="#fff" /></div>
+          <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Opening Explorer</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        </div>
+      </div>
+
+      <div style={{ background: 'linear-gradient(135deg, #e91e63, #c2185b)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Crown size={32} color="#fff" /></div>
+          <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Daily Challenge</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        </div>
+      </div>
     </div>
   );
 }
