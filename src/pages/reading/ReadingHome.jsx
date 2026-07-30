@@ -123,9 +123,11 @@ const LibraryView = () => {
 };
 
 const ReadingHome = () => {
+  const navigate = useNavigate();
   return (
     <div className="reading-module">
-      <header className="reading-header">
+      <header className="reading-header" style={{ position: 'relative' }}>
+        <button onClick={() => navigate('/')} style={{ position: 'absolute', left: '1rem', top: '1rem', background: 'none', border: 'none', color: '#333', fontSize: '1.5rem', cursor: 'pointer' }}>←</button>
         <h1>📖 Reading</h1>
       </header>
       

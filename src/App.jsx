@@ -14,11 +14,20 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 import './index.css';
 
+// Placeholder components for new routes
+const Placeholder = ({ title }) => (
+  <div style={{ padding: '2rem', textAlign: 'center' }}>
+    <h2>{title}</h2>
+    <p>Coming Soon!</p>
+  </div>
+);
+
 function BottomNav() {
   const location = useLocation();
   const { user } = useAuth();
 
-  if (!user || location.pathname === '/login' || location.pathname === '/signup') {
+  const showNavPaths = ['/', '/leaderboards', '/store', '/profile'];
+  if (!user || !showNavPaths.includes(location.pathname)) {
     return null;
   }
 
@@ -28,27 +37,44 @@ function BottomNav() {
         <span role="img" aria-label="home">🏠</span>
         <span>Home</span>
       </NavLink>
-      <NavLink to="/chess" className={location.pathname.startsWith('/chess') ? 'active' : ''}>
-        <span role="img" aria-label="chess">♟️</span>
-        <span>Chess</span>
+      <NavLink to="/leaderboards" className={location.pathname === '/leaderboards' ? 'active' : ''}>
+        <span role="img" aria-label="leaderboards">🏆</span>
+        <span>Rank</span>
       </NavLink>
-      <NavLink to="/geo" className={location.pathname.startsWith('/geo') ? 'active' : ''}>
-        <span role="img" aria-label="geo">🌍</span>
-        <span>Geo</span>
-      </NavLink>
-      <NavLink to="/reading" className={location.pathname.startsWith('/reading') ? 'active' : ''}>
-        <span role="img" aria-label="reading">📖</span>
-        <span>Read</span>
-      </NavLink>
-      <NavLink to="/space" className={location.pathname.startsWith('/space') ? 'active' : ''}>
-        <span role="img" aria-label="space">🪐</span>
-        <span>Space</span>
+      <NavLink to="/store" className={location.pathname === '/store' ? 'active' : ''}>
+        <span role="img" aria-label="store">💎</span>
+        <span>Store</span>
       </NavLink>
       <NavLink to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>
         <span role="img" aria-label="profile">👤</span>
         <span>Me</span>
       </NavLink>
     </nav>
+  );
+}
+
+function Layout() {
+  const location = useLocation();
+  const { user } = useAuth();
+  const showNavPaths = ['/', '/leaderboards', '/store', '/profile'];
+  const showNav = user && showNavPaths.includes(location.pathname);
+
+  return (
+    <div style={{ paddingBottom: showNav ? '65px' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/leaderboards" element={<ProtectedRoute><Placeholder title="Leaderboards" /></ProtectedRoute>} />
+        <Route path="/store" element={<ProtectedRoute><Placeholder title="Jemz Store" /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/chess/*" element={<ProtectedRoute><ChessHome /></ProtectedRoute>} />
+        <Route path="/geo/*" element={<ProtectedRoute><GeoHome /></ProtectedRoute>} />
+        <Route path="/reading/*" element={<ProtectedRoute><ReadingHome /></ProtectedRoute>} />
+        <Route path="/space/*" element={<ProtectedRoute><SpaceHome /></ProtectedRoute>} />
+      </Routes>
+      <BottomNav />
+    </div>
   );
 }
 
@@ -61,19 +87,7 @@ function AppContent() {
 
   return (
     <Router>
-      <div style={{ paddingBottom: '56px' }}>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/chess/*" element={<ProtectedRoute><ChessHome /></ProtectedRoute>} />
-          <Route path="/geo/*" element={<ProtectedRoute><GeoHome /></ProtectedRoute>} />
-          <Route path="/reading/*" element={<ProtectedRoute><ReadingHome /></ProtectedRoute>} />
-          <Route path="/space/*" element={<ProtectedRoute><SpaceHome /></ProtectedRoute>} />
-        </Routes>
-      </div>
-      <BottomNav />
+      <Layout />
     </Router>
   );
 }

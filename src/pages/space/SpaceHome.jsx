@@ -34,7 +34,8 @@ const SpaceHub = () => {
         ))}
       </div>
       
-      <div className="space-header">
+      <div className="space-header" style={{ position: 'relative' }}>
+        <button onClick={() => navigate('/')} style={{ position: 'absolute', left: '1rem', top: '1rem', background: 'none', border: 'none', color: '#fff', fontSize: '1.5rem', cursor: 'pointer', zIndex: 10 }}>←</button>
         <h1>🪐 Space Explorer</h1>
         <p>Discover the wonders of the cosmos</p>
       </div>

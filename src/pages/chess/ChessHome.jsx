@@ -46,12 +46,19 @@ function ChessMenu() {
 }
 export default function ChessHome() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { chessWins, puzzlesSolved } = useGame();
 
   return (
     <div className="chess-container">
       <div className="chess-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <button 
+            onClick={() => navigate('/')} 
+            style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '0 8px 0 0', display: 'flex', alignItems: 'center' }}
+          >
+            ←
+          </button>
           <Crown size={32} color="#ffeb3b" />
           <h1 style={{ margin: 0, fontSize: '1.5rem' }}>Chess Mastery</h1>
         </div>

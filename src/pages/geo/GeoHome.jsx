@@ -18,7 +18,8 @@ function GeoDashboard() {
 
   return (
     <div className="geo-home animate-fade-in">
-      <header className="geo-header">
+      <header className="geo-header" style={{ position: 'relative' }}>
+        <button onClick={() => navigate('/')} style={{ position: 'absolute', left: '1rem', top: '1.5rem', background: 'none', border: 'none', color: '#fff', fontSize: '1.5rem', cursor: 'pointer' }}>←</button>
         <h1>🌍 Geography Hub</h1>
         <p>Explore the 81 provinces of the Philippines!</p>
       </header>
