@@ -31,7 +31,7 @@ export default function ChessPlay() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [status, setStatus] = useState('');
   const [history, setHistory] = useState([]);
-  const { addXp } = useGame();
+  const { winChessGame } = useGame();
 
   const updateGame = useCallback((newGame) => {
     setGame(newGame);
@@ -41,8 +41,7 @@ export default function ChessPlay() {
     if (newGame.isCheckmate()) {
       setStatus(`Checkmate! ${newGame.turn() === 'w' ? 'Black' : 'White'} wins!`);
       if (newGame.turn() === 'b') {
-        addXp(50);
-        localStorage.setItem('chess_gamesPlayed', (parseInt(localStorage.getItem('chess_gamesPlayed') || '0') + 1));
+        winChessGame();
       }
     } else if (newGame.isDraw()) {
       setStatus('Draw!');

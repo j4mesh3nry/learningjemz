@@ -1,5 +1,6 @@
 /* src/pages/Profile.jsx */
 import { useGame } from '../contexts/GameContext.jsx';
+import { useAuth } from '../contexts/AuthContext.jsx';
 import '../index.css';
 
 const achievements = [
@@ -13,32 +14,13 @@ const achievements = [
   { id: 'level_10', name: 'Master', icon: '👑', desc: 'Reach Level 10', condition: (s) => s.level >= 10 },
 ];
 
-function getModuleStats() {
-  try {
-    return {
-      chessWins: parseInt(localStorage.getItem('learningjemz-chess-wins') || '0'),
-      puzzlesSolved: parseInt(localStorage.getItem('learningjemz-puzzles-solved') || '0'),
-      provincesCorrect: parseInt(localStorage.getItem('learningjemz-provinces-correct') || '0'),
-      readingMinutes: parseInt(localStorage.getItem('learningjemz-reading-minutes') || '0'),
-      flashcardsMastered: parseInt(localStorage.getItem('learningjemz-flashcards-mastered') || '0'),
-      maxStreak: parseInt(localStorage.getItem('learningjemz-max-streak') || '0'),
-      booksReading: JSON.parse(localStorage.getItem('learningjemz-library') || '[]').length,
-      quizHighScore: parseInt(localStorage.getItem('learningjemz-quiz-high-score') || '0'),
-      level: 1,
-    };
-  } catch {
-    return { chessWins: 0, puzzlesSolved: 0, provincesCorrect: 0, readingMinutes: 0, flashcardsMastered: 0, maxStreak: 0, booksReading: 0, quizHighScore: 0, level: 1 };
-  }
-}
-
 export default function Profile() {
-  const { xp, level, streak } = useGame();
+  const stats = useGame();
+  const { xp, level, streak } = stats;
+  const { user, logout } = useAuth();
   const xpForNext = level * 100;
   const xpInLevel = xp - (level - 1) * 100;
   const pct = Math.min((xpInLevel / 100) * 100, 100);
-  const stats = getModuleStats();
-  stats.level = level;
-  stats.maxStreak = Math.max(stats.maxStreak, streak);
 
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const today = new Date().getDay(); // 0=Sun
@@ -62,9 +44,9 @@ export default function Profile() {
             fontFamily: 'var(--font-heading)'
           }}>Lv.{level}</span>
         </div>
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: 12 }}>Learner</h2>
+        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: 12 }}>{user?.name || 'Learner'}</h2>
         <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem' }}>
-          {level >= 10 ? '👑 Master' : level >= 5 ? '🎓 Scholar' : '🌱 Beginner'}
+          {user?.email} • {level >= 10 ? '👑 Master' : level >= 5 ? '🎓 Scholar' : '🌱 Beginner'}
         </p>
       </div>
 
@@ -179,6 +161,12 @@ export default function Profile() {
             </div>
           );
         })}
+      </div>
+
+      <div style={{ marginTop: '30px', textAlign: 'center' }}>
+        <button onClick={logout} className="btn-primary" style={{ background: '#e53935', width: '100%' }}>
+          Log Out
+        </button>
       </div>
     </div>
   );

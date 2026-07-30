@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Target, Gamepad2, GraduationCap, Crown, ChevronRight } from 'lucide-react';
+import { useGame } from '../../contexts/GameContext';
 import ChessPlay from './ChessPlay';
 import ChessPuzzles from './ChessPuzzles';
 import ChessLessons from './ChessLessons';
@@ -45,12 +46,7 @@ function ChessMenu() {
 }
 export default function ChessHome() {
   const location = useLocation();
-  
-  // Stats placeholder
-  const stats = {
-    gamesPlayed: localStorage.getItem('chess_gamesPlayed') || 0,
-    puzzlesSolved: localStorage.getItem('chess_puzzlesSolved') || 0,
-  };
+  const { chessWins, puzzlesSolved } = useGame();
 
   return (
     <div className="chess-container">
@@ -60,8 +56,8 @@ export default function ChessHome() {
           <h1 style={{ margin: 0, fontSize: '1.5rem' }}>Chess Mastery</h1>
         </div>
         <div style={{ fontSize: '0.8rem', textAlign: 'right' }}>
-          <div>Games: {stats.gamesPlayed}</div>
-          <div>Puzzles: {stats.puzzlesSolved}</div>
+          <div>Wins: {chessWins}</div>
+          <div>Puzzles: {puzzlesSolved}</div>
         </div>
       </div>
 

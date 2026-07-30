@@ -8,10 +8,20 @@ import GeoHome from './pages/geo/GeoHome.jsx';
 import ReadingHome from './pages/reading/ReadingHome.jsx';
 import SpaceHome from './pages/space/SpaceHome.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
+import Login from './pages/auth/Login.jsx';
+import Signup from './pages/auth/Signup.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 import './index.css';
 
 function BottomNav() {
   const location = useLocation();
+  const { user } = useAuth();
+
+  if (!user || location.pathname === '/login' || location.pathname === '/signup') {
+    return null;
+  }
+
   return (
     <nav className="bottom-nav">
       <NavLink to="/" end className={location.pathname === '/' ? 'active' : ''}>
@@ -42,7 +52,7 @@ function BottomNav() {
   );
 }
 
-export default function App() {
+function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
 
   if (showSplash) {
@@ -53,15 +63,25 @@ export default function App() {
     <Router>
       <div style={{ paddingBottom: '56px' }}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/chess/*" element={<ChessHome />} />
-          <Route path="/geo/*" element={<GeoHome />} />
-          <Route path="/reading/*" element={<ReadingHome />} />
-          <Route path="/space/*" element={<SpaceHome />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/chess/*" element={<ProtectedRoute><ChessHome /></ProtectedRoute>} />
+          <Route path="/geo/*" element={<ProtectedRoute><GeoHome /></ProtectedRoute>} />
+          <Route path="/reading/*" element={<ProtectedRoute><ReadingHome /></ProtectedRoute>} />
+          <Route path="/space/*" element={<ProtectedRoute><SpaceHome /></ProtectedRoute>} />
         </Routes>
       </div>
       <BottomNav />
     </Router>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }

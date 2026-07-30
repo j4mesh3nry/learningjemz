@@ -16,7 +16,7 @@ export default function ChessPuzzles() {
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [legalMoves, setLegalMoves] = useState([]);
   const [status, setStatus] = useState('');
-  const { addXp } = useGame();
+  const { solvePuzzle } = useGame();
 
   const puzzle = puzzlesData[currentIndex];
 
@@ -51,9 +51,7 @@ export default function ChessPuzzles() {
           if (moveResult.san === puzzle.solution || (moveResult.san + '#') === puzzle.solution) {
             setStatus('correct');
             setBoard(newGame.board());
-            addXp(25);
-            let solved = parseInt(localStorage.getItem('chess_puzzlesSolved') || '0') + 1;
-            localStorage.setItem('chess_puzzlesSolved', solved);
+            solvePuzzle();
             setTimeout(() => {
               nextPuzzle();
             }, 1500);
@@ -149,7 +147,7 @@ export default function ChessPuzzles() {
       )}
       {status === 'correct' && (
         <div style={{ textAlign: 'center', marginTop: '1rem', color: '#4caf50', fontWeight: 'bold' }}>
-          Correct! +25 XP
+          Correct! +10 XP
         </div>
       )}
     </div>
