@@ -7,12 +7,14 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const { signup, loading } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     
     if (!email || !password || !confirmPassword) {
       setError('Please fill in all fields');
@@ -25,8 +27,14 @@ export default function Signup() {
     }
 
     try {
-      await signup(email, password);
-      navigate('/', { replace: true });
+      const data = await signup(email, password);
+      
+      // If session is null after signup, Supabase requires email verification
+      if (data?.user && !data?.session) {
+        setSuccess('Success! Please check your email for the confirmation link.');
+      } else {
+        navigate('/', { replace: true });
+      }
     } catch (err) {
       setError(err.message || 'Failed to create account');
     }
@@ -37,6 +45,7 @@ export default function Signup() {
       <div className="auth-card">
         <h2>Create Account</h2>
         {error && <div className="auth-error">{error}</div>}
+        {success && <div style={{ color: '#4caf50', marginBottom: '1rem', textAlign: 'center', background: 'rgba(76, 175, 80, 0.1)', padding: '0.5rem', borderRadius: '4px' }}>{success}</div>}
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label>Email</label>
