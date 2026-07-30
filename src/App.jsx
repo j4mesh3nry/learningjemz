@@ -78,10 +78,14 @@ function AppContent() {
   );
 }
 
+import { GameProvider } from './contexts/GameContext.jsx';
+
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <GameProvider>
+        <AppContent />
+      </GameProvider>
     </AuthProvider>
   );
 }

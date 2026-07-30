@@ -28,7 +28,7 @@ export default function Signup() {
       await signup(email, password);
       navigate('/', { replace: true });
     } catch (err) {
-      setError('Failed to create account');
+      setError(err.message || 'Failed to create account');
     }
   };
 
