@@ -41,6 +41,7 @@ export function GameProvider({ children }) {
   // Initialize and Sync
   useEffect(() => {
     let isMounted = true;
+    isInitialized.current = false; // Prevent saving old state while fetching
 
     const initializeState = async () => {
       const localState = getLocalState();
