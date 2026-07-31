@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Plus, BookOpen, Search, Trash2 } from 'lucide-react';
+import { Plus, BookOpen, Search, Trash2, Library, Zap, Target, BookMarked, Brain, ChevronRight, Lock } from 'lucide-react';
 import { getLibrary, getReadingProgress, getCoverUrl, removeFromLibrary } from '../../utils/bookService';
 import { useGame } from '../../contexts/GameContext';
 import BookSearch from './BookSearch';
 import BookReader from './BookReader';
-import { BookOpen, Search, Library, Zap, Target, BookMarked, Brain, ChevronRight } from 'lucide-react';
 import './reading.css';
 
 const LibraryView = () => {
@@ -131,96 +130,136 @@ const LibraryView = () => {
 
 const ReadingDashboard = () => {
   const navigate = useNavigate();
-  const { xp, level, streak, booksReading, readingMinutes } = useGame();
+  const { xp, level, streak, booksReading } = useGame();
 
   return (
-    <div style={{
-      background: 'linear-gradient(135deg, #1f1c2c, #928dab)',
-      minHeight: '100vh',
-      color: '#fff',
-      padding: '1.5rem',
-      boxSizing: 'border-box'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
-        <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '1.5rem', cursor: 'pointer', padding: '0 8px 0 0' }}>←</button>
-        <h1 style={{ fontSize: '1.8rem', margin: 0 }}>📖 Reading Hub</h1>
-      </div>
-
-      {/* Stats Bar */}
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '16px',
-        padding: '1.5rem',
-        display: 'flex',
-        justifyContent: 'space-around',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        color: '#fff',
-        marginBottom: '2rem'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '1.8rem' }}>🔥</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{streak}</div>
-          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Streak</div>
+    <div className="reading-module-container">
+      <div className="reading-top-bar">
+        <div className="reading-title-area">
+          <button className="reading-back-btn" onClick={() => navigate('/')}>
+            ←
+          </button>
+          <BookOpen size={32} color="#a89478" />
+          <h1 className="reading-title">Reading Hub</h1>
         </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '1.8rem' }}>🎓</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Lv.{level}</div>
-          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Level</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '1.8rem' }}>✨</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{xp}</div>
-          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>XP</div>
+        
+        <div className="reading-stats-panel">
+          <div className="reading-stat-badge">
+            <span className="reading-stat-icon">🔥</span>
+            <span>{streak} Streak</span>
+          </div>
+          <div className="reading-stat-badge">
+            <span className="reading-stat-icon">🎓</span>
+            <span>Lv.{level}</span>
+          </div>
+          <div className="reading-stat-badge">
+            <span className="reading-stat-icon">✨</span>
+            <span>{xp} XP</span>
+          </div>
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', paddingBottom: '2rem' }}>
-        <h2 style={{ color: '#fff', margin: '0', fontSize: '1.2rem', fontWeight: 600 }}>Curriculum</h2>
+      <h2 className="reading-section-title">Current Curriculum</h2>
 
-        <div onClick={() => navigate('library')} style={{ background: 'linear-gradient(135deg, #8e2de2, #4a00e0)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', boxShadow: '0 10px 20px rgba(74, 0, 224, 0.3)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Library size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>My Library</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>{booksReading} books in progress</div></div>
+      <div className="reading-grid">
+        <div className="reading-card library" onClick={() => navigate('library')}>
+          <div className="reading-card-header">
+            <div className="reading-card-icon-wrapper">
+              <Library size={28} />
+            </div>
+            <ChevronRight className="reading-card-action" size={24} />
           </div>
-          <ChevronRight size={28} />
-        </div>
-
-        <div onClick={() => navigate('search')} style={{ background: 'linear-gradient(135deg, #00b4db, #0083b0)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', boxShadow: '0 10px 20px rgba(0, 131, 176, 0.3)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Search size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Book Search</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Find new stories</div></div>
+          <div className="reading-card-content">
+            <h3 className="reading-card-title">My Library</h3>
+            <p className="reading-card-desc">Continue your stories and revisit completed masterpieces.</p>
           </div>
-          <ChevronRight size={28} />
-        </div>
-
-        {/* Dummy options for scrolling */}
-        <div style={{ background: 'linear-gradient(135deg, #ff416c, #ff4b2b)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Zap size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Speed Reading</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+          <div className="reading-card-footer">
+            <span className="reading-card-meta">{booksReading || 0} books in progress</span>
           </div>
         </div>
 
-        <div style={{ background: 'linear-gradient(135deg, #11998e, #38ef7d)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Target size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Comprehension Quiz</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        <div className="reading-card search" onClick={() => navigate('search')}>
+          <div className="reading-card-header">
+            <div className="reading-card-icon-wrapper">
+              <Search size={28} />
+            </div>
+            <ChevronRight className="reading-card-action" size={24} />
+          </div>
+          <div className="reading-card-content">
+            <h3 className="reading-card-title">Book Search</h3>
+            <p className="reading-card-desc">Discover new adventures and knowledge from our vast collection.</p>
+          </div>
+          <div className="reading-card-footer">
+            <span className="reading-card-meta">Find new stories</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 className="reading-section-title">Advanced Studies (Locked)</h2>
+
+      <div className="reading-grid">
+        <div className="reading-card locked">
+          <div className="reading-card-header">
+            <div className="reading-card-icon-wrapper">
+              <Zap size={28} />
+            </div>
+            <Lock className="reading-lock-icon" size={20} />
+          </div>
+          <div className="reading-card-content">
+            <h3 className="reading-card-title">Speed Reading</h3>
+            <p className="reading-card-desc">Train your eye to absorb information at an accelerated pace.</p>
           </div>
         </div>
 
-        <div style={{ background: 'linear-gradient(135deg, #f7971e, #ffd200)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><BookMarked size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Vocabulary Builder</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        <div className="reading-card locked">
+          <div className="reading-card-header">
+            <div className="reading-card-icon-wrapper">
+              <Target size={28} />
+            </div>
+            <Lock className="reading-lock-icon" size={20} />
+          </div>
+          <div className="reading-card-content">
+            <h3 className="reading-card-title">Comprehension Quiz</h3>
+            <p className="reading-card-desc">Test your understanding of the chapters you've just read.</p>
           </div>
         </div>
 
-        <div style={{ background: 'linear-gradient(135deg, #fc4a1a, #f7b733)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Brain size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Daily Challenge</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        <div className="reading-card locked">
+          <div className="reading-card-header">
+            <div className="reading-card-icon-wrapper">
+              <BookMarked size={28} />
+            </div>
+            <Lock className="reading-lock-icon" size={20} />
+          </div>
+          <div className="reading-card-content">
+            <h3 className="reading-card-title">Vocabulary Builder</h3>
+            <p className="reading-card-desc">Expand your lexicon with context-based flashcards.</p>
+          </div>
+        </div>
+
+        <div className="reading-card locked">
+          <div className="reading-card-header">
+            <div className="reading-card-icon-wrapper">
+              <Brain size={28} />
+            </div>
+            <Lock className="reading-lock-icon" size={20} />
+          </div>
+          <div className="reading-card-content">
+            <h3 className="reading-card-title">Daily Challenge</h3>
+            <p className="reading-card-desc">A short, high-level reading passage with analytical questions.</p>
+          </div>
+        </div>
+        
+        <div className="reading-card locked">
+          <div className="reading-card-header">
+            <div className="reading-card-icon-wrapper">
+              <Library size={28} />
+            </div>
+            <Lock className="reading-lock-icon" size={20} />
+          </div>
+          <div className="reading-card-content">
+            <h3 className="reading-card-title">Reading Clubs</h3>
+            <p className="reading-card-desc">Discuss books with peers in weekly virtual meetups.</p>
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import ProvinceQuiz from './ProvinceQuiz';
 import MapExplorer from './MapExplorer';
 import { useGame } from '../../contexts/GameContext';
-import { Target, Search, Landmark, ChevronRight } from 'lucide-react';
+import { Target, Search, Landmark, ChevronRight, Lock, Flag, MapPin, Users, Globe, Compass } from 'lucide-react';
 import './geo.css';
 
 function GeoDashboard() {
@@ -11,157 +11,148 @@ function GeoDashboard() {
   const { xp, level, streak, provincesCorrect } = useGame();
 
   return (
-    <div style={{
-      background: 'linear-gradient(135deg, #112240, #0a192f)',
-      minHeight: '100vh',
-      color: '#fff',
-      padding: '1.5rem',
-      boxSizing: 'border-box'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
-        <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '1.5rem', cursor: 'pointer', padding: '0 8px 0 0' }}>←</button>
-        <h1 style={{ fontSize: '1.8rem', margin: 0 }}>🌍 Geography Hub</h1>
-      </div>
-
-      {/* Stats Bar */}
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '16px',
-        padding: '1.5rem',
-        display: 'flex',
-        justifyContent: 'space-around',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        color: '#fff',
-        marginBottom: '2rem'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '1.8rem' }}>🔥</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{streak}</div>
-          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Streak</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '1.8rem' }}>🎓</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Lv.{level}</div>
-          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Level</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '1.8rem' }}>✨</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{xp}</div>
-          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>XP</div>
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <h2 style={{ color: '#fff', margin: '0', fontSize: '1.2rem', fontWeight: 600 }}>Expeditions</h2>
-
-        <div 
-          onClick={() => navigate('quiz')}
-          style={{
-            background: 'linear-gradient(135deg, #e91e63, #c2185b)',
-            borderRadius: '20px',
-            padding: '1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            cursor: 'pointer',
-            boxShadow: '0 10px 20px rgba(233, 30, 99, 0.3)',
-            transition: 'transform 0.2s',
-            color: '#fff'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}>
-              <Target size={32} color="#fff" />
-            </div>
-            <div>
-              <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Province Quiz</div>
-              <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>{provincesCorrect}/81 Mastered</div>
-            </div>
-          </div>
-          <ChevronRight size={28} />
-        </div>
-
-        <div 
-          onClick={() => navigate('explorer')}
-          style={{
-            background: 'linear-gradient(135deg, #3f51b5, #303f9f)',
-            borderRadius: '20px',
-            padding: '1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            cursor: 'pointer',
-            boxShadow: '0 10px 20px rgba(63, 81, 181, 0.3)',
-            transition: 'transform 0.2s',
-            color: '#fff'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}>
-              <Search size={32} color="#fff" />
-            </div>
-            <div>
-              <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Map Explorer</div>
-              <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Free Roam Mode</div>
-            </div>
-          </div>
-          <ChevronRight size={28} />
+    <div className="geo-module-container">
+      <div className="geo-top-bar">
+        <div className="geo-title-area">
+          <button className="geo-back-btn" onClick={() => navigate('/')}>
+            ←
+          </button>
+          <Compass size={32} color="#64748b" />
+          <h1 className="geo-title">Geography Hub</h1>
         </div>
         
-        <div 
-          style={{
-            background: 'linear-gradient(135deg, #78909c, #546e7a)',
-            borderRadius: '20px',
-            padding: '1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            opacity: 0.7,
-            color: '#fff'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}>
-              <Landmark size={32} color="#fff" />
+        <div className="geo-stats-panel">
+          <div className="geo-stat-badge">
+            <span className="geo-stat-icon">🔥</span>
+            <span>{streak} Streak</span>
+          </div>
+          <div className="geo-stat-badge">
+            <span className="geo-stat-icon">🎓</span>
+            <span>Lv.{level}</span>
+          </div>
+          <div className="geo-stat-badge">
+            <span className="geo-stat-icon">✨</span>
+            <span>{xp} XP</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 className="geo-section-title">Active Expeditions</h2>
+
+      <div className="geo-grid">
+        <div className="geo-card quiz" onClick={() => navigate('quiz')}>
+          <div className="geo-card-header">
+            <div className="geo-card-icon-wrapper">
+              <Target size={28} />
             </div>
-            <div>
-              <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Capital Quiz</div>
-              <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div>
+            <ChevronRight className="geo-card-action" size={24} />
+          </div>
+          <div className="geo-card-content">
+            <h3 className="geo-card-title">Province Quiz</h3>
+            <p className="geo-card-desc">Test your knowledge of the 81 provinces on a blank map.</p>
+          </div>
+          <div className="geo-card-footer">
+            <span className="geo-card-meta">{provincesCorrect || 0}/81 Mastered</span>
+          </div>
+        </div>
+
+        <div className="geo-card explore" onClick={() => navigate('explorer')}>
+          <div className="geo-card-header">
+            <div className="geo-card-icon-wrapper">
+              <Search size={28} />
             </div>
+            <ChevronRight className="geo-card-action" size={24} />
+          </div>
+          <div className="geo-card-content">
+            <h3 className="geo-card-title">Map Explorer</h3>
+            <p className="geo-card-desc">Freely explore regions, capitals, and detailed geographical data.</p>
+          </div>
+          <div className="geo-card-footer">
+            <span className="geo-card-meta">Free Roam Mode</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 className="geo-section-title">Uncharted Territory (Locked)</h2>
+
+      <div className="geo-grid">
+        <div className="geo-card locked">
+          <div className="geo-card-header">
+            <div className="geo-card-icon-wrapper">
+              <Landmark size={28} />
+            </div>
+            <Lock className="geo-lock-icon" size={20} />
+          </div>
+          <div className="geo-card-content">
+            <h3 className="geo-card-title">Capital Quiz</h3>
+            <p className="geo-card-desc">Match provinces to their capitals in a race against time.</p>
           </div>
         </div>
 
-        {/* Dummy options for scrolling */}
-        <div style={{ background: 'linear-gradient(135deg, #8bc34a, #558b2f)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Target size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Flag Guesser</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        <div className="geo-card locked">
+          <div className="geo-card-header">
+            <div className="geo-card-icon-wrapper">
+              <Flag size={28} />
+            </div>
+            <Lock className="geo-lock-icon" size={20} />
+          </div>
+          <div className="geo-card-content">
+            <h3 className="geo-card-title">Flag Guesser</h3>
+            <p className="geo-card-desc">Identify regional and provincial flags accurately.</p>
           </div>
         </div>
 
-        <div style={{ background: 'linear-gradient(135deg, #00bcd4, #00838f)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Landmark size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Landmark Finder</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        <div className="geo-card locked">
+          <div className="geo-card-header">
+            <div className="geo-card-icon-wrapper">
+              <MapPin size={28} />
+            </div>
+            <Lock className="geo-lock-icon" size={20} />
+          </div>
+          <div className="geo-card-content">
+            <h3 className="geo-card-title">Landmark Finder</h3>
+            <p className="geo-card-desc">Pinpoint famous historical landmarks on the map.</p>
           </div>
         </div>
 
-        <div style={{ background: 'linear-gradient(135deg, #ff9800, #ef6c00)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Search size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Population Sorter</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        <div className="geo-card locked">
+          <div className="geo-card-header">
+            <div className="geo-card-icon-wrapper">
+              <Users size={28} />
+            </div>
+            <Lock className="geo-lock-icon" size={20} />
+          </div>
+          <div className="geo-card-content">
+            <h3 className="geo-card-title">Population Sorter</h3>
+            <p className="geo-card-desc">Rank provinces by population density and demographics.</p>
           </div>
         </div>
 
-        <div style={{ background: 'linear-gradient(135deg, #e91e63, #c2185b)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Target size={32} color="#fff" /></div>
-            <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Geo Daily Challenge</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        <div className="geo-card locked">
+          <div className="geo-card-header">
+            <div className="geo-card-icon-wrapper">
+              <Target size={28} />
+            </div>
+            <Lock className="geo-lock-icon" size={20} />
+          </div>
+          <div className="geo-card-content">
+            <h3 className="geo-card-title">Geo Daily Challenge</h3>
+            <p className="geo-card-desc">A unique geography puzzle that refreshes every 24 hours.</p>
           </div>
         </div>
 
+        <div className="geo-card locked">
+          <div className="geo-card-header">
+            <div className="geo-card-icon-wrapper">
+              <Globe size={28} />
+            </div>
+            <Lock className="geo-lock-icon" size={20} />
+          </div>
+          <div className="geo-card-content">
+            <h3 className="geo-card-title">Continent Mastery</h3>
+            <p className="geo-card-desc">Expand your knowledge beyond local borders to the world stage.</p>
+          </div>
+        </div>
       </div>
     </div>
   );

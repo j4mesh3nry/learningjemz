@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { Target, Gamepad2, GraduationCap, Crown, ChevronRight } from 'lucide-react';
+import { Target, Gamepad2, GraduationCap, Crown, ChevronRight, Lock, Trophy, FastForward, BookOpen, Clock, EyeOff } from 'lucide-react';
 import { useGame } from '../../contexts/GameContext';
 import ChessPlay from './ChessPlay';
 import ChessPuzzles from './ChessPuzzles';
@@ -11,149 +11,165 @@ function ChessMenu() {
   const navigate = useNavigate();
   const { xp, level, streak, puzzlesSolved } = useGame();
   
+  const handleMouseMove = (e) => {
+    const cards = document.querySelectorAll('.chess-card');
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  };
+  
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem', paddingBottom: '2rem' }}>
-      {/* Stats Bar */}
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '16px',
-        padding: '1.5rem',
-        display: 'flex',
-        justifyContent: 'space-around',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        color: '#fff'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '1.8rem' }}>🔥</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{streak}</div>
-          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Streak</div>
+    <div className="chess-module-container" onMouseMove={handleMouseMove}>
+      <div className="chess-top-bar">
+        <div className="chess-title-area">
+          <button className="chess-back-btn" onClick={() => navigate('/')}>
+            ←
+          </button>
+          <Crown size={32} color="#8c9b8c" />
+          <h1 className="chess-title">Chess Mastery</h1>
         </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '1.8rem' }}>🎓</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Lv.{level}</div>
-          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Level</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '1.8rem' }}>✨</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{xp}</div>
-          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>XP</div>
-        </div>
-      </div>
-
-      <h2 style={{ color: '#fff', margin: '0.5rem 0 0 0', fontSize: '1.2rem', fontWeight: 600 }}>Training Regimen</h2>
-
-      {/* Play Button */}
-      <div 
-        onClick={() => navigate('play')}
-        style={{
-          background: 'linear-gradient(135deg, #4caf50, #2e7d32)',
-          borderRadius: '20px',
-          padding: '1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          cursor: 'pointer',
-          boxShadow: '0 10px 20px rgba(76, 175, 80, 0.3)',
-          transition: 'transform 0.2s',
-          color: '#fff'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}>
-            <Gamepad2 size={32} color="#fff" />
+        
+        <div className="chess-stats-panel">
+          <div className="chess-stat-badge">
+            <span className="chess-stat-icon">🔥</span>
+            <span>{streak} Streak</span>
           </div>
-          <div>
-            <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Play with Bot</div>
-            <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Hone your skills against AI</div>
+          <div className="chess-stat-badge">
+            <span className="chess-stat-icon">🎓</span>
+            <span>Lv.{level}</span>
+          </div>
+          <div className="chess-stat-badge">
+            <span className="chess-stat-icon">✨</span>
+            <span>{xp} XP</span>
           </div>
         </div>
-        <ChevronRight size={28} />
       </div>
 
-      {/* Puzzles Button */}
-      <div 
-        onClick={() => navigate('puzzles')}
-        style={{
-          background: 'linear-gradient(135deg, #ff9800, #ef6c00)',
-          borderRadius: '20px',
-          padding: '1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          cursor: 'pointer',
-          boxShadow: '0 10px 20px rgba(255, 152, 0, 0.3)',
-          transition: 'transform 0.2s',
-          color: '#fff'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}>
-            <Target size={32} color="#fff" />
+      <h2 className="chess-section-title">Active Training Regimen</h2>
+
+      <div className="chess-grid">
+        {/* Play Button */}
+        <div className="chess-card play" onClick={() => navigate('play')}>
+          <div className="chess-card-header">
+            <div className="chess-card-icon-wrapper">
+              <Gamepad2 size={28} />
+            </div>
+            <ChevronRight className="chess-card-action" size={24} />
           </div>
-          <div>
-            <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Tactics Puzzles</div>
-            <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>{puzzlesSolved} completed</div>
+          <div className="chess-card-content">
+            <h3 className="chess-card-title">Play with Bot</h3>
+            <p className="chess-card-desc">Hone your skills against our advanced AI engines.</p>
+          </div>
+          <div className="chess-card-footer">
+            <span className="chess-card-meta">Standard & Blitz modes</span>
           </div>
         </div>
-        <ChevronRight size={28} />
-      </div>
 
-      {/* Lessons Button */}
-      <div 
-        onClick={() => navigate('lessons')}
-        style={{
-          background: 'linear-gradient(135deg, #2196f3, #1565c0)',
-          borderRadius: '20px',
-          padding: '1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          cursor: 'pointer',
-          boxShadow: '0 10px 20px rgba(33, 150, 243, 0.3)',
-          transition: 'transform 0.2s',
-          color: '#fff'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}>
-            <GraduationCap size={32} color="#fff" />
+        {/* Puzzles Button */}
+        <div className="chess-card tactics" onClick={() => navigate('puzzles')}>
+          <div className="chess-card-header">
+            <div className="chess-card-icon-wrapper">
+              <Target size={28} />
+            </div>
+            <ChevronRight className="chess-card-action" size={24} />
           </div>
-          <div>
-            <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Mastery Lessons</div>
-            <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div>
+          <div className="chess-card-content">
+            <h3 className="chess-card-title">Tactics Puzzles</h3>
+            <p className="chess-card-desc">Improve your pattern recognition and tactical vision.</p>
+          </div>
+          <div className="chess-card-footer">
+            <span className="chess-card-meta">{puzzlesSolved || 0} Puzzles Solved</span>
           </div>
         </div>
-        <ChevronRight size={28} />
-      </div>
 
-      {/* Dummy options for scrolling */}
-      <div style={{ background: 'linear-gradient(135deg, #9c27b0, #6a1b9a)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Crown size={32} color="#fff" /></div>
-          <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Grandmaster Tournaments</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        {/* Lessons Button */}
+        <div className="chess-card lessons" onClick={() => navigate('lessons')}>
+          <div className="chess-card-header">
+            <div className="chess-card-icon-wrapper">
+              <GraduationCap size={28} />
+            </div>
+            <ChevronRight className="chess-card-action" size={24} />
+          </div>
+          <div className="chess-card-content">
+            <h3 className="chess-card-title">Mastery Lessons</h3>
+            <p className="chess-card-desc">Learn from curated courses spanning openings to endgames.</p>
+          </div>
+          <div className="chess-card-footer">
+            <span className="chess-card-meta">12 Modules Available</span>
+          </div>
         </div>
       </div>
 
-      <div style={{ background: 'linear-gradient(135deg, #ff9800, #f57c00)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Target size={32} color="#fff" /></div>
-          <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Endgame Practice</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
-        </div>
-      </div>
+      <h2 className="chess-section-title">Advanced Regimen (Locked)</h2>
 
-      <div style={{ background: 'linear-gradient(135deg, #00bcd4, #0097a7)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Gamepad2 size={32} color="#fff" /></div>
-          <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Opening Explorer</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+      <div className="chess-grid">
+        <div className="chess-card locked">
+          <div className="chess-card-header">
+            <div className="chess-card-icon-wrapper">
+              <Trophy size={28} />
+            </div>
+            <Lock className="chess-lock-icon" size={20} />
+          </div>
+          <div className="chess-card-content">
+            <h3 className="chess-card-title">Grandmaster Tournaments</h3>
+            <p className="chess-card-desc">Compete in high-stakes seasonal events for legendary rewards.</p>
+          </div>
         </div>
-      </div>
 
-      <div style={{ background: 'linear-gradient(135deg, #e91e63, #c2185b)', borderRadius: '20px', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: 0.7, color: '#fff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '12px' }}><Crown size={32} color="#fff" /></div>
-          <div><div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Daily Challenge</div><div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Coming Soon</div></div>
+        <div className="chess-card locked">
+          <div className="chess-card-header">
+            <div className="chess-card-icon-wrapper">
+              <FastForward size={28} />
+            </div>
+            <Lock className="chess-lock-icon" size={20} />
+          </div>
+          <div className="chess-card-content">
+            <h3 className="chess-card-title">Endgame Practice</h3>
+            <p className="chess-card-desc">Master complex endgame scenarios and theoretical draws.</p>
+          </div>
+        </div>
+
+        <div className="chess-card locked">
+          <div className="chess-card-header">
+            <div className="chess-card-icon-wrapper">
+              <BookOpen size={28} />
+            </div>
+            <Lock className="chess-lock-icon" size={20} />
+          </div>
+          <div className="chess-card-content">
+            <h3 className="chess-card-title">Opening Explorer</h3>
+            <p className="chess-card-desc">Deep dive into millions of master games and theoretical lines.</p>
+          </div>
+        </div>
+        
+        <div className="chess-card locked">
+          <div className="chess-card-header">
+            <div className="chess-card-icon-wrapper">
+              <Clock size={28} />
+            </div>
+            <Lock className="chess-lock-icon" size={20} />
+          </div>
+          <div className="chess-card-content">
+            <h3 className="chess-card-title">Daily Challenge</h3>
+            <p className="chess-card-desc">A unique, high-difficulty puzzle every single day.</p>
+          </div>
+        </div>
+
+        <div className="chess-card locked">
+          <div className="chess-card-header">
+            <div className="chess-card-icon-wrapper">
+              <EyeOff size={28} />
+            </div>
+            <Lock className="chess-lock-icon" size={20} />
+          </div>
+          <div className="chess-card-content">
+            <h3 className="chess-card-title">Blindfold Chess</h3>
+            <p className="chess-card-desc">Test your absolute limits by playing without seeing the pieces.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -162,44 +178,14 @@ function ChessMenu() {
 
 export default function ChessHome() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { chessWins } = useGame();
-
   const isMenu = location.pathname === '/chess' || location.pathname === '/chess/';
-  const handleBack = () => {
-    if (isMenu) {
-      navigate('/');
-    } else {
-      navigate('/chess');
-    }
-  };
 
   return (
-    <div className="chess-container">
-      <div className="chess-header" style={{ marginBottom: isMenu ? '0' : '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <button 
-            onClick={handleBack} 
-            style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '0 8px 0 0', display: 'flex', alignItems: 'center' }}
-          >
-            ←
-          </button>
-          <Crown size={32} color="#ffeb3b" />
-          <h1 style={{ margin: 0, fontSize: '1.5rem' }}>Chess Mastery</h1>
-        </div>
-        <div style={{ fontSize: '0.8rem', textAlign: 'right' }}>
-          <div>Wins: {chessWins}</div>
-        </div>
-      </div>
-
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Routes>
-          <Route path="/" element={<ChessMenu />} />
-          <Route path="play" element={<ChessPlay />} />
-          <Route path="puzzles" element={<ChessPuzzles />} />
-          <Route path="lessons" element={<ChessLessons />} />
-        </Routes>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<ChessMenu />} />
+      <Route path="play" element={<ChessPlay />} />
+      <Route path="puzzles" element={<ChessPuzzles />} />
+      <Route path="lessons" element={<ChessLessons />} />
+    </Routes>
   );
 }
