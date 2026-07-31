@@ -114,11 +114,12 @@ button:active { transform: scale(0.97); }
   height: 64px;
   padding-bottom: 8px;
   padding-top: 4px;
-  background: var(--color-bg-dark);
+  background: var(--color-bg);
   display: flex;
   justify-content: space-around;
   align-items: center;
   border-top: 1px solid #e0e0e0;
+  z-index: 100;
 }
 .bottom-nav a {
   color: var(--color-muted);

@@ -93,7 +93,7 @@ export default function Home() {
     }}>
       {/* Sticky Header Container */}
       <div style={{ 
-        position: 'sticky', top: 0, zIndex: 100, background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)',
+        position: 'sticky', top: 0, zIndex: 100, background: '#ffffff',
         paddingTop: 24, paddingBottom: 16, margin: '-24px -16px 16px -16px', paddingLeft: 16, paddingRight: 16,
         borderBottom: '1px solid #f0f0f0'
       }}>
