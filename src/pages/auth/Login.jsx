@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Mail, Lock, LogIn } from 'lucide-react';
+import { Sparkles, Mail, Lock, LogIn } from 'lucide-react';
 import '../../index.css';
 
 export default function Login() {
@@ -31,38 +31,42 @@ export default function Login() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#ffffff',
+      background: 'linear-gradient(135deg, var(--color-primary-dark), #0a230c)',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       padding: '20px', position: 'relative', overflow: 'hidden'
     }}>
       {/* Background decorations */}
-      <div style={{ position: 'absolute', top: '10%', left: '10%', opacity: 0.05, fontSize: '4rem' }}>🧠</div>
-      <div style={{ position: 'absolute', bottom: '20%', right: '15%', opacity: 0.05, fontSize: '5rem' }}>🌍</div>
-      <div style={{ position: 'absolute', top: '40%', right: '10%', opacity: 0.05, fontSize: '3rem' }}>📖</div>
-      <div style={{ position: 'absolute', bottom: '10%', left: '20%', opacity: 0.05, fontSize: '4rem' }}>♟️</div>
+      <div style={{ position: 'absolute', top: '10%', left: '10%', opacity: 0.1, fontSize: '4rem' }}>⭐</div>
+      <div style={{ position: 'absolute', bottom: '20%', right: '15%', opacity: 0.1, fontSize: '5rem' }}>🚀</div>
+      <div style={{ position: 'absolute', top: '40%', right: '10%', opacity: 0.1, fontSize: '3rem' }}>🧠</div>
       
       {/* Brand Header */}
       <div style={{ textAlign: 'center', marginBottom: '32px', zIndex: 10 }}>
-        <h1 style={{ 
-          fontFamily: 'var(--font-heading)', fontSize: '3.2rem', 
-          color: '#1a1a1a', margin: 0, textShadow: '2px 2px 0px #4caf50', 
-          letterSpacing: '-1px' 
+        <div style={{ 
+          width: 72, height: 72, background: '#fff', borderRadius: '24px', 
+          display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3)', transform: 'rotate(-5deg)'
         }}>
+          <Sparkles size={40} color="var(--color-primary)" fill="var(--color-primary)" />
+        </div>
+        <h1 style={{ fontFamily: 'var(--font-heading)', color: '#fff', fontSize: '2.5rem', margin: 0, textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
           LearningJemz
         </h1>
-        <p style={{ color: 'var(--color-muted)', margin: '8px 0 0 0', fontSize: '1.1rem' }}>Welcome back!</p>
+        <p style={{ color: 'rgba(255,255,255,0.8)', margin: '8px 0 0 0', fontSize: '1.1rem' }}>Your learning adventure awaits!</p>
       </div>
 
-      {/* Auth Card */}
+      {/* Glassmorphic Auth Card */}
       <div style={{
-        background: '#ffffff',
-        borderRadius: '24px', padding: '32px 24px',
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '32px', padding: '32px 24px',
         width: '100%', maxWidth: '400px',
-        border: '1px solid #eaeaea',
-        boxShadow: '0 12px 40px rgba(0,0,0,0.06)',
+        boxShadow: '0 24px 48px rgba(0,0,0,0.4)',
         zIndex: 10
       }}>
-        {/* H2 Removed for cleaner look */}
+        <h2 style={{ fontFamily: 'var(--font-heading)', textAlign: 'center', margin: '0 0 24px 0', fontSize: '1.8rem', color: '#222' }}>
+          Welcome Back
+        </h2>
         
         {error && (
           <div style={{ background: '#ffebee', color: '#c62828', padding: '12px', borderRadius: '12px', marginBottom: '20px', fontSize: '0.9rem', textAlign: 'center', border: '1px solid #ffcdd2' }}>
