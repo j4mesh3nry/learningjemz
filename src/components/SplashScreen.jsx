@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Gem, BookOpen, Globe2, Crown, Rocket, Music, ScrollText, Calculator, Microscope, Lightbulb, Compass, Palette, Star, Atom, Trophy, Gamepad2, Award, PenTool, Feather, Dna, Telescope } from 'lucide-react';
+import { Gem, BookOpen, Globe2, Crown, Rocket, Music, ScrollText, Calculator, Microscope, Lightbulb, Compass, Palette, Star, Atom, Trophy, Gamepad2, Award, PenTool, Feather, Dna, Telescope, Brain } from 'lucide-react';
 import './splash.css';
 
 const floatingIcons = [
@@ -28,6 +28,11 @@ const floatingIcons = [
   { Icon: Compass, top: '52%', left: '94%', size: 40, rotation: -25, delay: 0.7 },
   { Icon: Rocket, top: '62%', left: '8%', size: 44, rotation: 20, delay: 0.1 },
   { Icon: Star, top: '62%', left: '90%', size: 24, rotation: 40, delay: 0.4 },
+  
+  // --- DIRECTLY BELOW LOGO (Filling the gap) ---
+  { Icon: Brain, top: '60%', left: '42%', size: 28, rotation: -12, delay: 0.5 },
+  { Icon: BookOpen, top: '64%', left: '55%', size: 24, rotation: 18, delay: 1.2 },
+  { Icon: Feather, top: '58%', left: '68%', size: 22, rotation: -25, delay: 0.9 },
 
   // --- BOTTOM LEFT ZONE ---
   { Icon: Calculator, top: '88%', left: '15%', size: 40, rotation: 18, delay: 0.2 },
