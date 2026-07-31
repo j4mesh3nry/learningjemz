@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Gem, BookOpen, Globe2, Crown, Rocket, Music, ScrollText, Calculator, Microscope, Lightbulb, Compass, Palette } from 'lucide-react';
+import { Gem, BookOpen, Globe2, Crown, Rocket, Music, ScrollText, Calculator, Microscope, Lightbulb, Compass, Palette, Star, Atom, Trophy, Gamepad2, Award, PenTool, Feather, Dna } from 'lucide-react';
 import './splash.css';
 
 const floatingIcons = [
+  // Original outer ring
   { Icon: BookOpen, top: '12%', left: '15%', size: 40, rotation: -15, delay: 0 },
   { Icon: Globe2, top: '15%', left: '75%', size: 48, rotation: 20, delay: 0.5 },
   { Icon: Crown, top: '35%', left: '8%', size: 36, rotation: -10, delay: 1 },
@@ -15,6 +16,22 @@ const floatingIcons = [
   { Icon: Compass, top: '50%', left: '88%', size: 40, rotation: -25, delay: 1.1 },
   { Icon: Palette, top: '88%', left: '45%', size: 44, rotation: 15, delay: 0.3 },
   { Icon: BookOpen, top: '50%', left: '5%', size: 32, rotation: 15, delay: 1.3 },
+  
+  // New inner ring and corner fillers
+  { Icon: Star, top: '25%', left: '35%', size: 28, rotation: 10, delay: 0.1 },
+  { Icon: Atom, top: '22%', left: '60%', size: 34, rotation: -15, delay: 1.4 },
+  { Icon: Trophy, top: '75%', left: '45%', size: 38, rotation: -5, delay: 0.9 },
+  { Icon: Gamepad2, top: '55%', left: '25%', size: 32, rotation: 20, delay: 0.6 },
+  { Icon: Award, top: '45%', left: '70%', size: 30, rotation: -15, delay: 1.6 },
+  { Icon: PenTool, top: '80%', left: '30%', size: 26, rotation: 30, delay: 1.8 },
+  { Icon: Feather, top: '10%', left: '90%', size: 32, rotation: -20, delay: 0.5 },
+  { Icon: Dna, top: '95%', left: '85%', size: 36, rotation: 15, delay: 1.1 },
+  { Icon: Star, top: '60%', left: '60%', size: 24, rotation: 45, delay: 0.3 },
+  { Icon: Globe2, top: '5%', left: '25%', size: 28, rotation: -30, delay: 1.2 },
+  { Icon: Music, top: '92%', left: '25%', size: 30, rotation: 10, delay: 0.7 },
+  { Icon: Lightbulb, top: '40%', left: '92%', size: 24, rotation: -10, delay: 0.4 },
+  { Icon: Rocket, top: '72%', left: '5%', size: 28, rotation: 40, delay: 1.9 },
+  { Icon: BookOpen, top: '25%', left: '92%', size: 30, rotation: 15, delay: 0.8 }
 ];
 
 export default function SplashScreen({ onFinish }) {
