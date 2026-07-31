@@ -19,7 +19,7 @@ export default function SplashScreen({ onFinish }) {
     <div className={`splash-container ${fade ? 'splash-fade-out' : ''}`}>
       <div className="splash-logo-wrapper">
         <div className="splash-icon-box">
-          <Gem size={42} color="#ffffff" strokeWidth={2.5} />
+          <Gem size={32} color="#ffffff" strokeWidth={2.5} />
         </div>
         <h1 className="splash-title">
           Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
