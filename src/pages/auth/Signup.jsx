@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Sparkles, Mail, Lock, UserPlus } from 'lucide-react';
+import { Gem, Mail, Lock, UserPlus } from 'lucide-react';
 import '../../index.css';
 
 export default function Signup() {
@@ -55,16 +55,30 @@ export default function Signup() {
       
       {/* Brand Header */}
       <div style={{ textAlign: 'center', marginBottom: '24px', zIndex: 10 }}>
-        <div style={{ 
-          width: 60, height: 60, background: '#fff', borderRadius: '20px', 
-          display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.3)', transform: 'rotate(5deg)'
-        }}>
-          <Sparkles size={32} color="var(--color-primary)" fill="var(--color-primary)" />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #1c7c54, #4caf50)',
+            borderRadius: '16px',
+            padding: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+          }}>
+            <Gem size={32} color="#ffffff" strokeWidth={2.5} />
+          </div>
+          <h1 style={{ 
+            fontFamily: 'var(--font-heading)', 
+            fontSize: '2.5rem',
+            fontWeight: 800,
+            letterSpacing: '-0.5px',
+            color: '#ffffff',
+            margin: 0,
+            textShadow: '0 4px 12px rgba(0,0,0,0.3)'
+          }}>
+            Learning<span style={{ color: '#4caf50' }}>Jemz</span>
+          </h1>
         </div>
-        <h1 style={{ fontFamily: 'var(--font-heading)', color: '#fff', fontSize: '2rem', margin: 0, textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-          Join LearningJemz
-        </h1>
       </div>
 
       {/* Glassmorphic Auth Card */}
