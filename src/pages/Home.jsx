@@ -79,6 +79,8 @@ function StarDots() {
   );
 }
 
+import { Gem } from 'lucide-react';
+
 export default function Home() {
   const { xp, level, streak } = useGame();
   const xpInLevel = xp - (level - 1) * 100;
@@ -97,14 +99,29 @@ export default function Home() {
       }}>
         {/* Top row: Title and Badges */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <div>
-            <h1 style={{
-              fontFamily: 'var(--font-heading)', fontSize: '1.8rem',
+          
+          {/* Logo Area */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
               background: 'linear-gradient(135deg, #1c7c54, #4caf50)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              borderRadius: '10px',
+              padding: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 3px 10px rgba(76, 175, 80, 0.25)'
+            }}>
+              <Gem size={22} color="#ffffff" strokeWidth={2.5} />
+            </div>
+            <h1 style={{
+              fontFamily: 'var(--font-heading)', 
+              fontSize: '1.6rem',
+              fontWeight: 800,
+              letterSpacing: '-0.5px',
+              color: '#1a202c',
               margin: 0,
             }}>
-              💎 LearningJemz
+              Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
             </h1>
           </div>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
