@@ -117,55 +117,17 @@ export default function Leaderboard() {
         <Trophy size={24} color="#f57f17" /> Global Leaderboard
       </h2>
 
-      {/* Podium */}
-      {top3.length > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '8px', marginBottom: 32, height: 160, marginTop: 24 }}>
-          
-          {/* Rank 2 */}
-          {top3[1] && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-              <div style={{ fontSize: '2.5rem', background: '#f8f9fa', borderRadius: '50%', padding: 4, border: '3px solid #9e9e9e' }}>
-                {top3[1].avatar || '👤'}
-              </div>
-              <div style={{ background: '#9e9e9e', color: '#fff', fontWeight: 700, borderRadius: '12px', padding: '2px 8px', fontSize: '0.8rem', marginTop: -10, zIndex: 1 }}>2nd</div>
-              <div style={{ fontWeight: 700, color: '#333', fontSize: '0.9rem', marginTop: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 80 }}>{top3[1].name || 'Learner'}</div>
-              <div style={{ color: 'var(--color-primary)', fontWeight: 800, fontSize: '0.85rem' }}>{top3[1].xp} XP</div>
-              <div style={{ background: '#f5f5f5', width: '100%', height: 50, borderRadius: '8px 8px 0 0', marginTop: 8 }} />
-            </div>
-          )}
-
-          {/* Rank 1 */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1.2 }}>
-            <div style={{ fontSize: '3rem', background: '#fff9c4', borderRadius: '50%', padding: 6, border: '3px solid #f57f17' }}>
-              {top3[0].avatar || '👤'}
-            </div>
-            <div style={{ background: '#f57f17', color: '#fff', fontWeight: 700, borderRadius: '12px', padding: '2px 8px', fontSize: '0.8rem', marginTop: -12, zIndex: 1 }}>1st</div>
-            <div style={{ fontWeight: 800, color: '#222', fontSize: '1rem', marginTop: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 90 }}>{top3[0].name || 'Learner'}</div>
-            <div style={{ color: 'var(--color-primary)', fontWeight: 800, fontSize: '0.95rem' }}>{top3[0].xp} XP</div>
-            <div style={{ background: '#fff8e1', width: '100%', height: 70, borderRadius: '8px 8px 0 0', marginTop: 8 }} />
-          </div>
-
-          {/* Rank 3 */}
-          {top3[2] && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-              <div style={{ fontSize: '2.5rem', background: '#efebe9', borderRadius: '50%', padding: 4, border: '3px solid #bcaaa4' }}>
-                {top3[2].avatar || '👤'}
-              </div>
-              <div style={{ background: '#bcaaa4', color: '#fff', fontWeight: 700, borderRadius: '12px', padding: '2px 8px', fontSize: '0.8rem', marginTop: -10, zIndex: 1 }}>3rd</div>
-              <div style={{ fontWeight: 700, color: '#333', fontSize: '0.9rem', marginTop: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 80 }}>{top3[2].name || 'Learner'}</div>
-              <div style={{ color: 'var(--color-primary)', fontWeight: 800, fontSize: '0.85rem' }}>{top3[2].xp} XP</div>
-              <div style={{ background: '#fafafa', width: '100%', height: 35, borderRadius: '8px 8px 0 0', marginTop: 8 }} />
-            </div>
-          )}
-
-        </div>
-      )}
-
-      {/* List for 4+ */}
+      {/* List for All Ranks */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {rest.map((leader, index) => {
-          const rank = index + 4;
+        {leaders.map((leader, index) => {
+          const rank = index + 1;
           const isMe = leader.id === user?.id;
+          
+          let rankDisplay;
+          if (rank === 1) rankDisplay = <div style={{ fontSize: '1.5rem' }}>🥇</div>;
+          else if (rank === 2) rankDisplay = <div style={{ fontSize: '1.5rem' }}>🥈</div>;
+          else if (rank === 3) rankDisplay = <div style={{ fontSize: '1.5rem' }}>🥉</div>;
+          else rankDisplay = <div style={{ fontWeight: 700, color: '#999', fontSize: '1.1rem' }}>{rank}</div>;
           
           return (
             <div key={leader.id} style={{
@@ -175,8 +137,8 @@ export default function Leaderboard() {
               border: isMe ? '2px solid #4caf50' : '1px solid #eaeaea',
               boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
             }}>
-              <div style={{ fontWeight: 700, color: '#999', width: 24, fontSize: '1rem' }}>
-                {rank}
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 36 }}>
+                {rankDisplay}
               </div>
               <div style={{ fontSize: '2rem', margin: '0 16px 0 8px', background: '#f8f9fa', borderRadius: '50%', padding: 4 }}>
                 {leader.avatar || '👤'}
