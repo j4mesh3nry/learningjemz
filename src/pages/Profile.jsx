@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useGame } from '../contexts/GameContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { ACHIEVEMENTS } from '../utils/achievements.js';
-import { Settings, LogOut, Flame, Trophy, Map as MapIcon, BookOpen, Rocket, Check, Lock } from 'lucide-react';
+import { Settings, LogOut, Flame, Trophy, Map as MapIcon, BookOpen, Rocket, Check, Lock, Pencil } from 'lucide-react';
 import '../index.css';
 
 export default function Profile() {
@@ -63,11 +63,11 @@ export default function Profile() {
           {avatar}
           <div style={{
             position: 'absolute', bottom: -2, right: -2, background: '#ffb400', 
-            borderRadius: '50%', width: 28, height: 28, display: 'flex', 
+            borderRadius: '50%', width: 26, height: 26, display: 'flex', 
             alignItems: 'center', justifyContent: 'center', border: '2px solid #fff',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)', color: '#222'
           }}>
-            <span style={{ fontSize: '12px' }}>✏️</span>
+            <Pencil size={12} strokeWidth={3} />
           </div>
         </div>
         
@@ -78,12 +78,13 @@ export default function Profile() {
           <div 
             onClick={() => { setTempName(name); setIsEditingName(true); }}
             style={{ 
-              background: 'rgba(255,255,255,0.2)', borderRadius: '50%', width: 28, height: 28, 
+              background: 'rgba(255,255,255,0.2)', borderRadius: '50%', width: 26, height: 26, 
               display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-              border: '1px solid rgba(255,255,255,0.4)', transition: 'transform 0.1s ease'
+              border: '1px solid rgba(255,255,255,0.4)', transition: 'transform 0.1s ease',
+              color: '#fff'
             }}
           >
-            <span style={{ fontSize: '12px' }}>✏️</span>
+            <Pencil size={12} strokeWidth={2.5} />
           </div>
         </div>
 
