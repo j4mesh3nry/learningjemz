@@ -38,6 +38,24 @@ const modules = [
   },
 ];
 
+const lockedModules = [
+  {
+    icon: '🎵',
+    title: 'Learning Songs',
+    subtitle: 'Sing & Learn',
+  },
+  {
+    icon: '📜',
+    title: 'Poems',
+    subtitle: 'Rhymes & Verses',
+  },
+  {
+    icon: '🧮',
+    title: 'Math',
+    subtitle: 'Numbers & Logic',
+  }
+];
+
 function StarDots() {
   // small yellow/white dots for the space card
   const dots = Array.from({ length: 20 }, (_, i) => ({
@@ -71,53 +89,60 @@ export default function Home() {
       minHeight: '100vh', background: '#ffffff',
       padding: '24px 16px 80px', maxWidth: 420, margin: '0 auto',
     }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-        <div>
-          <h1 style={{
-            fontFamily: 'var(--font-heading)', fontSize: '1.8rem',
-            background: 'linear-gradient(135deg, #1c7c54, #4caf50)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            margin: 0,
-          }}>
-            💎 LearningJemz
-          </h1>
-        </div>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          {/* Streak badge */}
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 4,
-            background: '#fff5f5', padding: '4px 10px', borderRadius: 20,
-            border: '1px solid #ffcdd2',
-          }}>
-            <span style={{ fontSize: '1rem' }}>🔥</span>
-            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#e53935' }}>{streak}</span>
+      {/* Sticky Header Container */}
+      <div style={{ 
+        position: 'sticky', top: 0, zIndex: 100, background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)',
+        paddingTop: 24, paddingBottom: 16, margin: '-24px -16px 16px -16px', paddingLeft: 16, paddingRight: 16,
+        borderBottom: '1px solid #f0f0f0'
+      }}>
+        {/* Top row: Title and Badges */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <div>
+            <h1 style={{
+              fontFamily: 'var(--font-heading)', fontSize: '1.8rem',
+              background: 'linear-gradient(135deg, #1c7c54, #4caf50)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              margin: 0,
+            }}>
+              💎 LearningJemz
+            </h1>
           </div>
-          {/* Level badge */}
-          <Link to="/profile" style={{
-            display: 'flex', alignItems: 'center', gap: 4,
-            background: '#fff8e1', padding: '4px 10px', borderRadius: 20,
-            border: '1px solid #ffe082', textDecoration: 'none',
-          }}>
-            <span style={{ fontSize: '0.85rem' }}>⭐</span>
-            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#f57f17' }}>Lv.{level}</span>
-          </Link>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            {/* Streak badge */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 4,
+              background: '#fff5f5', padding: '4px 10px', borderRadius: 20,
+              border: '1px solid #ffcdd2',
+            }}>
+              <span style={{ fontSize: '1rem' }}>🔥</span>
+              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#e53935' }}>{streak}</span>
+            </div>
+            {/* Level badge */}
+            <Link to="/profile" style={{
+              display: 'flex', alignItems: 'center', gap: 4,
+              background: '#fff8e1', padding: '4px 10px', borderRadius: 20,
+              border: '1px solid #ffe082', textDecoration: 'none',
+            }}>
+              <span style={{ fontSize: '0.85rem' }}>⭐</span>
+              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#f57f17' }}>Lv.{level}</span>
+            </Link>
+          </div>
         </div>
-      </div>
 
-      {/* XP Mini bar */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{
-          height: 6, borderRadius: 3, background: '#e8f5e9', overflow: 'hidden',
-        }}>
+        {/* XP Mini bar */}
+        <div>
           <div style={{
-            height: '100%', borderRadius: 3, width: `${pct}%`,
-            background: 'linear-gradient(90deg, #4caf50, #8bc34a)',
-            transition: 'width 0.5s ease',
-          }} />
-        </div>
-        <div style={{ fontSize: '0.7rem', color: 'var(--color-muted)', marginTop: 2 }}>
-          {xpInLevel}/100 XP to Level {level + 1}
+            height: 6, borderRadius: 3, background: '#e8f5e9', overflow: 'hidden',
+          }}>
+            <div style={{
+              height: '100%', borderRadius: 3, width: `${pct}%`,
+              background: 'linear-gradient(90deg, #4caf50, #8bc34a)',
+              transition: 'width 0.5s ease',
+            }} />
+          </div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--color-muted)', marginTop: 4 }}>
+            {xpInLevel}/100 XP to Level {level + 1}
+          </div>
         </div>
       </div>
 
@@ -173,6 +198,66 @@ export default function Home() {
               position: 'relative', zIndex: 1,
             }}>→</div>
           </Link>
+        ))}
+      </div>
+
+      {/* Locked Modules */}
+      <h2 style={{
+        fontFamily: 'var(--font-heading)', fontSize: '1.3rem',
+        marginTop: 32, marginBottom: 20, color: '#333',
+      }}>
+        Coming Soon
+      </h2>
+
+      <div style={{ display: 'grid', gap: 14 }}>
+        {lockedModules.map((m) => (
+          <div key={m.title} style={{
+            display: 'flex', alignItems: 'center', gap: 16,
+            color: '#6c757d',
+            background: '#f8f9fa', borderRadius: 16,
+            border: '1px solid #e9ecef',
+            padding: '20px 18px', position: 'relative', overflow: 'hidden',
+            cursor: 'not-allowed'
+          }}>
+            {/* Icon */}
+            <div style={{
+              fontSize: '2.2rem', width: 56, height: 56,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: '#e9ecef', borderRadius: 14,
+              flexShrink: 0,
+              opacity: 0.7
+            }}>
+              {m.icon}
+            </div>
+
+            {/* Text */}
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <h3 style={{
+                fontFamily: 'var(--font-heading)', fontSize: '1.2rem',
+                margin: 0, fontWeight: 700,
+                color: '#495057'
+              }}>{m.title}</h3>
+              <p style={{
+                margin: '4px 0 0', fontSize: '0.85rem', opacity: 1,
+              }}>{m.subtitle}</p>
+            </div>
+
+            {/* Lock Badge */}
+            <div style={{
+              marginLeft: 'auto',
+              background: '#e9ecef',
+              color: '#6c757d',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              padding: '4px 8px',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}>
+              🔒 Locked
+            </div>
+          </div>
         ))}
       </div>
 
