@@ -22,6 +22,8 @@ const Placeholder = ({ title }) => (
   </div>
 );
 
+import { Home as HomeIcon, Trophy, Store, User } from 'lucide-react';
+
 function BottomNav() {
   const location = useLocation();
   const { user } = useAuth();
@@ -34,20 +36,20 @@ function BottomNav() {
   return (
     <nav className="bottom-nav">
       <NavLink to="/" end className={location.pathname === '/' ? 'active' : ''}>
-        <span role="img" aria-label="home">🏠</span>
-        <span>Home</span>
+        <HomeIcon size={24} />
+        <span style={{ marginTop: '4px' }}>Home</span>
       </NavLink>
       <NavLink to="/leaderboards" className={location.pathname === '/leaderboards' ? 'active' : ''}>
-        <span role="img" aria-label="leaderboards">🏆</span>
-        <span>Rank</span>
+        <Trophy size={24} />
+        <span style={{ marginTop: '4px' }}>Rank</span>
       </NavLink>
       <NavLink to="/store" className={location.pathname === '/store' ? 'active' : ''}>
-        <span role="img" aria-label="store">💎</span>
-        <span>Store</span>
+        <Store size={24} />
+        <span style={{ marginTop: '4px' }}>Store</span>
       </NavLink>
       <NavLink to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>
-        <span role="img" aria-label="profile">👤</span>
-        <span>Me</span>
+        <User size={24} />
+        <span style={{ marginTop: '4px' }}>Me</span>
       </NavLink>
     </nav>
   );
