@@ -38,14 +38,7 @@
   --font-body: 'Inter', sans-serif;
 }
 
-/* Dark mode (optional) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #121212;
-    --color-text: #e0e0e0;
-    --color-muted: #aaaaaa;
-  }
-}
+/* Dark mode is disabled to maintain the gamified light theme consistently */
 
 /* Global resets */
 *,
