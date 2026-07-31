@@ -95,7 +95,8 @@ export default function Home() {
       <div style={{ 
         position: 'sticky', top: 0, zIndex: 100, background: '#ffffff',
         paddingTop: 24, paddingBottom: 16, margin: '-24px -16px 16px -16px', paddingLeft: 16, paddingRight: 16,
-        borderBottom: '1px solid #f0f0f0'
+        borderBottom: '1px solid #eaeaea',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
       }}>
         {/* Top row: Title and Badges */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
