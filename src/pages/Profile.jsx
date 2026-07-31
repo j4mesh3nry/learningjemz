@@ -16,6 +16,10 @@ export default function Profile() {
 
   const [avatar, setAvatar] = useState(() => localStorage.getItem('learningjemz_avatar') || '👤');
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
+  
+  const [name, setName] = useState(() => localStorage.getItem('learningjemz_name') || user?.user_metadata?.name || 'Learner');
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState('');
 
   const PFP_OPTIONS = ['👤', '🦊', '🦉', '🐯', '🐼', '🐸', '🐶', '🦄', '🤖', '👽', '🦸‍♂️', '👩‍🚀', '🐱', '🦁'];
 
@@ -66,9 +70,23 @@ export default function Profile() {
             <span style={{ fontSize: '12px' }}>✏️</span>
           </div>
         </div>
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: 20, marginBottom: 4, fontSize: '1.8rem' }}>
-          {user?.name || 'Learner'}
-        </h2>
+        
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 20, marginBottom: 4 }}>
+          <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.8rem' }}>
+            {name}
+          </h2>
+          <div 
+            onClick={() => { setTempName(name); setIsEditingName(true); }}
+            style={{ 
+              background: 'rgba(255,255,255,0.2)', borderRadius: '50%', width: 28, height: 28, 
+              display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+              border: '1px solid rgba(255,255,255,0.4)', transition: 'transform 0.1s ease'
+            }}
+          >
+            <span style={{ fontSize: '12px' }}>✏️</span>
+          </div>
+        </div>
+
         <p style={{ opacity: 0.9, fontSize: '0.9rem', marginBottom: 20 }}>{user?.email}</p>
         
         <div style={{
@@ -276,11 +294,69 @@ export default function Profile() {
               onClick={() => setIsEditingAvatar(false)}
               style={{
                 width: '100%', marginTop: 24, padding: 14, borderRadius: 12,
-                background: '#f5f5f5', color: '#333', fontWeight: 600, border: 'none'
+                background: '#f5f5f5', color: '#333', fontWeight: 600, border: 'none', cursor: 'pointer'
               }}
             >
               Cancel
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Name Edit Modal */}
+      {isEditingName && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.6)', zIndex: 1000,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          backdropFilter: 'blur(5px)'
+        }} onClick={() => setIsEditingName(false)}>
+          <div style={{
+            background: '#fff', padding: 24, borderRadius: 24,
+            width: '90%', maxWidth: 360, boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+          }} onClick={e => e.stopPropagation()}>
+            <h3 style={{ fontFamily: 'var(--font-heading)', textAlign: 'center', marginBottom: 20, color: '#333' }}>Edit Name</h3>
+            
+            <input 
+              type="text" 
+              value={tempName}
+              onChange={(e) => setTempName(e.target.value)}
+              placeholder="Enter your name..."
+              style={{
+                width: '100%', padding: '14px 16px', borderRadius: 12,
+                border: '2px solid #eaeaea', fontSize: '1.1rem',
+                fontFamily: 'var(--font-body)', marginBottom: 24,
+                outline: 'none', color: '#333', background: '#fcfcfc'
+              }}
+              autoFocus
+            />
+
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button 
+                onClick={() => setIsEditingName(false)}
+                style={{
+                  flex: 1, padding: 14, borderRadius: 12,
+                  background: '#f5f5f5', color: '#555', fontWeight: 600, border: 'none', cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  if (tempName.trim()) {
+                    setName(tempName.trim());
+                    localStorage.setItem('learningjemz_name', tempName.trim());
+                  }
+                  setIsEditingName(false);
+                }}
+                style={{
+                  flex: 1, padding: 14, borderRadius: 12,
+                  background: 'var(--color-primary)', color: '#fff', fontWeight: 600, border: 'none', cursor: 'pointer'
+                }}
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
       )}
