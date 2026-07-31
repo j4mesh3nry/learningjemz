@@ -23,6 +23,11 @@ const floatingIcons = [
   { Icon: BookOpen, top: '15%', left: '95%', size: 30, rotation: -5, delay: 1.2 },
   { Icon: Telescope, top: '8%', left: '65%', size: 32, rotation: 15, delay: 0.9 },
 
+  // --- DIRECTLY ABOVE LOGO (Filling the gap) ---
+  { Icon: Compass, top: '38%', left: '55%', size: 24, rotation: 20, delay: 0.3 },
+  { Icon: Gamepad2, top: '36%', left: '72%', size: 28, rotation: -15, delay: 1.1 },
+  { Icon: PenTool, top: '44%', left: '65%', size: 22, rotation: 10, delay: 0.6 },
+
   // --- MIDDLE EXTREME EDGES (Avoiding Center Logo) ---
   { Icon: Crown, top: '48%', left: '4%', size: 38, rotation: -15, delay: 0.9 },
   { Icon: Compass, top: '52%', left: '94%', size: 40, rotation: -25, delay: 0.7 },
