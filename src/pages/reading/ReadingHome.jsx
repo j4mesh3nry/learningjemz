@@ -133,134 +133,93 @@ const ReadingDashboard = () => {
   const { xp, level, streak, booksReading } = useGame();
 
   return (
-    <div className="reading-module-container">
-      <div className="reading-top-bar">
-        <div className="reading-title-area">
-          <button className="reading-back-btn" onClick={() => navigate('/')}>
+    <div className="reading-module-page">
+      {/* Navigation Header */}
+      <div className="reading-nav-header">
+        <div className="reading-header-left">
+          <button className="reading-back-btn" onClick={() => navigate('/')} title="Back to Home">
             ←
           </button>
-          <BookOpen size={32} color="#a89478" />
-          <h1 className="reading-title">Reading Hub</h1>
+          <h1 className="reading-page-title">📖 Reading</h1>
         </div>
-        
-        <div className="reading-stats-panel">
-          <div className="reading-stat-badge">
-            <span className="reading-stat-icon">🔥</span>
-            <span>{streak} Streak</span>
+
+        <div className="reading-badges">
+          <div className="reading-badge streak">
+            <span>🔥</span>
+            <span>{streak}</span>
           </div>
-          <div className="reading-stat-badge">
-            <span className="reading-stat-icon">🎓</span>
+          <div className="reading-badge level">
+            <span>⭐</span>
             <span>Lv.{level}</span>
           </div>
-          <div className="reading-stat-badge">
-            <span className="reading-stat-icon">✨</span>
+          <div className="reading-badge xp">
+            <span>✨</span>
             <span>{xp} XP</span>
           </div>
         </div>
       </div>
 
-      <h2 className="reading-section-title">Current Curriculum</h2>
+      {/* Active Modes */}
+      <h2 className="reading-section-heading">Curriculum</h2>
 
-      <div className="reading-grid">
-        <div className="reading-card library" onClick={() => navigate('library')}>
-          <div className="reading-card-header">
-            <div className="reading-card-icon-wrapper">
-              <Library size={28} />
-            </div>
-            <ChevronRight className="reading-card-action" size={24} />
-          </div>
-          <div className="reading-card-content">
+      <div className="reading-card-list">
+        <div className="reading-card-item" onClick={() => navigate('library')}>
+          <div className="reading-card-icon">📚</div>
+          <div className="reading-card-info">
             <h3 className="reading-card-title">My Library</h3>
-            <p className="reading-card-desc">Continue your stories and revisit completed masterpieces.</p>
+            <p className="reading-card-subtitle">{booksReading || 0} books in progress</p>
           </div>
-          <div className="reading-card-footer">
-            <span className="reading-card-meta">{booksReading || 0} books in progress</span>
-          </div>
+          <div className="reading-card-arrow">→</div>
         </div>
 
-        <div className="reading-card search" onClick={() => navigate('search')}>
-          <div className="reading-card-header">
-            <div className="reading-card-icon-wrapper">
-              <Search size={28} />
-            </div>
-            <ChevronRight className="reading-card-action" size={24} />
-          </div>
-          <div className="reading-card-content">
+        <div className="reading-card-item" onClick={() => navigate('search')}>
+          <div className="reading-card-icon">🔍</div>
+          <div className="reading-card-info">
             <h3 className="reading-card-title">Book Search</h3>
-            <p className="reading-card-desc">Discover new adventures and knowledge from our vast collection.</p>
+            <p className="reading-card-subtitle">Find new books & novels</p>
           </div>
-          <div className="reading-card-footer">
-            <span className="reading-card-meta">Find new stories</span>
-          </div>
+          <div className="reading-card-arrow">→</div>
         </div>
       </div>
 
-      <h2 className="reading-section-title">Advanced Studies (Locked)</h2>
+      {/* Locked Modes */}
+      <h2 className="reading-section-heading">Advanced Studies (Locked)</h2>
 
-      <div className="reading-grid">
-        <div className="reading-card locked">
-          <div className="reading-card-header">
-            <div className="reading-card-icon-wrapper">
-              <Zap size={28} />
-            </div>
-            <Lock className="reading-lock-icon" size={20} />
-          </div>
-          <div className="reading-card-content">
+      <div className="reading-card-list">
+        <div className="reading-card-item locked">
+          <div className="reading-card-icon">⚡</div>
+          <div className="reading-card-info">
             <h3 className="reading-card-title">Speed Reading</h3>
-            <p className="reading-card-desc">Train your eye to absorb information at an accelerated pace.</p>
+            <p className="reading-card-subtitle">Accelerate reading pace</p>
           </div>
+          <div className="reading-lock-badge">🔒 Locked</div>
         </div>
 
-        <div className="reading-card locked">
-          <div className="reading-card-header">
-            <div className="reading-card-icon-wrapper">
-              <Target size={28} />
-            </div>
-            <Lock className="reading-lock-icon" size={20} />
-          </div>
-          <div className="reading-card-content">
+        <div className="reading-card-item locked">
+          <div className="reading-card-icon">🎯</div>
+          <div className="reading-card-info">
             <h3 className="reading-card-title">Comprehension Quiz</h3>
-            <p className="reading-card-desc">Test your understanding of the chapters you've just read.</p>
+            <p className="reading-card-subtitle">Test chapter understanding</p>
           </div>
+          <div className="reading-lock-badge">🔒 Locked</div>
         </div>
 
-        <div className="reading-card locked">
-          <div className="reading-card-header">
-            <div className="reading-card-icon-wrapper">
-              <BookMarked size={28} />
-            </div>
-            <Lock className="reading-lock-icon" size={20} />
-          </div>
-          <div className="reading-card-content">
+        <div className="reading-card-item locked">
+          <div className="reading-card-icon">🔖</div>
+          <div className="reading-card-info">
             <h3 className="reading-card-title">Vocabulary Builder</h3>
-            <p className="reading-card-desc">Expand your lexicon with context-based flashcards.</p>
+            <p className="reading-card-subtitle">Learn context-based words</p>
           </div>
+          <div className="reading-lock-badge">🔒 Locked</div>
         </div>
 
-        <div className="reading-card locked">
-          <div className="reading-card-header">
-            <div className="reading-card-icon-wrapper">
-              <Brain size={28} />
-            </div>
-            <Lock className="reading-lock-icon" size={20} />
-          </div>
-          <div className="reading-card-content">
-            <h3 className="reading-card-title">Daily Challenge</h3>
-            <p className="reading-card-desc">A short, high-level reading passage with analytical questions.</p>
-          </div>
-        </div>
-        
-        <div className="reading-card locked">
-          <div className="reading-card-header">
-            <div className="reading-card-icon-wrapper">
-              <Library size={28} />
-            </div>
-            <Lock className="reading-lock-icon" size={20} />
-          </div>
-          <div className="reading-card-content">
+        <div className="reading-card-item locked">
+          <div className="reading-card-icon">👥</div>
+          <div className="reading-card-info">
             <h3 className="reading-card-title">Reading Clubs</h3>
-            <p className="reading-card-desc">Discuss books with peers in weekly virtual meetups.</p>
+            <p className="reading-card-subtitle">Join community book chats</p>
           </div>
+          <div className="reading-lock-badge">🔒 Locked</div>
         </div>
       </div>
     </div>
