@@ -1,9 +1,10 @@
 /* src/pages/Profile.jsx */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGame } from '../contexts/GameContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { ACHIEVEMENTS } from '../utils/achievements.js';
 import { Settings, LogOut, Flame, Trophy, Map as MapIcon, BookOpen, Rocket, Check, Lock, Pencil } from 'lucide-react';
+import { supabase } from '../utils/supabase.js';
 import '../index.css';
 
 export default function Profile() {
@@ -14,19 +15,30 @@ export default function Profile() {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const today = new Date().getDay(); // 0=Sun, 1=Mon
 
-  const [avatar, setAvatar] = useState(() => localStorage.getItem('learningjemz_avatar') || '👤');
+  const [avatar, setAvatar] = useState(() => user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar') || '👤');
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
   
-  const [name, setName] = useState(() => localStorage.getItem('learningjemz_name') || user?.user_metadata?.name || 'Learner');
+  const [name, setName] = useState(() => user?.user_metadata?.name || localStorage.getItem('learningjemz_name') || user?.email?.split('@')[0] || 'Learner');
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState('');
 
   const PFP_OPTIONS = ['👤', '🦊', '🦉', '🐯', '🐼', '🐸', '🐶', '🦄', '🤖', '👽', '🦸‍♂️', '👩‍🚀', '🐱', '🦁'];
 
-  const handleSelectAvatar = (a) => {
+  // Sync with cloud when user data loads on new device
+  useEffect(() => {
+    if (user?.user_metadata?.avatar) setAvatar(user.user_metadata.avatar);
+    if (user?.user_metadata?.name) setName(user.user_metadata.name);
+  }, [user]);
+
+  const handleSelectAvatar = async (a) => {
     setAvatar(a);
     localStorage.setItem('learningjemz_avatar', a);
     setIsEditingAvatar(false);
+    
+    // Save to Supabase Cloud
+    if (user) {
+      await supabase.auth.updateUser({ data: { avatar: a } });
+    }
   };
 
   return (
@@ -343,12 +355,20 @@ export default function Profile() {
                 Cancel
               </button>
               <button 
-                onClick={() => {
-                  if (tempName.trim()) {
-                    setName(tempName.trim());
-                    localStorage.setItem('learningjemz_name', tempName.trim());
+                onClick={async () => {
+                  const trimmed = tempName.trim();
+                  if (trimmed) {
+                    setName(trimmed);
+                    localStorage.setItem('learningjemz_name', trimmed);
+                    setIsEditingName(false);
+                    
+                    // Save to Supabase Cloud
+                    if (user) {
+                      await supabase.auth.updateUser({ data: { name: trimmed } });
+                    }
+                  } else {
+                    setIsEditingName(false);
                   }
-                  setIsEditingName(false);
                 }}
                 style={{
                   flex: 1, padding: 14, borderRadius: 12,
