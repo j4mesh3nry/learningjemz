@@ -38,6 +38,7 @@ export default function Profile() {
     // Save to Supabase Cloud
     if (user) {
       await supabase.auth.updateUser({ data: { avatar: a } });
+      await supabase.from('game_progress').update({ avatar: a }).eq('id', user.id);
     }
   };
 
@@ -365,6 +366,7 @@ export default function Profile() {
                     // Save to Supabase Cloud
                     if (user) {
                       await supabase.auth.updateUser({ data: { name: trimmed } });
+                      await supabase.from('game_progress').update({ name: trimmed }).eq('id', user.id);
                     }
                   } else {
                     setIsEditingName(false);

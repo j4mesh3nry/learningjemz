@@ -10,6 +10,7 @@ import SpaceHome from './pages/space/SpaceHome.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
 import Login from './pages/auth/Login.jsx';
 import Signup from './pages/auth/Signup.jsx';
+import Leaderboard from './pages/Leaderboard.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 import './index.css';
@@ -67,7 +68,7 @@ function Layout() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path="/leaderboards" element={<ProtectedRoute><Placeholder title="Leaderboards" /></ProtectedRoute>} />
+        <Route path="/leaderboards" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
         <Route path="/store" element={<ProtectedRoute><Placeholder title="Jemz Store" /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/chess/*" element={<ProtectedRoute><ChessHome /></ProtectedRoute>} />

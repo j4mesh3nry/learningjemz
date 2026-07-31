@@ -98,7 +98,9 @@ export function GameProvider({ children }) {
           reading_minutes: localState.readingMinutes,
           flashcards_mastered: localState.flashcardsMastered,
           books_reading: localState.booksReading,
-          quiz_high_score: localState.quizHighScore
+          quiz_high_score: localState.quizHighScore,
+          name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
+          avatar: user.user_metadata?.avatar || '👤'
         };
         await supabase.from('game_progress').insert([dbPayload]);
         setState(localState);
@@ -155,7 +157,9 @@ export function GameProvider({ children }) {
         reading_minutes: state.readingMinutes,
         flashcards_mastered: state.flashcardsMastered,
         books_reading: state.booksReading,
-        quiz_high_score: state.quizHighScore
+        quiz_high_score: state.quizHighScore,
+        name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
+        avatar: user.user_metadata?.avatar || '👤'
       };
       
       supabase.from('game_progress').update(dbPayload).eq('id', user.id).then();
