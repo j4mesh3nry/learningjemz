@@ -1,4 +1,5 @@
 /* src/pages/Profile.jsx */
+import { useState } from 'react';
 import { useGame } from '../contexts/GameContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { ACHIEVEMENTS } from '../utils/achievements.js';
