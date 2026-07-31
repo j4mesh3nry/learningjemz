@@ -13,6 +13,17 @@ export default function Profile() {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const today = new Date().getDay(); // 0=Sun, 1=Mon
 
+  const [avatar, setAvatar] = useState(() => localStorage.getItem('learningjemz_avatar') || '👤');
+  const [isEditingAvatar, setIsEditingAvatar] = useState(false);
+
+  const PFP_OPTIONS = ['👤', '🦊', '🦉', '🐯', '🐼', '🐸', '🐶', '🦄', '🤖', '👽', '🦸‍♂️', '👩‍🚀', '🐱', '🦁'];
+
+  const handleSelectAvatar = (a) => {
+    setAvatar(a);
+    localStorage.setItem('learningjemz_avatar', a);
+    setIsEditingAvatar(false);
+  };
+
   return (
     <div className="container" style={{ paddingBottom: '100px' }}>
       
@@ -35,12 +46,24 @@ export default function Profile() {
         position: 'relative', overflow: 'hidden',
         boxShadow: '0 12px 32px rgba(28,124,84,0.25)', marginBottom: 24
       }}>
-        <div style={{
-          width: 90, height: 90, borderRadius: '50%', margin: '0 auto',
-          background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '2.5rem', boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
-        }}>
-          👤
+        <div 
+          onClick={() => setIsEditingAvatar(true)}
+          style={{
+            width: 90, height: 90, borderRadius: '50%', margin: '0 auto',
+            background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '2.5rem', boxShadow: '0 8px 24px rgba(0,0,0,0.2)', cursor: 'pointer',
+            position: 'relative'
+          }}
+        >
+          {avatar}
+          <div style={{
+            position: 'absolute', bottom: -2, right: -2, background: '#ffb400', 
+            borderRadius: '50%', width: 28, height: 28, display: 'flex', 
+            alignItems: 'center', justifyContent: 'center', border: '2px solid #fff',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+          }}>
+            <span style={{ fontSize: '12px' }}>✏️</span>
+          </div>
         </div>
         <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: 20, marginBottom: 4, fontSize: '1.8rem' }}>
           {user?.name || 'Learner'}
@@ -219,6 +242,47 @@ export default function Profile() {
           Sign Out
         </button>
       </div>
+
+      {/* Avatar Selection Modal */}
+      {isEditingAvatar && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.6)', zIndex: 1000,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          backdropFilter: 'blur(5px)'
+        }} onClick={() => setIsEditingAvatar(false)}>
+          <div style={{
+            background: '#fff', padding: 24, borderRadius: 24,
+            width: '90%', maxWidth: 360, boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+          }} onClick={e => e.stopPropagation()}>
+            <h3 style={{ fontFamily: 'var(--font-heading)', textAlign: 'center', marginBottom: 20 }}>Choose Avatar</h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+              {PFP_OPTIONS.map(a => (
+                <div key={a} onClick={() => handleSelectAvatar(a)} style={{
+                  width: 60, height: 60, borderRadius: '50%',
+                  background: avatar === a ? '#e8f5e9' : '#f5f5f5',
+                  border: avatar === a ? '3px solid #4caf50' : '2px solid transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '2rem', cursor: 'pointer', transition: 'transform 0.1s ease',
+                  transform: avatar === a ? 'scale(1.1)' : 'scale(1)',
+                  boxShadow: avatar === a ? '0 4px 12px rgba(76,175,80,0.3)' : 'none'
+                }}>
+                  {a}
+                </div>
+              ))}
+            </div>
+            <button 
+              onClick={() => setIsEditingAvatar(false)}
+              style={{
+                width: '100%', marginTop: 24, padding: 14, borderRadius: 12,
+                background: '#f5f5f5', color: '#333', fontWeight: 600, border: 'none'
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   );
