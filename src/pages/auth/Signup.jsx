@@ -5,6 +5,7 @@ import { Gem, Mail, Lock, UserPlus } from 'lucide-react';
 import '../../index.css';
 
 export default function Signup() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,7 +19,7 @@ export default function Signup() {
     setError('');
     setSuccess('');
     
-    if (!email || !password || !confirmPassword) {
+    if (!name || !email || !password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
@@ -29,7 +30,7 @@ export default function Signup() {
     }
 
     try {
-      const data = await signup(email, password);
+      const data = await signup(email, password, name);
       
       if (data?.user && !data?.session) {
         setSuccess('Success! Please check your email for the confirmation link.');
@@ -107,6 +108,26 @@ export default function Signup() {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           
+          <div style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999' }}>
+              <UserPlus size={20} />
+            </div>
+            <input 
+              type="text" 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+              placeholder="Choose a Display Name"
+              disabled={loading}
+              style={{
+                width: '100%', padding: '16px 16px 16px 48px', borderRadius: '16px',
+                border: '2px solid #eaeaea', fontSize: '1rem', outline: 'none',
+                background: '#fcfcfc', transition: 'border-color 0.2s', color: '#333'
+              }}
+              onFocus={e => e.target.style.borderColor = 'var(--color-primary)'}
+              onBlur={e => e.target.style.borderColor = '#eaeaea'}
+            />
+          </div>
+
           <div style={{ position: 'relative' }}>
             <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999' }}>
               <Mail size={20} />

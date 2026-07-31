@@ -30,13 +30,25 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
-  const signup = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+  const signup = async (email, password, name) => {
+    const { data, error } = await supabase.auth.signUp({ 
+      email, 
+      password,
+      options: {
+        data: {
+          name: name || email.split('@')[0],
+          avatar: '👤'
+        }
+      }
+    });
     if (error) throw error;
     return data;
   };
 
   const logout = async () => {
+    localStorage.removeItem('learningjemz_name');
+    localStorage.removeItem('learningjemz_avatar');
+    localStorage.removeItem('learningjemz-game-state');
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };
