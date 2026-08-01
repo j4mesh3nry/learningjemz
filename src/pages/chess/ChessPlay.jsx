@@ -347,9 +347,9 @@ export default function ChessPlay() {
                 <p>Easy • Makes random moves</p>
               </div>
               {selectedOpponent === 'Easy' && (
-                <div style={{ display: 'flex', gap: 8, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
-                  <button className="color-btn white" onClick={() => startGame('Easy', 'w')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#f5f5f5', border: '2px solid #ccc', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚪</button>
-                  <button className="color-btn black" onClick={() => startGame('Easy', 'b')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#333', border: '2px solid #222', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚫</button>
+                <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
+                  <button onClick={() => startGame('Easy', 'w')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#f8f9fa', border: '1px solid #dee2e6', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#333', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>White</button>
+                  <button onClick={() => startGame('Easy', 'b')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#343a40', border: '1px solid #212529', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#fff', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>Black</button>
                 </div>
               )}
             </div>
@@ -360,9 +360,9 @@ export default function ChessPlay() {
                 <p>Medium • Looks for captures</p>
               </div>
               {selectedOpponent === 'Medium' && (
-                <div style={{ display: 'flex', gap: 8, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
-                  <button className="color-btn white" onClick={() => startGame('Medium', 'w')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#f5f5f5', border: '2px solid #ccc', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚪</button>
-                  <button className="color-btn black" onClick={() => startGame('Medium', 'b')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#333', border: '2px solid #222', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚫</button>
+                <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
+                  <button onClick={() => startGame('Medium', 'w')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#f8f9fa', border: '1px solid #dee2e6', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#333', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>White</button>
+                  <button onClick={() => startGame('Medium', 'b')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#343a40', border: '1px solid #212529', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#fff', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>Black</button>
                 </div>
               )}
             </div>
@@ -373,9 +373,9 @@ export default function ChessPlay() {
                 <p>Hard • Calculates deeply</p>
               </div>
               {selectedOpponent === 'Hard' && (
-                <div style={{ display: 'flex', gap: 8, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
-                  <button className="color-btn white" onClick={() => startGame('Hard', 'w')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#f5f5f5', border: '2px solid #ccc', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚪</button>
-                  <button className="color-btn black" onClick={() => startGame('Hard', 'b')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#333', border: '2px solid #222', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚫</button>
+                <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
+                  <button onClick={() => startGame('Hard', 'w')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#f8f9fa', border: '1px solid #dee2e6', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#333', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>White</button>
+                  <button onClick={() => startGame('Hard', 'b')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#343a40', border: '1px solid #212529', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#fff', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>Black</button>
                 </div>
               )}
             </div>
