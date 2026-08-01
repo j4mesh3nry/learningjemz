@@ -196,7 +196,7 @@ export default function ChessPlay() {
     }
 
     const piece = game.get(square);
-    if (piece && piece.color === 'w') {
+    if (piece && piece.color === playerColor) {
       setSelectedSquare(square);
       setLegalMoves(game.moves({ square, verbose: true }));
     } else {
