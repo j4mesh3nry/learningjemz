@@ -49,6 +49,51 @@ export default function ChessPlay() {
   const playerName = user?.user_metadata?.name || 'You';
   const playerAvatar = user?.user_metadata?.avatar || '👤';
 
+  const capturedStats = React.useMemo(() => {
+    const startCount = { w: { p: 8, n: 2, b: 2, r: 2, q: 1 }, b: { p: 8, n: 2, b: 2, r: 2, q: 1 } };
+    const currentCount = { w: { p: 0, n: 0, b: 0, r: 0, q: 0 }, b: { p: 0, n: 0, b: 0, r: 0, q: 0 } };
+
+    board.forEach(row => {
+      row.forEach(piece => {
+        if (piece && piece.type !== 'k') {
+          currentCount[piece.color][piece.type]++;
+        }
+      });
+    });
+
+    const captured = { w: [], b: [] }; 
+    let wScore = 0; let bScore = 0;
+    const values = { p: 1, n: 3, b: 3, r: 5, q: 9 };
+    // Sort order for display: Q, R, B, N, P
+    const sortOrder = { q: 1, r: 2, b: 3, n: 4, p: 5 };
+
+    Object.keys(startCount.w).forEach(type => {
+      const diff = startCount.w[type] - currentCount.w[type];
+      for (let i = 0; i < diff; i++) {
+        captured.w.push(type);
+        bScore += values[type];
+      }
+    });
+
+    Object.keys(startCount.b).forEach(type => {
+      const diff = startCount.b[type] - currentCount.b[type];
+      for (let i = 0; i < diff; i++) {
+        captured.b.push(type);
+        wScore += values[type];
+      }
+    });
+
+    captured.w.sort((a, b) => sortOrder[a] - sortOrder[b]);
+    captured.b.sort((a, b) => sortOrder[a] - sortOrder[b]);
+
+    return { 
+      capturedByWhite: captured.b,
+      capturedByBlack: captured.w,
+      whiteScoreDiff: wScore - bScore,
+      blackScoreDiff: bScore - wScore
+    };
+  }, [board]);
+
   const updateGame = useCallback((newGame) => {
     setGame(newGame);
     setBoard(newGame.board());
@@ -299,6 +344,14 @@ export default function ChessPlay() {
                 {isThinking && <span className="thinking-indicator" style={{ marginLeft: 8, fontSize: '0.8rem' }}>(thinking...)</span>}
               </div>
               <div className="player-tagline">Bot • {difficulty}</div>
+              {capturedStats.capturedByBlack.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 4, minHeight: 16 }}>
+                  {capturedStats.capturedByBlack.map((type, i) => (
+                    <img key={i} src={PIECE_IMAGES['w'][type]} alt={type} style={{ width: 14, height: 14 }} />
+                  ))}
+                  {capturedStats.blackScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{capturedStats.blackScoreDiff}</span>}
+                </div>
+              )}
             </div>
           </div>
 
@@ -433,6 +486,14 @@ export default function ChessPlay() {
                 {playerName}
               </div>
               <div className="player-tagline">Lv.{level} • 🔥 {streak} Streak</div>
+              {capturedStats.capturedByWhite.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 4, minHeight: 16 }}>
+                  {capturedStats.capturedByWhite.map((type, i) => (
+                    <img key={i} src={PIECE_IMAGES['b'][type]} alt={type} style={{ width: 14, height: 14 }} />
+                  ))}
+                  {capturedStats.whiteScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{capturedStats.whiteScoreDiff}</span>}
+                </div>
+              )}
             </div>
           </div>
 
