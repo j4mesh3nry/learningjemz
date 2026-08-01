@@ -115,14 +115,13 @@ export function GameProvider({ children }) {
     return () => { isMounted = false; };
   }, [user]);
 
-  // Streak calculation (only run when state is actually loaded)
-  useEffect(() => {
-    if (!isInitialized.current) return;
+  // Streak is now handled by recordActivity called upon completing a game/puzzle
+  const recordActivity = () => {
+    const today = new Date().toDateString();
+    if (state.lastVisit === today) return false;
 
     setState(prev => {
-      const today = new Date().toDateString();
       if (prev.lastVisit === today) return prev;
-
       let newStreak = prev.streak;
       if (prev.lastVisit) {
         const yesterday = new Date();
@@ -137,7 +136,8 @@ export function GameProvider({ children }) {
       }
       return { ...prev, streak: newStreak, maxStreak: Math.max(prev.maxStreak || 0, newStreak), lastVisit: today };
     });
-  }, [state.lastVisit]);
+    return true;
+  };
 
   // Save to DB and LocalStorage whenever state changes
   useEffect(() => {
@@ -243,7 +243,8 @@ export function GameProvider({ children }) {
     masterFlashcard,
     readForMinutes,
     startReadingBook,
-    updateQuizHighScore
+    updateQuizHighScore,
+    recordActivity
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

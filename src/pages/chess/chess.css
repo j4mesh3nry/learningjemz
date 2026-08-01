@@ -547,6 +547,33 @@
   font-size: 1.1rem;
 }
 
+.game-over-overlay.win {
+  background: rgba(28, 124, 84, 0.9);
+  border-top: 2px solid #a5d6a7;
+  border-bottom: 2px solid #a5d6a7;
+  box-shadow: 0 8px 32px rgba(28, 124, 84, 0.4);
+}
+
+.game-over-overlay.win h2 {
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.game-over-overlay.win p {
+  color: #a5d6a7;
+}
+
+.streak-notification {
+  margin-top: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  font-weight: bold;
+  color: white;
+  animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

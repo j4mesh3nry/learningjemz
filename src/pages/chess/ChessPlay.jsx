@@ -37,8 +37,9 @@ export default function ChessPlay() {
   const [isThinking, setIsThinking] = useState(false);
   const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
   const [showRestartModal, setShowRestartModal] = useState(false);
+  const [streakMsg, setStreakMsg] = useState('');
   const navigate = useNavigate();
-  const { winChessGame, addXp, level, streak } = useGame();
+  const { winChessGame, addXp, level, streak, recordActivity } = useGame();
   const { user } = useAuth();
   
   const playerName = user?.user_metadata?.name || 'You';
@@ -53,11 +54,13 @@ export default function ChessPlay() {
       setGameState('checkmate');
       if (newGame.turn() === 'b') {
         winChessGame();
+        const streakIncreased = recordActivity();
+        setStreakMsg(streakIncreased ? "🔥 Streak Increased!" : "✅ Daily Streak Sufficed!");
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
     }
-  }, [winChessGame]);
+  }, [winChessGame, recordActivity]);
 
   const makeAIMove = useCallback(() => {
     if (game.isGameOver() || gameState !== 'playing') return;
@@ -139,6 +142,7 @@ export default function ChessPlay() {
     setLegalMoves([]);
     setGameState('playing');
     setShowRestartModal(false);
+    setStreakMsg('');
   };
 
   const handleRestartClick = () => {
@@ -162,6 +166,7 @@ export default function ChessPlay() {
             if (difficulty) {
               setDifficulty(null);
               setGameState('playing');
+              setStreakMsg('');
               updateGame(new Chess());
               setSelectedSquare(null);
               setLegalMoves([]);
@@ -263,13 +268,18 @@ export default function ChessPlay() {
             )}
             
             {(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && (
-              <div className="game-over-overlay">
+              <div className={`game-over-overlay ${gameState === 'checkmate' && game.turn() === 'b' ? 'win' : ''}`}>
                 <h2>{gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : 'Checkmate!'}</h2>
                 <p>
                   {gameState === 'resigned' ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!` :
                    gameState === 'draw' ? 'The game is a draw.' :
                    game.turn() === 'b' ? 'You win!' : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
                 </p>
+                {streakMsg && (
+                  <div className="streak-notification">
+                    {streakMsg}
+                  </div>
+                )}
               </div>
             )}
 
