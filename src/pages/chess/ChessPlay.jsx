@@ -37,6 +37,7 @@ export default function ChessPlay() {
   const [isThinking, setIsThinking] = useState(false);
   const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
   const [showRestartModal, setShowRestartModal] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(true);
   const [victoryStats, setVictoryStats] = useState(null);
   const [igniting, setIgniting] = useState(false);
   const [displayedStreak, setDisplayedStreak] = useState(0);
@@ -50,10 +51,11 @@ export default function ChessPlay() {
   const updateGame = useCallback((newGame) => {
     setGame(newGame);
     setBoard(newGame.board());
-    setHistory(newGame.history());
+    setHistory(newGame.history({ verbose: true }));
     
     if (newGame.isCheckmate()) {
       setGameState('checkmate');
+      setShowOverlay(true);
       if (newGame.turn() === 'b') {
         const oldStreak = streak;
         winChessGame();
@@ -73,6 +75,7 @@ export default function ChessPlay() {
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
+      setShowOverlay(true);
     }
   }, [winChessGame, recordActivity, streak]);
 
@@ -156,6 +159,7 @@ export default function ChessPlay() {
     setLegalMoves([]);
     setGameState('playing');
     setShowRestartModal(false);
+    setShowOverlay(true);
     setVictoryStats(null);
     setIgniting(false);
   };
@@ -171,7 +175,10 @@ export default function ChessPlay() {
 
   const handleResign = () => {
     setGameState('resigned');
+    setShowOverlay(true);
   };
+
+  const lastMove = history.length > 0 ? history[history.length - 1] : null;
 
   return (
     <div className="chess-module-page">
@@ -283,7 +290,7 @@ export default function ChessPlay() {
               </div>
             )}
             
-            {(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && (
+            {(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && showOverlay && (
               <div className={`game-over-overlay ${gameState === 'checkmate' && game.turn() === 'b' ? 'win' : ''}`}>
                 <h2>{gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : 'Checkmate!'}</h2>
                 <p>
@@ -305,6 +312,14 @@ export default function ChessPlay() {
                     </div>
                   </div>
                 )}
+                
+                <button 
+                  className="btn" 
+                  onClick={() => setShowOverlay(false)}
+                  style={{ marginTop: 20, background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 20, padding: '6px 16px', fontSize: '0.9rem' }}
+                >
+                  👁️ View Board
+                </button>
               </div>
             )}
 
@@ -315,6 +330,7 @@ export default function ChessPlay() {
                   const isLight = (rIndex + cIndex) % 2 === 0;
                   const isSelected = selectedSquare === squareLabel;
                   const isLegal = legalMoves.some(m => m.to === squareLabel);
+                  const isLastMove = lastMove && (lastMove.from === squareLabel || lastMove.to === squareLabel);
                   
                   const isLeftEdge = cIndex === 0;
                   const isBottomEdge = rIndex === 7;
@@ -324,7 +340,7 @@ export default function ChessPlay() {
                   return (
                     <div 
                       key={squareLabel}
-                      className={`square ${isLight ? 'light' : 'dark'} ${isSelected ? 'selected' : ''}`}
+                      className={`square ${isLight ? 'light' : 'dark'} ${isSelected ? 'selected' : ''} ${isLastMove ? 'last-move' : ''}`}
                       onClick={() => handleSquareClick(squareLabel)}
                     >
                       {rankLabel && <span className="coord-rank">{rankLabel}</span>}
@@ -359,9 +375,16 @@ export default function ChessPlay() {
 
           <div className="game-controls" style={{ order: 4 }}>
             {gameState !== 'playing' ? (
-              <button className="btn primary" onClick={resetGame}>
-                <Play size={18} /> Rematch
-              </button>
+              <>
+                <button className="btn primary" onClick={resetGame}>
+                  <Play size={18} /> Rematch
+                </button>
+                {!showOverlay && (
+                  <button className="btn" onClick={() => setShowOverlay(true)} style={{ background: '#fff8e1', color: '#f57f17' }}>
+                    Show Results
+                  </button>
+                )}
+              </>
             ) : (
               <>
                 <button className="btn" onClick={() => setIsFlipped(!isFlipped)}>
