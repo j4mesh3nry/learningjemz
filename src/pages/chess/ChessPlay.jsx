@@ -172,7 +172,7 @@ export default function ChessPlay() {
 
     workerRef.current.postMessage({ 
       fen: game.fen(), 
-      depth: difficulty === 'Hard' ? 3 : 2, 
+      depth: difficulty === 'Hard' ? 4 : difficulty === 'Medium' ? 3 : 2, 
       difficulty 
     });
   }, [game, difficulty, updateGame, gameState]);

@@ -163,8 +163,11 @@ export function getBestMove(game, depth = 3, difficulty = 'Hard') {
     if (bookMove) return bookMove;
   }
 
-  // Easy mode: 30% blunder rate (pick a completely random move instead of best move)
-  if (difficulty === 'Easy' && Math.random() < 0.3) {
+  // Blunder rates: Easy makes mostly random moves, Medium occasionally blunders
+  if (difficulty === 'Easy' && Math.random() < 0.75) {
+    return moves[Math.floor(Math.random() * moves.length)];
+  }
+  if (difficulty === 'Medium' && Math.random() < 0.15) {
     return moves[Math.floor(Math.random() * moves.length)];
   }
 
