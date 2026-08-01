@@ -41,10 +41,12 @@ export default function ChessPlay() {
   const [promotionPending, setPromotionPending] = useState(null);
   const [victoryStats, setVictoryStats] = useState(null);
   const [igniting, setIgniting] = useState(false);
+  const [igniting, setIgniting] = useState(false);
   const [displayedStreak, setDisplayedStreak] = useState(0);
   const [selectedOpponent, setSelectedOpponent] = useState(null);
   const [playerColor, setPlayerColor] = useState('w');
   const navigate = useNavigate();
+  const historyScrollRef = React.useRef(null);
   const { winChessGame, recordChessGame, addXp, level, streak, recordActivity, hasPlayedToday, botStats } = useGame();
   const { user } = useAuth();
   const workerRef = React.useRef(null);
@@ -157,6 +159,11 @@ export default function ChessPlay() {
         const newGame = new Chess(game.fen());
         newGame.move(move);
         updateGame(newGame);
+        setTimeout(() => {
+          if (historyScrollRef.current) {
+            historyScrollRef.current.scrollTop = historyScrollRef.current.scrollHeight;
+          }
+        }, 50);
       } else {
         console.error(message);
       }
@@ -199,6 +206,11 @@ export default function ChessPlay() {
             promotion: 'q'
           });
           updateGame(newGame);
+          setTimeout(() => {
+            if (historyScrollRef.current) {
+              historyScrollRef.current.scrollTop = historyScrollRef.current.scrollHeight;
+            }
+          }, 50);
         } catch (e) {
           console.error(e);
         }
@@ -302,6 +314,11 @@ export default function ChessPlay() {
         promotion: pieceType
       });
       updateGame(newGame);
+      setTimeout(() => {
+        if (historyScrollRef.current) {
+          historyScrollRef.current.scrollTop = historyScrollRef.current.scrollHeight;
+        }
+      }, 50);
     } catch (e) {
       console.error(e);
     }
@@ -317,6 +334,37 @@ export default function ChessPlay() {
   };
 
   const lastMove = history.length > 0 ? history[history.length - 1] : null;
+
+  const renderHistoryMove = (move, isLastMove) => {
+    if (!move) return null;
+    const isPawn = move.piece === 'p';
+    const sanText = isPawn ? move.san : move.san.replace(/^[NBRQK]/, '');
+    
+    return (
+      <div style={{ 
+        display: 'flex', alignItems: 'center', gap: 6, 
+        padding: '4px 8px', borderRadius: 6,
+        background: isLastMove ? 'rgba(28, 124, 84, 0.1)' : 'transparent',
+        border: isLastMove ? '1px solid rgba(28, 124, 84, 0.3)' : '1px solid transparent',
+      }}>
+        {!isPawn && (
+          <img 
+            src={PIECE_IMAGES[move.color][move.piece]} 
+            alt={move.piece} 
+            style={{ width: 14, height: 14, opacity: 0.9 }} 
+          />
+        )}
+        <span style={{ 
+          color: isLastMove ? '#1c7c54' : '#444', 
+          fontWeight: isLastMove ? 800 : 600,
+          fontFamily: 'monospace',
+          fontSize: '0.9rem'
+        }}>
+          {sanText}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <div className="chess-module-page">
@@ -634,24 +682,33 @@ export default function ChessPlay() {
             )}
           </div>
           
-          <div className="move-history-panel" style={{ order: 5, marginTop: 20, background: '#fff', borderRadius: 8, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', border: '1px solid #eee', display: 'flex', flexDirection: 'column', height: 160 }}>
-            <div style={{ flex: 1, overflowY: 'auto', padding: 0 }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', fontFamily: 'monospace' }}>
+          <div className="move-history-panel" style={{ order: 5, marginTop: 20, background: '#fff', borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.06)', border: '1px solid #eaeaea', display: 'flex', flexDirection: 'column', height: 180 }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '10px 16px' }} ref={historyScrollRef}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <tbody>
                   {history.reduce((acc, curr, i) => {
                     if (i % 2 === 0) acc.push([curr]);
                     else acc[acc.length - 1].push(curr);
                     return acc;
-                  }, []).map((pair, i) => (
-                    <tr key={i} style={{ background: i % 2 === 0 ? '#f8f9fa' : '#ffffff' }}>
-                      <td style={{ padding: '4px 12px', color: '#888', width: '40px', borderRight: '1px solid #eee' }}>{i + 1}.</td>
-                      <td style={{ padding: '4px 16px', color: '#333', width: '50%', fontWeight: 600 }}>{pair[0].san}</td>
-                      <td style={{ padding: '4px 16px', color: '#333', width: '50%', fontWeight: 600 }}>{pair[1] ? pair[1].san : ''}</td>
-                    </tr>
-                  ))}
+                  }, []).map((pair, i) => {
+                    const isWhiteLast = pair.length === 1 && history.length === i * 2 + 1;
+                    const isBlackLast = pair.length === 2 && history.length === i * 2 + 2;
+                    
+                    return (
+                      <tr key={i} style={{ borderBottom: '1px solid #f5f5f5' }}>
+                        <td style={{ padding: '8px 12px', color: '#aaa', width: '40px', fontWeight: 700, fontSize: '0.85rem' }}>{i + 1}.</td>
+                        <td style={{ padding: '4px 12px', width: '50%' }}>
+                          {renderHistoryMove(pair[0], isWhiteLast)}
+                        </td>
+                        <td style={{ padding: '4px 12px', width: '50%' }}>
+                          {renderHistoryMove(pair[1], isBlackLast)}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
-              {history.length === 0 && <p style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', margin: '20px 0' }}>History</p>}
+              {history.length === 0 && <p style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', margin: '30px 0', fontWeight: 600 }}>Moves will appear here</p>}
             </div>
           </div>
         </div>
