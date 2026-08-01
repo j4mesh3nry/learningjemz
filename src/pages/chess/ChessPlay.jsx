@@ -38,8 +38,10 @@ export default function ChessPlay() {
   const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
   const [showRestartModal, setShowRestartModal] = useState(false);
   const [victoryStats, setVictoryStats] = useState(null);
+  const [igniting, setIgniting] = useState(false);
+  const [displayedStreak, setDisplayedStreak] = useState(0);
   const navigate = useNavigate();
-  const { winChessGame, addXp, level, streak, recordActivity } = useGame();
+  const { winChessGame, addXp, level, streak, recordActivity, hasPlayedToday } = useGame();
   const { user } = useAuth();
   
   const playerName = user?.user_metadata?.name || 'You';
@@ -53,14 +55,26 @@ export default function ChessPlay() {
     if (newGame.isCheckmate()) {
       setGameState('checkmate');
       if (newGame.turn() === 'b') {
+        const oldStreak = streak;
         winChessGame();
         const streakIncreased = recordActivity();
+        
         setVictoryStats({ streakIncreased, xpGained: 15 });
+        setDisplayedStreak(oldStreak);
+        
+        if (streakIncreased) {
+          setTimeout(() => {
+            setIgniting(true);
+            setDisplayedStreak(oldStreak + 1);
+          }, 800);
+        } else {
+          setDisplayedStreak(oldStreak); // Wait, oldStreak is correct since it didn't increase
+        }
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
     }
-  }, [winChessGame, recordActivity]);
+  }, [winChessGame, recordActivity, streak]);
 
   const makeAIMove = useCallback(() => {
     if (game.isGameOver() || gameState !== 'playing') return;
@@ -143,6 +157,7 @@ export default function ChessPlay() {
     setGameState('playing');
     setShowRestartModal(false);
     setVictoryStats(null);
+    setIgniting(false);
   };
 
   const handleRestartClick = () => {
@@ -167,6 +182,7 @@ export default function ChessPlay() {
               setDifficulty(null);
               setGameState('playing');
               setVictoryStats(null);
+              setIgniting(false);
               updateGame(new Chess());
               setSelectedSquare(null);
               setLegalMoves([]);
@@ -187,8 +203,8 @@ export default function ChessPlay() {
             background: '#fff5f5', padding: '2px 8px', borderRadius: 12,
             border: '1px solid #ffcdd2',
           }}>
-            <span style={{ fontSize: '0.75rem' }}>🔥</span>
-            <span style={{ fontWeight: 800, fontSize: '0.7rem', color: '#e53935' }}>{streak}</span>
+            <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '0.75rem' }}>🔥</span>
+            <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 800, fontSize: '0.7rem', color: '#e53935' }}>{streak}</span>
           </div>
           <div onClick={() => navigate('/profile')} style={{
             display: 'flex', alignItems: 'center', gap: 3,
@@ -277,9 +293,9 @@ export default function ChessPlay() {
                 </p>
                 {victoryStats && (
                   <div className="victory-stats-container">
-                    <div className="victory-stat-card" style={{ animationDelay: '0.1s' }}>
-                      <div className="stat-icon">🔥</div>
-                      <div className="stat-value">{victoryStats.streakIncreased ? '+1' : '+0'}</div>
+                    <div className={`victory-stat-card ${igniting ? 'igniting' : ''}`} style={{ animationDelay: '0.1s' }}>
+                      <div className={`stat-icon ${!hasPlayedToday && !igniting ? 'unlit-icon' : ''}`}>🔥</div>
+                      <div className={`stat-value ${!hasPlayedToday && !igniting ? 'unlit-text' : ''}`}>{displayedStreak}</div>
                       <div className="stat-label">Day Streak</div>
                     </div>
                     <div className="victory-stat-card" style={{ animationDelay: '0.2s' }}>

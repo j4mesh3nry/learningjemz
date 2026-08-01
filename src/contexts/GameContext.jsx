@@ -234,8 +234,11 @@ export function GameProvider({ children }) {
     setState(prev => ({ ...prev, quizHighScore: Math.max(prev.quizHighScore, score) }));
   };
 
+  const hasPlayedToday = state.lastVisit === new Date().toDateString();
+
   const value = { 
     ...state, 
+    hasPlayedToday,
     addXp,
     winChessGame,
     solvePuzzle,

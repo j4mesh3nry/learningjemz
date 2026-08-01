@@ -82,7 +82,7 @@ function StarDots() {
 import { Gem } from 'lucide-react';
 
 export default function Home() {
-  const { xp, level, streak } = useGame();
+  const { xp, level, streak, hasPlayedToday } = useGame();
   const xpInLevel = xp - (level - 1) * 100;
   const pct = Math.min(xpInLevel, 100);
 
@@ -125,17 +125,11 @@ export default function Home() {
               Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
             </h1>
           </div>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            {/* Streak badge */}
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 4,
-              background: '#fff5f5', padding: '4px 10px', borderRadius: 20,
-              border: '1px solid #ffcdd2',
-            }}>
-              <span style={{ fontSize: '1rem' }}>🔥</span>
-              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#e53935' }}>{streak}</span>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '0.85rem' }}>🔥</span>
+              <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 700, fontSize: '0.85rem', color: '#e53935' }}>{streak}</span>
             </div>
-            {/* Level badge */}
             <Link to="/profile" style={{
               display: 'flex', alignItems: 'center', gap: 4,
               background: '#fff8e1', padding: '4px 10px', borderRadius: 20,

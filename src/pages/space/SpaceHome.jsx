@@ -8,7 +8,7 @@ import './space.css';
 
 const SpaceHub = () => {
   const navigate = useNavigate();
-  const { xp, level, streak, flashcardsMastered, quizHighScore } = useGame();
+  const { xp, level, streak, flashcardsMastered, quizHighScore, hasPlayedToday } = useGame();
 
   return (
     <div className="space-module-page">
@@ -37,8 +37,8 @@ const SpaceHub = () => {
             background: '#fff5f5', padding: '2px 8px', borderRadius: 12,
             border: '1px solid #ffcdd2',
           }}>
-            <span style={{ fontSize: '0.75rem' }}>🔥</span>
-            <span style={{ fontWeight: 800, fontSize: '0.7rem', color: '#e53935' }}>{streak}</span>
+            <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '0.75rem' }}>🔥</span>
+            <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 800, fontSize: '0.7rem', color: '#e53935' }}>{streak}</span>
           </div>
           <div onClick={() => navigate('/profile')} style={{
             display: 'flex', alignItems: 'center', gap: 3,

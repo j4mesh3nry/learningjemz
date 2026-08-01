@@ -10,6 +10,7 @@ import '../index.css';
 export default function Profile() {
   const stats = useGame();
   const { xp, level, streak } = stats;
+  const { hasPlayedToday } = useGame();
   const { user, logout } = useAuth();
   
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -116,15 +117,11 @@ export default function Profile() {
       </div>
 
       {/* Stats Row (Streak & XP) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
-        <div style={{
-          padding: 20, borderRadius: 20, border: '2px solid #ffebee',
-          background: '#fffafafa', display: 'flex', flexDirection: 'column', alignItems: 'center',
-          boxShadow: '0 8px 16px rgba(255,77,77,0.06)'
-        }}>
-          <Flame size={36} color="#ff4d4d" style={{ fill: '#ff4d4d' }} />
-          <strong style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)' }}>{streak}</strong>
-          <span style={{ fontSize: '0.85rem', color: 'var(--color-muted)', fontWeight: 500 }}>Day Streak</span>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 30 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#fff', padding: 20, borderRadius: 12, border: '1px solid #ffebee' }}>
+          <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '2rem' }}>🔥</span>
+          <strong className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)' }}>{streak}</strong>
+          <span style={{ color: '#666', fontSize: '0.9rem' }}>Day Streak</span>
         </div>
         
         <div style={{
