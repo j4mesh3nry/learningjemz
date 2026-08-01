@@ -2,6 +2,8 @@
 /* Global design system – mobile‑first, Duolingo‑style gamified theme */
 
 :root {
+  color-scheme: light;
+  
   /* Primary palette */
   --color-primary: #1c7c54; /* emerald green for chess */
   --color-primary-light: #4caf50;
