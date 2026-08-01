@@ -140,7 +140,12 @@ const ReadingDashboard = () => {
           <button className="reading-back-btn" onClick={() => navigate('/')} title="Back to Home">
             ←
           </button>
-          <h1 className="reading-page-title">📖 Reading</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#d16f2c">
+              <path d="M21 4H14a3 3 0 0 0-2 1a3 3 0 0 0-2-1H3v15h7a3 3 0 0 1 2 1 3 3 0 0 1 2-1h7V4z"/>
+            </svg>
+            <h1 className="reading-page-title" style={{ margin: 0, color: '#d16f2c', fontSize: '1.8rem', fontWeight: 900 }}>Reading</h1>
+          </div>
         </div>
 
         <div className="reading-badges">

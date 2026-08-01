@@ -18,7 +18,13 @@ const SpaceHub = () => {
           <button className="space-back-btn" onClick={() => navigate('/')} title="Back to Home">
             ←
           </button>
-          <h1 className="space-page-title">🪐 Space</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#111324" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="7" fill="#111324" stroke="none" />
+              <ellipse cx="12" cy="12" rx="12" ry="4" transform="rotate(-20 12 12)" />
+            </svg>
+            <h1 className="space-page-title" style={{ margin: 0, color: '#111324', fontSize: '1.8rem', fontWeight: 900 }}>Space</h1>
+          </div>
         </div>
 
         <div className="space-badges">

@@ -17,7 +17,12 @@ function GeoDashboard() {
           <button className="geo-back-btn" onClick={() => navigate('/')} title="Back to Home">
             ←
           </button>
-          <h1 className="geo-page-title">🌍 Geography</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#0066cc">
+              <circle cx="12" cy="12" r="10" />
+            </svg>
+            <h1 className="geo-page-title" style={{ margin: 0, color: '#0066cc', fontSize: '1.8rem', fontWeight: 900 }}>Geography</h1>
+          </div>
         </div>
 
         <div className="geo-badges">
