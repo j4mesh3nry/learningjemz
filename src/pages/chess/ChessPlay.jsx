@@ -140,7 +140,9 @@ export default function ChessPlay() {
           setDisplayedStreak(oldStreak);
         }
       } else {
+        // Bot wins
         recordChessGame(difficulty, false);
+        recordActivity(); // Award streak for trying
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
@@ -311,6 +313,10 @@ export default function ChessPlay() {
   };
 
   const confirmRestart = () => {
+    if (game.history().length > 0 && gameState === 'playing') {
+      recordChessGame(difficulty, false);
+      recordActivity();
+    }
     setShowRestartModal(false);
     resetGame();
   };
@@ -326,6 +332,10 @@ export default function ChessPlay() {
   const confirmBack = () => {
     setShowBackModal(false);
     if (difficulty) {
+      if (game.history().length > 0 && gameState === 'playing') {
+        recordChessGame(difficulty, false);
+        recordActivity();
+      }
       setDifficulty(null);
       setGameState('playing');
       setVictoryStats(null);
@@ -342,6 +352,7 @@ export default function ChessPlay() {
     setGameState('resigned');
     setShowOverlay(true);
     recordChessGame(difficulty, false);
+    recordActivity(); // Award streak for trying
   };
 
   const handlePromotionSelect = (pieceType) => {
