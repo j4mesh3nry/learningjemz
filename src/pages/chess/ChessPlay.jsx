@@ -41,7 +41,6 @@ export default function ChessPlay() {
   const [promotionPending, setPromotionPending] = useState(null);
   const [victoryStats, setVictoryStats] = useState(null);
   const [igniting, setIgniting] = useState(false);
-  const [igniting, setIgniting] = useState(false);
   const [displayedStreak, setDisplayedStreak] = useState(0);
   const [selectedOpponent, setSelectedOpponent] = useState(null);
   const [playerColor, setPlayerColor] = useState('w');
