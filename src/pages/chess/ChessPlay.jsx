@@ -43,6 +43,8 @@ export default function ChessPlay() {
   const [victoryStats, setVictoryStats] = useState(null);
   const [igniting, setIgniting] = useState(false);
   const [displayedStreak, setDisplayedStreak] = useState(0);
+  const [selectedOpponent, setSelectedOpponent] = useState(null);
+  const [playerColor, setPlayerColor] = useState('w');
   const navigate = useNavigate();
   const { winChessGame, addXp, level, streak, recordActivity, hasPlayedToday } = useGame();
   const { user } = useAuth();
@@ -103,7 +105,7 @@ export default function ChessPlay() {
     if (newGame.isCheckmate()) {
       setGameState('checkmate');
       setShowOverlay(true);
-      if (newGame.turn() === 'b') {
+      if (newGame.turn() !== playerColor) {
         const oldStreak = streak;
         winChessGame();
         const streakIncreased = recordActivity();
@@ -117,14 +119,14 @@ export default function ChessPlay() {
             setDisplayedStreak(oldStreak + 1);
           }, 800);
         } else {
-          setDisplayedStreak(oldStreak); // Wait, oldStreak is correct since it didn't increase
+          setDisplayedStreak(oldStreak);
         }
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
       setShowOverlay(true);
     }
-  }, [winChessGame, recordActivity, streak]);
+  }, [winChessGame, recordActivity, streak, playerColor]);
 
   const makeAIMove = useCallback(() => {
     if (game.isGameOver() || gameState !== 'playing') return;
@@ -156,13 +158,15 @@ export default function ChessPlay() {
   }, [game, difficulty, updateGame]);
 
   useEffect(() => {
-    if (game.turn() === 'b' && !game.isGameOver()) {
+    const botColor = playerColor === 'w' ? 'b' : 'w';
+    if (gameState === 'playing' && difficulty && game.turn() === botColor && !game.isGameOver()) {
       makeAIMove();
     }
-  }, [game, makeAIMove]);
+  }, [game, makeAIMove, playerColor, gameState, difficulty]);
 
   const handleSquareClick = (square) => {
-    if (game.turn() === 'b' || game.isGameOver() || gameState !== 'playing') return;
+    const botColor = playerColor === 'w' ? 'b' : 'w';
+    if (game.turn() === botColor || game.isGameOver() || gameState !== 'playing') return;
 
     if (selectedSquare) {
       const possibleMoves = legalMoves.filter(m => m.to === square);
@@ -209,6 +213,25 @@ export default function ChessPlay() {
 
   const resetGame = () => {
     updateGame(new Chess());
+    setSelectedSquare(null);
+    setLegalMoves([]);
+    setGameState('playing');
+    setShowRestartModal(false);
+    setShowOverlay(true);
+    setVictoryStats(null);
+    setIgniting(false);
+    setPromotionPending(null);
+    setIsFlipped(playerColor === 'b');
+  };
+
+  const startGame = (diff, color) => {
+    setPlayerColor(color);
+    setDifficulty(diff);
+    setSelectedOpponent(null);
+    setIsFlipped(color === 'b');
+    
+    const newGame = new Chess();
+    updateGame(newGame);
     setSelectedSquare(null);
     setLegalMoves([]);
     setGameState('playing');
@@ -317,26 +340,44 @@ export default function ChessPlay() {
         <div className="opponent-selection-screen">
           <h2 style={{ textAlign: 'center', marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333' }}>Choose Your Opponent</h2>
           <div className="opponent-cards">
-            <div className="opponent-card easy" onClick={() => setDifficulty('Easy')}>
+            <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-avatar"><Bot size={40} color="#4caf50" /></div>
-              <div className="opponent-info">
+              <div className="opponent-info" style={{ flex: 1 }}>
                 <h3>Beginner Bob</h3>
                 <p>Easy • Makes random moves</p>
               </div>
+              {selectedOpponent === 'Easy' && (
+                <div style={{ display: 'flex', gap: 8, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
+                  <button className="color-btn white" onClick={() => startGame('Easy', 'w')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#f5f5f5', border: '2px solid #ccc', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚪</button>
+                  <button className="color-btn black" onClick={() => startGame('Easy', 'b')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#333', border: '2px solid #222', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚫</button>
+                </div>
+              )}
             </div>
-            <div className="opponent-card medium" onClick={() => setDifficulty('Medium')}>
+            <div className={`opponent-card medium ${selectedOpponent === 'Medium' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Medium' ? null : 'Medium')}>
               <div className="opponent-avatar"><BrainCircuit size={40} color="#ff9800" /></div>
-              <div className="opponent-info">
+              <div className="opponent-info" style={{ flex: 1 }}>
                 <h3>Intermediate Ivy</h3>
                 <p>Medium • Looks for captures</p>
               </div>
+              {selectedOpponent === 'Medium' && (
+                <div style={{ display: 'flex', gap: 8, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
+                  <button className="color-btn white" onClick={() => startGame('Medium', 'w')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#f5f5f5', border: '2px solid #ccc', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚪</button>
+                  <button className="color-btn black" onClick={() => startGame('Medium', 'b')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#333', border: '2px solid #222', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚫</button>
+                </div>
+              )}
             </div>
-            <div className="opponent-card hard" onClick={() => setDifficulty('Hard')}>
+            <div className={`opponent-card hard ${selectedOpponent === 'Hard' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Hard' ? null : 'Hard')}>
               <div className="opponent-avatar"><Cpu size={40} color="#f44336" /></div>
-              <div className="opponent-info">
+              <div className="opponent-info" style={{ flex: 1 }}>
                 <h3>Grandmaster Gary</h3>
                 <p>Hard • Calculates deeply</p>
               </div>
+              {selectedOpponent === 'Hard' && (
+                <div style={{ display: 'flex', gap: 8, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
+                  <button className="color-btn white" onClick={() => startGame('Hard', 'w')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#f5f5f5', border: '2px solid #ccc', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚪</button>
+                  <button className="color-btn black" onClick={() => startGame('Hard', 'b')} style={{ width: 44, height: 44, borderRadius: '50%', background: '#333', border: '2px solid #222', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>⚫</button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -440,12 +481,12 @@ export default function ChessPlay() {
             )}
             
             {(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && showOverlay && (
-              <div className={`game-over-overlay ${gameState === 'checkmate' && game.turn() === 'b' ? 'win' : ''}`}>
+              <div className={`game-over-overlay ${gameState === 'checkmate' && game.turn() !== playerColor ? 'win' : ''}`}>
                 <h2>{gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : 'Checkmate!'}</h2>
                 <p>
                   {gameState === 'resigned' ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!` :
                    gameState === 'draw' ? 'The game is a draw.' :
-                   game.turn() === 'b' ? 'You win!' : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
+                   game.turn() !== playerColor ? 'You win!' : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
                 </p>
                 {victoryStats && (
                   <div className="victory-stats-container">
