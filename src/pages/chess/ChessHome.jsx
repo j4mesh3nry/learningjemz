@@ -30,10 +30,6 @@ function ChessMenu() {
             <span>⭐</span>
             <span>Lv.{level}</span>
           </div>
-          <div className="chess-badge xp">
-            <span>✨</span>
-            <span>{xp} XP</span>
-          </div>
         </div>
       </div>
 
