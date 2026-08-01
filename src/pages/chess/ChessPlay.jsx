@@ -472,7 +472,7 @@ export default function ChessPlay() {
         <>
         <div className="chess-play-layout">
           
-          <div className={`player-profile-banner ${isFlipped ? 'bottom' : ''}`} style={{ order: isFlipped ? 3 : 1 }}>
+          <div className="player-profile-banner">
             <div className="player-avatar">
               {difficulty === 'Easy' ? <Bot size={24} color="#4caf50" /> : 
                difficulty === 'Medium' ? <BrainCircuit size={24} color="#ff9800" /> : 
@@ -634,7 +634,7 @@ export default function ChessPlay() {
             </div>
           </div>
 
-          <div className={`player-profile-banner ${isFlipped ? '' : 'bottom'}`} style={{ order: isFlipped ? 1 : 3 }}>
+          <div className="player-profile-banner">
             <div className="player-avatar" style={{ background: '#e3f2fd', fontSize: '1.2rem' }}>
               {playerAvatar}
             </div>
@@ -659,7 +659,7 @@ export default function ChessPlay() {
             </div>
           </div>
 
-          <div className="game-controls" style={{ order: 4 }}>
+          <div className="game-controls">
             {gameState !== 'playing' ? (
               <>
                 <button className="btn primary" onClick={resetGame}>
