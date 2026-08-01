@@ -18,16 +18,16 @@ const SpaceHub = () => {
           <button className="space-back-btn" onClick={() => navigate('/')} title="Back to Home">
             ←
           </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{
-              fontSize: '1.4rem', width: 38, height: 38,
+              fontSize: '1.1rem', width: 30, height: 30,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%)', borderRadius: 10,
-              boxShadow: '0 4px 10px rgba(26,26,62,0.3)'
+              background: 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%)', borderRadius: 8,
+              boxShadow: '0 2px 6px rgba(26,26,62,0.3)'
             }}>
               🪐
             </div>
-            <h1 className="space-page-title" style={{ margin: 0, color: '#111324', fontSize: '1.6rem', fontWeight: 900 }}>Space</h1>
+            <h1 className="space-page-title" style={{ margin: 0, color: '#111324', fontSize: '1.4rem', fontWeight: 900 }}>Space</h1>
           </div>
         </div>
 
