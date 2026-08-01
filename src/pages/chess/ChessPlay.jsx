@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Chess } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
-import { RotateCw, Flag, Play } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu } from 'lucide-react';
+import { getBestMove } from '../../utils/chessEngine';
 import './chess.css';
 
 import w_p from '../../assets/pieces/w_p.svg';
@@ -27,11 +28,12 @@ export default function ChessPlay() {
   const [board, setBoard] = useState(game.board());
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [legalMoves, setLegalMoves] = useState([]);
-  const [difficulty, setDifficulty] = useState('Easy'); // Easy, Medium, Hard
+  const [difficulty, setDifficulty] = useState(null); // null means in selection screen
   const [isFlipped, setIsFlipped] = useState(false);
   const [status, setStatus] = useState('');
   const [history, setHistory] = useState([]);
-  const { winChessGame } = useGame();
+  const [isThinking, setIsThinking] = useState(false);
+  const { winChessGame, addXp } = useGame();
 
   const updateGame = useCallback((newGame) => {
     setGame(newGame);
@@ -42,6 +44,7 @@ export default function ChessPlay() {
       setStatus(`Checkmate! ${newGame.turn() === 'w' ? 'Black' : 'White'} wins!`);
       if (newGame.turn() === 'b') {
         winChessGame();
+        addXp(50);
       }
     } else if (newGame.isDraw()) {
       setStatus('Draw!');
@@ -50,35 +53,35 @@ export default function ChessPlay() {
     } else {
       setStatus('');
     }
-  }, [addXp]);
+  }, [addXp, winChessGame]);
 
   const makeAIMove = useCallback(() => {
     if (game.isGameOver()) return;
 
+    setIsThinking(true);
     setTimeout(() => {
       const moves = game.moves({ verbose: true });
-      if (moves.length === 0) return;
+      if (moves.length === 0) {
+        setIsThinking(false);
+        return;
+      }
 
       let move;
       if (difficulty === 'Easy') {
         move = moves[Math.floor(Math.random() * moves.length)];
       } else if (difficulty === 'Medium') {
-        const captures = moves.filter(m => m.flags.includes('c'));
-        if (captures.length > 0) {
-          move = captures[Math.floor(Math.random() * captures.length)];
-        } else {
-          move = moves[Math.floor(Math.random() * moves.length)];
-        }
+        move = getBestMove(game, 2) || moves[0];
       } else {
-        // Hard mode placeholder: just random for now if worker fails, but try to use logic
-        const checks = moves.filter(m => m.san.includes('+'));
-        move = checks.length ? checks[0] : moves[Math.floor(Math.random() * moves.length)];
+        move = getBestMove(game, 3) || moves[0];
       }
 
-      const newGame = new Chess(game.fen());
-      newGame.move(move.san);
-      updateGame(newGame);
-    }, 500);
+      if (move) {
+        const newGame = new Chess(game.fen());
+        newGame.move(move.san);
+        updateGame(newGame);
+      }
+      setIsThinking(false);
+    }, 100);
   }, [game, difficulty, updateGame]);
 
   useEffect(() => {
@@ -132,18 +135,42 @@ export default function ChessPlay() {
     setLegalMoves([]);
   };
 
+  if (!difficulty) {
+    return (
+      <div className="opponent-selection-screen">
+        <h2 style={{ textAlign: 'center', marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333' }}>Choose Your Opponent</h2>
+        <div className="opponent-cards">
+          <div className="opponent-card easy" onClick={() => setDifficulty('Easy')}>
+            <div className="opponent-avatar"><Bot size={40} color="#4caf50" /></div>
+            <div className="opponent-info">
+              <h3>Beginner Bob</h3>
+              <p>Easy • Makes random moves</p>
+            </div>
+          </div>
+          <div className="opponent-card medium" onClick={() => setDifficulty('Medium')}>
+            <div className="opponent-avatar"><BrainCircuit size={40} color="#ff9800" /></div>
+            <div className="opponent-info">
+              <h3>Intermediate Ivy</h3>
+              <p>Medium • Looks for captures</p>
+            </div>
+          </div>
+          <div className="opponent-card hard" onClick={() => setDifficulty('Hard')}>
+            <div className="opponent-avatar"><Cpu size={40} color="#f44336" /></div>
+            <div className="opponent-info">
+              <h3>Grandmaster Gary</h3>
+              <p>Hard • Calculates deeply</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div className="difficulty-selector">
-        {['Easy', 'Medium', 'Hard'].map(level => (
-          <div 
-            key={level}
-            className={`difficulty-pill ${difficulty === level ? 'active' : ''}`}
-            onClick={() => setDifficulty(level)}
-          >
-            {level}
-          </div>
-        ))}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <div style={{ fontWeight: 'bold', color: '#555' }}>vs {difficulty} AI</div>
+        {isThinking && <div className="thinking-indicator">AI is thinking...</div>}
       </div>
 
       {status && (

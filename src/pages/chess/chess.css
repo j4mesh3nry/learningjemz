@@ -195,3 +195,89 @@
   align-items: center;
   gap: 4px;
 }
+
+/* Opponent Selection Screen */
+.opponent-selection-screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px 0;
+}
+
+.opponent-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.opponent-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border: 2px solid #eaeaea;
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.opponent-card:hover {
+  transform: translateY(-2px);
+}
+
+.opponent-card.easy:hover {
+  border-color: #4caf50;
+  box-shadow: 0 6px 15px rgba(76, 175, 80, 0.15);
+}
+
+.opponent-card.medium:hover {
+  border-color: #ff9800;
+  box-shadow: 0 6px 15px rgba(255, 152, 0, 0.15);
+}
+
+.opponent-card.hard:hover {
+  border-color: #f44336;
+  box-shadow: 0 6px 15px rgba(244, 67, 54, 0.15);
+}
+
+.opponent-avatar {
+  background: #f8f9fa;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.opponent-card.easy .opponent-avatar { background: #e8f5e9; }
+.opponent-card.medium .opponent-avatar { background: #fff3e0; }
+.opponent-card.hard .opponent-avatar { background: #ffebee; }
+
+.opponent-info h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.opponent-info p {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.thinking-indicator {
+  font-size: 0.85rem;
+  color: #ff9800;
+  font-weight: bold;
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
