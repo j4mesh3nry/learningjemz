@@ -153,8 +153,9 @@ export default function ChessPlay() {
 
     setIsThinking(true);
     
-    // Beginner Bob (Easy) intentionally blunders by making a random move 50% of the time
-    if (difficulty === 'Easy' && Math.random() < 0.5) {
+    // Beginner Bob (Easy) intentionally blunders by making a random move 90% of the time
+    // This makes him extremely easy to beat and checkmate for absolute beginners.
+    if (difficulty === 'Easy' && Math.random() < 0.9) {
       setTimeout(() => {
         const moves = game.moves();
         const randomMove = moves[Math.floor(Math.random() * moves.length)];
