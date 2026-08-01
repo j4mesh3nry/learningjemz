@@ -595,20 +595,20 @@ export default function ChessPlay() {
               </div>
             )}
 
-            <div className={`board-container ${isFlipped ? 'flipped' : ''}`}>
-              {board.map((row, rIndex) => {
-                return row.map((piece, cIndex) => {
+            <div className={`board-container`}>
+              {(isFlipped ? [...board].reverse() : board).map((row, rIndexMapped) => {
+                const rIndex = isFlipped ? 7 - rIndexMapped : rIndexMapped;
+                return (isFlipped ? [...row].reverse() : row).map((piece, cIndexMapped) => {
+                  const cIndex = isFlipped ? 7 - cIndexMapped : cIndexMapped;
                   const squareLabel = getSquareLabel(rIndex, cIndex);
                   const isLight = (rIndex + cIndex) % 2 === 0;
                   const isSelected = selectedSquare === squareLabel;
                   const isLegal = legalMoves.some(m => m.to === squareLabel);
                   const isLastMove = lastMove && (lastMove.from === squareLabel || lastMove.to === squareLabel);
-                  
-                  const isLeftEdge = isFlipped ? cIndex === 7 : cIndex === 0;
-                  const isBottomEdge = isFlipped ? rIndex === 0 : rIndex === 7;
+                  const isLeftEdge = cIndexMapped === 0;
+                  const isBottomEdge = rIndexMapped === 7;
                   const rankLabel = isLeftEdge ? (8 - rIndex) : null;
                   const fileLabel = isBottomEdge ? String.fromCharCode(97 + cIndex) : null;
-                  const labelStyle = { transform: isFlipped ? 'rotate(180deg)' : 'none', transformOrigin: 'center' };
 
                   return (
                     <div 
@@ -616,8 +616,8 @@ export default function ChessPlay() {
                       className={`square ${isLight ? 'light' : 'dark'} ${isSelected ? 'selected' : ''} ${isLastMove ? 'last-move' : ''}`}
                       onClick={() => handleSquareClick(squareLabel)}
                     >
-                      {rankLabel && <span className="coord-rank" style={labelStyle}>{rankLabel}</span>}
-                      {fileLabel && <span className="coord-file" style={labelStyle}>{fileLabel}</span>}
+                      {rankLabel && <span className="coord-rank">{rankLabel}</span>}
+                      {fileLabel && <span className="coord-file">{fileLabel}</span>}
                       
                       {piece && (
                         <img 
