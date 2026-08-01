@@ -154,6 +154,7 @@ export function GameProvider({ children }) {
 
     if (user) {
       const dbPayload = {
+        id: user.id,
         xp: state.xp,
         level: state.level,
         streak: state.streak,
@@ -171,7 +172,7 @@ export function GameProvider({ children }) {
         avatar: user.user_metadata?.avatar || '👤'
       };
       
-      supabase.from('game_progress').update(dbPayload).eq('id', user.id).then();
+      supabase.from('game_progress').upsert(dbPayload).then();
     }
   }, [state, user]);
 
