@@ -51,7 +51,8 @@ export default function ChessPlay() {
   const workerRef = React.useRef(null);
 
   useEffect(() => {
-    workerRef.current = new Worker(new URL('../../utils/chessWorker.js', import.meta.url), { type: 'module' });
+    workerRef.current = new Worker('/stockfish/stockfish.js');
+    workerRef.current.postMessage('uci');
     return () => {
       if (workerRef.current) workerRef.current.terminate();
     };
@@ -153,28 +154,41 @@ export default function ChessPlay() {
     setIsThinking(true);
     
     workerRef.current.onmessage = (e) => {
-      const { type, move, message } = e.data;
-      if (type === 'MOVE_FOUND') {
+      const message = typeof e.data === 'string' ? e.data : e.data.data;
+      if (message && message.startsWith('bestmove')) {
+        const moveStr = message.split(' ')[1]; // e.g. "e2e4"
         const newGame = new Chess();
         newGame.loadPgn(game.pgn());
-        newGame.move(move);
+        
+        const moveMatch = moveStr.match(/^([a-h][1-8])([a-h][1-8])([qrbn])?$/);
+        if (moveMatch) {
+          newGame.move({ from: moveMatch[1], to: moveMatch[2], promotion: moveMatch[3] });
+        } else {
+          newGame.move(moveStr); // Fallback
+        }
+        
         updateGame(newGame);
         setTimeout(() => {
           if (historyScrollRef.current) {
             historyScrollRef.current.scrollTop = historyScrollRef.current.scrollHeight;
           }
         }, 50);
-      } else {
-        console.error(message);
+        setIsThinking(false);
       }
-      setIsThinking(false);
     };
 
-    workerRef.current.postMessage({ 
-      fen: game.fen(), 
-      depth: difficulty === 'Hard' ? 4 : difficulty === 'Medium' ? 3 : 2, 
-      difficulty 
-    });
+    if (difficulty === 'Easy') {
+      workerRef.current.postMessage('setoption name Skill Level value 0');
+    } else if (difficulty === 'Medium') {
+      workerRef.current.postMessage('setoption name Skill Level value 10');
+    } else {
+      workerRef.current.postMessage('setoption name Skill Level value 20');
+    }
+
+    workerRef.current.postMessage(`position fen ${game.fen()}`);
+    const depth = difficulty === 'Hard' ? 15 : difficulty === 'Medium' ? 5 : 1;
+    workerRef.current.postMessage(`go depth ${depth}`);
+    
   }, [game, difficulty, updateGame, gameState]);
 
   useEffect(() => {
