@@ -1,6 +1,6 @@
 /* src/App.jsx */
-import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Home from './pages/Home.jsx';
 import Profile from './pages/Profile.jsx';
 import ChessHome from './pages/chess/ChessHome.jsx';
@@ -58,9 +58,18 @@ function BottomNav() {
 
 function Layout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const showNavPaths = ['/', '/leaderboards', '/store', '/profile'];
   const showNav = user && showNavPaths.includes(location.pathname);
+
+  // Force redirect to Home on refresh/initial mount
+  useEffect(() => {
+    // We don't redirect if they are on login/signup and not authenticated
+    if (location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/signup') {
+      navigate('/', { replace: true });
+    }
+  }, []);
 
   return (
     <div style={{ paddingBottom: showNav ? '65px' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>
