@@ -563,15 +563,41 @@
   color: #a5d6a7;
 }
 
-.streak-notification {
-  margin-top: 15px;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 8px 16px;
-  border-radius: 20px;
-  display: inline-block;
-  font-weight: bold;
-  color: white;
+.victory-stats-container {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.victory-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  min-width: 100px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
   animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation-fill-mode: both;
+}
+
+.victory-stat-card .stat-icon {
+  font-size: 1.8rem;
+}
+
+.victory-stat-card .stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #333;
+}
+
+.victory-stat-card .stat-label {
+  font-size: 0.8rem;
+  color: #777;
+  font-weight: 600;
 }
 
 @keyframes fadeIn {

@@ -37,7 +37,7 @@ export default function ChessPlay() {
   const [isThinking, setIsThinking] = useState(false);
   const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
   const [showRestartModal, setShowRestartModal] = useState(false);
-  const [streakMsg, setStreakMsg] = useState('');
+  const [victoryStats, setVictoryStats] = useState(null);
   const navigate = useNavigate();
   const { winChessGame, addXp, level, streak, recordActivity } = useGame();
   const { user } = useAuth();
@@ -55,7 +55,7 @@ export default function ChessPlay() {
       if (newGame.turn() === 'b') {
         winChessGame();
         const streakIncreased = recordActivity();
-        setStreakMsg(streakIncreased ? "🔥 Streak Increased!" : "✅ Daily Streak Sufficed!");
+        setVictoryStats({ streakIncreased, xpGained: 15 });
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
@@ -142,7 +142,7 @@ export default function ChessPlay() {
     setLegalMoves([]);
     setGameState('playing');
     setShowRestartModal(false);
-    setStreakMsg('');
+    setVictoryStats(null);
   };
 
   const handleRestartClick = () => {
@@ -166,7 +166,7 @@ export default function ChessPlay() {
             if (difficulty) {
               setDifficulty(null);
               setGameState('playing');
-              setStreakMsg('');
+              setVictoryStats(null);
               updateGame(new Chess());
               setSelectedSquare(null);
               setLegalMoves([]);
@@ -275,9 +275,18 @@ export default function ChessPlay() {
                    gameState === 'draw' ? 'The game is a draw.' :
                    game.turn() === 'b' ? 'You win!' : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
                 </p>
-                {streakMsg && (
-                  <div className="streak-notification">
-                    {streakMsg}
+                {victoryStats && (
+                  <div className="victory-stats-container">
+                    <div className="victory-stat-card" style={{ animationDelay: '0.1s' }}>
+                      <div className="stat-icon">🔥</div>
+                      <div className="stat-value">{victoryStats.streakIncreased ? '+1' : '+0'}</div>
+                      <div className="stat-label">Day Streak</div>
+                    </div>
+                    <div className="victory-stat-card" style={{ animationDelay: '0.2s' }}>
+                      <div className="stat-icon">🏆</div>
+                      <div className="stat-value">+{victoryStats.xpGained}</div>
+                      <div className="stat-label">Total XP</div>
+                    </div>
                   </div>
                 )}
               </div>
