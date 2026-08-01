@@ -341,7 +341,6 @@ export default function ChessPlay() {
               <div className="player-name">
                 {difficulty === 'Easy' ? 'Beginner Bob' : 
                  difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}
-                {isThinking && <span className="thinking-indicator" style={{ fontSize: '0.8rem' }}>(thinking...)</span>}
                 
                 {capturedStats.capturedByBlack.length > 0 && (
                   <>
@@ -355,7 +354,10 @@ export default function ChessPlay() {
                   </>
                 )}
               </div>
-              <div className="player-tagline">Bot • {difficulty}</div>
+              <div className="player-tagline">
+                Bot • {difficulty}
+                {isThinking && <span className="thinking-indicator" style={{ marginLeft: 6, fontSize: '0.75rem' }}>(thinking...)</span>}
+              </div>
             </div>
           </div>
 
