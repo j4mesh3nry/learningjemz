@@ -358,6 +358,11 @@
   grid-template-rows: repeat(8, 1fr);
   width: 100%;
   aspect-ratio: 1;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.board-container.flipped {
+  transform: rotate(180deg);
 }
 
 .square {
@@ -412,6 +417,17 @@
   z-index: 3;
 }
 
+.piece, .legal-move-dot, .coord-rank, .coord-file {
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.board-container.flipped .piece,
+.board-container.flipped .legal-move-dot,
+.board-container.flipped .coord-rank,
+.board-container.flipped .coord-file {
+  transform: rotate(-180deg);
+}
+
 .piece:active {
   cursor: grabbing;
 }
@@ -453,6 +469,97 @@
   padding: 16px;
   background: #f8f9fa;
   box-sizing: border-box;
+}
+
+/* Modals and Overlays */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 12px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.restart-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 85%;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.restart-modal h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-heading);
+  color: #333;
+}
+
+.restart-modal p {
+  margin: 0 0 20px;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.game-over-overlay {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  z-index: 5;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  animation: cinematicIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-top: 2px solid #ffb74d;
+  border-bottom: 2px solid #ffb74d;
+}
+
+.game-over-overlay h2 {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  font-family: var(--font-heading);
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.game-over-overlay p {
+  margin: 0;
+  color: #ffb74d;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cinematicIn {
+  from { opacity: 0; transform: translateY(-50%) scale(0.95); }
+  to { opacity: 1; transform: translateY(-50%) scale(1); }
 }
 
 .game-controls .btn {

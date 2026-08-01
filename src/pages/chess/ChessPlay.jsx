@@ -34,6 +34,8 @@ export default function ChessPlay() {
   const [status, setStatus] = useState('');
   const [history, setHistory] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
+  const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
+  const [showRestartModal, setShowRestartModal] = useState(false);
   const navigate = useNavigate();
   const { winChessGame, addXp, level, streak } = useGame();
 
@@ -43,22 +45,17 @@ export default function ChessPlay() {
     setHistory(newGame.history());
     
     if (newGame.isCheckmate()) {
-      setStatus(`Checkmate! ${newGame.turn() === 'w' ? 'Black' : 'White'} wins!`);
+      setGameState('checkmate');
       if (newGame.turn() === 'b') {
         winChessGame();
-        addXp(50);
       }
     } else if (newGame.isDraw()) {
-      setStatus('Draw!');
-    } else if (newGame.isCheck()) {
-      setStatus('Check!');
-    } else {
-      setStatus('');
+      setGameState('draw');
     }
-  }, [addXp, winChessGame]);
+  }, [winChessGame]);
 
   const makeAIMove = useCallback(() => {
-    if (game.isGameOver()) return;
+    if (game.isGameOver() || gameState !== 'playing') return;
 
     setIsThinking(true);
     setTimeout(() => {
@@ -93,7 +90,7 @@ export default function ChessPlay() {
   }, [game, makeAIMove]);
 
   const handleSquareClick = (square) => {
-    if (game.turn() === 'b' || game.isGameOver()) return;
+    if (game.turn() === 'b' || game.isGameOver() || gameState !== 'playing') return;
 
     if (selectedSquare) {
       const move = legalMoves.find(m => m.to === square);
@@ -126,8 +123,8 @@ export default function ChessPlay() {
   };
 
   const getSquareLabel = (r, c) => {
-    const row = isFlipped ? r + 1 : 8 - r;
-    const col = isFlipped ? String.fromCharCode(104 - c) : String.fromCharCode(97 + c);
+    const row = 8 - r;
+    const col = String.fromCharCode(97 + c);
     return `${col}${row}`;
   };
 
@@ -135,6 +132,21 @@ export default function ChessPlay() {
     updateGame(new Chess());
     setSelectedSquare(null);
     setLegalMoves([]);
+    setGameState('playing');
+    setShowRestartModal(false);
+  };
+
+  const handleRestartClick = () => {
+    setShowRestartModal(true);
+  };
+
+  const confirmRestart = () => {
+    setShowRestartModal(false);
+    resetGame();
+  };
+
+  const handleResign = () => {
+    setGameState('resigned');
   };
 
   return (
@@ -215,18 +227,40 @@ export default function ChessPlay() {
             </div>
           </div>
 
-          {status && (
+          {status && gameState === 'playing' && (
             <div style={{ textAlign: 'center', margin: '0.5rem 0', fontWeight: 'bold', color: '#ff9800', width: '100%' }}>
               {status}
             </div>
           )}
 
           <div className="board-outer-wrapper">
-            <div className="board-container">
+            {showRestartModal && (
+              <div className="modal-overlay">
+                <div className="restart-modal">
+                  <h3>Restart Game?</h3>
+                  <p>Are you sure you want to abandon this match? This counts as a loss!</p>
+                  <div className="modal-actions">
+                    <button className="btn" onClick={() => setShowRestartModal(false)}>Cancel</button>
+                    <button className="btn primary" onClick={confirmRestart}>Restart</button>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && (
+              <div className="game-over-overlay">
+                <h2>{gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : 'Checkmate!'}</h2>
+                <p>
+                  {gameState === 'resigned' ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!` :
+                   gameState === 'draw' ? 'The game is a draw.' :
+                   game.turn() === 'b' ? 'You win!' : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
+                </p>
+              </div>
+            )}
+
+            <div className={`board-container ${isFlipped ? 'flipped' : ''}`}>
               {board.map((row, rIndex) => {
-                const displayRow = isFlipped ? [...row].reverse() : row;
-                
-                return displayRow.map((piece, cIndex) => {
+                return row.map((piece, cIndex) => {
                   const squareLabel = getSquareLabel(rIndex, cIndex);
                   const isLight = (rIndex + cIndex) % 2 === 0;
                   const isSelected = selectedSquare === squareLabel;
@@ -234,8 +268,8 @@ export default function ChessPlay() {
                   
                   const isLeftEdge = cIndex === 0;
                   const isBottomEdge = rIndex === 7;
-                  const rankLabel = isLeftEdge ? (isFlipped ? rIndex + 1 : 8 - rIndex) : null;
-                  const fileLabel = isBottomEdge ? (isFlipped ? String.fromCharCode(104 - cIndex) : String.fromCharCode(97 + cIndex)) : null;
+                  const rankLabel = isLeftEdge ? (8 - rIndex) : null;
+                  const fileLabel = isBottomEdge ? String.fromCharCode(97 + cIndex) : null;
 
                   return (
                     <div 
@@ -274,15 +308,23 @@ export default function ChessPlay() {
           </div>
 
           <div className="game-controls">
-            <button className="btn" onClick={() => setIsFlipped(!isFlipped)}>
-              <RotateCw size={18} /> Flip
-            </button>
-            <button className="btn primary" onClick={resetGame}>
-              <Play size={18} /> Restart
-            </button>
-            <button className="btn danger" onClick={resetGame}>
-              <Flag size={18} /> Resign
-            </button>
+            {gameState !== 'playing' ? (
+              <button className="btn primary" onClick={resetGame}>
+                <Play size={18} /> Rematch
+              </button>
+            ) : (
+              <>
+                <button className="btn" onClick={() => setIsFlipped(!isFlipped)}>
+                  <RotateCw size={18} /> Flip
+                </button>
+                <button className="btn primary" onClick={handleRestartClick}>
+                  <Play size={18} /> Restart
+                </button>
+                <button className="btn danger" onClick={handleResign}>
+                  <Flag size={18} /> Resign
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
