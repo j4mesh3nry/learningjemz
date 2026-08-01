@@ -155,6 +155,8 @@ export default function ChessPlay() {
     
     workerRef.current.onmessage = (e) => {
       const message = typeof e.data === 'string' ? e.data : e.data.data;
+      console.log('Stockfish says:', message);
+      
       if (message && message.startsWith('bestmove')) {
         const moveStr = message.split(' ')[1]; // e.g. "e2e4"
         const newGame = new Chess();
@@ -186,8 +188,10 @@ export default function ChessPlay() {
     }
 
     workerRef.current.postMessage(`position fen ${game.fen()}`);
-    const moveTime = difficulty === 'Hard' ? 1500 : difficulty === 'Medium' ? 500 : 100;
-    workerRef.current.postMessage(`go movetime ${moveTime}`);
+    // Using movetime requires SharedArrayBuffer/Cross-Origin-Isolation which isn't available by default.
+    // Falling back to depth to prevent the engine from hanging forever.
+    const depth = difficulty === 'Hard' ? 10 : difficulty === 'Medium' ? 4 : 1;
+    workerRef.current.postMessage(`go depth ${depth}`);
     
   }, [game, difficulty, updateGame, gameState]);
 
