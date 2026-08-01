@@ -97,6 +97,14 @@ export default function ChessPlay() {
     };
   }, [board]);
 
+  const playerCapturedPieces = playerColor === 'w' ? capturedStats.capturedByWhite : capturedStats.capturedByBlack;
+  const playerScoreDiff = playerColor === 'w' ? capturedStats.whiteScoreDiff : capturedStats.blackScoreDiff;
+  const playerCapturedColor = playerColor === 'w' ? 'b' : 'w';
+
+  const botCapturedPieces = playerColor === 'w' ? capturedStats.capturedByBlack : capturedStats.capturedByWhite;
+  const botScoreDiff = playerColor === 'w' ? capturedStats.blackScoreDiff : capturedStats.whiteScoreDiff;
+  const botCapturedColor = playerColor === 'w' ? 'w' : 'b';
+
   const updateGame = useCallback((newGame) => {
     setGame(newGame);
     setBoard(newGame.board());
@@ -397,14 +405,14 @@ export default function ChessPlay() {
                    difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}
                 </span>
                 
-                {capturedStats.capturedByBlack.length > 0 && (
+                {botCapturedPieces.length > 0 && (
                   <>
                     <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                      {capturedStats.capturedByBlack.map((type, i) => (
-                        <img key={i} src={PIECE_IMAGES['w'][type]} alt={type} style={{ width: 14, height: 14 }} />
+                      {botCapturedPieces.map((type, i) => (
+                        <img key={i} src={PIECE_IMAGES[botCapturedColor][type]} alt={type} style={{ width: 14, height: 14 }} />
                       ))}
-                      {capturedStats.blackScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{capturedStats.blackScoreDiff}</span>}
+                      {botScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{botScoreDiff}</span>}
                     </div>
                   </>
                 )}
@@ -560,14 +568,14 @@ export default function ChessPlay() {
                 <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
                   {playerName}
                 </span>
-                {capturedStats.capturedByWhite.length > 0 && (
+                {playerCapturedPieces.length > 0 && (
                   <>
                     <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                      {capturedStats.capturedByWhite.map((type, i) => (
-                        <img key={i} src={PIECE_IMAGES['b'][type]} alt={type} style={{ width: 14, height: 14 }} />
+                      {playerCapturedPieces.map((type, i) => (
+                        <img key={i} src={PIECE_IMAGES[playerCapturedColor][type]} alt={type} style={{ width: 14, height: 14 }} />
                       ))}
-                      {capturedStats.whiteScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{capturedStats.whiteScoreDiff}</span>}
+                      {playerScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{playerScoreDiff}</span>}
                     </div>
                   </>
                 )}
