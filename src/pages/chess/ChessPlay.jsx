@@ -153,6 +153,25 @@ export default function ChessPlay() {
 
     setIsThinking(true);
     
+    // Beginner Bob (Easy) intentionally blunders by making a random move 50% of the time
+    if (difficulty === 'Easy' && Math.random() < 0.5) {
+      setTimeout(() => {
+        const moves = game.moves();
+        const randomMove = moves[Math.floor(Math.random() * moves.length)];
+        const newGame = new Chess();
+        newGame.loadPgn(game.pgn());
+        newGame.move(randomMove);
+        updateGame(newGame);
+        setTimeout(() => {
+          if (historyScrollRef.current) {
+            historyScrollRef.current.scrollTop = historyScrollRef.current.scrollHeight;
+          }
+        }, 50);
+        setIsThinking(false);
+      }, 500); // 0.5s artificial thinking time
+      return;
+    }
+
     workerRef.current.onmessage = (e) => {
       const message = typeof e.data === 'string' ? e.data : e.data.data;
       console.log('Stockfish says:', message);
