@@ -357,19 +357,8 @@ export default function ChessPlay() {
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-avatar"><Bot size={40} color="#4caf50" /></div>
               <div className="opponent-info" style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <h3>Beginner Bob</h3>
-                    <p>Easy • High blunder rate</p>
-                  </div>
-                  {botStats && botStats.Easy.played > 0 && (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontSize: '0.75rem', color: '#666', background: '#f5f5f5', padding: '4px 8px', borderRadius: 8 }}>
-                      <span style={{ fontWeight: 800, color: '#1c7c54' }}>{Math.round(botStats.Easy.won / botStats.Easy.played * 100)}% Win</span>
-                      <span>{botStats.Easy.won}W - {botStats.Easy.lost}L</span>
-                      <span>{botStats.Easy.played} Played</span>
-                    </div>
-                  )}
-                </div>
+                <h3>Beginner Bob</h3>
+                <p>Easy • High blunder rate</p>
               </div>
               {selectedOpponent === 'Easy' && (
                 <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
@@ -381,19 +370,8 @@ export default function ChessPlay() {
             <div className={`opponent-card medium ${selectedOpponent === 'Medium' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Medium' ? null : 'Medium')}>
               <div className="opponent-avatar"><BrainCircuit size={40} color="#ff9800" /></div>
               <div className="opponent-info" style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <h3>Intermediate Ivy</h3>
-                    <p>Medium • Looks for captures</p>
-                  </div>
-                  {botStats && botStats.Medium.played > 0 && (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontSize: '0.75rem', color: '#666', background: '#f5f5f5', padding: '4px 8px', borderRadius: 8 }}>
-                      <span style={{ fontWeight: 800, color: '#1c7c54' }}>{Math.round(botStats.Medium.won / botStats.Medium.played * 100)}% Win</span>
-                      <span>{botStats.Medium.won}W - {botStats.Medium.lost}L</span>
-                      <span>{botStats.Medium.played} Played</span>
-                    </div>
-                  )}
-                </div>
+                <h3>Intermediate Ivy</h3>
+                <p>Medium • Looks for captures</p>
               </div>
               {selectedOpponent === 'Medium' && (
                 <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
@@ -405,19 +383,8 @@ export default function ChessPlay() {
             <div className={`opponent-card hard ${selectedOpponent === 'Hard' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Hard' ? null : 'Hard')}>
               <div className="opponent-avatar"><Cpu size={40} color="#f44336" /></div>
               <div className="opponent-info" style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <h3>Grandmaster Gary</h3>
-                    <p>Hard • Calculates deeply</p>
-                  </div>
-                  {botStats && botStats.Hard.played > 0 && (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontSize: '0.75rem', color: '#666', background: '#f5f5f5', padding: '4px 8px', borderRadius: 8 }}>
-                      <span style={{ fontWeight: 800, color: '#1c7c54' }}>{Math.round(botStats.Hard.won / botStats.Hard.played * 100)}% Win</span>
-                      <span>{botStats.Hard.won}W - {botStats.Hard.lost}L</span>
-                      <span>{botStats.Hard.played} Played</span>
-                    </div>
-                  )}
-                </div>
+                <h3>Grandmaster Gary</h3>
+                <p>Hard • Calculates deeply</p>
               </div>
               {selectedOpponent === 'Hard' && (
                 <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
@@ -427,6 +394,29 @@ export default function ChessPlay() {
               )}
             </div>
           </div>
+          
+          {botStats && (
+            <div className="global-stats-box" style={{ marginTop: 32, padding: 20, background: '#fff', borderRadius: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: '1px solid #eee' }}>
+              <h3 style={{ textAlign: 'center', marginBottom: 16, color: '#333', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <Trophy size={20} color="#ffb300" /> Career Stats
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, textAlign: 'center' }}>
+                {['Easy', 'Medium', 'Hard'].map(diff => {
+                  const stats = botStats[diff];
+                  const winRate = stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0;
+                  const color = diff === 'Easy' ? '#4caf50' : diff === 'Medium' ? '#ff9800' : '#f44336';
+                  return (
+                    <div key={diff} style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#f8f9fa', padding: '12px 8px', borderRadius: 12, borderTop: `3px solid ${color}` }}>
+                      <div style={{ fontWeight: 800, color: '#333', fontSize: '0.9rem' }}>{diff}</div>
+                      <div style={{ color: color, fontWeight: 900, fontSize: '1.2rem' }}>{winRate}% <span style={{ fontSize: '0.7rem', color: '#888', fontWeight: 600 }}>WIN</span></div>
+                      <div style={{ fontSize: '0.8rem', color: '#666', marginTop: 4 }}>{stats.won}W - {stats.lost}L</div>
+                      <div style={{ fontSize: '0.75rem', color: '#aaa' }}>{stats.played} Matches</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="chess-play-layout">
@@ -456,18 +446,12 @@ export default function ChessPlay() {
                   </>
                 )}
               </div>
-              <div className="player-tagline">
+              <div className="player-tagline" style={{ position: 'relative' }}>
                 Bot • {difficulty}
-                {isThinking && <span className="thinking-indicator" style={{ marginLeft: 6, fontSize: '0.75rem' }}>(thinking...)</span>}
+                {isThinking && <span className="thinking-indicator" style={{ position: 'absolute', marginLeft: 6, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>(thinking...)</span>}
               </div>
             </div>
           </div>
-
-          {status && gameState === 'playing' && (
-            <div style={{ textAlign: 'center', margin: '0.5rem 0', fontWeight: 'bold', color: '#ff9800', width: '100%', order: 2 }}>
-              {status}
-            </div>
-          )}
 
           <div className="board-outer-wrapper" style={{ order: 2 }}>
             {showBackModal && (
@@ -650,24 +634,25 @@ export default function ChessPlay() {
             )}
           </div>
           
-          <div className="move-history-panel" style={{ order: 5, marginTop: 20, background: '#fff', borderRadius: 16, padding: '16px 20px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', maxHeight: 200, overflowY: 'auto', border: '1px solid #eee' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '1rem', color: '#333', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: '1.2rem' }}>📜</span> Move History
-            </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '40px 1fr 1fr', gap: 8, fontSize: '0.9rem' }}>
-              {history.reduce((acc, curr, i) => {
-                if (i % 2 === 0) acc.push([curr]);
-                else acc[acc.length - 1].push(curr);
-                return acc;
-              }, []).map((pair, i) => (
-                <React.Fragment key={i}>
-                  <div style={{ color: '#aaa', fontWeight: 600 }}>{i + 1}.</div>
-                  <div style={{ color: '#333', fontWeight: 500 }}>{pair[0].san}</div>
-                  <div style={{ color: '#333', fontWeight: 500 }}>{pair[1] ? pair[1].san : ''}</div>
-                </React.Fragment>
-              ))}
+          <div className="move-history-panel" style={{ order: 5, marginTop: 20, background: '#fff', borderRadius: 8, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', border: '1px solid #eee', display: 'flex', flexDirection: 'column', height: 160 }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: 0 }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', fontFamily: 'monospace' }}>
+                <tbody>
+                  {history.reduce((acc, curr, i) => {
+                    if (i % 2 === 0) acc.push([curr]);
+                    else acc[acc.length - 1].push(curr);
+                    return acc;
+                  }, []).map((pair, i) => (
+                    <tr key={i} style={{ background: i % 2 === 0 ? '#f8f9fa' : '#ffffff' }}>
+                      <td style={{ padding: '4px 12px', color: '#888', width: '40px', borderRight: '1px solid #eee' }}>{i + 1}.</td>
+                      <td style={{ padding: '4px 16px', color: '#333', width: '50%', fontWeight: 600 }}>{pair[0].san}</td>
+                      <td style={{ padding: '4px 16px', color: '#333', width: '50%', fontWeight: 600 }}>{pair[1] ? pair[1].san : ''}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {history.length === 0 && <p style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', margin: '20px 0' }}>History</p>}
             </div>
-            {history.length === 0 && <p style={{ color: '#888', fontSize: '0.9rem', textAlign: 'center', margin: '20px 0' }}>Make a move to start recording!</p>}
           </div>
         </div>
       )}
