@@ -155,7 +155,8 @@ export default function ChessPlay() {
     workerRef.current.onmessage = (e) => {
       const { type, move, message } = e.data;
       if (type === 'MOVE_FOUND') {
-        const newGame = new Chess(game.fen());
+        const newGame = new Chess();
+        newGame.loadPgn(game.pgn());
         newGame.move(move);
         updateGame(newGame);
         setTimeout(() => {
@@ -197,7 +198,8 @@ export default function ChessPlay() {
           return;
         }
 
-        const newGame = new Chess(game.fen());
+        const newGame = new Chess();
+        newGame.loadPgn(game.pgn());
         try {
           newGame.move({
             from: selectedSquare,
@@ -305,7 +307,8 @@ export default function ChessPlay() {
   };
 
   const handlePromotionSelect = (pieceType) => {
-    const newGame = new Chess(game.fen());
+    const newGame = new Chess();
+    newGame.loadPgn(game.pgn());
     try {
       newGame.move({
         from: promotionPending.from,
