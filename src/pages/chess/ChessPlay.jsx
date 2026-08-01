@@ -37,6 +37,7 @@ export default function ChessPlay() {
   const [isThinking, setIsThinking] = useState(false);
   const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
   const [showRestartModal, setShowRestartModal] = useState(false);
+  const [showBackModal, setShowBackModal] = useState(false);
   const [showOverlay, setShowOverlay] = useState(true);
   const [promotionPending, setPromotionPending] = useState(null);
   const [victoryStats, setVictoryStats] = useState(null);
@@ -227,6 +228,29 @@ export default function ChessPlay() {
     resetGame();
   };
 
+  const handleBackClick = () => {
+    if (difficulty && gameState === 'playing' && history.length > 0) {
+      setShowBackModal(true);
+    } else {
+      confirmBack();
+    }
+  };
+
+  const confirmBack = () => {
+    setShowBackModal(false);
+    if (difficulty) {
+      setDifficulty(null);
+      setGameState('playing');
+      setVictoryStats(null);
+      setIgniting(false);
+      updateGame(new Chess());
+      setSelectedSquare(null);
+      setLegalMoves([]);
+    } else {
+      navigate('/chess');
+    }
+  };
+
   const handleResign = () => {
     setGameState('resigned');
     setShowOverlay(true);
@@ -261,19 +285,7 @@ export default function ChessPlay() {
     <div className="chess-module-page">
       <div className="chess-nav-header">
         <div className="chess-header-left">
-          <button className="chess-back-btn" onClick={() => {
-            if (difficulty) {
-              setDifficulty(null);
-              setGameState('playing');
-              setVictoryStats(null);
-              setIgniting(false);
-              updateGame(new Chess());
-              setSelectedSquare(null);
-              setLegalMoves([]);
-            } else {
-              navigate('/chess');
-            }
-          }} title="Back">
+          <button className="chess-back-btn" onClick={handleBackClick} title="Back">
             ←
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -370,6 +382,19 @@ export default function ChessPlay() {
           )}
 
           <div className="board-outer-wrapper" style={{ order: 2 }}>
+            {showBackModal && (
+              <div className="modal-overlay">
+                <div className="restart-modal">
+                  <h3>Leave Game?</h3>
+                  <p>Are you sure you want to leave? This counts as a loss!</p>
+                  <div className="modal-actions">
+                    <button className="btn primary" onClick={() => setShowBackModal(false)}>Cancel</button>
+                    <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmBack}>Leave</button>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {showRestartModal && (
               <div className="modal-overlay">
                 <div className="restart-modal">
