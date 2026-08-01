@@ -1,5 +1,23 @@
 import { Chess } from 'chess.js';
 
+// Simple Opening Book (moves as standard algebraic notation)
+const OPENING_BOOK = {
+  // White openings
+  '': ['e4', 'd4', 'Nf3'],
+  // Black responses to e4
+  'e4': ['e5', 'c5', 'e6', 'c6'],
+  // Black responses to d4
+  'd4': ['d5', 'Nf6'],
+  // White response to e4 e5
+  'e4 e5': ['Nf3', 'Bc4', 'Nc3'],
+  // White response to e4 c5
+  'e4 c5': ['Nf3', 'Nc3'],
+  // Black response to e4 e5 Nf3
+  'e4 e5 Nf3': ['Nc6', 'Nf6', 'd6'],
+  // Black response to d4 d5
+  'd4 d5': ['c4', 'Nf3', 'Bf4']
+};
+
 // Piece values
 const PIECE_VALUES = {
   p: 100,
@@ -132,11 +150,25 @@ function minimax(game, depth, alpha, beta, isMaximizingPlayer) {
   }
 }
 
-export function getBestMove(game, depth = 3) {
-  const isMaximizingPlayer = game.turn() === 'w';
+export function getBestMove(game, depth = 3, difficulty = 'Hard') {
   const moves = game.moves({ verbose: true });
-  
   if (moves.length === 0) return null;
+
+  // Opening book lookup
+  const historyStr = game.history().join(' ');
+  if (OPENING_BOOK[historyStr]) {
+    const bookMoves = OPENING_BOOK[historyStr];
+    const bookMoveStr = bookMoves[Math.floor(Math.random() * bookMoves.length)];
+    const bookMove = moves.find(m => m.san === bookMoveStr);
+    if (bookMove) return bookMove;
+  }
+
+  // Easy mode: 30% blunder rate (pick a completely random move instead of best move)
+  if (difficulty === 'Easy' && Math.random() < 0.3) {
+    return moves[Math.floor(Math.random() * moves.length)];
+  }
+
+  const isMaximizingPlayer = game.turn() === 'w';
 
   let bestMove = moves[0];
   let bestVal = isMaximizingPlayer ? -Infinity : Infinity;

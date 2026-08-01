@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu } from 'lucide-react';
-import { getBestMove } from '../../utils/chessEngine';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, Swords, Percent } from 'lucide-react';
 import './chess.css';
 
 import w_p from '../../assets/pieces/w_p.svg';
@@ -46,8 +45,16 @@ export default function ChessPlay() {
   const [selectedOpponent, setSelectedOpponent] = useState(null);
   const [playerColor, setPlayerColor] = useState('w');
   const navigate = useNavigate();
-  const { winChessGame, addXp, level, streak, recordActivity, hasPlayedToday } = useGame();
+  const { winChessGame, recordChessGame, addXp, level, streak, recordActivity, hasPlayedToday, botStats } = useGame();
   const { user } = useAuth();
+  const workerRef = React.useRef(null);
+
+  useEffect(() => {
+    workerRef.current = new Worker(new URL('../../utils/chessWorker.js', import.meta.url), { type: 'module' });
+    return () => {
+      if (workerRef.current) workerRef.current.terminate();
+    };
+  }, []);
   
   const playerName = user?.user_metadata?.name || 'You';
   const playerAvatar = user?.user_metadata?.avatar || '👤';
@@ -115,10 +122,11 @@ export default function ChessPlay() {
       setShowOverlay(true);
       if (newGame.turn() !== playerColor) {
         const oldStreak = streak;
-        winChessGame();
+        const xpGained = winChessGame(difficulty);
+        recordChessGame(difficulty, true);
         const streakIncreased = recordActivity();
         
-        setVictoryStats({ streakIncreased, xpGained: 15 });
+        setVictoryStats({ streakIncreased, xpGained });
         setDisplayedStreak(oldStreak);
         
         if (streakIncreased) {
@@ -129,6 +137,8 @@ export default function ChessPlay() {
         } else {
           setDisplayedStreak(oldStreak);
         }
+      } else {
+        recordChessGame(difficulty, false);
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
@@ -140,30 +150,25 @@ export default function ChessPlay() {
     if (game.isGameOver() || gameState !== 'playing') return;
 
     setIsThinking(true);
-    setTimeout(() => {
-      const moves = game.moves({ verbose: true });
-      if (moves.length === 0) {
-        setIsThinking(false);
-        return;
-      }
-
-      let move;
-      if (difficulty === 'Easy') {
-        move = moves[Math.floor(Math.random() * moves.length)];
-      } else if (difficulty === 'Medium') {
-        move = getBestMove(game, 2) || moves[0];
-      } else {
-        move = getBestMove(game, 3) || moves[0];
-      }
-
-      if (move) {
+    
+    workerRef.current.onmessage = (e) => {
+      const { type, move, message } = e.data;
+      if (type === 'MOVE_FOUND') {
         const newGame = new Chess(game.fen());
-        newGame.move(move.san);
+        newGame.move(move);
         updateGame(newGame);
+      } else {
+        console.error(message);
       }
       setIsThinking(false);
-    }, 100);
-  }, [game, difficulty, updateGame]);
+    };
+
+    workerRef.current.postMessage({ 
+      fen: game.fen(), 
+      depth: difficulty === 'Hard' ? 3 : 2, 
+      difficulty 
+    });
+  }, [game, difficulty, updateGame, gameState]);
 
   useEffect(() => {
     const botColor = playerColor === 'w' ? 'b' : 'w';
@@ -285,6 +290,7 @@ export default function ChessPlay() {
   const handleResign = () => {
     setGameState('resigned');
     setShowOverlay(true);
+    recordChessGame(difficulty, false);
   };
 
   const handlePromotionSelect = (pieceType) => {
@@ -351,8 +357,19 @@ export default function ChessPlay() {
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-avatar"><Bot size={40} color="#4caf50" /></div>
               <div className="opponent-info" style={{ flex: 1 }}>
-                <h3>Beginner Bob</h3>
-                <p>Easy • Makes random moves</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <h3>Beginner Bob</h3>
+                    <p>Easy • High blunder rate</p>
+                  </div>
+                  {botStats && botStats.Easy.played > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontSize: '0.75rem', color: '#666', background: '#f5f5f5', padding: '4px 8px', borderRadius: 8 }}>
+                      <span style={{ fontWeight: 800, color: '#1c7c54' }}>{Math.round(botStats.Easy.won / botStats.Easy.played * 100)}% Win</span>
+                      <span>{botStats.Easy.won}W - {botStats.Easy.lost}L</span>
+                      <span>{botStats.Easy.played} Played</span>
+                    </div>
+                  )}
+                </div>
               </div>
               {selectedOpponent === 'Easy' && (
                 <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
@@ -364,8 +381,19 @@ export default function ChessPlay() {
             <div className={`opponent-card medium ${selectedOpponent === 'Medium' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Medium' ? null : 'Medium')}>
               <div className="opponent-avatar"><BrainCircuit size={40} color="#ff9800" /></div>
               <div className="opponent-info" style={{ flex: 1 }}>
-                <h3>Intermediate Ivy</h3>
-                <p>Medium • Looks for captures</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <h3>Intermediate Ivy</h3>
+                    <p>Medium • Looks for captures</p>
+                  </div>
+                  {botStats && botStats.Medium.played > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontSize: '0.75rem', color: '#666', background: '#f5f5f5', padding: '4px 8px', borderRadius: 8 }}>
+                      <span style={{ fontWeight: 800, color: '#1c7c54' }}>{Math.round(botStats.Medium.won / botStats.Medium.played * 100)}% Win</span>
+                      <span>{botStats.Medium.won}W - {botStats.Medium.lost}L</span>
+                      <span>{botStats.Medium.played} Played</span>
+                    </div>
+                  )}
+                </div>
               </div>
               {selectedOpponent === 'Medium' && (
                 <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
@@ -377,8 +405,19 @@ export default function ChessPlay() {
             <div className={`opponent-card hard ${selectedOpponent === 'Hard' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Hard' ? null : 'Hard')}>
               <div className="opponent-avatar"><Cpu size={40} color="#f44336" /></div>
               <div className="opponent-info" style={{ flex: 1 }}>
-                <h3>Grandmaster Gary</h3>
-                <p>Hard • Calculates deeply</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <h3>Grandmaster Gary</h3>
+                    <p>Hard • Calculates deeply</p>
+                  </div>
+                  {botStats && botStats.Hard.played > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontSize: '0.75rem', color: '#666', background: '#f5f5f5', padding: '4px 8px', borderRadius: 8 }}>
+                      <span style={{ fontWeight: 800, color: '#1c7c54' }}>{Math.round(botStats.Hard.won / botStats.Hard.played * 100)}% Win</span>
+                      <span>{botStats.Hard.won}W - {botStats.Hard.lost}L</span>
+                      <span>{botStats.Hard.played} Played</span>
+                    </div>
+                  )}
+                </div>
               </div>
               {selectedOpponent === 'Hard' && (
                 <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
@@ -609,6 +648,26 @@ export default function ChessPlay() {
                 </button>
               </>
             )}
+          </div>
+          
+          <div className="move-history-panel" style={{ order: 5, marginTop: 20, background: '#fff', borderRadius: 16, padding: '16px 20px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', maxHeight: 200, overflowY: 'auto', border: '1px solid #eee' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '1rem', color: '#333', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: '1.2rem' }}>📜</span> Move History
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '40px 1fr 1fr', gap: 8, fontSize: '0.9rem' }}>
+              {history.reduce((acc, curr, i) => {
+                if (i % 2 === 0) acc.push([curr]);
+                else acc[acc.length - 1].push(curr);
+                return acc;
+              }, []).map((pair, i) => (
+                <React.Fragment key={i}>
+                  <div style={{ color: '#aaa', fontWeight: 600 }}>{i + 1}.</div>
+                  <div style={{ color: '#333', fontWeight: 500 }}>{pair[0].san}</div>
+                  <div style={{ color: '#333', fontWeight: 500 }}>{pair[1] ? pair[1].san : ''}</div>
+                </React.Fragment>
+              ))}
+            </div>
+            {history.length === 0 && <p style={{ color: '#888', fontSize: '0.9rem', textAlign: 'center', margin: '20px 0' }}>Make a move to start recording!</p>}
           </div>
         </div>
       )}

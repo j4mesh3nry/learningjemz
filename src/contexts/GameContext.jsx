@@ -21,6 +21,11 @@ const defaultState = {
   flashcardsMastered: 0,
   booksReading: 0,
   quizHighScore: 0,
+  botStats: {
+    Easy: { played: 0, won: 0, lost: 0 },
+    Medium: { played: 0, won: 0, lost: 0 },
+    Hard: { played: 0, won: 0, lost: 0 }
+  },
   achievements: []
 };
 
@@ -80,6 +85,7 @@ export function GameProvider({ children }) {
           flashcardsMastered: data.flashcards_mastered,
           booksReading: data.books_reading,
           quizHighScore: data.quiz_high_score,
+          botStats: data.bot_stats || defaultState.botStats,
           achievements: achievementsData.map(a => ({ id: a.achievement_id, unlockedAt: a.unlocked_at }))
         };
         setState(remoteState);
@@ -100,6 +106,7 @@ export function GameProvider({ children }) {
           flashcards_mastered: localState.flashcardsMastered,
           books_reading: localState.booksReading,
           quiz_high_score: localState.quizHighScore,
+          bot_stats: localState.botStats,
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
           avatar: user.user_metadata?.avatar || '👤'
         };
@@ -159,6 +166,7 @@ export function GameProvider({ children }) {
         flashcards_mastered: state.flashcardsMastered,
         books_reading: state.booksReading,
         quiz_high_score: state.quizHighScore,
+        bot_stats: state.botStats,
         name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
         avatar: user.user_metadata?.avatar || '👤'
       };
@@ -201,9 +209,31 @@ export function GameProvider({ children }) {
     });
   };
 
-  const winChessGame = () => {
+  const winChessGame = (difficulty = 'Easy') => {
+    const xpReward = difficulty === 'Hard' ? 20 : difficulty === 'Medium' ? 15 : 10;
     setState(prev => ({ ...prev, chessWins: prev.chessWins + 1 }));
-    addXp(15);
+    addXp(xpReward);
+    return xpReward;
+  };
+
+  const recordChessGame = (difficulty, won) => {
+    setState(prev => {
+      const currentStats = prev.botStats || defaultState.botStats;
+      const diffStats = currentStats[difficulty] || { played: 0, won: 0, lost: 0 };
+      
+      return {
+        ...prev,
+        botStats: {
+          ...currentStats,
+          [difficulty]: {
+            ...diffStats,
+            played: diffStats.played + 1,
+            won: diffStats.won + (won ? 1 : 0),
+            lost: diffStats.lost + (won ? 0 : 1)
+          }
+        }
+      };
+    });
   };
 
   const solvePuzzle = () => {
@@ -241,6 +271,7 @@ export function GameProvider({ children }) {
     hasPlayedToday,
     addXp,
     winChessGame,
+    recordChessGame,
     solvePuzzle,
     answerProvinceCorrect,
     masterFlashcard,
