@@ -38,6 +38,7 @@ export default function ChessPlay() {
   const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
   const [showRestartModal, setShowRestartModal] = useState(false);
   const [showOverlay, setShowOverlay] = useState(true);
+  const [promotionPending, setPromotionPending] = useState(null);
   const [victoryStats, setVictoryStats] = useState(null);
   const [igniting, setIgniting] = useState(false);
   const [displayedStreak, setDisplayedStreak] = useState(0);
@@ -118,8 +119,15 @@ export default function ChessPlay() {
     if (game.turn() === 'b' || game.isGameOver() || gameState !== 'playing') return;
 
     if (selectedSquare) {
-      const move = legalMoves.find(m => m.to === square);
-      if (move) {
+      const possibleMoves = legalMoves.filter(m => m.to === square);
+      if (possibleMoves.length > 0) {
+        const isPromotion = possibleMoves.some(m => m.promotion);
+        
+        if (isPromotion) {
+          setPromotionPending({ from: selectedSquare, to: square });
+          return;
+        }
+
         const newGame = new Chess(game.fen());
         try {
           newGame.move({
@@ -162,6 +170,7 @@ export default function ChessPlay() {
     setShowOverlay(true);
     setVictoryStats(null);
     setIgniting(false);
+    setPromotionPending(null);
   };
 
   const handleRestartClick = () => {
@@ -176,6 +185,29 @@ export default function ChessPlay() {
   const handleResign = () => {
     setGameState('resigned');
     setShowOverlay(true);
+  };
+
+  const handlePromotionSelect = (pieceType) => {
+    const newGame = new Chess(game.fen());
+    try {
+      newGame.move({
+        from: promotionPending.from,
+        to: promotionPending.to,
+        promotion: pieceType
+      });
+      updateGame(newGame);
+    } catch (e) {
+      console.error(e);
+    }
+    setPromotionPending(null);
+    setSelectedSquare(null);
+    setLegalMoves([]);
+  };
+
+  const cancelPromotion = () => {
+    setPromotionPending(null);
+    setSelectedSquare(null);
+    setLegalMoves([]);
   };
 
   const lastMove = history.length > 0 ? history[history.length - 1] : null;
@@ -286,6 +318,37 @@ export default function ChessPlay() {
                     <button className="btn primary" onClick={() => setShowRestartModal(false)}>Cancel</button>
                     <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmRestart}>Restart</button>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {promotionPending && (
+              <div className="modal-overlay">
+                <div className="promotion-modal" style={{ background: '#fff', padding: 24, borderRadius: 20, textAlign: 'center', boxShadow: '0 12px 40px rgba(0,0,0,0.3)', minWidth: 300, animation: 'cinematicIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}>
+                  <h3 style={{ marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333', fontSize: '1.4rem' }}>Promote Pawn</h3>
+                  <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+                    {['q', 'r', 'n', 'b'].map(type => (
+                      <div 
+                        key={type}
+                        onClick={() => handlePromotionSelect(type)}
+                        style={{ 
+                          width: 60, height: 60, background: '#f5f5f5', borderRadius: 12, 
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          cursor: 'pointer', border: '2px solid transparent',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-primary)'; e.currentTarget.style.background = '#e8f5e9'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'transparent'; e.currentTarget.style.background = '#f5f5f5'; }}
+                      >
+                        <img 
+                          src={PIECE_IMAGES[game.turn()][type]} 
+                          alt={type} 
+                          style={{ width: '85%', height: '85%' }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <button className="btn" style={{ marginTop: 24, width: '100%', background: '#f5f5f5', color: '#555' }} onClick={cancelPromotion}>Cancel</button>
                 </div>
               </div>
             )}
