@@ -504,7 +504,7 @@ export default function ChessPlay() {
             </div>
           </div>
 
-          <div className="board-outer-wrapper" style={{ order: 2 }}>
+          <div className="board-outer-wrapper">
             {showBackModal && (
               <div className="modal-overlay">
                 <div className="restart-modal">
