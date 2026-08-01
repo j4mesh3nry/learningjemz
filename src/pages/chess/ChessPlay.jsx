@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu } from 'lucide-react';
@@ -33,7 +34,8 @@ export default function ChessPlay() {
   const [status, setStatus] = useState('');
   const [history, setHistory] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
-  const { winChessGame, addXp } = useGame();
+  const navigate = useNavigate();
+  const { winChessGame, addXp, level, streak } = useGame();
 
   const updateGame = useCallback((newGame) => {
     setGame(newGame);
@@ -135,115 +137,145 @@ export default function ChessPlay() {
     setLegalMoves([]);
   };
 
-  if (!difficulty) {
-    return (
-      <div className="opponent-selection-screen">
-        <h2 style={{ textAlign: 'center', marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333' }}>Choose Your Opponent</h2>
-        <div className="opponent-cards">
-          <div className="opponent-card easy" onClick={() => setDifficulty('Easy')}>
-            <div className="opponent-avatar"><Bot size={40} color="#4caf50" /></div>
-            <div className="opponent-info">
-              <h3>Beginner Bob</h3>
-              <p>Easy • Makes random moves</p>
-            </div>
+  return (
+    <div className="chess-module-page">
+      <div className="chess-nav-header">
+        <div className="chess-header-left">
+          <button className="chess-back-btn" onClick={() => difficulty ? setDifficulty(null) : navigate('/chess')} title="Back">
+            ←
+          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h1 className="chess-page-title" style={{ margin: 0, color: '#1c7c54', fontSize: '1.4rem', fontWeight: 900 }}>Play with Bot</h1>
           </div>
-          <div className="opponent-card medium" onClick={() => setDifficulty('Medium')}>
-            <div className="opponent-avatar"><BrainCircuit size={40} color="#ff9800" /></div>
-            <div className="opponent-info">
-              <h3>Intermediate Ivy</h3>
-              <p>Medium • Looks for captures</p>
-            </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 3,
+            background: '#fff5f5', padding: '2px 8px', borderRadius: 12,
+            border: '1px solid #ffcdd2',
+          }}>
+            <span style={{ fontSize: '0.75rem' }}>🔥</span>
+            <span style={{ fontWeight: 800, fontSize: '0.7rem', color: '#e53935' }}>{streak}</span>
           </div>
-          <div className="opponent-card hard" onClick={() => setDifficulty('Hard')}>
-            <div className="opponent-avatar"><Cpu size={40} color="#f44336" /></div>
-            <div className="opponent-info">
-              <h3>Grandmaster Gary</h3>
-              <p>Hard • Calculates deeply</p>
-            </div>
+          <div onClick={() => navigate('/profile')} style={{
+            display: 'flex', alignItems: 'center', gap: 3,
+            background: '#fff8e1', padding: '2px 8px', borderRadius: 12,
+            border: '1px solid #ffe082', cursor: 'pointer',
+          }}>
+            <span style={{ fontSize: '0.75rem' }}>⭐</span>
+            <span style={{ fontWeight: 800, fontSize: '0.7rem', color: '#f57f17' }}>Lv.{level}</span>
           </div>
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-        <div style={{ fontWeight: 'bold', color: '#555' }}>vs {difficulty} AI</div>
-        {isThinking && <div className="thinking-indicator">AI is thinking...</div>}
-      </div>
+      {!difficulty ? (
+        <div className="opponent-selection-screen">
+          <h2 style={{ textAlign: 'center', marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333' }}>Choose Your Opponent</h2>
+          <div className="opponent-cards">
+            <div className="opponent-card easy" onClick={() => setDifficulty('Easy')}>
+              <div className="opponent-avatar"><Bot size={40} color="#4caf50" /></div>
+              <div className="opponent-info">
+                <h3>Beginner Bob</h3>
+                <p>Easy • Makes random moves</p>
+              </div>
+            </div>
+            <div className="opponent-card medium" onClick={() => setDifficulty('Medium')}>
+              <div className="opponent-avatar"><BrainCircuit size={40} color="#ff9800" /></div>
+              <div className="opponent-info">
+                <h3>Intermediate Ivy</h3>
+                <p>Medium • Looks for captures</p>
+              </div>
+            </div>
+            <div className="opponent-card hard" onClick={() => setDifficulty('Hard')}>
+              <div className="opponent-avatar"><Cpu size={40} color="#f44336" /></div>
+              <div className="opponent-info">
+                <h3>Grandmaster Gary</h3>
+                <p>Hard • Calculates deeply</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <div style={{ fontWeight: 'bold', color: '#555' }}>vs {difficulty} AI</div>
+            {isThinking && <div className="thinking-indicator">AI is thinking...</div>}
+          </div>
 
-      {status && (
-        <div style={{ textAlign: 'center', margin: '0.5rem 0', fontWeight: 'bold', color: '#ff9800' }}>
-          {status}
+          {status && (
+            <div style={{ textAlign: 'center', margin: '0.5rem 0', fontWeight: 'bold', color: '#ff9800' }}>
+              {status}
+            </div>
+          )}
+
+          <div className="chess-play-layout">
+            <div className="board-outer-wrapper">
+              <div className="board-labels-left">
+                {[8, 7, 6, 5, 4, 3, 2, 1].map(num => (
+                  <span key={num}>{isFlipped ? 9 - num : num}</span>
+                ))}
+              </div>
+              
+              <div className="board-container">
+                {board.map((row, rIndex) => {
+                  const displayRow = isFlipped ? [...row].reverse() : row;
+                  
+                  return displayRow.map((piece, cIndex) => {
+                    const squareLabel = getSquareLabel(rIndex, cIndex);
+                    const isLight = (rIndex + cIndex) % 2 === 0;
+                    const isSelected = selectedSquare === squareLabel;
+                    const isLegal = legalMoves.some(m => m.to === squareLabel);
+                    
+                    return (
+                      <div 
+                        key={squareLabel}
+                        className={`square ${isLight ? 'light' : 'dark'} ${isSelected ? 'selected' : ''}`}
+                        onClick={() => handleSquareClick(squareLabel)}
+                      >
+                        {piece && (
+                          <img 
+                            src={PIECE_IMAGES[piece.color][piece.type]} 
+                            alt={`${piece.color} ${piece.type}`} 
+                            className="piece" 
+                          />
+                        )}
+                        {isLegal && <div className="legal-move-dot" />}
+                      </div>
+                    );
+                  });
+                })}
+              </div>
+              
+              <div className="board-labels-bottom">
+                {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map(letter => (
+                  <span key={letter}>{isFlipped ? String.fromCharCode(201 - letter.charCodeAt(0)) : letter}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="game-controls">
+            <button className="btn" onClick={resetGame}>
+              <Play size={16} /> New Game
+            </button>
+            <button className="btn" style={{ background: '#555' }} onClick={() => setIsFlipped(!isFlipped)}>
+              <RotateCw size={16} /> Flip
+            </button>
+            <button className="btn danger" onClick={resetGame}>
+              <Flag size={16} /> Resign
+            </button>
+          </div>
+
+          <div className="history-panel">
+            {history.map((move, i) => (
+              <span key={i} style={{ color: i % 2 === 0 ? '#fff' : '#aaa' }}>
+                {i % 2 === 0 ? `${i/2 + 1}. ` : ''}{move}
+              </span>
+            ))}
+          </div>
         </div>
       )}
-
-      <div className="chess-play-layout">
-        <div className="board-outer-wrapper">
-          <div className="board-labels-left">
-            {[8, 7, 6, 5, 4, 3, 2, 1].map(num => (
-              <span key={num}>{isFlipped ? 9 - num : num}</span>
-            ))}
-          </div>
-          
-          <div className="board-container">
-            {board.map((row, rIndex) => {
-              const displayRow = isFlipped ? [...row].reverse() : row;
-              
-              return displayRow.map((piece, cIndex) => {
-                const squareLabel = getSquareLabel(rIndex, cIndex);
-                const isLight = (rIndex + cIndex) % 2 === 0;
-                const isSelected = selectedSquare === squareLabel;
-                const isLegal = legalMoves.some(m => m.to === squareLabel);
-                
-                return (
-                  <div 
-                    key={squareLabel}
-                    className={`square ${isLight ? 'light' : 'dark'} ${isSelected ? 'selected' : ''}`}
-                    onClick={() => handleSquareClick(squareLabel)}
-                  >
-                    {piece && (
-                      <img 
-                        src={PIECE_IMAGES[piece.color][piece.type]} 
-                        alt={`${piece.color} ${piece.type}`} 
-                        className="piece" 
-                      />
-                    )}
-                    {isLegal && <div className="legal-move-dot" />}
-                  </div>
-                );
-              });
-            })}
-          </div>
-          
-          <div className="board-labels-bottom">
-            {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map(letter => (
-              <span key={letter}>{isFlipped ? String.fromCharCode(201 - letter.charCodeAt(0)) : letter}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="game-controls">
-        <button className="btn" onClick={resetGame}>
-          <Play size={16} /> New Game
-        </button>
-        <button className="btn" style={{ background: '#555' }} onClick={() => setIsFlipped(!isFlipped)}>
-          <RotateCw size={16} /> Flip
-        </button>
-        <button className="btn danger" onClick={resetGame}>
-          <Flag size={16} /> Resign
-        </button>
-      </div>
-
-      <div className="history-panel">
-        {history.map((move, i) => (
-          <span key={i} style={{ color: i % 2 === 0 ? '#fff' : '#aaa' }}>
-            {i % 2 === 0 ? `${i/2 + 1}. ` : ''}{move}
-          </span>
-        ))}
-      </div>
     </div>
   );
 }
