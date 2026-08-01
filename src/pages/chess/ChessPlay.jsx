@@ -341,17 +341,21 @@ export default function ChessPlay() {
               <div className="player-name">
                 {difficulty === 'Easy' ? 'Beginner Bob' : 
                  difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}
-                {isThinking && <span className="thinking-indicator" style={{ marginLeft: 8, fontSize: '0.8rem' }}>(thinking...)</span>}
+                {isThinking && <span className="thinking-indicator" style={{ fontSize: '0.8rem' }}>(thinking...)</span>}
+                
+                {capturedStats.capturedByBlack.length > 0 && (
+                  <>
+                    <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      {capturedStats.capturedByBlack.map((type, i) => (
+                        <img key={i} src={PIECE_IMAGES['w'][type]} alt={type} style={{ width: 14, height: 14 }} />
+                      ))}
+                      {capturedStats.blackScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{capturedStats.blackScoreDiff}</span>}
+                    </div>
+                  </>
+                )}
               </div>
               <div className="player-tagline">Bot • {difficulty}</div>
-              {capturedStats.capturedByBlack.length > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 4, minHeight: 16 }}>
-                  {capturedStats.capturedByBlack.map((type, i) => (
-                    <img key={i} src={PIECE_IMAGES['w'][type]} alt={type} style={{ width: 14, height: 14 }} />
-                  ))}
-                  {capturedStats.blackScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{capturedStats.blackScoreDiff}</span>}
-                </div>
-              )}
             </div>
           </div>
 
@@ -484,16 +488,19 @@ export default function ChessPlay() {
             <div className="player-info">
               <div className="player-name">
                 {playerName}
+                {capturedStats.capturedByWhite.length > 0 && (
+                  <>
+                    <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      {capturedStats.capturedByWhite.map((type, i) => (
+                        <img key={i} src={PIECE_IMAGES['b'][type]} alt={type} style={{ width: 14, height: 14 }} />
+                      ))}
+                      {capturedStats.whiteScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{capturedStats.whiteScoreDiff}</span>}
+                    </div>
+                  </>
+                )}
               </div>
               <div className="player-tagline">Lv.{level} • 🔥 {streak} Streak</div>
-              {capturedStats.capturedByWhite.length > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 4, minHeight: 16 }}>
-                  {capturedStats.capturedByWhite.map((type, i) => (
-                    <img key={i} src={PIECE_IMAGES['b'][type]} alt={type} style={{ width: 14, height: 14 }} />
-                  ))}
-                  {capturedStats.whiteScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{capturedStats.whiteScoreDiff}</span>}
-                </div>
-              )}
             </div>
           </div>
 
