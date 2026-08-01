@@ -85,7 +85,11 @@ export function GameProvider({ children }) {
           flashcardsMastered: data.flashcards_mastered,
           booksReading: data.books_reading,
           quizHighScore: data.quiz_high_score,
-          botStats: localState.botStats || defaultState.botStats,
+          botStats: {
+            Easy: localState.botStats?.Easy || defaultState.botStats.Easy,
+            Medium: localState.botStats?.Medium || defaultState.botStats.Medium,
+            Hard: localState.botStats?.Hard || defaultState.botStats.Hard
+          },
           achievements: achievementsData.map(a => ({ id: a.achievement_id, unlockedAt: a.unlocked_at }))
         };
         setState(remoteState);
