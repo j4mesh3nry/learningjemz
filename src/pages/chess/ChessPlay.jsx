@@ -681,7 +681,6 @@ export default function ChessPlay() {
               </>
             )}
           </div>
-          </div>
         </div>
 
         <div className="move-history-panel-container" style={{ width: '100%', maxWidth: 480, margin: '24px auto 40px auto', background: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 8px 30px rgba(0,0,0,0.08)', border: '1px solid #eaeaea', display: 'flex', flexDirection: 'column', height: 260 }}>
@@ -716,7 +715,7 @@ export default function ChessPlay() {
             {history.length === 0 && <p style={{ color: '#aaa', fontSize: '0.9rem', textAlign: 'center', margin: '40px 0', fontWeight: 600 }}>Moves will appear here</p>}
           </div>
         </div>
-      </>}
+      </>
       )}
     </div>
   );
