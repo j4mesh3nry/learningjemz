@@ -322,7 +322,7 @@ export default function ChessPlay() {
   };
 
   const handleBackClick = () => {
-    if (difficulty && gameState === 'playing' && history.length > 0) {
+    if (difficulty && gameState === 'playing' && game.history().length > 0) {
       setShowBackModal(true);
     } else {
       confirmBack();
