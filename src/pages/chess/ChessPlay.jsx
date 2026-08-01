@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, Swords, Percent } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, Swords, Percent, Eye } from 'lucide-react';
 import './chess.css';
 
 import w_p from '../../assets/pieces/w_p.svg';
@@ -537,9 +537,9 @@ export default function ChessPlay() {
                 <button 
                   className="btn" 
                   onClick={() => setShowOverlay(false)}
-                  style={{ marginTop: 20, background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 20, padding: '6px 16px', fontSize: '0.9rem' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '20px auto 0 auto', background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 20, padding: '6px 16px', fontSize: '0.9rem' }}
                 >
-                  👁️ View Board
+                  <Eye size={18} /> View Board
                 </button>
               </div>
             )}
