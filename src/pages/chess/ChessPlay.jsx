@@ -186,8 +186,8 @@ export default function ChessPlay() {
     }
 
     workerRef.current.postMessage(`position fen ${game.fen()}`);
-    const depth = difficulty === 'Hard' ? 15 : difficulty === 'Medium' ? 5 : 1;
-    workerRef.current.postMessage(`go depth ${depth}`);
+    const moveTime = difficulty === 'Hard' ? 1500 : difficulty === 'Medium' ? 500 : 100;
+    workerRef.current.postMessage(`go movetime ${moveTime}`);
     
   }, [game, difficulty, updateGame, gameState]);
 
