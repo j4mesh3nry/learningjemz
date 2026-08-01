@@ -337,15 +337,17 @@ export default function ChessPlay() {
                difficulty === 'Medium' ? <BrainCircuit size={24} color="#ff9800" /> : 
                <Cpu size={24} color="#f44336" />}
             </div>
-            <div className="player-info">
-              <div className="player-name">
-                {difficulty === 'Easy' ? 'Beginner Bob' : 
-                 difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}
+            <div className="player-info" style={{ minWidth: 0 }}>
+              <div className="player-name" style={{ flexWrap: 'wrap' }}>
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  {difficulty === 'Easy' ? 'Beginner Bob' : 
+                   difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}
+                </span>
                 
                 {capturedStats.capturedByBlack.length > 0 && (
                   <>
                     <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
                       {capturedStats.capturedByBlack.map((type, i) => (
                         <img key={i} src={PIECE_IMAGES['w'][type]} alt={type} style={{ width: 14, height: 14 }} />
                       ))}
@@ -487,13 +489,15 @@ export default function ChessPlay() {
             <div className="player-avatar" style={{ background: '#e3f2fd', fontSize: '1.2rem' }}>
               {playerAvatar}
             </div>
-            <div className="player-info">
-              <div className="player-name">
-                {playerName}
+            <div className="player-info" style={{ minWidth: 0 }}>
+              <div className="player-name" style={{ flexWrap: 'wrap' }}>
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                  {playerName}
+                </span>
                 {capturedStats.capturedByWhite.length > 0 && (
                   <>
                     <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
                       {capturedStats.capturedByWhite.map((type, i) => (
                         <img key={i} src={PIECE_IMAGES['b'][type]} alt={type} style={{ width: 14, height: 14 }} />
                       ))}
