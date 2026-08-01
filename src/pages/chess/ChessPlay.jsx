@@ -466,6 +466,7 @@ export default function ChessPlay() {
           )}
         </div>
       ) : (
+        <>
         <div className="chess-play-layout">
           
           <div className={`player-profile-banner ${isFlipped ? 'bottom' : ''}`} style={{ order: isFlipped ? 3 : 1 }}>
@@ -680,37 +681,42 @@ export default function ChessPlay() {
               </>
             )}
           </div>
-          
-          <div className="move-history-panel" style={{ order: 5, marginTop: 20, background: '#fff', borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.06)', border: '1px solid #eaeaea', display: 'flex', flexDirection: 'column', height: 180 }}>
-            <div style={{ flex: 1, overflowY: 'auto', padding: '10px 16px' }} ref={historyScrollRef}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <tbody>
-                  {history.reduce((acc, curr, i) => {
-                    if (i % 2 === 0) acc.push([curr]);
-                    else acc[acc.length - 1].push(curr);
-                    return acc;
-                  }, []).map((pair, i) => {
-                    const isWhiteLast = pair.length === 1 && history.length === i * 2 + 1;
-                    const isBlackLast = pair.length === 2 && history.length === i * 2 + 2;
-                    
-                    return (
-                      <tr key={i} style={{ borderBottom: '1px solid #f5f5f5' }}>
-                        <td style={{ padding: '8px 12px', color: '#aaa', width: '40px', fontWeight: 700, fontSize: '0.85rem' }}>{i + 1}.</td>
-                        <td style={{ padding: '4px 12px', width: '50%' }}>
-                          {renderHistoryMove(pair[0], isWhiteLast)}
-                        </td>
-                        <td style={{ padding: '4px 12px', width: '50%' }}>
-                          {renderHistoryMove(pair[1], isBlackLast)}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-              {history.length === 0 && <p style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', margin: '30px 0', fontWeight: 600 }}>Moves will appear here</p>}
-            </div>
           </div>
         </div>
+
+        <div className="move-history-panel-container" style={{ width: '100%', maxWidth: 480, margin: '24px auto 40px auto', background: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 8px 30px rgba(0,0,0,0.08)', border: '1px solid #eaeaea', display: 'flex', flexDirection: 'column', height: 260 }}>
+          <h2 style={{ margin: 0, padding: '16px 20px', background: '#1c7c54', color: 'white', textAlign: 'center', fontSize: '1.4rem', fontFamily: 'var(--font-heading)', letterSpacing: '0.5px' }}>
+            History
+          </h2>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '10px 16px', background: '#fafafa' }} ref={historyScrollRef}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <tbody>
+                {history.reduce((acc, curr, i) => {
+                  if (i % 2 === 0) acc.push([curr]);
+                  else acc[acc.length - 1].push(curr);
+                  return acc;
+                }, []).map((pair, i) => {
+                  const isWhiteLast = pair.length === 1 && history.length === i * 2 + 1;
+                  const isBlackLast = pair.length === 2 && history.length === i * 2 + 2;
+                  
+                  return (
+                    <tr key={i} style={{ borderBottom: '1px solid #eee', background: i % 2 === 0 ? '#ffffff' : '#fafafa' }}>
+                      <td style={{ padding: '8px 12px', color: '#999', width: '40px', fontWeight: 700, fontSize: '0.9rem' }}>{i + 1}.</td>
+                      <td style={{ padding: '4px 12px', width: '50%' }}>
+                        {renderHistoryMove(pair[0], isWhiteLast)}
+                      </td>
+                      <td style={{ padding: '4px 12px', width: '50%' }}>
+                        {renderHistoryMove(pair[1], isBlackLast)}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            {history.length === 0 && <p style={{ color: '#aaa', fontSize: '0.9rem', textAlign: 'center', margin: '40px 0', fontWeight: 600 }}>Moves will appear here</p>}
+          </div>
+        </div>
+      </>}
       )}
     </div>
   );
