@@ -17,10 +17,15 @@ function GeoDashboard() {
           <button className="geo-back-btn" onClick={() => navigate('/')} title="Back to Home">
             ←
           </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="#0066cc">
-              <circle cx="12" cy="12" r="10" />
-            </svg>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              fontSize: '1.8rem', width: 46, height: 46,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'linear-gradient(135deg, #004e92 0%, #0077b6 100%)', borderRadius: 12,
+              boxShadow: '0 4px 10px rgba(0,119,182,0.3)'
+            }}>
+              🌍
+            </div>
             <h1 className="geo-page-title" style={{ margin: 0, color: '#0066cc', fontSize: '1.8rem', fontWeight: 900 }}>Geography</h1>
           </div>
         </div>

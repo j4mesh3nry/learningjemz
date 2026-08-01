@@ -18,10 +18,15 @@ function ChessMenu() {
           <button className="chess-back-btn" onClick={() => navigate('/')} title="Back to Home">
             ←
           </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="#1c7c54">
-              <path d="M12 2a3 3 0 0 0-2.83 4H9a1 1 0 0 0 0 2h.34A5.96 5.96 0 0 0 8 13.5L7 17a1 1 0 0 0 0 2h10a1 1 0 0 0 0-2l-1-3.5a5.96 5.96 0 0 0-1.34-5.5H15a1 1 0 0 0 0-2h-.17A3 3 0 0 0 12 2zm-4 20h8v2H8v-2z"/>
-            </svg>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              fontSize: '1.8rem', width: 46, height: 46,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'linear-gradient(135deg, #0e4d2e 0%, #1c7c54 100%)', borderRadius: 12,
+              boxShadow: '0 4px 10px rgba(28,124,84,0.3)'
+            }}>
+              ♟️
+            </div>
             <h1 className="chess-page-title" style={{ margin: 0, color: '#1c7c54', fontSize: '1.8rem', fontWeight: 900 }}>Chess</h1>
           </div>
         </div>
