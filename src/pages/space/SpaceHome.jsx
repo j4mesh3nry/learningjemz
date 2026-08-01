@@ -31,14 +31,22 @@ const SpaceHub = () => {
           </div>
         </div>
 
-        <div className="space-badges">
-          <div className="space-badge streak">
-            <span>🔥</span>
-            <span>{streak}</span>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 4,
+            background: '#fff5f5', padding: '4px 10px', borderRadius: 20,
+            border: '1px solid #ffcdd2',
+          }}>
+            <span style={{ fontSize: '1rem' }}>🔥</span>
+            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#e53935' }}>{streak}</span>
           </div>
-          <div className="space-badge level">
-            <span>⭐</span>
-            <span>Lv.{level}</span>
+          <div onClick={() => navigate('/profile')} style={{
+            display: 'flex', alignItems: 'center', gap: 4,
+            background: '#fff8e1', padding: '4px 10px', borderRadius: 20,
+            border: '1px solid #ffe082', cursor: 'pointer',
+          }}>
+            <span style={{ fontSize: '0.85rem' }}>⭐</span>
+            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#f57f17' }}>Lv.{level}</span>
           </div>
         </div>
       </div>
