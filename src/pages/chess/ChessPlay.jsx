@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu } from 'lucide-react';
 import { getBestMove } from '../../utils/chessEngine';
 import './chess.css';
@@ -38,6 +39,10 @@ export default function ChessPlay() {
   const [showRestartModal, setShowRestartModal] = useState(false);
   const navigate = useNavigate();
   const { winChessGame, addXp, level, streak } = useGame();
+  const { user } = useAuth();
+  
+  const playerName = user?.user_metadata?.name || 'You';
+  const playerAvatar = user?.user_metadata?.avatar || '👤';
 
   const updateGame = useCallback((newGame) => {
     setGame(newGame);
@@ -153,7 +158,17 @@ export default function ChessPlay() {
     <div className="chess-module-page">
       <div className="chess-nav-header">
         <div className="chess-header-left">
-          <button className="chess-back-btn" onClick={() => difficulty ? setDifficulty(null) : navigate('/chess')} title="Back">
+          <button className="chess-back-btn" onClick={() => {
+            if (difficulty) {
+              setDifficulty(null);
+              setGameState('playing');
+              updateGame(new Chess());
+              setSelectedSquare(null);
+              setLegalMoves([]);
+            } else {
+              navigate('/chess');
+            }
+          }} title="Back">
             ←
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -211,7 +226,7 @@ export default function ChessPlay() {
       ) : (
         <div className="chess-play-layout">
           
-          <div className="player-profile-banner">
+          <div className={`player-profile-banner ${isFlipped ? 'bottom' : ''}`} style={{ order: isFlipped ? 3 : 1 }}>
             <div className="player-avatar">
               {difficulty === 'Easy' ? <Bot size={24} color="#4caf50" /> : 
                difficulty === 'Medium' ? <BrainCircuit size={24} color="#ff9800" /> : 
@@ -228,20 +243,20 @@ export default function ChessPlay() {
           </div>
 
           {status && gameState === 'playing' && (
-            <div style={{ textAlign: 'center', margin: '0.5rem 0', fontWeight: 'bold', color: '#ff9800', width: '100%' }}>
+            <div style={{ textAlign: 'center', margin: '0.5rem 0', fontWeight: 'bold', color: '#ff9800', width: '100%', order: 2 }}>
               {status}
             </div>
           )}
 
-          <div className="board-outer-wrapper">
+          <div className="board-outer-wrapper" style={{ order: 2 }}>
             {showRestartModal && (
               <div className="modal-overlay">
                 <div className="restart-modal">
                   <h3>Restart Game?</h3>
                   <p>Are you sure you want to abandon this match? This counts as a loss!</p>
                   <div className="modal-actions">
-                    <button className="btn" onClick={() => setShowRestartModal(false)}>Cancel</button>
-                    <button className="btn primary" onClick={confirmRestart}>Restart</button>
+                    <button className="btn primary" onClick={() => setShowRestartModal(false)}>Cancel</button>
+                    <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmRestart}>Restart</button>
                   </div>
                 </div>
               </div>
@@ -295,19 +310,19 @@ export default function ChessPlay() {
             </div>
           </div>
 
-          <div className="player-profile-banner bottom">
+          <div className={`player-profile-banner ${isFlipped ? '' : 'bottom'}`} style={{ order: isFlipped ? 1 : 3 }}>
             <div className="player-avatar" style={{ background: '#e3f2fd', fontSize: '1.2rem' }}>
-              👤
+              {playerAvatar}
             </div>
             <div className="player-info">
               <div className="player-name">
-                You
+                {playerName}
               </div>
               <div className="player-tagline">Lv.{level} • 🔥 {streak} Streak</div>
             </div>
           </div>
 
-          <div className="game-controls">
+          <div className="game-controls" style={{ order: 4 }}>
             {gameState !== 'playing' ? (
               <button className="btn primary" onClick={resetGame}>
                 <Play size={18} /> Rematch

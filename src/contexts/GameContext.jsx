@@ -203,27 +203,27 @@ export function GameProvider({ children }) {
 
   const winChessGame = () => {
     setState(prev => ({ ...prev, chessWins: prev.chessWins + 1 }));
-    addXp(50);
+    addXp(15);
   };
 
   const solvePuzzle = () => {
     setState(prev => ({ ...prev, puzzlesSolved: prev.puzzlesSolved + 1 }));
-    addXp(10);
+    addXp(5);
   };
 
   const answerProvinceCorrect = () => {
     setState(prev => ({ ...prev, provincesCorrect: prev.provincesCorrect + 1 }));
-    addXp(5);
+    addXp(2);
   };
 
   const masterFlashcard = () => {
     setState(prev => ({ ...prev, flashcardsMastered: prev.flashcardsMastered + 1 }));
-    addXp(5);
+    addXp(2);
   };
 
   const readForMinutes = (mins) => {
     setState(prev => ({ ...prev, readingMinutes: prev.readingMinutes + mins }));
-    addXp(mins * 2);
+    addXp(mins);
   };
 
   const startReadingBook = () => {
