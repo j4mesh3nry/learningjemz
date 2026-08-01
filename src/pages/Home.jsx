@@ -20,6 +20,14 @@ const modules = [
     bg: 'linear-gradient(135deg, #b85c1e 0%, #e07c3e 100%)',
     pattern: 'reading',
   },
+  {
+    to: '/space',
+    icon: '🪐',
+    title: 'Space',
+    subtitle: 'Planets, Moons & Stars',
+    bg: 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%)',
+    pattern: 'space',
+  },
 ];
 
 const lockedModules = [
@@ -27,11 +35,6 @@ const lockedModules = [
     icon: '🌍',
     title: 'Geography',
     subtitle: 'Philippine Provinces',
-  },
-  {
-    icon: '🪐',
-    title: 'Space',
-    subtitle: 'Planets, Moons & Stars',
   },
   {
     icon: '🎵',
