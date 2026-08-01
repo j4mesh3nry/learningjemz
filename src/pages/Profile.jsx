@@ -15,6 +15,8 @@ export default function Profile() {
   
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const today = new Date().getDay(); // 0=Sun, 1=Mon
+  const currentDayIdx = today === 0 ? 6 : today - 1;
+  const refDayIdx = hasPlayedToday ? currentDayIdx : (currentDayIdx - 1 + 7) % 7;
 
   const [avatar, setAvatar] = useState(() => user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar') || '👤');
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
@@ -147,9 +149,9 @@ export default function Profile() {
         </h3>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {days.map((d, i) => {
-            const dayIndex = (i + 1) % 7; // Mon=1 ... Sun=0
-            const isActive = i < streak % 7 || (streak >= 7);
-            const isToday = dayIndex === today;
+            const daysAgo = (refDayIdx - i + 7) % 7;
+            const isActive = streak > 0 && (daysAgo < streak || streak >= 7);
+            const isToday = i === currentDayIdx;
             return (
               <div key={d} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                 <div style={{
