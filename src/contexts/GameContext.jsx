@@ -106,7 +106,6 @@ export function GameProvider({ children }) {
           flashcards_mastered: localState.flashcardsMastered,
           books_reading: localState.booksReading,
           quiz_high_score: localState.quizHighScore,
-          bot_stats: localState.botStats,
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
           avatar: user.user_metadata?.avatar || '👤'
         };
