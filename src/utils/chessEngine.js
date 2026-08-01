@@ -126,6 +126,13 @@ function minimax(game, depth, alpha, beta, isMaximizingPlayer) {
   }
 
   const moves = game.moves({ verbose: true });
+  
+  // Move ordering: evaluate captures and promotions first for massive alpha-beta speedup
+  moves.sort((a, b) => {
+    let scoreA = (a.flags.includes('c') ? 10 : 0) + (a.promotion ? 20 : 0);
+    let scoreB = (b.flags.includes('c') ? 10 : 0) + (b.promotion ? 20 : 0);
+    return scoreB - scoreA;
+  });
 
   if (isMaximizingPlayer) {
     let bestVal = -Infinity;
@@ -176,9 +183,11 @@ export function getBestMove(game, depth = 3, difficulty = 'Hard') {
   let bestMove = moves[0];
   let bestVal = isMaximizingPlayer ? -Infinity : Infinity;
 
-  // Simple move ordering: captures first to improve alpha-beta pruning
+  // Move ordering: evaluate captures and promotions first for massive alpha-beta speedup
   moves.sort((a, b) => {
-    return (b.flags.includes('c') ? 1 : 0) - (a.flags.includes('c') ? 1 : 0);
+    let scoreA = (a.flags.includes('c') ? 10 : 0) + (a.promotion ? 20 : 0);
+    let scoreB = (b.flags.includes('c') ? 10 : 0) + (b.promotion ? 20 : 0);
+    return scoreB - scoreA;
   });
 
   for (const move of moves) {
