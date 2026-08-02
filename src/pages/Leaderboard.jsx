@@ -30,7 +30,7 @@ export default function Leaderboard() {
     
     const subscription = supabase
       .channel('public:game_progress')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'game_progress' }, payload => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'game_progress' }, payload => {
         fetchLeaders();
       })
       .subscribe();
