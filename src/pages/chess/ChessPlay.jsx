@@ -345,7 +345,6 @@ export default function ChessPlay() {
   const confirmRestart = () => {
     if (game.history().length > 0 && gameState === 'playing') {
       recordChessGame(difficulty, false);
-      recordActivity();
     }
     setShowRestartModal(false);
     resetGame();
@@ -364,7 +363,6 @@ export default function ChessPlay() {
     if (difficulty) {
       if (game.history().length > 0 && gameState === 'playing') {
         recordChessGame(difficulty, false);
-        recordActivity();
       }
       setDifficulty(null);
       setGameState('playing');
@@ -388,19 +386,9 @@ export default function ChessPlay() {
     setShowOverlay(true);
     recordChessGame(difficulty, false);
     
-    const oldStreak = streak;
-    const streakIncreased = recordActivity(); // Award streak for trying
-    setVictoryStats({ streakIncreased, xpGained: 0 });
-    setDisplayedStreak(oldStreak);
-    
-    if (streakIncreased) {
-      setTimeout(() => {
-        setIgniting(true);
-        setDisplayedStreak(oldStreak + 1);
-      }, 800);
-    } else {
-      setDisplayedStreak(oldStreak);
-    }
+    setVictoryStats({ streakIncreased: false, xpGained: 0 });
+    setDisplayedStreak(streak);
+    setIgniting(false);
   };
 
   const handlePromotionSelect = (pieceType) => {
