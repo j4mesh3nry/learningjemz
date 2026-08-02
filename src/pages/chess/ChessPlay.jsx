@@ -279,6 +279,10 @@ export default function ChessPlay() {
   };
 
   const resetGame = () => {
+    if (workerRef.current) {
+      workerRef.current.onmessage = null;
+    }
+    setIsThinking(false);
     updateGame(new Chess());
     setSelectedSquare(null);
     setLegalMoves([]);
@@ -341,6 +345,11 @@ export default function ChessPlay() {
       setGameState('playing');
       setVictoryStats(null);
       setIgniting(false);
+      
+      if (workerRef.current) {
+        workerRef.current.onmessage = null;
+      }
+      setIsThinking(false);
       updateGame(new Chess());
       setSelectedSquare(null);
       setLegalMoves([]);
