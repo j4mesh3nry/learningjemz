@@ -82,9 +82,4 @@ LearningJemz is a **proprietary personal project** created and owned entirely by
 
 ## 👨‍💻 Author
 
-**James Henry Emorricha** 
-
-- **LinkedIn:** [Insert LinkedIn URL]
-- **Email:** [Insert Email Address]
-
-**Made with ❤️ by James Henry**
+**James Henry Emorricha**
