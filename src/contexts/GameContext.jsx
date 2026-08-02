@@ -85,7 +85,7 @@ export function GameProvider({ children }) {
           flashcardsMastered: data.flashcards_mastered,
           booksReading: data.books_reading,
           quizHighScore: data.quiz_high_score,
-          botStats: {
+          botStats: data.bot_stats || {
             Easy: localState.botStats?.Easy || defaultState.botStats.Easy,
             Medium: localState.botStats?.Medium || defaultState.botStats.Medium,
             Hard: localState.botStats?.Hard || defaultState.botStats.Hard
@@ -110,6 +110,7 @@ export function GameProvider({ children }) {
           flashcards_mastered: localState.flashcardsMastered,
           books_reading: localState.booksReading,
           quiz_high_score: localState.quizHighScore,
+          bot_stats: localState.botStats,
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
           avatar: user.user_metadata?.avatar || '👤'
         };
@@ -170,6 +171,7 @@ export function GameProvider({ children }) {
         flashcards_mastered: state.flashcardsMastered,
         books_reading: state.booksReading,
         quiz_high_score: state.quizHighScore,
+        bot_stats: state.botStats,
         name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
         avatar: user.user_metadata?.avatar || '👤'
       };
