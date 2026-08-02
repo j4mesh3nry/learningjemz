@@ -122,10 +122,14 @@ export default function Home() {
               Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
             </h1>
           </div>
-          <div style={{ display: 'flex', gap: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <div style={{ 
+              display: 'flex', alignItems: 'center', gap: 4,
+              background: '#fff5f5', padding: '4px 10px', borderRadius: 20,
+              border: '1px solid #ffcdd2',
+            }}>
               <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '0.85rem' }}>🔥</span>
-              <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 700, fontSize: '0.85rem', color: '#e53935' }}>{streak}</span>
+              <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 800, fontSize: '0.85rem', color: '#e53935' }}>{streak}</span>
             </div>
             <Link to="/profile" style={{
               display: 'flex', alignItems: 'center', gap: 4,
@@ -133,7 +137,7 @@ export default function Home() {
               border: '1px solid #ffe082', textDecoration: 'none',
             }}>
               <span style={{ fontSize: '0.85rem' }}>⭐</span>
-              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#f57f17' }}>Lv.{level}</span>
+              <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#f57f17' }}>Lv.{level}</span>
             </Link>
           </div>
         </div>
