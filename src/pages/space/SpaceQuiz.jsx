@@ -75,7 +75,8 @@ export default function SpaceQuiz() {
     setSelectedAnswer(index);
     setTimerActive(false);
 
-    if (index === questions[currentIndex].correctIndex) {
+    const isCorrect = index === questions[currentIndex].correctIndex;
+    if (isCorrect) {
       setScore(s => s + 1);
       addXp(10);
       setSessionXp(xp => xp + 10);
@@ -88,16 +89,15 @@ export default function SpaceQuiz() {
         setTimer(15);
         setTimerActive(true);
       } else {
-        finishQuiz();
+        finishQuiz(score + (isCorrect ? 1 : 0));
       }
     }, 1500);
   };
 
-  const finishQuiz = () => {
+  const finishQuiz = (finalScore) => {
     setIsFinished(true);
     setTimerActive(false);
     
-    const finalScore = score + (selectedAnswer === questions[currentIndex].correctIndex ? 1 : 0);
     const savedStats = JSON.parse(localStorage.getItem('learningjemz-space-stats') || '{"cardsMastered":0,"quizHighScore":0,"planetsExplored":0}');
     if (finalScore > savedStats.quizHighScore) {
       savedStats.quizHighScore = finalScore;

@@ -58,7 +58,7 @@ export default function ProvinceQuiz() {
         setSessionXp(xp => xp + 2);
         setCorrectFlash(null);
         if (currentIndex + 1 >= queue.length) {
-          endGame();
+          endGame(score + 1, lives);
         } else {
           setCurrentIndex(i => i + 1);
         }
@@ -69,7 +69,7 @@ export default function ProvinceQuiz() {
       setTimeout(() => {
         setLives(l => {
           const newLives = l - 1;
-          if (newLives <= 0) endGame();
+          if (newLives <= 0) endGame(score, newLives);
           return newLives;
         });
         setWrongFlash(null);
@@ -77,13 +77,13 @@ export default function ProvinceQuiz() {
     }
   };
 
-  const endGame = () => {
+  const endGame = (finalScore, finalLives) => {
     setGameOver(true);
     // update stats
     const saved = localStorage.getItem('learningjemz-geo-stats');
     let stats = saved ? JSON.parse(saved) : { mastered: 0, accuracy: 0, streak: 0 };
-    stats.accuracy = Math.round((score / (score + (3 - lives))) * 100) || 0;
-    stats.mastered = Math.max(stats.mastered, score);
+    stats.accuracy = Math.round((finalScore / (finalScore + (3 - finalLives))) * 100) || 0;
+    stats.mastered = Math.max(stats.mastered, finalScore);
     localStorage.setItem('learningjemz-geo-stats', JSON.stringify(stats));
     
     // Gamification
