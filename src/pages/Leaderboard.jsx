@@ -157,8 +157,8 @@ export default function Leaderboard() {
         })}
       </div>
       
-      {/* Sticky Current User (if not in top 3) */}
-      {!loading && currentUserRankIndex > 2 && (
+      {/* Sticky Current User */}
+      {!loading && user && (
         <div style={{
           position: 'fixed', bottom: 70, left: '50%', transform: 'translateX(-50%)',
           width: '100%', maxWidth: 420, padding: '0 16px', boxSizing: 'border-box',
@@ -171,7 +171,7 @@ export default function Leaderboard() {
             boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
             border: '2px solid var(--color-primary)'
           }}>
-            <div style={{ fontWeight: 700, color: 'var(--color-primary)', width: 24, fontSize: '1rem' }}>
+            <div style={{ fontWeight: 700, color: 'var(--color-primary)', width: 24, fontSize: '1rem', display: 'flex', justifyContent: 'center' }}>
               {currentUserRank}
             </div>
             <div style={{ fontSize: '2rem', margin: '0 16px 0 8px', background: '#f8f9fa', borderRadius: '50%', padding: 4 }}>
@@ -181,10 +181,10 @@ export default function Leaderboard() {
               <span style={{ fontWeight: 700, color: 'var(--color-primary-dark)', fontSize: '1.05rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {currentUserData?.name || user?.user_metadata?.name || 'You'}
               </span>
-              <span style={{ color: '#666', fontSize: '0.85rem' }}>Lv. {currentUserData?.level || 1}</span>
+              <span style={{ color: '#666', fontSize: '0.85rem' }}>Lv. {level}</span>
             </div>
             <div style={{ fontWeight: 800, color: 'var(--color-primary)', fontSize: '1.05rem' }}>
-              {currentUserData?.xp || 0} XP
+              {xp} XP
             </div>
           </div>
         </div>
