@@ -149,7 +149,7 @@ export default function ChessPlay() {
       setGameState('draw');
       setShowOverlay(true);
     }
-  }, [winChessGame, recordActivity, streak, playerColor]);
+  }, [winChessGame, recordActivity, streak, playerColor, difficulty, recordChessGame]);
 
   const makeAIMove = useCallback(() => {
     if (game.isGameOver() || gameState !== 'playing') return;
