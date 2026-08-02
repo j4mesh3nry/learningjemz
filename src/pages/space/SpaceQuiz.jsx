@@ -4,6 +4,7 @@ import { useGame } from '../../contexts/GameContext.jsx';
 import { quizQuestions } from '../../data/space-data.js';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import './space.css';
+import VictoryScreen from '../../components/VictoryScreen';
 
 export default function SpaceQuiz() {
   const navigate = useNavigate();
@@ -17,6 +18,12 @@ export default function SpaceQuiz() {
   const [isFinished, setIsFinished] = useState(false);
   const [timer, setTimer] = useState(15);
   const [timerActive, setTimerActive] = useState(false);
+  
+  // Victory screen states
+  const [sessionXp, setSessionXp] = useState(0);
+  const [igniting, setIgniting] = useState(false);
+  const [displayedStreak, setDisplayedStreak] = useState(0);
+  const { streak, recordActivity, hasPlayedToday } = useGame();
 
   useEffect(() => {
     startQuiz();
@@ -58,6 +65,8 @@ export default function SpaceQuiz() {
     setIsFinished(false);
     setTimer(15);
     setTimerActive(true);
+    setSessionXp(0);
+    setIgniting(false);
   };
 
   const handleAnswer = (index) => {
@@ -69,6 +78,7 @@ export default function SpaceQuiz() {
     if (index === questions[currentIndex].correctIndex) {
       setScore(s => s + 1);
       addXp(10);
+      setSessionXp(xp => xp + 10);
     }
 
     setTimeout(() => {
@@ -93,34 +103,49 @@ export default function SpaceQuiz() {
       savedStats.quizHighScore = finalScore;
       localStorage.setItem('learningjemz-space-stats', JSON.stringify(savedStats));
     }
+    
+    // Gamification
+    const oldStreak = streak;
+    setDisplayedStreak(oldStreak);
+    const streakIncreased = recordActivity();
+    if (streakIncreased) {
+      setTimeout(() => {
+        setIgniting(true);
+        setDisplayedStreak(oldStreak + 1);
+      }, 800);
+    }
   };
 
   if (isFinished) {
     const accuracy = Math.round((score / questions.length) * 100);
     return (
       <div className="space-module quiz-mode">
-        <div className="space-nav">
-          <button onClick={() => navigate('/space')} className="back-btn"><ArrowLeft /> Back to Space</button>
-        </div>
-        <div className="results-screen">
-          <h2>Quiz Complete!</h2>
-          <div className="results-stats">
-            <div className="result-stat">
-              <span className="result-label">Score</span>
-              <span className="result-value text-gold">{score} / {questions.length}</span>
+        <VictoryScreen
+          isOpen={true}
+          title="Quiz Complete!"
+          xpGained={sessionXp}
+          streak={displayedStreak}
+          igniting={igniting}
+          hasPlayedToday={hasPlayedToday}
+          onContinue={startQuiz}
+        >
+          <div className="results-stats" style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 20 }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.2rem', color: '#ffb400', fontWeight: 'bold' }}>{score} / {questions.length}</div>
+              <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: '#ccc' }}>Score</div>
             </div>
-            <div className="result-stat">
-              <span className="result-label">Accuracy</span>
-              <span className="result-value">{accuracy}%</span>
-            </div>
-            <div className="result-stat">
-              <span className="result-label">XP Earned</span>
-              <span className="result-value text-green">+{score * 10} XP</span>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.2rem', color: '#4caf50', fontWeight: 'bold' }}>{accuracy}%</div>
+              <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: '#ccc' }}>Accuracy</div>
             </div>
           </div>
-          <button className="space-btn" onClick={startQuiz}>
-            <RotateCcw className="icon" /> Play Again
-          </button>
+        </VictoryScreen>
+        
+        <div className="space-nav" style={{ filter: 'blur(4px)' }}>
+          <button onClick={() => navigate('/space')} className="back-btn"><ArrowLeft /> Back to Space</button>
+        </div>
+        <div className="quiz-card" style={{ filter: 'blur(4px)', minHeight: 400 }}>
+          {/* Background blur filler */}
         </div>
       </div>
     );

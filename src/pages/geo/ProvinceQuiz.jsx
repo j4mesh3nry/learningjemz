@@ -5,6 +5,7 @@ import provinces from '../../data/philippines-provinces';
 import { useGame } from '../../contexts/GameContext';
 import { Heart, ArrowLeft } from 'lucide-react';
 import './geo.css';
+import VictoryScreen from '../../components/VictoryScreen';
 
 export default function ProvinceQuiz() {
   const navigate = useNavigate();
@@ -19,6 +20,12 @@ export default function ProvinceQuiz() {
   const [correctFlash, setCorrectFlash] = useState(null);
   const [wrongFlash, setWrongFlash] = useState(null);
   const [mode, setMode] = useState('quiz'); // 'quiz' or 'learn'
+  
+  // Victory screen states
+  const [sessionXp, setSessionXp] = useState(0);
+  const [igniting, setIgniting] = useState(false);
+  const [displayedStreak, setDisplayedStreak] = useState(0);
+  const { streak, recordActivity, hasPlayedToday } = useGame();
 
   useEffect(() => {
     startNewGame();
@@ -33,6 +40,8 @@ export default function ProvinceQuiz() {
     setGameOver(false);
     setCorrectFlash(null);
     setWrongFlash(null);
+    setSessionXp(0);
+    setIgniting(false);
   };
 
   const handleProvinceClick = (id) => {
@@ -45,7 +54,8 @@ export default function ProvinceQuiz() {
       setCorrectFlash(id);
       setTimeout(() => {
         setScore(s => s + 1);
-        addXp(10);
+        addXp(2); // Reduced from 10 to match design doc (+2 XP per province)
+        setSessionXp(xp => xp + 2);
         setCorrectFlash(null);
         if (currentIndex + 1 >= queue.length) {
           endGame();
@@ -75,6 +85,17 @@ export default function ProvinceQuiz() {
     stats.accuracy = Math.round((score / (score + (3 - lives))) * 100) || 0;
     stats.mastered = Math.max(stats.mastered, score);
     localStorage.setItem('learningjemz-geo-stats', JSON.stringify(stats));
+    
+    // Gamification
+    const oldStreak = streak;
+    setDisplayedStreak(oldStreak);
+    const streakIncreased = recordActivity();
+    if (streakIncreased) {
+      setTimeout(() => {
+        setIgniting(true);
+        setDisplayedStreak(oldStreak + 1);
+      }, 800);
+    }
   };
 
   if (queue.length === 0) return <div>Loading...</div>;
@@ -98,11 +119,27 @@ export default function ProvinceQuiz() {
       )}
 
       {gameOver ? (
-        <div className="results-screen animate-fade-in">
-          <h2>Quiz Complete!</h2>
-          <p>Score: {score} / 81</p>
-          <button className="geo-btn" onClick={startNewGame}>Play Again</button>
-        </div>
+        <>
+          <VictoryScreen
+            isOpen={true}
+            title="Quiz Complete!"
+            xpGained={sessionXp}
+            streak={displayedStreak}
+            igniting={igniting}
+            hasPlayedToday={hasPlayedToday}
+            onContinue={startNewGame}
+          >
+            <p style={{ margin: 0 }}>You got {score} / 81 provinces correct!</p>
+          </VictoryScreen>
+          <div className="map-wrapper" style={{ filter: 'blur(4px)' }}>
+            <PhilippineMap
+              onProvinceClick={() => {}}
+              correctProvince={null}
+              wrongProvince={null}
+              showNames={mode === 'learn'}
+            />
+          </div>
+        </>
       ) : (
         <div className="map-wrapper">
           <PhilippineMap

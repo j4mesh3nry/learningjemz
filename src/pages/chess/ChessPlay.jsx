@@ -5,6 +5,7 @@ import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, Swords, Percent, Eye } from 'lucide-react';
 import './chess.css';
+import VictoryScreen from '../../components/VictoryScreen';
 
 import w_p from '../../assets/pieces/w_p.svg';
 import w_n from '../../assets/pieces/w_n.svg';
@@ -611,29 +612,27 @@ export default function ChessPlay() {
               </div>
             )}
             
-            {(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && showOverlay && (
-              <div className={`game-over-overlay ${gameState === 'checkmate' && game.turn() !== playerColor ? 'win' : ''}`}>
+            <VictoryScreen
+              isOpen={(gameState === 'checkmate' && game.turn() !== playerColor) && showOverlay && victoryStats}
+              title="Checkmate!"
+              xpGained={victoryStats?.xpGained || 0}
+              streak={displayedStreak}
+              igniting={igniting}
+              hasPlayedToday={hasPlayedToday}
+              onContinue={() => setShowOverlay(false)}
+            >
+              <p>You defeated {difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}!</p>
+            </VictoryScreen>
+
+            {/* Fallback for losses / resignations / draws */}
+            {(gameState === 'resigned' || (gameState === 'checkmate' && game.turn() === playerColor) || gameState === 'draw') && showOverlay && (
+              <div className="game-over-overlay">
                 <h2>{gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : 'Checkmate!'}</h2>
                 <p>
                   {gameState === 'resigned' ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!` :
                    gameState === 'draw' ? 'The game is a draw.' :
-                   game.turn() !== playerColor ? 'You win!' : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
+                   `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
                 </p>
-                {victoryStats && (
-                  <div className="victory-stats-container">
-                    <div className={`victory-stat-card ${igniting ? 'igniting' : ''}`} style={{ animationDelay: '0.1s' }}>
-                      <div className={`stat-icon ${!hasPlayedToday && !igniting ? 'unlit-icon' : ''}`}>🔥</div>
-                      <div className={`stat-value ${!hasPlayedToday && !igniting ? 'unlit-text' : ''}`}>{displayedStreak}</div>
-                      <div className="stat-label">Day Streak</div>
-                    </div>
-                    <div className="victory-stat-card" style={{ animationDelay: '0.2s' }}>
-                      <div className="stat-icon">🏆</div>
-                      <div className="stat-value">+{victoryStats.xpGained}</div>
-                      <div className="stat-label">Total XP</div>
-                    </div>
-                  </div>
-                )}
-                
                 <button 
                   className="btn" 
                   onClick={() => setShowOverlay(false)}
