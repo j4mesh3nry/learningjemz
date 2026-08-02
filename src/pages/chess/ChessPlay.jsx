@@ -613,35 +613,21 @@ export default function ChessPlay() {
             )}
             
             <VictoryScreen
-              isOpen={(gameState === 'checkmate' && game.turn() !== playerColor) && showOverlay && victoryStats}
-              title="Checkmate!"
+              isOpen={(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && showOverlay}
+              title={gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : 'Checkmate!'}
               xpGained={victoryStats?.xpGained || 0}
               streak={displayedStreak}
               igniting={igniting}
               hasPlayedToday={hasPlayedToday}
               onContinue={() => setShowOverlay(false)}
             >
-              <p>You defeated {difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}!</p>
+              <p>
+                {gameState === 'resigned' ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!` :
+                 gameState === 'draw' ? 'The game is a draw.' :
+                 game.turn() !== playerColor ? `You defeated ${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}!` :
+                 `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
+              </p>
             </VictoryScreen>
-
-            {/* Fallback for losses / resignations / draws */}
-            {(gameState === 'resigned' || (gameState === 'checkmate' && game.turn() === playerColor) || gameState === 'draw') && showOverlay && (
-              <div className="game-over-overlay">
-                <h2>{gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : 'Checkmate!'}</h2>
-                <p>
-                  {gameState === 'resigned' ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!` :
-                   gameState === 'draw' ? 'The game is a draw.' :
-                   `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
-                </p>
-                <button 
-                  className="btn" 
-                  onClick={() => setShowOverlay(false)}
-                  style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '20px auto 0 auto', background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 20, padding: '6px 16px', fontSize: '0.9rem' }}
-                >
-                  <Eye size={18} /> View Board
-                </button>
-              </div>
-            )}
 
             <div className={`board-container`}>
               {(isFlipped ? [...board].reverse() : board).map((row, rIndexMapped) => {
