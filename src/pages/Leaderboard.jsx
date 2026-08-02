@@ -8,7 +8,7 @@ import '../index.css';
 
 export default function Leaderboard() {
   const { user } = useAuth();
-  const { streak, level } = useGame();
+  const { streak, level, xp } = useGame();
   const [leaders, setLeaders] = useState([]);
   const [loading, setLoading] = useState(true);
   
