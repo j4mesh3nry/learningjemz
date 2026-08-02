@@ -1,5 +1,5 @@
 import React from 'react';
-import { Diamond } from 'lucide-react';
+import Gemstone from './Gemstone';
 import './victory.css';
 
 export default function VictoryScreen({ 
@@ -21,7 +21,7 @@ export default function VictoryScreen({
         
         <div className="gem-forge-container">
           <div className="gem-glow"></div>
-          <Diamond className="gem-icon" />
+          <Gemstone className="gem-icon" />
         </div>
 
         <div className="victory-stats">
