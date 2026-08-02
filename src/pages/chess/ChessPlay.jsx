@@ -143,11 +143,36 @@ export default function ChessPlay() {
       } else {
         // Bot wins
         recordChessGame(difficulty, false);
-        recordActivity(); // Award streak for trying
+        const streakIncreased = recordActivity(); // Award streak for trying
+        setVictoryStats({ streakIncreased, xpGained: 0 });
+        setDisplayedStreak(oldStreak);
+        
+        if (streakIncreased) {
+          setTimeout(() => {
+            setIgniting(true);
+            setDisplayedStreak(oldStreak + 1);
+          }, 800);
+        } else {
+          setDisplayedStreak(oldStreak);
+        }
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
       setShowOverlay(true);
+      recordChessGame(difficulty, false);
+      const oldStreak = streak;
+      const streakIncreased = recordActivity(); // Award streak for trying
+      setVictoryStats({ streakIncreased, xpGained: 0 });
+      setDisplayedStreak(oldStreak);
+      
+      if (streakIncreased) {
+        setTimeout(() => {
+          setIgniting(true);
+          setDisplayedStreak(oldStreak + 1);
+        }, 800);
+      } else {
+        setDisplayedStreak(oldStreak);
+      }
     }
   }, [winChessGame, recordActivity, streak, playerColor, difficulty, recordChessGame]);
 
@@ -362,7 +387,20 @@ export default function ChessPlay() {
     setGameState('resigned');
     setShowOverlay(true);
     recordChessGame(difficulty, false);
-    recordActivity(); // Award streak for trying
+    
+    const oldStreak = streak;
+    const streakIncreased = recordActivity(); // Award streak for trying
+    setVictoryStats({ streakIncreased, xpGained: 0 });
+    setDisplayedStreak(oldStreak);
+    
+    if (streakIncreased) {
+      setTimeout(() => {
+        setIgniting(true);
+        setDisplayedStreak(oldStreak + 1);
+      }, 800);
+    } else {
+      setDisplayedStreak(oldStreak);
+    }
   };
 
   const handlePromotionSelect = (pieceType) => {
@@ -627,8 +665,9 @@ export default function ChessPlay() {
               xpGained={victoryStats?.xpGained || 0}
               streak={displayedStreak}
               igniting={igniting}
-              hasPlayedToday={hasPlayedToday}
+              streakIncreased={victoryStats?.streakIncreased || false}
               onContinue={() => setShowOverlay(false)}
+              customMessage={gameState === 'checkmate' ? (game.turn() === playerColor ? 'Beginner Bob wins!' : 'You win!') : undefined}
             >
               <p>
                 {gameState === 'resigned' ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!` :

@@ -8,11 +8,15 @@ export default function VictoryScreen({
   xpGained, 
   streak, 
   igniting, 
-  hasPlayedToday,
+  streakIncreased,
   onContinue,
   children
 }) {
   if (!isOpen) return null;
+
+  // If streakIncreased is true, it starts pale and becomes ignited when `igniting` becomes true.
+  // If streakIncreased is false, it is ALWAYS ignited.
+  const isPale = streakIncreased && !igniting;
 
   return (
     <div className="victory-overlay">
@@ -26,14 +30,18 @@ export default function VictoryScreen({
 
         <div className="victory-stats">
           {/* Day Streak Card - Animates in second */}
-          <div className={`victory-stat-card ${igniting ? 'igniting' : ''}`} style={{ animationDelay: '0.2s' }}>
-            <div className={`stat-icon ${!hasPlayedToday && !igniting ? 'unlit-icon' : ''}`}>
+          <div className={`victory-stat-card ${igniting ? 'igniting' : ''}`} style={{ animationDelay: '0.2s', position: 'relative' }}>
+            <div className={`stat-icon ${isPale ? 'unlit-icon' : ''}`}>
               🔥
             </div>
-            <div className={`stat-value ${!hasPlayedToday && !igniting ? 'unlit-text' : ''}`}>
+            <div className={`stat-value ${isPale ? 'unlit-text' : ''}`}>
               {streak}
             </div>
             <div className="stat-label">Day Streak</div>
+            
+            {igniting && streakIncreased && (
+              <div className="streak-plus-one">+1</div>
+            )}
           </div>
 
           {/* XP Card - Animates in first */}

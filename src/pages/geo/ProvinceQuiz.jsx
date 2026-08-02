@@ -19,6 +19,7 @@ export default function ProvinceQuiz() {
   
   const [correctFlash, setCorrectFlash] = useState(null);
   const [wrongFlash, setWrongFlash] = useState(null);
+  const [streakIncreased, setStreakIncreased] = useState(false);
   const [mode, setMode] = useState('quiz'); // 'quiz' or 'learn'
   
   // Victory screen states
@@ -42,6 +43,7 @@ export default function ProvinceQuiz() {
     setWrongFlash(null);
     setSessionXp(0);
     setIgniting(false);
+    setStreakIncreased(false);
   };
 
   const handleProvinceClick = (id) => {
@@ -89,8 +91,10 @@ export default function ProvinceQuiz() {
     // Gamification
     const oldStreak = streak;
     setDisplayedStreak(oldStreak);
-    const streakIncreased = recordActivity();
-    if (streakIncreased) {
+    const didIncrease = recordActivity();
+    setStreakIncreased(didIncrease);
+    
+    if (didIncrease) {
       setTimeout(() => {
         setIgniting(true);
         setDisplayedStreak(oldStreak + 1);
@@ -126,7 +130,7 @@ export default function ProvinceQuiz() {
             xpGained={sessionXp}
             streak={displayedStreak}
             igniting={igniting}
-            hasPlayedToday={hasPlayedToday}
+            streakIncreased={streakIncreased}
             onContinue={startNewGame}
           >
             <p style={{ margin: 0 }}>You got {score} / 81 provinces correct!</p>

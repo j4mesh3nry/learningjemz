@@ -19,10 +19,10 @@ export default function SpaceQuiz() {
   const [timer, setTimer] = useState(15);
   const [timerActive, setTimerActive] = useState(false);
   
-  // Victory screen states
   const [sessionXp, setSessionXp] = useState(0);
   const [igniting, setIgniting] = useState(false);
   const [displayedStreak, setDisplayedStreak] = useState(0);
+  const [streakIncreased, setStreakIncreased] = useState(false);
   const { streak, recordActivity, hasPlayedToday } = useGame();
 
   useEffect(() => {
@@ -67,6 +67,7 @@ export default function SpaceQuiz() {
     setTimerActive(true);
     setSessionXp(0);
     setIgniting(false);
+    setStreakIncreased(false);
   };
 
   const handleAnswer = (index) => {
@@ -107,8 +108,10 @@ export default function SpaceQuiz() {
     // Gamification
     const oldStreak = streak;
     setDisplayedStreak(oldStreak);
-    const streakIncreased = recordActivity();
-    if (streakIncreased) {
+    const didIncrease = recordActivity();
+    setStreakIncreased(didIncrease);
+    
+    if (didIncrease) {
       setTimeout(() => {
         setIgniting(true);
         setDisplayedStreak(oldStreak + 1);
@@ -126,7 +129,7 @@ export default function SpaceQuiz() {
           xpGained={sessionXp}
           streak={displayedStreak}
           igniting={igniting}
-          hasPlayedToday={hasPlayedToday}
+          streakIncreased={streakIncreased}
           onContinue={startQuiz}
         >
           <div className="results-stats" style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 20 }}>
