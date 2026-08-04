@@ -77,12 +77,12 @@ export default function Home() {
       {/* Sticky Header Container */}
       <div style={{ 
         position: 'sticky', top: 0, zIndex: 100, background: '#ffffff',
-        paddingTop: 24, paddingBottom: 16, margin: '-24px -16px 16px -16px', paddingLeft: 16, paddingRight: 16,
+        paddingTop: 28, paddingBottom: 20, margin: '-24px -16px 20px -16px', paddingLeft: 16, paddingRight: 16,
         borderBottom: '1px solid #eaeaea',
         boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
       }}>
         {/* Top row: Title and Badges */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           {/* Logo Area */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{
@@ -107,22 +107,22 @@ export default function Home() {
               Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
             </h1>
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             <div style={{
-              display: 'flex', alignItems: 'center', gap: 4,
-              background: '#fff5f5', padding: '4px 10px', borderRadius: 20,
+              display: 'flex', alignItems: 'center', gap: 3,
+              background: '#fff5f5', padding: '2px 8px', borderRadius: 12,
               border: '1px solid #ffcdd2',
             }}>
-              <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '0.85rem' }}>🔥</span>
-              <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 800, fontSize: '0.85rem', color: '#e53935' }}>{streak}</span>
+              <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '0.75rem' }}>🔥</span>
+              <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 800, fontSize: '0.7rem', color: '#e53935' }}>{streak}</span>
             </div>
             <div onClick={() => navigate('/profile')} style={{
-              display: 'flex', alignItems: 'center', gap: 4,
-              background: '#fff8e1', padding: '4px 10px', borderRadius: 20,
+              display: 'flex', alignItems: 'center', gap: 3,
+              background: '#fff8e1', padding: '2px 8px', borderRadius: 12,
               border: '1px solid #ffe082', cursor: 'pointer',
             }} aria-label="Go to Profile" role="button">
-              <span style={{ fontSize: '0.85rem' }}>⭐</span>
-              <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#f57f17' }}>Lv.{level}</span>
+              <span style={{ fontSize: '0.75rem' }}>⭐</span>
+              <span style={{ fontWeight: 800, fontSize: '0.7rem', color: '#f57f17' }}>Lv.{level}</span>
             </div>
           </div>
         </div>
