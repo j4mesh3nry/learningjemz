@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, NavLink, useLocation, useNaviga
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useAuth, AuthProvider } from './contexts/AuthContext.jsx';
 import { GameProvider } from './contexts/GameContext.jsx';
-import Home from './pages/Home.jsx';
+import Home from './pages/Home.tsx';
 import SplashScreen from './components/SplashScreen.jsx';
 import Login from './pages/auth/Login.jsx';
 import Signup from './pages/auth/Signup.jsx';
@@ -17,7 +17,7 @@ const Profile = lazy(() => import('./pages/Profile.tsx'));
 const Settings = lazy(() => import('./pages/Settings.tsx'));
 const Leaderboard = lazy(() => import('./pages/Leaderboard.tsx'));
 const ChessHome = lazy(() => import('./pages/chess/ChessHome.tsx'));
-const GeoHome = lazy(() => import('./pages/geo/GeoHome.jsx'));
+const GeoHome = lazy(() => import('./pages/geo/GeoHome.tsx'));
 const ReadingHome = lazy(() => import('./pages/reading/ReadingHome.tsx'));
 const SpaceHome = lazy(() => import('./pages/space/SpaceHome.tsx'));
 
