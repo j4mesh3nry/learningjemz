@@ -10,7 +10,7 @@ import { Card } from '../../components/Card';
 import './reading.css';
 
 const LibraryView = () => {
-  const [library, setLibrary] = useState([]);
+  const [library, setLibrary] = useState<any[]>([]);
   const [filter, setFilter] = useState('All');
   const navigate = useNavigate();
 
@@ -99,7 +99,7 @@ const LibraryView = () => {
               </button>
               <div className="book-cover">
                 {book.coverId ? (
-                  <img src={getCoverUrl(book.coverId, 'M')} alt={book.title} />
+                  <img src={getCoverUrl(book.coverId, 'M') || undefined} alt={book.title} />
                 ) : (
                   <div className="cover-placeholder"><span>{book.title}</span></div>
                 )}

@@ -1,8 +1,7 @@
 // src/pages/geo/GeoHome.tsx
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Card } from '../../components/Card';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import React, { lazy, Suspense } from 'react';
 import ProvinceQuiz from './ProvinceQuiz';
 const MapExplorer = lazy(() => import('./MapExplorer'));
 import { useGame } from '../../contexts/GameContext';

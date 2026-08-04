@@ -6,9 +6,11 @@ type CardProps = {
   style?: React.CSSProperties;
   ariaLabel?: string;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
 };
 
-export const Card: React.FC<CardProps> = ({ children, className = '', style, ariaLabel, onClick }) => {
+export const Card: React.FC<CardProps> = ({ children, className = '', style, ariaLabel, onClick, onMouseEnter, onMouseLeave }) => {
   const classes = `card ${className}`.trim();
   const isInteractive = !!onClick;
 
@@ -25,6 +27,8 @@ export const Card: React.FC<CardProps> = ({ children, className = '', style, ari
       style={style}
       aria-label={ariaLabel}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
       onKeyDown={isInteractive ? handleKeyDown : undefined}
