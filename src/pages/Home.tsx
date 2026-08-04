@@ -155,7 +155,7 @@ export default function Home() {
       <div style={{ display: 'grid', gap: 14 }}>
         {modules.map((m) => (
           <Card key={m.to} className="geo-card-item" onClick={() => navigate(m.to)} ariaLabel={m.title} style={{
-            display: 'flex', alignItems: 'center', gap: 16,
+            display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
             textDecoration: 'none', color: '#fff',
             background: m.bg, borderRadius: 16,
             padding: '20px 18px', position: 'relative', overflow: 'hidden',
