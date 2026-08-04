@@ -200,7 +200,79 @@ export default function Profile() {
           <span style={{ fontSize: '0.85rem', color: 'var(--color-muted)', fontWeight: 500 }}>Total XP</span>
         </div>
       </div>
-      {/* ... rest of component unchanged ... */}
+      {/* Module Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 32 }}>
+        
+        <div style={{
+          background: 'linear-gradient(135deg, #b85c1e, #d66c24)', borderRadius: 20, padding: 20, color: '#fff',
+          boxShadow: '0 8px 24px rgba(184,92,30,0.25)', position: 'relative', overflow: 'hidden'
+        }}>
+          <div style={{ position: 'absolute', right: -10, top: -10, opacity: 0.1, transform: 'scale(2)' }}>
+            <BookOpen size={64} />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, opacity: 0.9 }}>
+            <BookOpen size={24} color="#fff" />
+            <strong style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem' }}>Reading</strong>
+          </div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Books: <strong style={{color:'#fff'}}>{stats.booksCompleted}</strong></div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Mins: <strong style={{color:'#fff'}}>{stats.readingMinutes}</strong></div>
+        </div>
+
+        <div style={{
+          background: 'linear-gradient(135deg, #0a0a1a, #1a1a3e)', borderRadius: 20, padding: 20, color: '#fff',
+          boxShadow: '0 8px 24px rgba(10,10,26,0.4)', position: 'relative', overflow: 'hidden'
+        }}>
+          <div style={{ position: 'absolute', right: -10, top: -10, opacity: 0.05, transform: 'scale(2)' }}>
+            <Rocket size={64} />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, opacity: 0.9 }}>
+            <Rocket size={24} color="#fff" />
+            <strong style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem' }}>Space</strong>
+          </div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Mastered: <strong style={{color:'#fff'}}>{stats.flashcardsMastered}</strong></div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Best: <strong style={{color:'#fff'}}>{stats.quizHighScore}%</strong></div>
+        </div>
+
+      </div>
+
+      {/* Achievements */}
+      <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', marginBottom: 16, paddingLeft: 8 }}>Achievements</h3>
+      <div style={{ 
+        padding: 24, borderRadius: 20, background: '#ffffff',
+        border: '1px solid #eaeaea', boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
+        marginBottom: 32,
+        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 
+      }}>
+        {ACHIEVEMENTS.map(a => {
+          const unlockedData = stats.achievements?.find(ach => ach.id === a.id);
+          const unlocked = !!unlockedData;
+          return (
+            <div key={a.id} style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+              opacity: unlocked ? 1 : 0.4,
+              filter: unlocked ? 'none' : 'grayscale(100%)'
+            }}>
+              <div style={{ 
+                width: 60, height: 60, borderRadius: '50%', 
+                background: unlocked ? '#fff8e1' : '#f5f5f5',
+                border: unlocked ? '2px solid #ffb400' : '2px dashed #ddd',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '2rem', marginBottom: 8,
+                position: 'relative',
+                boxShadow: unlocked ? '0 4px 12px rgba(255,180,0,0.3)' : 'none'
+              }}>
+                {unlocked ? a.icon : <Lock size={20} color="#999" />}
+              </div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', lineHeight: 1.2 }}>{a.name}</div>
+              {unlocked && (
+                <div style={{ fontSize: '0.65rem', color: 'var(--color-primary)', fontWeight: 600, marginTop: 4 }}>
+                  {new Date(unlockedData.unlockedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
       {/* Logout */}
       <div style={{ paddingBottom: 24 }}>
         <button
