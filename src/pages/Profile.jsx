@@ -5,12 +5,11 @@ import { useAuth } from '../contexts/AuthContext.jsx';
 import { ACHIEVEMENTS } from '../utils/achievements.js';
 import { Settings, LogOut, Flame, Trophy, Map as MapIcon, BookOpen, Rocket, Check, Lock, Pencil } from 'lucide-react';
 import { supabase } from '../utils/supabase.js';
+import { updateAvatar, updateName } from '../api/supabase.js';
 import '../index.css';
 
 export default function Profile() {
-  const stats = useGame();
-  const { xp, level, streak } = stats;
-  const { hasPlayedToday } = useGame();
+  const { xp, level, streak, hasPlayedToday } = useGame();
   const { user, logout } = useAuth();
   
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -24,6 +23,13 @@ export default function Profile() {
   const [name, setName] = useState(() => user?.user_metadata?.name || localStorage.getItem('learningjemz_name') || user?.email?.split('@')[0] || 'Learner');
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState('');
+  const [toast, setToast] = useState(null);
+
+  // Simple toast helper
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const PFP_OPTIONS = ['👤', '🦊', '🦉', '🐯', '🐼', '🐸', '🐶', '🦄', '🤖', '👽', '🦸‍♂️', '👩‍🚀', '🐱', '🦁'];
 
@@ -38,17 +44,26 @@ export default function Profile() {
     localStorage.setItem('learningjemz_avatar', a);
     setIsEditingAvatar(false);
     
-    // Save to Supabase Cloud
+    // Save to Supabase using helper
     if (user) {
-      await supabase.auth.updateUser({ data: { avatar: a } });
-      await supabase.from('game_progress').update({ avatar: a }).eq('id', user.id);
+      const result = await updateAvatar(user.id, a);
+      if (result.success) {
+        showToast('Avatar updated');
+      } else {
+        console.error(result.error);
+        showToast('Failed to update avatar');
+      }
     }
   };
 
   return (
     <div className="container" style={{ paddingBottom: '100px' }}>
       
-      {/* Sticky Header */}
+        {toast && (
+          <div className="toast" role="alert" aria-live="assertive">
+            {toast}
+          </div>
+        )}
       <div style={{ 
         position: 'sticky', top: 0, zIndex: 100, background: '#ffffff',
         paddingTop: 24, paddingBottom: 16, margin: '-24px -16px 24px -16px', paddingLeft: 16, paddingRight: 16,
@@ -362,10 +377,15 @@ export default function Profile() {
                     localStorage.setItem('learningjemz_name', trimmed);
                     setIsEditingName(false);
                     
-                    // Save to Supabase Cloud
+                    // Save to Supabase using helper
                     if (user) {
-                      await supabase.auth.updateUser({ data: { name: trimmed } });
-                      await supabase.from('game_progress').update({ name: trimmed }).eq('id', user.id);
+                      const result = await updateName(user.id, trimmed);
+                      if (result.success) {
+                        showToast('Name updated');
+                      } else {
+                        console.error(result.error);
+                        showToast('Failed to update name');
+                      }
                     }
                   } else {
                     setIsEditingName(false);

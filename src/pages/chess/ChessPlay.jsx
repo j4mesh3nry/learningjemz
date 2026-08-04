@@ -123,8 +123,8 @@ export default function ChessPlay() {
     if (newGame.isCheckmate()) {
       setGameState('checkmate');
       setShowOverlay(true);
+      const oldStreak = streak;
       if (newGame.turn() !== playerColor) {
-        const oldStreak = streak;
         const xpGained = winChessGame(difficulty);
         recordChessGame(difficulty, true);
         const streakIncreased = recordActivity();

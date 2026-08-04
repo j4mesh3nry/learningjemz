@@ -1,19 +1,25 @@
 /* src/App.jsx */
 import { BrowserRouter as Router, Routes, Route, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import { useAuth, AuthProvider } from './contexts/AuthContext.jsx';
+import { GameProvider } from './contexts/GameContext.jsx';
 import Home from './pages/Home.jsx';
-import Profile from './pages/Profile.jsx';
-import ChessHome from './pages/chess/ChessHome.jsx';
-import GeoHome from './pages/geo/GeoHome.jsx';
-import ReadingHome from './pages/reading/ReadingHome.jsx';
-import SpaceHome from './pages/space/SpaceHome.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
 import Login from './pages/auth/Login.jsx';
 import Signup from './pages/auth/Signup.jsx';
-import Leaderboard from './pages/Leaderboard.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 import './index.css';
+
+import { Home as HomeIcon, Trophy, Store, User } from 'lucide-react';
+
+// Lazy-loaded heavy routes for code-splitting
+const Profile = lazy(() => import('./pages/Profile.tsx'));
+const Settings = lazy(() => import('./pages/Settings.tsx'));
+const Leaderboard = lazy(() => import('./pages/Leaderboard.tsx'));
+const ChessHome = lazy(() => import('./pages/chess/ChessHome.tsx'));
+const GeoHome = lazy(() => import('./pages/geo/GeoHome.jsx'));
+const ReadingHome = lazy(() => import('./pages/reading/ReadingHome.tsx'));
+const SpaceHome = lazy(() => import('./pages/space/SpaceHome.tsx'));
 
 // Placeholder components for new routes
 const Placeholder = ({ title }) => (
@@ -23,7 +29,16 @@ const Placeholder = ({ title }) => (
   </div>
 );
 
-import { Home as HomeIcon, Trophy, Store, User } from 'lucide-react';
+// Loading spinner for Suspense fallback
+const LoadingFallback = () => (
+  <div style={{
+    display: 'flex', justifyContent: 'center', alignItems: 'center',
+    height: '100vh', color: 'var(--color-primary)', fontWeight: 'bold',
+    fontFamily: 'var(--font-heading)', fontSize: '1.1rem',
+  }}>
+    Loading...
+  </div>
+);
 
 function BottomNav() {
   const location = useLocation();
@@ -35,7 +50,7 @@ function BottomNav() {
   }
 
   return (
-    <nav className="bottom-nav">
+    <nav className="bottom-nav" aria-label="Main navigation">
       <NavLink to="/" end className={location.pathname === '/' ? 'active' : ''}>
         <HomeIcon size={24} />
         <span style={{ marginTop: '4px' }}>Home</span>
@@ -65,7 +80,6 @@ function Layout() {
 
   // Force redirect to Home on refresh/initial mount
   useEffect(() => {
-    // We don't redirect if they are on login/signup and not authenticated
     if (location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/signup') {
       navigate('/', { replace: true });
     }
@@ -73,18 +87,24 @@ function Layout() {
 
   return (
     <div style={{ paddingBottom: showNav ? '65px' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path="/leaderboards" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
-        <Route path="/store" element={<ProtectedRoute><Placeholder title="Jemz Store" /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/chess/*" element={<ProtectedRoute><ChessHome /></ProtectedRoute>} />
-        <Route path="/geo/*" element={<ProtectedRoute><GeoHome /></ProtectedRoute>} />
-        <Route path="/reading/*" element={<ProtectedRoute><ReadingHome /></ProtectedRoute>} />
-        <Route path="/space/*" element={<ProtectedRoute><SpaceHome /></ProtectedRoute>} />
-      </Routes>
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      <main id="main-content">
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="/leaderboards" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+            <Route path="/store" element={<ProtectedRoute><Placeholder title="Jemz Store" /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/chess/*" element={<ProtectedRoute><ChessHome /></ProtectedRoute>} />
+            <Route path="/geo/*" element={<ProtectedRoute><GeoHome /></ProtectedRoute>} />
+            <Route path="/reading/*" element={<ProtectedRoute><ReadingHome /></ProtectedRoute>} />
+            <Route path="/space/*" element={<ProtectedRoute><SpaceHome /></ProtectedRoute>} />
+          </Routes>
+        </Suspense>
+      </main>
       <BottomNav />
     </div>
   );
@@ -103,8 +123,6 @@ function AppContent() {
     </Router>
   );
 }
-
-import { GameProvider } from './contexts/GameContext.jsx';
 
 export default function App() {
   return (

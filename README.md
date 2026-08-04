@@ -4,7 +4,9 @@
 > Explore diverse learning modules, earn XP, build streaks, and climb the leaderboard!
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://learningjemz.vercel.app)
+[![CI](https://github.com/j4mesh3nry/learningjemz/actions/workflows/ci.yml/badge.svg)](https://github.com/j4mesh3nry/learningjemz/actions/workflows/ci.yml)
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-blue?style=flat-square)](https://web.dev/progressive-web-apps/)
+[![Tests](https://img.shields.io/badge/Tests-Vitest-6E9F18?style=flat-square&logo=vitest)](https://vitest.dev/)
 [![Status: Proprietary](https://img.shields.io/badge/Status-Proprietary-red?style=flat-square)]()
 
 **🔗 [Play LearningJemz](https://learningjemz.vercel.app)** | 📱 Install as app on iOS/Android
