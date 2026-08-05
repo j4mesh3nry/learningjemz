@@ -132,16 +132,14 @@ const Sun = React.forwardRef(({ onSelect }, ref) => {
 
 /* ─── Camera Controller ─── */
 function CameraController({ selected, planetRefs, controlsRef }) {
+  const target = useMemo(() => new THREE.Vector3(), []);
+  
   useFrame(() => {
     if (!controlsRef.current) return;
-    const target = new THREE.Vector3();
     if (selected && planetRefs.current[selected.name]) {
       planetRefs.current[selected.name].getWorldPosition(target);
-    } else {
-      target.set(0, 0, 0);
+      controlsRef.current.target.lerp(target, 0.05);
     }
-    // Smoothly interpolate the target position
-    controlsRef.current.target.lerp(target, 0.05);
   });
   return null;
 }
