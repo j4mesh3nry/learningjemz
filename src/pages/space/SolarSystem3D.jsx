@@ -81,7 +81,7 @@ function OrbitRing({ radius }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" array={points} count={points.length / 3} itemSize={3} />
       </bufferGeometry>
-      <lineBasicMaterial color="#ffffff" transparent opacity={0.08} />
+      <lineBasicMaterial color="#4488cc" transparent opacity={0.25} />
     </line>
   );
 }
