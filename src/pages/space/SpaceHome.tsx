@@ -5,6 +5,9 @@ import { useGame } from '../../contexts/GameContext';
 import Flashcards from './Flashcards';
 import SpaceQuiz from './SpaceQuiz';
 import SolarSystem3D from './SolarSystem3D';
+import SizeStack from './SizeStack';
+import ObjectsBySizeMenu from './ObjectsBySizeMenu';
+import IlluminateSystem from './IlluminateSystem';
 import { Card } from '../../components/Card';
 import './space.css';
 
@@ -70,6 +73,19 @@ function SpaceHub() {
           <div className="space-card-info">
             <h3 className="space-card-title">Solar Explorer</h3>
             <p className="space-card-subtitle">Interactive solar system map</p>
+          </div>
+          <div className="space-card-arrow">→</div>
+        </Card>
+
+        <Card
+          className="space-card-item"
+          onClick={() => navigate('/space/objects-by-size')}
+          ariaLabel="List of Solar System objects by size"
+        >
+          <div className="space-card-icon">🪐</div>
+          <div className="space-card-info">
+            <h3 className="space-card-title">Objects by Size</h3>
+            <p className="space-card-subtitle">Master the 35 largest objects</p>
           </div>
           <div className="space-card-arrow">→</div>
         </Card>
@@ -139,6 +155,9 @@ export default function SpaceHome() {
       <Route path="flashcards" element={<Flashcards />} />
       <Route path="quiz" element={<SpaceQuiz />} />
       <Route path="solar-system" element={<SolarSystem3D />} />
+      <Route path="objects-by-size" element={<ObjectsBySizeMenu />} />
+      <Route path="size-stack" element={<SizeStack />} />
+      <Route path="illuminate" element={<IlluminateSystem />} />
     </Routes>
   );
 }
