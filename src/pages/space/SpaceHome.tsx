@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useGame } from '../../contexts/GameContext';
 import Flashcards from './Flashcards';
 import SpaceQuiz from './SpaceQuiz';
-import SolarSystem from './SolarSystem';
+import SolarSystem3D from './SolarSystem3D';
 import { Card } from '../../components/Card';
 import './space.css';
 
@@ -148,7 +148,7 @@ export default function SpaceHome() {
       <Route path="/" element={<SpaceHub />} />
       <Route path="flashcards" element={<Flashcards />} />
       <Route path="quiz" element={<SpaceQuiz />} />
-      <Route path="solar-system" element={<SolarSystem />} />
+      <Route path="solar-system" element={<SolarSystem3D />} />
     </Routes>
   );
 }
