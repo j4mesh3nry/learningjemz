@@ -16,6 +16,7 @@ import { Home as HomeIcon, Trophy, Store, User } from 'lucide-react';
 const Profile = lazy(() => import('./pages/Profile.tsx'));
 const Settings = lazy(() => import('./pages/Settings.tsx'));
 const Leaderboard = lazy(() => import('./pages/Leaderboard.tsx'));
+const StorePage = lazy(() => import('./pages/Store.tsx'));
 const ChessHome = lazy(() => import('./pages/chess/ChessHome.tsx'));
 const GeoHome = lazy(() => import('./pages/geo/GeoHome.tsx'));
 const ReadingHome = lazy(() => import('./pages/reading/ReadingHome.tsx'));
@@ -95,7 +96,7 @@ function Layout() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path="/leaderboards" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
-            <Route path="/store" element={<ProtectedRoute><Placeholder title="Jemz Store" /></ProtectedRoute>} />
+            <Route path="/store" element={<ProtectedRoute><StorePage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/chess/*" element={<ProtectedRoute><ChessHome /></ProtectedRoute>} />
