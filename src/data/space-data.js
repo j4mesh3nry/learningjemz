@@ -270,3 +270,25 @@ export const flashcards = [
   { id: 'f29', front: 'Constellation', back: 'A grouping of stars that form a recognizable pattern or picture in the sky.', category: 'stars', image: '🌠' },
   { id: 'f30', front: 'Asteroid Belt', back: 'A region between Mars and Jupiter filled with rocky bodies (asteroids) orbiting the Sun.', category: 'planets', image: '🪨' }
 ];
+
+export const sunData = {
+  id: 'sun',
+  name: 'Sun',
+  type: 'Yellow Dwarf Star',
+  distanceFromSun: 0,
+  diameter: 1392700,
+  mass: '1.989 × 10^30 kg',
+  gravity: '274 m/s²',
+  dayLength: '27 Earth days',
+  yearLength: '230 million yrs',
+  moons: 0,
+  atmosphere: 'Hydrogen & Helium',
+  temperature: '5,500°C',
+  funFacts: [
+    'The Sun contains 99.86% of the mass in the entire Solar System.',
+    'It takes 8 minutes and 20 seconds for light from the Sun to reach Earth.',
+    'Over one million Earths could fit inside the Sun.'
+  ],
+  color: '#FDB813',
+  emoji: '☀️'
+};

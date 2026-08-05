@@ -63,32 +63,6 @@ function SpaceHub() {
       <div className="space-card-list">
         <Card
           className="space-card-item"
-          onClick={() => navigate('/space/flashcards')}
-          ariaLabel="Cosmic Cards"
-        >
-          <div className="space-card-icon">🎴</div>
-          <div className="space-card-info">
-            <h3 className="space-card-title">Cosmic Cards</h3>
-            <p className="space-card-subtitle">{flashcardsMastered || 0} cards mastered</p>
-          </div>
-          <div className="space-card-arrow">→</div>
-        </Card>
-
-        <Card
-          className="space-card-item"
-          onClick={() => navigate('/space/quiz')}
-          ariaLabel="Space Quiz"
-        >
-          <div className="space-card-icon">❓</div>
-          <div className="space-card-info">
-            <h3 className="space-card-title">Space Quiz</h3>
-            <p className="space-card-subtitle">High Score: {quizHighScore || 0}%</p>
-          </div>
-          <div className="space-card-arrow">→</div>
-        </Card>
-
-        <Card
-          className="space-card-item"
           onClick={() => navigate('/space/solar-system')}
           ariaLabel="Solar Explorer"
         >
@@ -105,6 +79,22 @@ function SpaceHub() {
       <h2 className="space-section-heading">Deep Space (Locked)</h2>
 
       <div className="space-card-list">
+        <Card className="space-card-item locked" ariaLabel="Cosmic Cards (Locked)" onClick={() => {}}>
+          <div className="space-card-icon">🎴</div>
+          <div className="space-card-info">
+            <h3 className="space-card-title">Cosmic Cards</h3>
+            <p className="space-card-subtitle">Unlock at Lv. 5</p>
+          </div>
+          <div className="space-lock-badge">🔒 Locked</div>
+        </Card>
+        <Card className="space-card-item locked" ariaLabel="Space Quiz (Locked)" onClick={() => {}}>
+          <div className="space-card-icon">❓</div>
+          <div className="space-card-info">
+            <h3 className="space-card-title">Space Quiz</h3>
+            <p className="space-card-subtitle">Unlock at Lv. 10</p>
+          </div>
+          <div className="space-lock-badge">🔒 Locked</div>
+        </Card>
         <Card className="space-card-item locked" ariaLabel="Constellation Guide (Locked)" onClick={() => {}}>
           <div className="space-card-icon">🌌</div>
           <div className="space-card-info">
