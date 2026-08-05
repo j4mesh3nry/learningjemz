@@ -4,12 +4,15 @@ import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
 import { Trophy, Gem } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../index.css';
 
 export default function Leaderboard() {
   const { user } = useAuth();
-  const { streak, level, xp } = useGame();
+  const { xp, level, streak, hasPlayedToday } = useGame();
+  const xpInLevel = xp - (level - 1) * 100;
+  const pct = Math.min(xpInLevel, 100);
+  const navigate = useNavigate();
   const [leaders, setLeaders] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -57,18 +60,19 @@ export default function Leaderboard() {
       minHeight: '100vh', background: '#ffffff',
       padding: '24px 16px 80px', maxWidth: 420, margin: '0 auto',
     }}>
-      {/* Sticky Header Container (From Home.jsx) */}
+      {/* Sticky Header Container */}
       <div style={{ 
         position: 'sticky', top: 0, zIndex: 100, background: '#ffffff',
-        paddingTop: 24, paddingBottom: 16, margin: '-24px -16px 16px -16px', paddingLeft: 16, paddingRight: 16,
+        paddingTop: 28, paddingBottom: 20, margin: '-24px -16px 20px -16px', paddingLeft: 16, paddingRight: 16,
         borderBottom: '1px solid #eaeaea',
         boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* Top row: Title and Badges */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           {/* Logo Area */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{
-              background: 'linear-gradient(135deg, #1c7c54, #4caf5 0%, #4caf50)',
+              background: 'linear-gradient(135deg, #1c7c54, #4caf50)',
               borderRadius: '10px',
               padding: '6px',
               display: 'flex',
@@ -89,23 +93,38 @@ export default function Leaderboard() {
               Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
             </h1>
           </div>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             <div style={{
-              display: 'flex', alignItems: 'center', gap: 4,
-              background: '#fff5f5', padding: '4px 10px', borderRadius: 20,
+              display: 'flex', alignItems: 'center', gap: 3,
+              background: '#fff5f5', padding: '2px 8px', borderRadius: 12,
               border: '1px solid #ffcdd2',
             }}>
-              <span style={{ fontSize: '1rem' }}>🔥</span>
-              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#e53935' }}>{streak}</span>
+              <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '0.75rem' }}>🔥</span>
+              <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 800, fontSize: '0.7rem', color: '#e53935' }}>{streak}</span>
             </div>
-            <Link to="/profile" style={{
-              display: 'flex', alignItems: 'center', gap: 4,
-              background: '#fff8e1', padding: '4px 10px', borderRadius: 20,
-              border: '1px solid #ffe082', textDecoration: 'none',
-            }}>
-              <span style={{ fontSize: '0.85rem' }}>⭐</span>
-              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#f57f17' }}>Lv.{level}</span>
-            </Link>
+            <div onClick={() => navigate('/profile')} style={{
+              display: 'flex', alignItems: 'center', gap: 3,
+              background: '#fff8e1', padding: '2px 8px', borderRadius: 12,
+              border: '1px solid #ffe082', cursor: 'pointer',
+            }} aria-label="Go to Profile" role="button">
+              <span style={{ fontSize: '0.75rem' }}>⭐</span>
+              <span style={{ fontWeight: 800, fontSize: '0.7rem', color: '#f57f17' }}>Lv.{level}</span>
+            </div>
+          </div>
+        </div>
+        {/* XP Mini bar */}
+        <div>
+          <div style={{
+            height: 6, borderRadius: 3, background: '#e8f5e9', overflow: 'hidden',
+          }}>
+            <div style={{
+              height: '100%', borderRadius: 3, width: `${pct}%`,
+              background: 'linear-gradient(90deg, #4caf50, #8bc34a)',
+              transition: 'width 0.5s ease',
+            }} />
+          </div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--color-muted)', marginTop: 4 }}>
+            {xpInLevel}/100 XP to Level {level + 1}
           </div>
         </div>
       </div>
