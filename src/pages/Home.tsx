@@ -14,14 +14,7 @@ const modules = [
     bg: 'linear-gradient(135deg, #0e4d2e 0%, #1c7c54 100%)',
     pattern: 'chess',
   },
-  {
-    to: '/reading',
-    icon: '📖',
-    title: 'Reading',
-    subtitle: 'Books & Novels',
-    bg: 'linear-gradient(135deg, #b85c1e 0%, #e07c3e 100%)',
-    pattern: 'reading',
-  },
+
   {
     to: '/space',
     icon: '🪐',
@@ -33,6 +26,7 @@ const modules = [
 ];
 
 const lockedModules = [
+  { icon: '📖', title: 'Reading', subtitle: 'Books & Novels' },
   { icon: '🌍', title: 'Geography', subtitle: 'Philippine Provinces' },
   { icon: '🎵', title: 'Learning Songs', subtitle: 'Sing & Learn' },
   { icon: '📜', title: 'Poems', subtitle: 'Rhymes & Verses' },
