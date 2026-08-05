@@ -9,7 +9,7 @@ import { updateAvatar, updateName } from '../api/supabase.js';
 import '../index.css';
 
 export default function Profile() {
-  const { xp, level, streak, hasPlayedToday, stats } = useGame();
+  const { xp, level, streak, hasPlayedToday, booksReading, readingMinutes, flashcardsMastered, quizHighScore, achievements } = useGame();
   const { user, logout } = useAuth();
 
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -214,8 +214,8 @@ export default function Profile() {
             <BookOpen size={24} color="#fff" />
             <strong style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem' }}>Reading</strong>
           </div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Books: <strong style={{color:'#fff'}}>{stats.booksCompleted}</strong></div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Mins: <strong style={{color:'#fff'}}>{stats.readingMinutes}</strong></div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Books: <strong style={{color:'#fff'}}>{booksReading || 0}</strong></div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Mins: <strong style={{color:'#fff'}}>{readingMinutes || 0}</strong></div>
         </div>
 
         <div style={{
@@ -229,8 +229,8 @@ export default function Profile() {
             <Rocket size={24} color="#fff" />
             <strong style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem' }}>Space</strong>
           </div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Mastered: <strong style={{color:'#fff'}}>{stats.flashcardsMastered}</strong></div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Best: <strong style={{color:'#fff'}}>{stats.quizHighScore}%</strong></div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Mastered: <strong style={{color:'#fff'}}>{flashcardsMastered || 0}</strong></div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Best: <strong style={{color:'#fff'}}>{quizHighScore || 0}%</strong></div>
         </div>
 
       </div>
@@ -244,7 +244,7 @@ export default function Profile() {
         display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 
       }}>
         {ACHIEVEMENTS.map(a => {
-          const unlockedData = stats.achievements?.find(ach => ach.id === a.id);
+          const unlockedData = achievements?.find(ach => ach.id === a.id);
           const unlocked = !!unlockedData;
           return (
             <div key={a.id} style={{
