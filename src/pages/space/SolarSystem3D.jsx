@@ -23,285 +23,24 @@ const PLANET_CONFIG = {
   Neptune:  { size: 0.8,  orbit: 22.5,   speed: 0.18, emissive: '#6688ff', emissiveIntensity: 0.15 },
 };
 
-/* ─── Procedural planet texture generator ─── */
-function generatePlanetTexture(name) {
-  const size = 256;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-
-  // Seeded pseudo-random for consistency
-  let seed = 0;
-  for (let i = 0; i < name.length; i++) seed += name.charCodeAt(i);
-  const rand = () => { seed = (seed * 16807 + 7) % 2147483647; return (seed & 0x7fffffff) / 0x7fffffff; };
-
-  switch (name) {
-    case 'Mercury': {
-      // Gray, cratered surface
-      ctx.fillStyle = '#8c8c8c';
-      ctx.fillRect(0, 0, size, size);
-      for (let i = 0; i < 120; i++) {
-        const x = rand() * size, y = rand() * size, r = rand() * 8 + 2;
-        const shade = Math.floor(rand() * 40 + 90);
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgb(${shade},${shade},${shade + 5})`;
-        ctx.fill();
-      }
-      // Subtle noise
-      for (let i = 0; i < 600; i++) {
-        const x = rand() * size, y = rand() * size;
-        ctx.fillStyle = `rgba(${rand() > 0.5 ? 180 : 60},${rand() > 0.5 ? 170 : 60},${rand() > 0.5 ? 160 : 60},0.15)`;
-        ctx.fillRect(x, y, 2, 2);
-      }
-      break;
-    }
-    case 'Venus': {
-      // Yellowish with swirly clouds
-      const grd = ctx.createLinearGradient(0, 0, size, size);
-      grd.addColorStop(0, '#e3c37a');
-      grd.addColorStop(0.5, '#d4a84f');
-      grd.addColorStop(1, '#c99540');
-      ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, size, size);
-      // Cloud swirls
-      for (let i = 0; i < 30; i++) {
-        ctx.beginPath();
-        const y = rand() * size;
-        ctx.moveTo(0, y);
-        ctx.bezierCurveTo(rand() * size, y + (rand() - 0.5) * 40, rand() * size, y + (rand() - 0.5) * 40, size, y + (rand() - 0.5) * 20);
-        ctx.strokeStyle = `rgba(255,240,200,${rand() * 0.15 + 0.05})`;
-        ctx.lineWidth = rand() * 10 + 4;
-        ctx.stroke();
-      }
-      break;
-    }
-    case 'Earth': {
-      // Ocean blue base
-      ctx.fillStyle = '#1a5276';
-      ctx.fillRect(0, 0, size, size);
-      // Ocean variation
-      for (let i = 0; i < 15; i++) {
-        ctx.beginPath();
-        ctx.ellipse(rand() * size, rand() * size, rand() * 60 + 20, rand() * 30 + 10, rand() * Math.PI, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(26,${Math.floor(rand() * 30 + 70)},${Math.floor(rand() * 40 + 100)},0.3)`;
-        ctx.fill();
-      }
-      // Continents (green/brown blobs)
-      const continents = [
-        { x: 0.3, y: 0.3, rx: 35, ry: 25 }, // North America-ish
-        { x: 0.55, y: 0.55, rx: 20, ry: 30 }, // South America-ish
-        { x: 0.75, y: 0.35, rx: 30, ry: 20 }, // Eurasia-ish
-        { x: 0.78, y: 0.55, rx: 18, ry: 15 }, // Africa-ish
-        { x: 0.9, y: 0.7, rx: 22, ry: 15 },  // Australia-ish
-      ];
-      continents.forEach(c => {
-        ctx.beginPath();
-        ctx.ellipse(c.x * size, c.y * size, c.rx, c.ry, rand() * 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgb(${Math.floor(rand() * 30 + 50)},${Math.floor(rand() * 50 + 110)},${Math.floor(rand() * 30 + 40)})`;
-        ctx.fill();
-        // Some brown highlands
-        ctx.beginPath();
-        ctx.ellipse(c.x * size + 5, c.y * size - 3, c.rx * 0.5, c.ry * 0.4, 0.3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(120,100,60,0.4)`;
-        ctx.fill();
-      });
-      // White cloud wisps
-      for (let i = 0; i < 20; i++) {
-        ctx.beginPath();
-        ctx.ellipse(rand() * size, rand() * size, rand() * 30 + 10, rand() * 8 + 3, rand() * Math.PI, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${rand() * 0.2 + 0.05})`;
-        ctx.fill();
-      }
-      // Polar caps
-      ctx.beginPath();
-      ctx.ellipse(size / 2, 8, size / 2, 18, 0, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(240,248,255,0.6)';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(size / 2, size - 8, size / 2, 18, 0, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(240,248,255,0.7)';
-      ctx.fill();
-      break;
-    }
-    case 'Mars': {
-      // Rusty red/brown base
-      ctx.fillStyle = '#a0522d';
-      ctx.fillRect(0, 0, size, size);
-      // Surface variation
-      for (let i = 0; i < 200; i++) {
-        const x = rand() * size, y = rand() * size;
-        ctx.beginPath();
-        ctx.arc(x, y, rand() * 12 + 2, 0, Math.PI * 2);
-        const r = Math.floor(rand() * 50 + 130), g = Math.floor(rand() * 30 + 50), b = Math.floor(rand() * 20 + 25);
-        ctx.fillStyle = `rgba(${r},${g},${b},0.3)`;
-        ctx.fill();
-      }
-      // Craters
-      for (let i = 0; i < 25; i++) {
-        const x = rand() * size, y = rand() * size, r = rand() * 8 + 3;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(80,30,15,0.4)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-        ctx.fillStyle = 'rgba(120,55,30,0.2)';
-        ctx.fill();
-      }
-      // Polar ice cap
-      ctx.beginPath();
-      ctx.ellipse(size / 2, 6, size * 0.3, 12, 0, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(230,230,240,0.5)';
-      ctx.fill();
-      break;
-    }
-    case 'Jupiter': {
-      // Horizontal bands
-      const bands = [
-        '#d4a56a', '#c98e4a', '#e8c88a', '#b87838',
-        '#c9944a', '#ddb870', '#a86828', '#d4a56a',
-        '#e0c080', '#c98e4a', '#b87838', '#d4a56a',
-      ];
-      const bandH = size / bands.length;
-      bands.forEach((c, i) => {
-        ctx.fillStyle = c;
-        ctx.fillRect(0, i * bandH, size, bandH + 1);
-      });
-      // Wavy band edges
-      for (let i = 1; i < bands.length; i++) {
-        ctx.beginPath();
-        const y = i * bandH;
-        ctx.moveTo(0, y);
-        for (let x = 0; x <= size; x += 4) {
-          ctx.lineTo(x, y + Math.sin(x * 0.05 + i) * 3);
-        }
-        ctx.strokeStyle = `rgba(0,0,0,0.1)`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-      // Great Red Spot
-      ctx.beginPath();
-      ctx.ellipse(size * 0.65, size * 0.58, 18, 12, 0.2, 0, Math.PI * 2);
-      ctx.fillStyle = '#c05030';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(size * 0.65, size * 0.58, 12, 7, 0.2, 0, Math.PI * 2);
-      ctx.fillStyle = '#d06040';
-      ctx.fill();
-      break;
-    }
-    case 'Saturn': {
-      // Softer horizontal bands
-      const bands = [
-        '#e8d8a0', '#d4c488', '#c8b070', '#ddd098',
-        '#c8b878', '#e0d090', '#ccc080', '#d8c890',
-      ];
-      const bandH = size / bands.length;
-      bands.forEach((c, i) => {
-        ctx.fillStyle = c;
-        ctx.fillRect(0, i * bandH, size, bandH + 1);
-      });
-      for (let i = 1; i < bands.length; i++) {
-        ctx.beginPath();
-        const y = i * bandH;
-        ctx.moveTo(0, y);
-        for (let x = 0; x <= size; x += 4) {
-          ctx.lineTo(x, y + Math.sin(x * 0.03 + i * 2) * 2);
-        }
-        ctx.strokeStyle = `rgba(180,160,100,0.15)`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-      break;
-    }
-    case 'Uranus': {
-      // Smooth cyan/teal gradient
-      const grd = ctx.createLinearGradient(0, 0, 0, size);
-      grd.addColorStop(0, '#7ec8d8');
-      grd.addColorStop(0.3, '#6cb8cc');
-      grd.addColorStop(0.7, '#5aa8bc');
-      grd.addColorStop(1, '#4898ac');
-      ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, size, size);
-      // Subtle haze bands
-      for (let i = 0; i < 8; i++) {
-        ctx.beginPath();
-        const y = rand() * size;
-        ctx.fillStyle = `rgba(200,240,255,${rand() * 0.08 + 0.02})`;
-        ctx.fillRect(0, y, size, rand() * 12 + 4);
-      }
-      break;
-    }
-    case 'Neptune': {
-      // Deep blue with bands and storm
-      const grd = ctx.createLinearGradient(0, 0, 0, size);
-      grd.addColorStop(0, '#3050c0');
-      grd.addColorStop(0.5, '#2040a0');
-      grd.addColorStop(1, '#1830a0');
-      ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, size, size);
-      // Bands
-      for (let i = 0; i < 6; i++) {
-        const y = rand() * size;
-        ctx.fillStyle = `rgba(80,120,220,${rand() * 0.15 + 0.05})`;
-        ctx.fillRect(0, y, size, rand() * 10 + 5);
-      }
-      // Great Dark Spot
-      ctx.beginPath();
-      ctx.ellipse(size * 0.4, size * 0.45, 14, 10, -0.2, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(15,20,70,0.6)';
-      ctx.fill();
-      // White cloud streaks
-      for (let i = 0; i < 5; i++) {
-        ctx.beginPath();
-        ctx.ellipse(rand() * size, rand() * size, rand() * 20 + 8, rand() * 3 + 1, rand(), 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(200,220,255,0.15)';
-        ctx.fill();
-      }
-      break;
-    }
-    default: {
-      ctx.fillStyle = '#888';
-      ctx.fillRect(0, 0, size, size);
-    }
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.ClampToEdgeWrapping;
-  return texture;
-}
-
-/* ─── Sun texture ─── */
-function generateSunTexture() {
-  const size = 256;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  const grd = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  grd.addColorStop(0, '#fff8e0');
-  grd.addColorStop(0.3, '#FDB813');
-  grd.addColorStop(0.7, '#f59e0b');
-  grd.addColorStop(1, '#e87800');
-  ctx.fillStyle = grd;
-  ctx.fillRect(0, 0, size, size);
-  // Solar granulation
-  for (let i = 0; i < 300; i++) {
-    const x = Math.random() * size, y = Math.random() * size;
-    ctx.beginPath();
-    ctx.arc(x, y, Math.random() * 4 + 1, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,${Math.floor(Math.random() * 80 + 180)},0,${Math.random() * 0.2 + 0.05})`;
-    ctx.fill();
-  }
-  return new THREE.CanvasTexture(canvas);
-}
+/* ─── Texture paths (served from public/) ─── */
+const TEXTURE_PATHS = {
+  Sun:     '/textures/planets/sun.jpg',
+  Mercury: '/textures/planets/mercury.jpg',
+  Venus:   '/textures/planets/venus.jpg',
+  Earth:   '/textures/planets/earth.jpg',
+  Mars:    '/textures/planets/mars.jpg',
+  Jupiter: '/textures/planets/jupiter.jpg',
+  Saturn:  '/textures/planets/saturn.jpg',
+  Uranus:  '/textures/planets/uranus.jpg',
+  Neptune: '/textures/planets/neptune.jpg',
+  SaturnRing: '/textures/planets/saturn_ring.png',
+};
 
 /* ─── Glowing Sun ─── */
 function Sun() {
   const meshRef = useRef();
-  const sunTexture = useMemo(() => generateSunTexture(), []);
+  const sunTexture = useTexture(TEXTURE_PATHS.Sun);
 
   useFrame((_, delta) => {
     if (meshRef.current) meshRef.current.rotation.y += delta * 0.05;
@@ -368,7 +107,8 @@ function Planet({ data, config, onSelect, isSelected }) {
   const glowRef = useRef();
   const initialAngle = useRef(Math.random() * Math.PI * 2);
   const [hovered, setHovered] = useState(false);
-  const texture = useMemo(() => generatePlanetTexture(data.name), [data.name]);
+  const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
+  const saturnRingTex = useTexture(TEXTURE_PATHS.SaturnRing);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
@@ -421,12 +161,12 @@ function Planet({ data, config, onSelect, isSelected }) {
         <mesh rotation={[Math.PI / 3, 0.2, 0]}>
           <ringGeometry args={[config.size * 1.4, config.size * 2.2, 64]} />
           <meshStandardMaterial
-            color="#d4c58a"
+            map={saturnRingTex}
             emissive="#d4c58a"
             emissiveIntensity={0.05}
             side={THREE.DoubleSide}
             transparent
-            opacity={0.7}
+            opacity={0.8}
           />
         </mesh>
       )}
@@ -643,7 +383,7 @@ export default function SolarSystem3D() {
           enableZoom
           enablePan
           minDistance={6}
-          maxDistance={55}
+          maxDistance={120}
           autoRotate
           autoRotateSpeed={0.08}
           maxPolarAngle={Math.PI / 1.8}
