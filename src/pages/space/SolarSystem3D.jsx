@@ -1,47 +1,74 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Stars, Html, Ring } from '@react-three/drei';
+import { Canvas, useFrame, extend } from '@react-three/fiber';
+import { OrbitControls, Stars, Html, useTexture } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, X, Info } from 'lucide-react';
+import { ArrowLeft, X, Info, ChevronRight } from 'lucide-react';
+import * as THREE from 'three';
 import { planets } from '../../data/space-data.js';
 import './space.css';
 
 /*
- * 3D Solar Explorer
- * Uses the planet data from space-data.js.
- * Key fields: name, diameter (number, km), distanceFromSun (number, km), color, funFacts[], etc.
+ * 3D Solar Explorer — Redesigned
+ * Bigger planets, glow auras, Saturn rings, animated orbits, premium info panel.
  */
 
-// Scaled visual sizes for each planet so they look good in the scene
-const VISUAL = {
-  Mercury:  { size: 0.25, orbit: 3,   speed: 4.15,  tilt: 0 },
-  Venus:    { size: 0.45, orbit: 4.5,  speed: 1.62,  tilt: 2.6 },
-  Earth:    { size: 0.5,  orbit: 6,    speed: 1.0,   tilt: 23.4 },
-  Mars:     { size: 0.35, orbit: 7.8,  speed: 0.53,  tilt: 25.2 },
-  Jupiter:  { size: 1.2,  orbit: 10.5, speed: 0.084, tilt: 3.1 },
-  Saturn:   { size: 1.0,  orbit: 13.5, speed: 0.034, tilt: 26.7 },
-  Uranus:   { size: 0.7,  orbit: 16,   speed: 0.012, tilt: 82.2 },
-  Neptune:  { size: 0.65, orbit: 18.5, speed: 0.006, tilt: 28.3 },
+const PLANET_CONFIG = {
+  Mercury:  { size: 0.35, orbit: 4.2,   speed: 1.6,  emissive: '#ffddaa', emissiveIntensity: 0.15 },
+  Venus:    { size: 0.55, orbit: 5.8,    speed: 1.17, emissive: '#ffe4a0', emissiveIntensity: 0.2 },
+  Earth:    { size: 0.6,  orbit: 7.5,    speed: 1.0,  emissive: '#88ccff', emissiveIntensity: 0.15 },
+  Mars:     { size: 0.45, orbit: 9.2,    speed: 0.8,  emissive: '#ff8866', emissiveIntensity: 0.15 },
+  Jupiter:  { size: 1.5,  orbit: 12.5,   speed: 0.44, emissive: '#ddbb88', emissiveIntensity: 0.1 },
+  Saturn:   { size: 1.25, orbit: 16.0,   speed: 0.32, emissive: '#eedd99', emissiveIntensity: 0.1 },
+  Uranus:   { size: 0.85, orbit: 19.5,   speed: 0.22, emissive: '#99ddee', emissiveIntensity: 0.1 },
+  Neptune:  { size: 0.8,  orbit: 22.5,   speed: 0.18, emissive: '#6688ff', emissiveIntensity: 0.15 },
 };
 
-/* ─── Sun ─── */
+/* ─── Glowing Sun ─── */
 function Sun() {
-  const ref = useRef();
-  useFrame((_, delta) => { if (ref.current) ref.current.rotation.y += delta * 0.1; });
+  const meshRef = useRef();
+  const glowRef = useRef();
+
+  useFrame((_, delta) => {
+    if (meshRef.current) meshRef.current.rotation.y += delta * 0.05;
+  });
+
   return (
-    <mesh ref={ref}>
-      <sphereGeometry args={[1.5, 64, 64]} />
-      <meshBasicMaterial color="#ffcc00" />
-      <pointLight intensity={2} distance={50} decay={2} />
-    </mesh>
+    <group>
+      {/* Core sun */}
+      <mesh ref={meshRef}>
+        <sphereGeometry args={[2.2, 64, 64]} />
+        <meshBasicMaterial color="#FDB813" />
+      </mesh>
+      {/* Inner glow */}
+      <mesh>
+        <sphereGeometry args={[2.6, 32, 32]} />
+        <meshBasicMaterial color="#FDB813" transparent opacity={0.15} />
+      </mesh>
+      {/* Outer glow */}
+      <mesh>
+        <sphereGeometry args={[3.2, 32, 32]} />
+        <meshBasicMaterial color="#ff9900" transparent opacity={0.06} />
+      </mesh>
+      {/* Sun light */}
+      <pointLight color="#FDB813" intensity={3} distance={80} decay={1.5} />
+      {/* Sun label */}
+      <Html position={[0, -3, 0]} center style={{ pointerEvents: 'none' }}>
+        <div style={{
+          color: '#FDB813', fontSize: '0.7rem', fontWeight: 700,
+          textShadow: '0 0 10px rgba(253,184,19,0.8)', userSelect: 'none', letterSpacing: '1px',
+        }}>
+          SUN
+        </div>
+      </Html>
+    </group>
   );
 }
 
-/* ─── Orbit ring (visual only) ─── */
+/* ─── Orbit ring ─── */
 function OrbitRing({ radius }) {
   const points = useMemo(() => {
     const pts = [];
-    const segs = 128;
+    const segs = 180;
     for (let i = 0; i <= segs; i++) {
       const angle = (i / segs) * Math.PI * 2;
       pts.push(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
@@ -52,57 +79,109 @@ function OrbitRing({ radius }) {
   return (
     <line>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          array={points}
-          count={points.length / 3}
-          itemSize={3}
-        />
+        <bufferAttribute attach="attributes-position" array={points} count={points.length / 3} itemSize={3} />
       </bufferGeometry>
-      <lineBasicMaterial color="#334" transparent opacity={0.35} />
+      <lineBasicMaterial color="#ffffff" transparent opacity={0.08} />
     </line>
   );
 }
 
-/* ─── Planet sphere that orbits the sun ─── */
-function PlanetMesh({ data, vis, onSelect }) {
+/* ─── Planet ─── */
+function Planet({ data, config, onSelect, isSelected }) {
   const groupRef = useRef();
   const meshRef = useRef();
+  const glowRef = useRef();
   const initialAngle = useRef(Math.random() * Math.PI * 2);
+  const [hovered, setHovered] = useState(false);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
-    const angle = initialAngle.current + t * vis.speed * 0.3;
+    const angle = initialAngle.current + t * config.speed * 0.15;
     if (groupRef.current) {
-      groupRef.current.position.x = Math.cos(angle) * vis.orbit;
-      groupRef.current.position.z = Math.sin(angle) * vis.orbit;
+      groupRef.current.position.x = Math.cos(angle) * config.orbit;
+      groupRef.current.position.z = Math.sin(angle) * config.orbit;
     }
     if (meshRef.current) {
-      meshRef.current.rotation.y += 0.01;
+      meshRef.current.rotation.y += 0.008;
+    }
+    // Pulse glow on hover
+    if (glowRef.current) {
+      const scale = hovered ? 1.4 + Math.sin(t * 4) * 0.1 : 1.3;
+      glowRef.current.scale.setScalar(scale);
+      glowRef.current.material.opacity = hovered ? 0.25 : 0.1;
     }
   });
 
-  const hasSaturnRings = data.name === 'Saturn';
+  const isSaturn = data.name === 'Saturn';
+  const isUranus = data.name === 'Uranus';
 
   return (
     <group ref={groupRef}>
+      {/* Glow aura */}
+      <mesh ref={glowRef}>
+        <sphereGeometry args={[config.size, 32, 32]} />
+        <meshBasicMaterial color={config.emissive} transparent opacity={0.1} />
+      </mesh>
+
+      {/* Planet body */}
       <mesh
         ref={meshRef}
         onClick={(e) => { e.stopPropagation(); onSelect(data); }}
+        onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
       >
-        <sphereGeometry args={[vis.size, 32, 32]} />
-        <meshStandardMaterial color={data.color || '#888'} roughness={0.7} metalness={0.1} />
+        <sphereGeometry args={[config.size, 48, 48]} />
+        <meshStandardMaterial
+          color={data.color || '#888'}
+          emissive={config.emissive}
+          emissiveIntensity={hovered ? config.emissiveIntensity * 3 : config.emissiveIntensity}
+          roughness={0.6}
+          metalness={0.15}
+        />
       </mesh>
-      {hasSaturnRings && (
-        <mesh rotation={[Math.PI / 2.5, 0, 0]}>
-          <ringGeometry args={[vis.size * 1.3, vis.size * 2, 64]} />
-          <meshStandardMaterial color="#c2b280" side={2} transparent opacity={0.6} />
+
+      {/* Saturn rings */}
+      {isSaturn && (
+        <mesh rotation={[Math.PI / 3, 0.2, 0]}>
+          <ringGeometry args={[config.size * 1.4, config.size * 2.2, 64]} />
+          <meshStandardMaterial
+            color="#d4c58a"
+            emissive="#d4c58a"
+            emissiveIntensity={0.05}
+            side={THREE.DoubleSide}
+            transparent
+            opacity={0.7}
+          />
         </mesh>
       )}
-      <Html distanceFactor={12} style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+
+      {/* Uranus thin ring */}
+      {isUranus && (
+        <mesh rotation={[0.3, 0, Math.PI / 2]}>
+          <ringGeometry args={[config.size * 1.3, config.size * 1.5, 64]} />
+          <meshStandardMaterial
+            color="#88bbcc"
+            side={THREE.DoubleSide}
+            transparent
+            opacity={0.3}
+          />
+        </mesh>
+      )}
+
+      {/* Label */}
+      <Html
+        position={[0, -(config.size + 0.5), 0]}
+        center
+        style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}
+      >
         <div style={{
-          color: '#fff', fontSize: '0.65rem', fontWeight: 600,
-          textShadow: '0 0 6px rgba(0,0,0,0.9)', userSelect: 'none',
+          color: hovered ? '#fff' : 'rgba(255,255,255,0.7)',
+          fontSize: hovered ? '0.75rem' : '0.65rem',
+          fontWeight: 700,
+          textShadow: `0 0 8px ${data.color || '#888'}`,
+          transition: 'all 0.2s ease',
+          userSelect: 'none',
+          letterSpacing: '0.5px',
         }}>
           {data.name}
         </div>
@@ -111,99 +190,223 @@ function PlanetMesh({ data, vis, onSelect }) {
   );
 }
 
-/* ─── Main component ─── */
+/* ─── Info Panel Component ─── */
+function InfoPanel({ planet, onClose, onFlashcards }) {
+  if (!planet) return null;
+
+  return (
+    <div style={{
+      position: 'fixed', bottom: 0, left: 0, right: 0,
+      zIndex: 50, padding: '0 12px 16px',
+      animation: 'slideUp 0.3s ease',
+    }}>
+      <div style={{
+        maxWidth: 420, margin: '0 auto',
+        background: 'linear-gradient(145deg, rgba(15,15,40,0.95), rgba(8,8,25,0.98))',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '20px 20px 16px 16px',
+        padding: '24px',
+        color: '#fff',
+        border: '1px solid rgba(255,255,255,0.08)',
+        boxShadow: `0 -8px 40px rgba(0,0,0,0.5), 0 0 30px ${planet.color}22`,
+      }}>
+        {/* Close button */}
+        <button onClick={onClose} style={{
+          position: 'absolute', top: 16, right: 16,
+          background: 'rgba(255,255,255,0.08)', border: 'none',
+          borderRadius: '50%', width: 32, height: 32,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', color: '#fff', transition: 'background 0.2s',
+        }}>
+          <X size={16} />
+        </button>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
+          <div style={{
+            width: 52, height: 52, borderRadius: '50%',
+            background: `radial-gradient(circle at 35% 35%, ${planet.color}cc, ${planet.color}44)`,
+            boxShadow: `0 0 24px ${planet.color}66, inset 0 -4px 8px rgba(0,0,0,0.3)`,
+            flexShrink: 0,
+          }} />
+          <div>
+            <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, letterSpacing: '-0.3px' }}>
+              {planet.name}
+            </h3>
+            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>
+              {planet.type}
+            </span>
+          </div>
+        </div>
+
+        {/* Stats grid */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr',
+          gap: '10px', marginBottom: 16,
+        }}>
+          {[
+            { label: 'Moons', value: planet.moons },
+            { label: 'Temperature', value: planet.temperature?.split(' ')[0] || '—' },
+            { label: 'Year Length', value: planet.yearLength },
+            { label: 'Gravity', value: planet.gravity },
+          ].map((stat) => (
+            <div key={stat.label} style={{
+              background: 'rgba(255,255,255,0.04)',
+              borderRadius: 10, padding: '10px 12px',
+              border: '1px solid rgba(255,255,255,0.05)',
+            }}>
+              <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>
+                {stat.label}
+              </div>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{stat.value}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Fun fact */}
+        <div style={{
+          background: `linear-gradient(135deg, ${planet.color}11, ${planet.color}08)`,
+          borderRadius: 12, padding: '12px 16px',
+          border: `1px solid ${planet.color}22`,
+          marginBottom: 14,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+            <Info size={13} style={{ color: planet.color, opacity: 0.8 }} />
+            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: planet.color, opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Fun Fact
+            </span>
+          </div>
+          <p style={{ margin: 0, fontSize: '0.82rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.85)' }}>
+            {planet.funFacts?.[0] || 'No fact available.'}
+          </p>
+        </div>
+
+        {/* CTA */}
+        <button onClick={onFlashcards} style={{
+          width: '100%', padding: '12px',
+          background: `linear-gradient(135deg, ${planet.color}cc, ${planet.color}88)`,
+          border: 'none', borderRadius: 12,
+          color: '#fff', fontWeight: 700, fontSize: '0.85rem',
+          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          boxShadow: `0 4px 16px ${planet.color}44`,
+          transition: 'transform 0.15s ease',
+        }}>
+          Learn More in Flashcards <ChevronRight size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main Component ─── */
 export default function SolarSystem3D() {
   const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
 
   return (
-    <div className="space-module solar-system-mode" style={{ position: 'relative' }}>
+    <div style={{
+      position: 'relative', width: '100%', height: '100vh',
+      background: 'radial-gradient(ellipse at 50% 50%, #0a0a2e 0%, #050510 60%, #020208 100%)',
+      overflow: 'hidden',
+    }}>
       {/* Overlay nav */}
-      <div className="space-nav overlay-nav" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
-        <button onClick={() => navigate('/space')} className="back-btn"><ArrowLeft /> Back</button>
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10,
+        padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      }}>
+        <button
+          onClick={() => navigate('/space')}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: 'rgba(255,255,255,0.08)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 12, padding: '8px 14px',
+            color: '#fff', fontWeight: 600, fontSize: '0.85rem',
+            cursor: 'pointer', transition: 'background 0.2s',
+          }}
+        >
+          <ArrowLeft size={18} /> Back
+        </button>
+        <div style={{
+          background: 'rgba(255,255,255,0.06)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 12, padding: '6px 14px',
+          color: 'rgba(255,255,255,0.6)', fontSize: '0.72rem', fontWeight: 600,
+          letterSpacing: '1px', textTransform: 'uppercase',
+        }}>
+          🪐 Solar Explorer
+        </div>
+      </div>
+
+      {/* Pinch / zoom hint */}
+      <div style={{
+        position: 'absolute', bottom: selected ? 320 : 24, left: '50%',
+        transform: 'translateX(-50%)', zIndex: 5,
+        color: 'rgba(255,255,255,0.25)', fontSize: '0.7rem', fontWeight: 500,
+        textAlign: 'center', transition: 'bottom 0.3s ease',
+        pointerEvents: 'none',
+      }}>
+        Drag to rotate · Scroll to zoom · Click a planet
       </div>
 
       {/* 3D Canvas */}
       <Canvas
-        camera={{ position: [0, 12, 22], fov: 55 }}
-        style={{ width: '100%', height: '100vh', background: '#050510' }}
+        camera={{ position: [8, 18, 28], fov: 50 }}
+        style={{ width: '100%', height: '100%' }}
+        gl={{ antialias: true, alpha: false }}
+        onCreated={({ gl }) => { gl.setClearColor('#050510'); }}
       >
-        <ambientLight intensity={0.15} />
-        <Stars radius={200} depth={60} count={6000} factor={5} saturation={0} fade speed={0.5} />
+        <ambientLight intensity={0.08} color="#4466aa" />
+        <directionalLight position={[10, 10, 5]} intensity={0.1} color="#8888ff" />
+
+        <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.2} fade speed={0.3} />
+
         <OrbitControls
           enableZoom
-          enablePan={false}
-          minDistance={5}
-          maxDistance={45}
+          enablePan
+          minDistance={6}
+          maxDistance={55}
           autoRotate
-          autoRotateSpeed={0.15}
+          autoRotateSpeed={0.08}
+          maxPolarAngle={Math.PI / 1.8}
+          minPolarAngle={Math.PI / 6}
         />
+
         <Sun />
+
         {planets.map((p) => {
-          const vis = VISUAL[p.name];
-          if (!vis) return null;
+          const cfg = PLANET_CONFIG[p.name];
+          if (!cfg) return null;
           return (
             <React.Fragment key={p.id}>
-              <OrbitRing radius={vis.orbit} />
-              <PlanetMesh data={p} vis={vis} onSelect={setSelected} />
+              <OrbitRing radius={cfg.orbit} />
+              <Planet
+                data={p}
+                config={cfg}
+                onSelect={setSelected}
+                isSelected={selected?.id === p.id}
+              />
             </React.Fragment>
           );
         })}
       </Canvas>
 
-      {/* Planet info card */}
-      {selected && (
-        <div className="planet-info-card" style={{
-          position: 'fixed', bottom: 80, left: '50%', transform: 'translateX(-50%)',
-          width: '90%', maxWidth: 380, zIndex: 20,
-          background: 'rgba(10,10,30,0.92)', backdropFilter: 'blur(12px)',
-          borderRadius: 16, padding: '20px 24px', color: '#fff',
-          border: '1px solid rgba(255,255,255,0.1)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
-        }}>
-          <button
-            onClick={() => setSelected(null)}
-            style={{
-              position: 'absolute', top: 12, right: 12,
-              background: 'rgba(255,255,255,0.1)', border: 'none',
-              borderRadius: '50%', width: 28, height: 28,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', color: '#fff',
-            }}
-          >
-            <X size={16} />
-          </button>
+      {/* Info Panel */}
+      <InfoPanel
+        planet={selected}
+        onClose={() => setSelected(null)}
+        onFlashcards={() => navigate('/space/flashcards')}
+      />
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <div style={{
-              width: 42, height: 42, borderRadius: '50%',
-              background: selected.color || '#888',
-              boxShadow: `0 0 16px ${selected.color || '#888'}`,
-            }} />
-            <div>
-              <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700 }}>{selected.name}</h3>
-              <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>{selected.type}</span>
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px', marginBottom: 14 }}>
-            <div><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>Moons</span><br/><span style={{ fontWeight: 700 }}>{selected.moons}</span></div>
-            <div><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>Temperature</span><br/><span style={{ fontWeight: 700, fontSize: '0.85rem' }}>{selected.temperature}</span></div>
-            <div><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>Year</span><br/><span style={{ fontWeight: 700 }}>{selected.yearLength}</span></div>
-            <div><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>Gravity</span><br/><span style={{ fontWeight: 700 }}>{selected.gravity}</span></div>
-          </div>
-
-          <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 10, padding: '10px 14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-              <Info size={14} style={{ opacity: 0.6 }} />
-              <span style={{ fontSize: '0.75rem', fontWeight: 600, opacity: 0.7 }}>Fun Fact</span>
-            </div>
-            <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.5 }}>
-              {selected.funFacts?.[0] || 'No fact available.'}
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Slide-up animation */}
+      <style>{`
+        @keyframes slideUp {
+          from { transform: translateY(100%); opacity: 0; }
+          to   { transform: translateY(0);    opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }
