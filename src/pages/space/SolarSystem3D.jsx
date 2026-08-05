@@ -370,9 +370,12 @@ export default function SolarSystem3D() {
       {/* 3D Canvas */}
       <Canvas
         camera={{ position: [8, 18, 28], fov: 50 }}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', background: '#050510' }}
         gl={{ antialias: true, alpha: false }}
-        onCreated={({ gl }) => { gl.setClearColor('#050510'); }}
+        onCreated={({ gl, scene }) => {
+          gl.setClearColor('#050510');
+          scene.background = new THREE.Color('#050510');
+        }}
       >
         <ambientLight intensity={0.08} color="#4466aa" />
         <directionalLight position={[10, 10, 5]} intensity={0.1} color="#8888ff" />
