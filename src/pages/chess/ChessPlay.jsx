@@ -817,7 +817,7 @@ export default function ChessPlay() {
           <div style={{ width: '100%', background: '#ffffff', borderTop: '1.5px solid #b0cbaf' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 14px', background: '#f4f9f4', borderBottom: '1px solid #e1f0e2' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f3825', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <ScrollText size={14} color="#16653e" /> Move History ({history.length})
+                <ScrollText size={14} color="#16653e" /> Game Notation
               </span>
             </div>
             {renderMoveHistoryList()}
