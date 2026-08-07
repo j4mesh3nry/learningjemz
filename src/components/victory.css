@@ -38,21 +38,15 @@
   justify-content: center;
 }
 
-.victory-icon-bg {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+.victory-logo-bg {
+  width: 68px;
+  height: 68px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #1c7c54 0%, #4caf50 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.25);
-  border: 2px solid #a5d6a7;
-}
-
-.victory-gem-svg {
-  width: 44px;
-  height: 44px;
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.35);
 }
 
 .sparkles-badge {

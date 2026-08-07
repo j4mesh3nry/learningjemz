@@ -1,7 +1,6 @@
 // src/components/VictoryScreen.tsx
 import React from 'react';
-import { Flame, Trophy, Sparkles } from 'lucide-react';
-import Gemstone from './Gemstone';
+import { Flame, Trophy, Sparkles, Gem } from 'lucide-react';
 import './victory.css';
 
 export interface VictoryScreenProps {
@@ -36,10 +35,10 @@ export default function VictoryScreen({
   return (
     <div className="victory-overlay" role="dialog" aria-modal="true" aria-label={title}>
       <div className="victory-modal-clean">
-        {/* Top Gem / Icon Container */}
+        {/* Top LearningJemz Logo Icon Container */}
         <div className="victory-icon-container">
-          <div className="victory-icon-bg">
-            <Gemstone className="victory-gem-svg" />
+          <div className="victory-logo-bg">
+            <Gem size={34} color="#ffffff" strokeWidth={2.5} />
           </div>
           <Sparkles className="sparkles-badge" size={22} color="#ffb300" />
         </div>
