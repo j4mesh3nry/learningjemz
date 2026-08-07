@@ -36,7 +36,7 @@ describe('Home', () => {
 
     expect(screen.getByText('Learning')).toBeInTheDocument();
     expect(screen.getByText('Jemz')).toBeInTheDocument();
-    expect(screen.getByText('What do you want to play and learn?')).toBeInTheDocument();
+    expect(screen.getByText('What would you like to explore today?')).toBeInTheDocument();
     expect(screen.getByText('Chess')).toBeInTheDocument();
     expect(screen.getByText('Space')).toBeInTheDocument();
   });

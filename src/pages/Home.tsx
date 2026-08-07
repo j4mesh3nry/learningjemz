@@ -76,7 +76,7 @@ export default function Home() {
         marginBottom: 14, color: '#0f3825', fontWeight: 800,
         display: 'flex', alignItems: 'center', gap: '6px'
       }}>
-        What do you want to play and learn?
+        What would you like to explore today?
       </h2>
 
       {/* Clean & Compact Module Cards */}
