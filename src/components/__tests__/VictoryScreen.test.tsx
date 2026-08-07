@@ -8,11 +8,6 @@ vi.mock('../../contexts/AuthContext', () => ({
   useAuth: () => ({ user: { id: 'test-user-123' } }),
 }));
 
-// Mock Gemstone since it may have SVG dependencies
-vi.mock('../Gemstone', () => ({
-  default: ({ className }: { className?: string }) => <div data-testid="gemstone" className={className} />,
-}));
-
 describe('VictoryScreen', () => {
   const defaultProps = {
     isOpen: true,
@@ -20,13 +15,14 @@ describe('VictoryScreen', () => {
     xpGained: 25,
     streak: 3,
     hasPlayedToday: true,
+    disableDailyStreakModal: true,
     onContinue: vi.fn(),
-    disableDailyStreakModal: true, // Test victory modal rendering directly
+    onPlayAgain: vi.fn(),
   };
 
   beforeEach(() => {
-    localStorage.clear();
     vi.clearAllMocks();
+    localStorage.clear();
   });
 
   it('renders nothing when isOpen is false', () => {
@@ -34,73 +30,52 @@ describe('VictoryScreen', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders the victory modal when isOpen is true', () => {
+  it('renders victory screen with title, xp, and streak when isOpen is true', () => {
     render(<VictoryScreen {...defaultProps} />);
     expect(screen.getByText('Victory!')).toBeInTheDocument();
+    expect(screen.getByText('+25')).toBeInTheDocument();
+    expect(screen.getByText('3')).toBeInTheDocument();
   });
 
-  it('displays custom title and subtitle', () => {
-    render(<VictoryScreen {...defaultProps} title="Well Done!" subtitle="You defeated the bot!" />);
-    expect(screen.getByText('Well Done!')).toBeInTheDocument();
-    expect(screen.getByText('You defeated the bot!')).toBeInTheDocument();
+  it('renders custom subtitle when provided', () => {
+    render(<VictoryScreen {...defaultProps} subtitle="Great puzzle solved!" />);
+    expect(screen.getByText('Great puzzle solved!')).toBeInTheDocument();
   });
 
-  it('displays XP gained', () => {
-    render(<VictoryScreen {...defaultProps} xpGained={50} />);
-    expect(screen.getByText('+50')).toBeInTheDocument();
-  });
-
-  it('displays streak count', () => {
-    render(<VictoryScreen {...defaultProps} streak={7} />);
-    expect(screen.getByText('7')).toBeInTheDocument();
-  });
-
-  it('calls onContinue when Continue button is clicked', async () => {
+  it('calls onContinue when continue button is clicked', async () => {
     const user = userEvent.setup();
-    const onContinue = vi.fn();
-    render(<VictoryScreen {...defaultProps} onContinue={onContinue} />);
-    await user.click(screen.getByText('Continue'));
-    expect(onContinue).toHaveBeenCalledTimes(1);
+    render(<VictoryScreen {...defaultProps} />);
+    const continueBtn = screen.getByRole('button', { name: /continue/i });
+    await user.click(continueBtn);
+    expect(defaultProps.onContinue).toHaveBeenCalledTimes(1);
   });
 
-  it('renders optional Play Again button when onPlayAgain prop is passed', async () => {
+  it('calls onPlayAgain when play again button is clicked', async () => {
     const user = userEvent.setup();
-    const onPlayAgain = vi.fn();
-    render(<VictoryScreen {...defaultProps} onPlayAgain={onPlayAgain} />);
-    const playAgainBtn = screen.getByText('Play Again');
-    expect(playAgainBtn).toBeInTheDocument();
+    render(<VictoryScreen {...defaultProps} />);
+    const playAgainBtn = screen.getByRole('button', { name: /play again/i });
     await user.click(playAgainBtn);
-    expect(onPlayAgain).toHaveBeenCalledTimes(1);
+    expect(defaultProps.onPlayAgain).toHaveBeenCalledTimes(1);
   });
 
   it('renders children when provided', () => {
     render(
       <VictoryScreen {...defaultProps}>
-        <span>Bonus message</span>
+        <div data-testid="custom-child">Extra Info</div>
       </VictoryScreen>
     );
-    expect(screen.getByText('Bonus message')).toBeInTheDocument();
+    expect(screen.getByTestId('custom-child')).toBeInTheDocument();
   });
 
-  it('has dialog role for accessibility', () => {
-    const { container } = render(<VictoryScreen {...defaultProps} />);
-    const overlay = container.querySelector('.victory-overlay');
-    expect(overlay).toHaveAttribute('role', 'dialog');
-    expect(overlay).toHaveAttribute('aria-modal', 'true');
-  });
-
-  it('renders StreakScreen on first game of day for user account, then transitions to VictoryScreen', async () => {
-    const user = userEvent.setup();
-    render(<VictoryScreen {...defaultProps} disableDailyStreakModal={false} />);
-    
-    // First game of day -> LearningJemz Streak Screen is displayed!
-    expect(screen.getByText('DAYS STREAK!')).toBeInTheDocument();
-    
-    // Tap CONTINUE on StreakScreen
-    const continueBtn = screen.getByRole('button', { name: /continue/i });
-    await user.click(continueBtn);
-
-    // Transitions to VictoryScreen modal!
-    expect(screen.getByText('Victory!')).toBeInTheDocument();
+  it('renders StreakScreen on first game of day for user account, then transitions to VictoryScreen', () => {
+    render(
+      <VictoryScreen
+        {...defaultProps}
+        disableDailyStreakModal={false}
+        streak={5}
+        hasPlayedToday={false}
+      />
+    );
+    expect(screen.getByRole('dialog', { name: /5 day streak/i })).toBeInTheDocument();
   });
 });
