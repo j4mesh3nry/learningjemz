@@ -25,21 +25,18 @@ export default function IlluminateSystem() {
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const inputRef = useRef(null);
 
-  const scrollToCurrentPlanet = (isFocused = false) => {
+  const scrollToCurrentPlanet = () => {
     setTimeout(() => {
       const el = document.getElementById(`planet-${currentIndex}`);
       if (el) {
-        // When focused, the top of the container might be pushed off-screen by the mobile keyboard.
-        // Using block: 'end' ensures the planet is positioned at the bottom of the grid container, 
-        // which is exactly where the user is looking (right above the input box).
-        el.scrollIntoView({ behavior: 'smooth', block: isFocused ? 'end' : 'center' });
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }, 100);
   };
 
   useEffect(() => {
     if (level && !isComplete) {
-      scrollToCurrentPlanet(document.activeElement === inputRef.current);
+      scrollToCurrentPlanet();
     }
   }, [currentIndex, level, isComplete]);
 
@@ -51,10 +48,9 @@ export default function IlluminateSystem() {
     setInputValue('');
     setIsComplete(false);
     setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
-    // Focus input on start without triggering browser page scroll
     setTimeout(() => {
       inputRef.current?.focus({ preventScroll: true });
-      scrollToCurrentPlanet(true);
+      scrollToCurrentPlanet();
     }, 100);
   };
 
@@ -260,8 +256,6 @@ export default function IlluminateSystem() {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onFocus={() => scrollToCurrentPlanet(true)}
-              onBlur={() => scrollToCurrentPlanet(false)}
               placeholder={`Type #${currentIndex + 1} (${gameData[currentIndex]?.type || 'Object'})...`}
               className={`illum-input ${isError ? 'illum-error' : ''}`}
               autoComplete="off"
