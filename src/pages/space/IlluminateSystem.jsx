@@ -25,6 +25,13 @@ export default function IlluminateSystem() {
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   
   const inputRef = useRef(null);
+  const currentItemRef = useRef(null);
+
+  useEffect(() => {
+    if (level && !isComplete && currentItemRef.current) {
+      currentItemRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [currentIndex, level, isComplete]);
 
   const startGame = (diffLevel) => {
     setLevel(diffLevel);
@@ -188,6 +195,7 @@ export default function IlluminateSystem() {
             return (
               <div 
                 key={obj.id} 
+                ref={isCurrent ? currentItemRef : null}
                 className={`illum-circle-wrapper ${isCurrent ? 'illum-current' : ''}`}
               >
                 <div 
@@ -212,13 +220,37 @@ export default function IlluminateSystem() {
       {/* Input Area */}
       {!isComplete && (
         <div className="illum-input-area">
+          <div className="illum-prompt-banner">
+            <div className="illum-prompt-header">
+              <span className="illum-step-badge">
+                #{currentIndex + 1} of {gameData.length}
+              </span>
+              <span className="illum-type-badge">
+                {gameData[currentIndex]?.type}
+              </span>
+              {currentHint && (
+                <span className="illum-hint-badge">
+                  Hint: {currentHint}
+                </span>
+              )}
+            </div>
+            {currentIndex > 0 && (
+              <div className="illum-after-text">
+                After: <strong>{gameData[currentIndex - 1].name.split(' ')[0]}</strong>
+              </div>
+            )}
+          </div>
+
           <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
             <input
               ref={inputRef}
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Type next largest object..."
+              onFocus={() => {
+                currentItemRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
+              placeholder={`Type #${currentIndex + 1} (${gameData[currentIndex]?.type || 'Object'})...`}
               className={`illum-input ${isError ? 'illum-error' : ''}`}
               autoComplete="off"
               autoFocus

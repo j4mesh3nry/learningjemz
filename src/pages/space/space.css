@@ -1225,11 +1225,68 @@
 }
 
 .illum-input-area {
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1rem 1rem;
+  background: rgba(10, 10, 26, 0.95);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   flex-shrink: 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.illum-prompt-banner {
+  max-width: 400px;
+  margin: 0 auto 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.illum-prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.illum-step-badge {
+  background: linear-gradient(135deg, #1c7c54 0%, #155d3e 100%);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.illum-type-badge {
+  background: rgba(255, 255, 255, 0.15);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.illum-hint-badge {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ffb74d;
+  border: 1px solid rgba(255, 152, 0, 0.4);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.illum-after-text {
+  color: #b0bec5;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.illum-after-text strong {
+  color: #ffffff;
 }
 
 .illum-input {
