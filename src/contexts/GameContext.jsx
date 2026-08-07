@@ -128,24 +128,33 @@ export function GameProvider({ children }) {
 
   // Streak is now handled by recordActivity called upon completing a game/puzzle
   const recordActivity = () => {
-    const today = new Date().toDateString();
-    if (state.lastVisit === today) return false;
+    const todayStr = new Date().toDateString();
 
     setState(prev => {
-      if (prev.lastVisit === today) return prev;
-      let newStreak = prev.streak;
-      if (prev.lastVisit) {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        if (prev.lastVisit === yesterday.toDateString()) {
-          newStreak = prev.streak + 1;
-        } else {
-          newStreak = 1;
-        }
-      } else {
-        newStreak = 1;
+      const lastVisitDate = prev.lastVisit ? new Date(prev.lastVisit) : null;
+      const lastVisitStr = (lastVisitDate && !isNaN(lastVisitDate.getTime())) ? lastVisitDate.toDateString() : null;
+
+      if (lastVisitStr === todayStr) {
+        return prev;
       }
-      return { ...prev, streak: newStreak, maxStreak: Math.max(prev.maxStreak || 0, newStreak), lastVisit: today };
+
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toDateString();
+
+      let newStreak = 1;
+      if (lastVisitStr === yesterdayStr) {
+        newStreak = (prev.streak || 0) + 1;
+      } else if (!lastVisitStr && prev.streak > 0) {
+        newStreak = prev.streak;
+      }
+
+      return {
+        ...prev,
+        streak: newStreak,
+        maxStreak: Math.max(prev.maxStreak || 0, newStreak),
+        lastVisit: todayStr
+      };
     });
     return true;
   };
