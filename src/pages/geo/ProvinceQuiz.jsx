@@ -89,17 +89,7 @@ export default function ProvinceQuiz() {
     localStorage.setItem('learningjemz-geo-stats', JSON.stringify(stats));
     
     // Gamification
-    const oldStreak = streak;
-    setDisplayedStreak(oldStreak);
-    const didIncrease = recordActivity();
-    setStreakIncreased(didIncrease);
-    
-    if (didIncrease) {
-      setTimeout(() => {
-        setIgniting(true);
-        setDisplayedStreak(oldStreak + 1);
-      }, 800);
-    }
+    recordActivity();
   };
 
   if (queue.length === 0) return <div>Loading...</div>;
@@ -129,7 +119,7 @@ export default function ProvinceQuiz() {
             title="Quiz Complete!"
             subtitle={`You mastered ${score} out of 81 Philippine provinces!`}
             xpGained={sessionXp}
-            streak={displayedStreak}
+            streak={streak}
             hasPlayedToday={hasPlayedToday}
             onContinue={() => navigate('/geo')}
             onPlayAgain={startNewGame}

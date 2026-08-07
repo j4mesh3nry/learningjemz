@@ -67,18 +67,8 @@ export default function SpaceQuiz() {
     }
     
     // Gamification
-    const oldStreak = streak;
-    setDisplayedStreak(oldStreak);
-    const didIncrease = recordActivity();
-    setStreakIncreased(didIncrease);
-    
-    if (didIncrease) {
-      setTimeout(() => {
-        setIgniting(true);
-        setDisplayedStreak(oldStreak + 1);
-      }, 800);
-    }
-  }, [streak, recordActivity]);
+    recordActivity();
+  }, [recordActivity]);
 
   const handleAnswer = useCallback((index) => {
     if (selectedAnswer !== null) return;
@@ -128,7 +118,7 @@ export default function SpaceQuiz() {
           title="Quiz Complete!"
           subtitle={`You scored ${score} out of ${questions.length} (${accuracy}% accuracy)`}
           xpGained={sessionXp}
-          streak={displayedStreak}
+          streak={streak}
           hasPlayedToday={hasPlayedToday}
           onContinue={() => navigate('/space')}
           onPlayAgain={startQuiz}

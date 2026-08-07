@@ -123,56 +123,23 @@ export default function ChessPlay() {
     if (newGame.isCheckmate()) {
       setGameState('checkmate');
       setShowOverlay(true);
-      const oldStreak = streak;
       if (newGame.turn() !== playerColor) {
         const xpGained = winChessGame(difficulty);
         recordChessGame(difficulty, true);
-        const streakIncreased = recordActivity();
-        
-        setVictoryStats({ streakIncreased, xpGained });
-        setDisplayedStreak(oldStreak);
-        
-        if (streakIncreased) {
-          setTimeout(() => {
-            setIgniting(true);
-            setDisplayedStreak(oldStreak + 1);
-          }, 800);
-        } else {
-          setDisplayedStreak(oldStreak);
-        }
+        recordActivity();
+        setVictoryStats({ xpGained });
       } else {
         // Bot wins
         recordChessGame(difficulty, false);
-        const streakIncreased = recordActivity(); // Award streak for trying
-        setVictoryStats({ streakIncreased, xpGained: 0 });
-        setDisplayedStreak(oldStreak);
-        
-        if (streakIncreased) {
-          setTimeout(() => {
-            setIgniting(true);
-            setDisplayedStreak(oldStreak + 1);
-          }, 800);
-        } else {
-          setDisplayedStreak(oldStreak);
-        }
+        recordActivity();
+        setVictoryStats({ xpGained: 0 });
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
       setShowOverlay(true);
       recordChessGame(difficulty, false);
-      const oldStreak = streak;
-      const streakIncreased = recordActivity(); // Award streak for trying
-      setVictoryStats({ streakIncreased, xpGained: 0 });
-      setDisplayedStreak(oldStreak);
-      
-      if (streakIncreased) {
-        setTimeout(() => {
-          setIgniting(true);
-          setDisplayedStreak(oldStreak + 1);
-        }, 800);
-      } else {
-        setDisplayedStreak(oldStreak);
-      }
+      recordActivity();
+      setVictoryStats({ xpGained: 0 });
     }
   }, [winChessGame, recordActivity, streak, playerColor, difficulty, recordChessGame]);
 
@@ -697,10 +664,8 @@ export default function ChessPlay() {
                   : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} won the game!`
               }
               xpGained={victoryStats?.xpGained || 0}
-              streak={displayedStreak}
+              streak={streak}
               hasPlayedToday={hasPlayedToday}
-              igniting={igniting}
-              streakIncreased={victoryStats?.streakIncreased || false}
               onContinue={() => setShowOverlay(false)}
               onPlayAgain={() => { setShowOverlay(false); resetGame(); }}
               continueText="Continue"
