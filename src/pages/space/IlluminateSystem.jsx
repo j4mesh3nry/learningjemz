@@ -21,6 +21,8 @@ export default function IlluminateSystem() {
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [isError, setIsError] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const inputRef = useRef(null);
 
   const scrollToCurrentPlanet = (isFocused = false) => {
