@@ -1,13 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGame } from '../../contexts/GameContext';
 import { Card } from '../../components/Card';
-import { Flame, Star, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import './space.css';
 
 export default function ObjectsBySizeMenu() {
   const navigate = useNavigate();
-  const { level, streak, hasPlayedToday } = useGame();
 
   return (
     <div className="space-module-page">
@@ -32,29 +30,6 @@ export default function ObjectsBySizeMenu() {
           </div>
         </div>
 
-        {/* Top Badges */}
-        <div style={{
-          display: 'flex', flexDirection: 'column', gap: 3,
-          background: '#fafafa', padding: '5px 9px', borderRadius: 12,
-          border: '1px solid #eaeaea', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-          minWidth: 76, boxSizing: 'border-box'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
-            <Flame 
-              size={13} 
-              color={hasPlayedToday ? '#ff4d4d' : '#888888'} 
-              fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
-            />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#444444' }}>
-              {streak ?? 0}
-            </span>
-          </div>
-          <div style={{ height: 1, background: '#eee', margin: '1px 0' }} />
-          <div onClick={() => navigate('/profile')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, cursor: 'pointer' }}>
-            <Star size={13} color="#f57f17" fill="#ffb300" />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#f57f17' }}>Lv.{level}</span>
-          </div>
-        </div>
       </div>
 
       {/* Description */}
