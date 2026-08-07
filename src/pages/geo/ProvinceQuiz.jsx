@@ -127,14 +127,14 @@ export default function ProvinceQuiz() {
           <VictoryScreen
             isOpen={true}
             title="Quiz Complete!"
+            subtitle={`You mastered ${score} out of 81 Philippine provinces!`}
             xpGained={sessionXp}
             streak={displayedStreak}
-            igniting={igniting}
-            streakIncreased={streakIncreased}
-            onContinue={startNewGame}
-          >
-            <p style={{ margin: 0 }}>You got {score} / 81 provinces correct!</p>
-          </VictoryScreen>
+            hasPlayedToday={hasPlayedToday}
+            onContinue={() => navigate('/geo')}
+            onPlayAgain={startNewGame}
+            continueText="Continue"
+          />
           <div className="map-wrapper" style={{ filter: 'blur(4px)' }}>
             <PhilippineMap
               onProvinceClick={() => {}}

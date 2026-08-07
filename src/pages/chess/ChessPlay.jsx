@@ -686,21 +686,25 @@ export default function ChessPlay() {
             
             <VictoryScreen
               isOpen={(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && showOverlay}
-              title={gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : 'Checkmate!'}
+              title={gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : (game.turn() !== playerColor ? 'Checkmate!' : 'Game Over')}
+              subtitle={
+                gameState === 'resigned' 
+                  ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`
+                  : gameState === 'draw' 
+                  ? 'The game ended in a draw.' 
+                  : game.turn() !== playerColor 
+                  ? `You defeated ${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}!` 
+                  : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} won the game!`
+              }
               xpGained={victoryStats?.xpGained || 0}
               streak={displayedStreak}
+              hasPlayedToday={hasPlayedToday}
               igniting={igniting}
               streakIncreased={victoryStats?.streakIncreased || false}
               onContinue={() => setShowOverlay(false)}
-              customMessage={gameState === 'checkmate' ? (game.turn() === playerColor ? 'Beginner Bob wins!' : 'You win!') : undefined}
-            >
-              <p>
-                {gameState === 'resigned' ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!` :
-                 gameState === 'draw' ? 'The game is a draw.' :
-                 game.turn() !== playerColor ? `You defeated ${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}!` :
-                 `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
-              </p>
-            </VictoryScreen>
+              onPlayAgain={() => { setShowOverlay(false); resetGame(); }}
+              continueText="Continue"
+            />
 
             <div className={`board-container`}>
               {(isFlipped ? [...board].reverse() : board).map((row, rIndexMapped) => {

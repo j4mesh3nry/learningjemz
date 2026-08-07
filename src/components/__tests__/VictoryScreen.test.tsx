@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import VictoryScreen from '../VictoryScreen.tsx';
+import VictoryScreen from '../VictoryScreen';
 
 // Mock Gemstone since it may have SVG dependencies
 vi.mock('../Gemstone', () => ({
@@ -14,8 +14,7 @@ describe('VictoryScreen', () => {
     title: 'Victory!',
     xpGained: 25,
     streak: 3,
-    igniting: false,
-    streakIncreased: false,
+    hasPlayedToday: true,
     onContinue: vi.fn(),
   };
 
@@ -29,9 +28,10 @@ describe('VictoryScreen', () => {
     expect(screen.getByText('Victory!')).toBeInTheDocument();
   });
 
-  it('displays custom title', () => {
-    render(<VictoryScreen {...defaultProps} title="Well Done!" />);
+  it('displays custom title and subtitle', () => {
+    render(<VictoryScreen {...defaultProps} title="Well Done!" subtitle="You defeated the bot!" />);
     expect(screen.getByText('Well Done!')).toBeInTheDocument();
+    expect(screen.getByText('You defeated the bot!')).toBeInTheDocument();
   });
 
   it('displays XP gained', () => {
@@ -44,22 +44,22 @@ describe('VictoryScreen', () => {
     expect(screen.getByText('7')).toBeInTheDocument();
   });
 
-  it('shows +1 badge when igniting and streakIncreased', () => {
-    render(<VictoryScreen {...defaultProps} igniting={true} streakIncreased={true} />);
-    expect(screen.getByText('+1')).toBeInTheDocument();
-  });
-
-  it('does not show +1 badge when not igniting', () => {
-    render(<VictoryScreen {...defaultProps} igniting={false} streakIncreased={true} />);
-    expect(screen.queryByText('+1')).toBeNull();
-  });
-
   it('calls onContinue when Continue button is clicked', async () => {
     const user = userEvent.setup();
     const onContinue = vi.fn();
     render(<VictoryScreen {...defaultProps} onContinue={onContinue} />);
     await user.click(screen.getByText('Continue'));
     expect(onContinue).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders optional Play Again button when onPlayAgain prop is passed', async () => {
+    const user = userEvent.setup();
+    const onPlayAgain = vi.fn();
+    render(<VictoryScreen {...defaultProps} onPlayAgain={onPlayAgain} />);
+    const playAgainBtn = screen.getByText('Play Again');
+    expect(playAgainBtn).toBeInTheDocument();
+    await user.click(playAgainBtn);
+    expect(onPlayAgain).toHaveBeenCalledTimes(1);
   });
 
   it('renders children when provided', () => {
