@@ -4,10 +4,11 @@
 :root {
   color-scheme: light;
   
-  /* Primary palette */
-  --color-primary: #1c7c54; /* emerald green for chess */
-  --color-primary-light: #4caf50;
-  --color-primary-dark: #155d35;
+  /* Primary palette - Emerald & Forest Green */
+  --color-primary: #1c7c54; 
+  --color-primary-light: #2eaf73;
+  --color-primary-dark: #0a2e1d;
+  --color-primary-forest: #0e3d26;
 
   /* Module specific backgrounds */
   --bg-chess: #0e4d2e; /* dark emerald */
@@ -15,20 +16,21 @@
   --bg-reading: #d16f2c; /* warm amber */
   --bg-space: #0a0a0a; /* deep space */
 
-  /* Neutral colors */
-  --color-bg: #ffffff;
-  --color-bg-dark: #f5f5f5;
-  --color-text: #222222;
-  --color-muted: #777777;
+  /* Neutral colors - Organic Mint/Sage Canvas */
+  --color-bg-page: #eaf2ed; /* soft mint-tinted background */
+  --color-bg-card: #ffffff;
+  --color-bg-dark: #0a2e1d;
+  --color-text: #173829;
+  --color-muted: #5b7e6e;
 
   /* Accent / XP */
   --color-xp: #ffb400;
   --color-streak: #ff4d4d;
 
   /* Border radius & spacing */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 12px;
@@ -55,7 +57,7 @@ html, body, #root {
 }
 body {
   font-family: var(--font-body);
-  background-color: var(--color-bg);
+  background-color: var(--color-bg-page);
   color: var(--color-text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -65,7 +67,7 @@ body {
 
 /* Visible focus ring for keyboard users only */
 *:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-primary-light);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
@@ -132,7 +134,7 @@ button {
 }
 button:active { transform: scale(0.97); }
 
-/* Card component – used for module tiles */
+/* Card component – tactile 3D tiles */
 .card {
   display: flex;
   border-radius: var(--radius-lg);
@@ -140,32 +142,39 @@ button:active { transform: scale(0.97); }
   text-decoration: none;
 }
 
-/* Bottom navigation bar */
+/* Bottom navigation bar - Deep Forest Green with Mint Active States */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 64px;
-  padding-bottom: 8px;
-  padding-top: 4px;
-  background: var(--color-bg);
+  height: 66px;
+  padding-bottom: 6px;
+  padding-top: 6px;
+  background: #082618;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-top: 1px solid #eaeaea;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
   z-index: 100;
 }
 .bottom-nav a {
-  color: var(--color-muted);
+  color: rgba(255, 255, 255, 0.55);
   font-size: 0.75rem;
+  font-weight: 600;
   text-decoration: none;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 4px 12px;
+  border-radius: 12px;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
-.bottom-nav a.active { color: var(--color-primary); }
+.bottom-nav a.active { 
+  color: #38d989;
+  background: rgba(56, 217, 137, 0.12);
+}
 
 /* Auth Styles */
 .auth-container {

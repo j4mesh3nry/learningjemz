@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Header } from '../components/Header';
+import { Lock } from 'lucide-react';
 import '../index.css';
 
 const modules = [
@@ -12,15 +13,16 @@ const modules = [
     title: 'Chess',
     subtitle: 'Play, Puzzles & Lessons',
     bg: 'linear-gradient(135deg, #0e4d2e 0%, #1c7c54 100%)',
+    shadow: '0 6px 0 #072415',
     pattern: 'chess',
   },
-
   {
     to: '/space',
     icon: '🪐',
     title: 'Space',
     subtitle: 'Planets, Moons & Stars',
     bg: 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%)',
+    shadow: '0 6px 0 #050515',
     pattern: 'space',
   },
 ];
@@ -55,61 +57,72 @@ function StarDots() {
   );
 }
 
-
-
 export default function Home() {
   const navigate = useNavigate();
 
   return (
     <div style={{
-      minHeight: '100vh', background: '#ffffff',
-      padding: '24px 16px 80px', maxWidth: 420, margin: '0 auto',
+      minHeight: '100vh', 
+      background: 'var(--color-bg-page)',
+      padding: '24px 16px 90px', 
+      maxWidth: 420, 
+      margin: '0 auto',
     }}>
       <Header />
 
-      {/* Question */}
+      {/* Main Section Header */}
       <h2 style={{
-        fontFamily: 'var(--font-heading)', fontSize: '1.3rem',
-        marginBottom: 20, color: '#333',
+        fontFamily: 'var(--font-heading)', fontSize: '1.25rem',
+        marginBottom: 16, marginTop: 8, color: '#0e3d26', fontWeight: 800,
+        display: 'flex', alignItems: 'center', gap: '8px'
       }}>
-        What do you want to play and learn?
+        <span>🎯</span> What do you want to play and learn?
       </h2>
 
       {/* Module Cards */}
-      <div style={{ display: 'grid', gap: 14 }}>
+      <div style={{ display: 'grid', gap: 16 }}>
         {modules.map((m) => (
-          <Card key={m.to} className="geo-card-item" onClick={() => navigate(m.to)} ariaLabel={m.title} style={{
-            display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
-            textDecoration: 'none', color: '#fff',
-            background: m.bg, borderRadius: 16,
-            padding: '20px 18px', position: 'relative', overflow: 'hidden',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
-            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.15)'; }}
+          <Card 
+            key={m.to} 
+            className="geo-card-item" 
+            onClick={() => navigate(m.to)} 
+            ariaLabel={m.title} 
+            style={{
+              display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
+              textDecoration: 'none', color: '#fff',
+              background: m.bg, borderRadius: 20,
+              padding: '20px 18px', position: 'relative', overflow: 'hidden',
+              boxShadow: m.shadow,
+              border: '1px solid rgba(255,255,255,0.15)',
+              transition: 'transform 0.1s ease, boxShadow 0.1s ease',
+              cursor: 'pointer'
+            }}
+            onMouseDown={e => { e.currentTarget.style.transform = 'translateY(3px)'; e.currentTarget.style.boxShadow = '0 2px 0 #072415'; }}
+            onMouseUp={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = m.shadow; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = m.shadow; }}
           >
             {m.pattern === 'space' && <StarDots />}
             <div style={{
               fontSize: '2.2rem', width: 56, height: 56,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'rgba(255,255,255,0.15)', borderRadius: 14,
+              background: 'rgba(255,255,255,0.18)', borderRadius: 16,
+              boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.2)',
               flexShrink: 0,
             }}>
               {m.icon}
             </div>
             <div style={{ position: 'relative', zIndex: 1 }}>
               <h3 style={{
-                fontFamily: 'var(--font-heading)', fontSize: '1.2rem',
-                margin: 0, fontWeight: 700,
+                fontFamily: 'var(--font-heading)', fontSize: '1.25rem',
+                margin: 0, fontWeight: 800, letterSpacing: '-0.2px'
               }}>{m.title}</h3>
               <p style={{
-                margin: '4px 0 0', fontSize: '0.85rem', opacity: 0.85,
+                margin: '4px 0 0', fontSize: '0.85rem', opacity: 0.88, fontWeight: 500
               }}>{m.subtitle}</p>
             </div>
             <div style={{
-              marginLeft: 'auto', fontSize: '1.2rem', opacity: 0.6,
-              position: 'relative', zIndex: 1,
+              marginLeft: 'auto', fontSize: '1.2rem', opacity: 0.8,
+              position: 'relative', zIndex: 1, fontWeight: 'bold'
             }}>→</div>
           </Card>
         ))}
@@ -117,54 +130,56 @@ export default function Home() {
 
       {/* Locked Modules */}
       <h2 style={{
-        fontFamily: 'var(--font-heading)', fontSize: '1.3rem',
-        marginTop: 32, marginBottom: 20, color: '#333',
+        fontFamily: 'var(--font-heading)', fontSize: '1.25rem',
+        marginTop: 32, marginBottom: 16, color: '#0e3d26', fontWeight: 800,
+        display: 'flex', alignItems: 'center', gap: '8px'
       }}>
-        Coming Soon
+        <span>🚀</span> Coming Soon
       </h2>
 
       <div style={{ display: 'grid', gap: 14 }}>
         {lockedModules.map((m) => (
           <div key={m.title} style={{
             display: 'flex', alignItems: 'center', gap: 16,
-            color: '#6c757d',
-            background: '#f8f9fa', borderRadius: 16,
-            border: '1px solid #e9ecef',
-            padding: '20px 18px', position: 'relative', overflow: 'hidden',
+            background: '#ffffff', borderRadius: 20,
+            border: '2px solid #cce3d7',
+            boxShadow: '0 4px 0 #b7d6c5',
+            padding: '16px 18px', position: 'relative', overflow: 'hidden',
             cursor: 'not-allowed'
           }}>
             <div style={{
-              fontSize: '2.2rem', width: 56, height: 56,
+              fontSize: '2rem', width: 52, height: 52,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: '#e9ecef', borderRadius: 14,
+              background: '#e8f3ed', borderRadius: 14,
               flexShrink: 0,
-              opacity: 0.7
+              opacity: 0.85
             }}>
               {m.icon}
             </div>
             <div style={{ position: 'relative', zIndex: 1 }}>
               <h3 style={{
-                fontFamily: 'var(--font-heading)', fontSize: '1.2rem',
+                fontFamily: 'var(--font-heading)', fontSize: '1.15rem',
                 margin: 0, fontWeight: 700,
-                color: '#495057'
+                color: '#0e3d26'
               }}>{m.title}</h3>
               <p style={{
-                margin: '4px 0 0', fontSize: '0.85rem', opacity: 1,
+                margin: '2px 0 0', fontSize: '0.82rem', color: '#496c5b', fontWeight: 500
               }}>{m.subtitle}</p>
             </div>
             <div style={{
               marginLeft: 'auto',
-              background: '#e9ecef',
-              color: '#6c757d',
+              background: '#dcf0e5',
+              color: '#165e3d',
               fontSize: '0.75rem',
-              fontWeight: 600,
-              padding: '4px 8px',
+              fontWeight: 700,
+              padding: '6px 10px',
               borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px'
+              gap: '5px',
+              border: '1px solid #bde2cf'
             }}>
-              🔒 Locked
+              <Lock size={13} /> Locked
             </div>
           </div>
         ))}
