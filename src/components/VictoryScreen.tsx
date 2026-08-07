@@ -1,6 +1,8 @@
 // src/components/VictoryScreen.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flame, Trophy, Sparkles, Gem } from 'lucide-react';
+import StreakScreen, { hasShownStreakToday } from './StreakScreen';
+import { useAuth } from '../contexts/AuthContext';
 import './victory.css';
 
 export interface VictoryScreenProps {
@@ -16,6 +18,7 @@ export interface VictoryScreenProps {
   onPlayAgain?: () => void;
   continueText?: string;
   children?: React.ReactNode;
+  disableDailyStreakModal?: boolean;
 }
 
 export default function VictoryScreen({
@@ -29,8 +32,39 @@ export default function VictoryScreen({
   onPlayAgain,
   continueText = "Continue",
   children,
+  disableDailyStreakModal = false,
 }: VictoryScreenProps) {
+  const { user } = useAuth();
+  const userId = user?.id;
+  const [showingStreakModal, setShowingStreakModal] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Trigger daily streak solo screen only once a day per account
+      const shouldTrigger = !disableDailyStreakModal && streak > 0 && !hasShownStreakToday(userId);
+      if (shouldTrigger) {
+        setShowingStreakModal(true);
+      } else {
+        setShowingStreakModal(false);
+      }
+    } else {
+      setShowingStreakModal(false);
+    }
+  }, [isOpen, streak, disableDailyStreakModal, userId]);
+
   if (!isOpen) return null;
+
+  // First game of the day: render Duolingo orange solo screen first
+  if (showingStreakModal) {
+    return (
+      <StreakScreen
+        isOpen={true}
+        streak={streak || 1}
+        userId={userId}
+        onContinue={() => setShowingStreakModal(false)}
+      />
+    );
+  }
 
   return (
     <div className="victory-overlay" role="dialog" aria-modal="true" aria-label={title}>

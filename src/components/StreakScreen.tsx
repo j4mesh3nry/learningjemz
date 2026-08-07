@@ -3,21 +3,25 @@ import React, { useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import './streak.css';
 
-const STREAK_SHOWN_KEY = 'learningjemz_streak_shown_date';
+export function getStreakStorageKey(userId?: string): string {
+  return userId ? `learningjemz_streak_shown_${userId}` : 'learningjemz_streak_shown_guest';
+}
 
-export function hasShownStreakToday(): boolean {
+export function hasShownStreakToday(userId?: string): boolean {
   try {
     const today = new Date().toDateString();
-    return localStorage.getItem(STREAK_SHOWN_KEY) === today;
+    const key = getStreakStorageKey(userId);
+    return localStorage.getItem(key) === today;
   } catch {
     return false;
   }
 }
 
-export function markStreakShownToday(): void {
+export function markStreakShownToday(userId?: string): void {
   try {
     const today = new Date().toDateString();
-    localStorage.setItem(STREAK_SHOWN_KEY, today);
+    const key = getStreakStorageKey(userId);
+    localStorage.setItem(key, today);
   } catch {}
 }
 
@@ -26,6 +30,7 @@ export interface StreakScreenProps {
   streak: number;
   onContinue: () => void;
   forceShow?: boolean;
+  userId?: string;
 }
 
 const DAYS_HEADER = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -35,6 +40,7 @@ export default function StreakScreen({
   streak = 1,
   onContinue,
   forceShow = false,
+  userId,
 }: StreakScreenProps) {
   const [animated, setAnimated] = useState(false);
 
@@ -50,13 +56,13 @@ export default function StreakScreen({
   if (!isOpen) return null;
 
   // Enforce once-per-day rule unless forceShow is true
-  if (!forceShow && hasShownStreakToday()) {
+  if (!forceShow && hasShownStreakToday(userId)) {
     onContinue();
     return null;
   }
 
   const handleContinue = () => {
-    markStreakShownToday();
+    markStreakShownToday(userId);
     onContinue();
   };
 

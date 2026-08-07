@@ -1,7 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import VictoryScreen from '../VictoryScreen';
+
+// Mock AuthContext
+vi.mock('../../contexts/AuthContext', () => ({
+  useAuth: () => ({ user: { id: 'test-user-123' } }),
+}));
 
 // Mock Gemstone since it may have SVG dependencies
 vi.mock('../Gemstone', () => ({
@@ -16,7 +21,13 @@ describe('VictoryScreen', () => {
     streak: 3,
     hasPlayedToday: true,
     onContinue: vi.fn(),
+    disableDailyStreakModal: true, // Test victory modal rendering directly
   };
+
+  beforeEach(() => {
+    localStorage.clear();
+    vi.clearAllMocks();
+  });
 
   it('renders nothing when isOpen is false', () => {
     const { container } = render(<VictoryScreen {...defaultProps} isOpen={false} />);
@@ -76,5 +87,20 @@ describe('VictoryScreen', () => {
     const overlay = container.querySelector('.victory-overlay');
     expect(overlay).toHaveAttribute('role', 'dialog');
     expect(overlay).toHaveAttribute('aria-modal', 'true');
+  });
+
+  it('renders StreakScreen on first game of day for user account, then transitions to VictoryScreen', async () => {
+    const user = userEvent.setup();
+    render(<VictoryScreen {...defaultProps} disableDailyStreakModal={false} />);
+    
+    // First game of day -> Orange Duolingo Streak Screen is displayed!
+    expect(screen.getByText('day streak')).toBeInTheDocument();
+    
+    // Tap CONTINUE on StreakScreen
+    const continueBtn = screen.getByRole('button', { name: /continue/i });
+    await user.click(continueBtn);
+
+    // Transitions to VictoryScreen modal!
+    expect(screen.getByText('Victory!')).toBeInTheDocument();
   });
 });
