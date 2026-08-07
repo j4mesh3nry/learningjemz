@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Gem, Mail, Lock, UserPlus } from 'lucide-react';
+import { Gem, Mail, Lock, UserPlus, Eye, EyeOff } from 'lucide-react';
 import '../../index.css';
 
 export default function Signup() {
@@ -9,15 +9,15 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const { signup, loading } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
     
     if (!name || !email || !password || !confirmPassword) {
       setError('Please fill in all fields');
@@ -30,13 +30,12 @@ export default function Signup() {
     }
 
     try {
-      const data = await signup(email, password, name);
-      
-      if (data?.user && !data?.session) {
-        setSuccess('Success! Please check your email for the confirmation link.');
-      } else {
-        navigate('/', { replace: true });
-      }
+      await signup(email, password, name);
+      // Directly redirect to Login page with success state when account is created
+      navigate('/login', { 
+        state: { message: 'Account created successfully! Please log in.' },
+        replace: true 
+      });
     } catch (err) {
       setError(err.message || 'Failed to create account');
     }
@@ -100,16 +99,11 @@ export default function Signup() {
             {error}
           </div>
         )}
-        {success && (
-          <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '12px', borderRadius: '12px', marginBottom: '20px', fontSize: '0.9rem', textAlign: 'center', border: '1px solid #c8e6c9' }}>
-            {success}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           
           <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999' }}>
+            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999', display: 'flex', alignItems: 'center' }}>
               <UserPlus size={20} />
             </div>
             <input 
@@ -121,7 +115,8 @@ export default function Signup() {
               style={{
                 width: '100%', padding: '16px 16px 16px 48px', borderRadius: '16px',
                 border: '2px solid #eaeaea', fontSize: '1rem', outline: 'none',
-                background: '#fcfcfc', transition: 'border-color 0.2s', color: '#333'
+                background: '#fcfcfc', transition: 'border-color 0.2s', color: '#333',
+                boxSizing: 'border-box'
               }}
               onFocus={e => e.target.style.borderColor = 'var(--color-primary)'}
               onBlur={e => e.target.style.borderColor = '#eaeaea'}
@@ -129,7 +124,7 @@ export default function Signup() {
           </div>
 
           <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999' }}>
+            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999', display: 'flex', alignItems: 'center' }}>
               <Mail size={20} />
             </div>
             <input 
@@ -141,51 +136,80 @@ export default function Signup() {
               style={{
                 width: '100%', padding: '16px 16px 16px 48px', borderRadius: '16px',
                 border: '2px solid #eaeaea', fontSize: '1rem', outline: 'none',
-                background: '#fcfcfc', transition: 'border-color 0.2s', color: '#333'
+                background: '#fcfcfc', transition: 'border-color 0.2s', color: '#333',
+                boxSizing: 'border-box'
               }}
               onFocus={e => e.target.style.borderColor = 'var(--color-primary)'}
               onBlur={e => e.target.style.borderColor = '#eaeaea'}
             />
           </div>
 
+          {/* Password Input with Visible Password Eye Toggle */}
           <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999' }}>
+            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999', display: 'flex', alignItems: 'center' }}>
               <Lock size={20} />
             </div>
             <input 
-              type="password" 
+              type={showPassword ? 'text' : 'password'} 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
               placeholder="Create Password"
               disabled={loading}
               style={{
-                width: '100%', padding: '16px 16px 16px 48px', borderRadius: '16px',
+                width: '100%', padding: '16px 48px 16px 48px', borderRadius: '16px',
                 border: '2px solid #eaeaea', fontSize: '1rem', outline: 'none',
-                background: '#fcfcfc', transition: 'border-color 0.2s', color: '#333'
+                background: '#fcfcfc', transition: 'border-color 0.2s', color: '#333',
+                boxSizing: 'border-box'
               }}
               onFocus={e => e.target.style.borderColor = 'var(--color-primary)'}
               onBlur={e => e.target.style.borderColor = '#eaeaea'}
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              style={{
+                position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)',
+                background: 'none', border: 'none', cursor: 'pointer', color: '#888',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0
+              }}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
+          {/* Confirm Password Input with Visible Password Eye Toggle */}
           <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999' }}>
+            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#999', display: 'flex', alignItems: 'center' }}>
               <Lock size={20} />
             </div>
             <input 
-              type="password" 
+              type={showConfirmPassword ? 'text' : 'password'} 
               value={confirmPassword} 
               onChange={(e) => setConfirmPassword(e.target.value)} 
               placeholder="Confirm Password"
               disabled={loading}
               style={{
-                width: '100%', padding: '16px 16px 16px 48px', borderRadius: '16px',
+                width: '100%', padding: '16px 48px 16px 48px', borderRadius: '16px',
                 border: '2px solid #eaeaea', fontSize: '1rem', outline: 'none',
-                background: '#fcfcfc', transition: 'border-color 0.2s', color: '#333'
+                background: '#fcfcfc', transition: 'border-color 0.2s', color: '#333',
+                boxSizing: 'border-box'
               }}
               onFocus={e => e.target.style.borderColor = 'var(--color-primary)'}
               onBlur={e => e.target.style.borderColor = '#eaeaea'}
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+              style={{
+                position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)',
+                background: 'none', border: 'none', cursor: 'pointer', color: '#888',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0
+              }}
+            >
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           <button 
