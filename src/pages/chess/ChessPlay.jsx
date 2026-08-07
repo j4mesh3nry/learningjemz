@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Chess } from 'chess.js';
+import { Chess as ChessJS } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -25,14 +25,27 @@ const PIECE_IMAGES = {
   b: { p: b_p, n: b_n, b: b_b, r: b_r, q: b_q, k: b_k }
 };
 
+const createChess = (pgn) => {
+  try {
+    const C = typeof ChessJS === 'function' ? ChessJS : (ChessJS?.Chess || ChessJS);
+    const g = new C();
+    if (pgn) {
+      try { g.loadPgn(pgn); } catch (e) {}
+    }
+    return g;
+  } catch (e) {
+    console.error('Error creating Chess instance:', e);
+    return new ChessJS();
+  }
+};
+
 export default function ChessPlay() {
-  const [game, setGame] = useState(new Chess());
-  const [board, setBoard] = useState(game.board());
+  const [game, setGame] = useState(() => createChess());
+  const [board, setBoard] = useState(() => game.board());
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [legalMoves, setLegalMoves] = useState([]);
   const [difficulty, setDifficulty] = useState(null); // null means in selection screen
   const [isFlipped, setIsFlipped] = useState(false);
-  // const [status, setStatus] = useState(''); // removed unused state
   const [history, setHistory] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
   const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
@@ -47,15 +60,34 @@ export default function ChessPlay() {
   const [playerColor, setPlayerColor] = useState('w');
   const navigate = useNavigate();
   const historyScrollRef = React.useRef(null);
-  const { winChessGame, recordChessGame, level, streak, recordActivity, hasPlayedToday, botStats } = useGame();
-  const { user } = useAuth();
+
+  const gameContext = useGame() || {};
+  const { 
+    winChessGame = () => 10, 
+    recordChessGame = () => {}, 
+    level = 1, 
+    streak = 0, 
+    recordActivity = () => {}, 
+    hasPlayedToday = false, 
+    botStats = {} 
+  } = gameContext;
+
+  const authContext = useAuth() || {};
+  const user = authContext.user;
+
   const workerRef = React.useRef(null);
 
   useEffect(() => {
-    workerRef.current = new Worker('/stockfish/stockfish.js');
-    workerRef.current.postMessage('uci');
+    try {
+      workerRef.current = new Worker('/stockfish/stockfish.js');
+      workerRef.current.postMessage('uci');
+    } catch (e) {
+      console.warn('Stockfish Worker failed to initialize:', e);
+    }
     return () => {
-      if (workerRef.current) workerRef.current.terminate();
+      if (workerRef.current) {
+        try { workerRef.current.terminate(); } catch (e) {}
+      }
     };
   }, []);
   
@@ -66,25 +98,28 @@ export default function ChessPlay() {
     const startCount = { w: { p: 8, n: 2, b: 2, r: 2, q: 1 }, b: { p: 8, n: 2, b: 2, r: 2, q: 1 } };
     const currentCount = { w: { p: 0, n: 0, b: 0, r: 0, q: 0 }, b: { p: 0, n: 0, b: 0, r: 0, q: 0 } };
 
-    board.forEach(row => {
-      row.forEach(piece => {
-        if (piece && piece.type !== 'k') {
-          currentCount[piece.color][piece.type]++;
+    if (board && Array.isArray(board)) {
+      board.forEach(row => {
+        if (Array.isArray(row)) {
+          row.forEach(piece => {
+            if (piece && piece.type !== 'k' && currentCount[piece.color]) {
+              currentCount[piece.color][piece.type]++;
+            }
+          });
         }
       });
-    });
+    }
 
     const captured = { w: [], b: [] }; 
     let wScore = 0; let bScore = 0;
     const values = { p: 1, n: 3, b: 3, r: 5, q: 9 };
-    // Sort order for display: Q, R, B, N, P
     const sortOrder = { q: 1, r: 2, b: 3, n: 4, p: 5 };
 
     Object.keys(startCount.w).forEach(type => {
       const diff = startCount.w[type] - currentCount.w[type];
       for (let i = 0; i < diff; i++) {
         captured.w.push(type);
-        bScore += values[type];
+        bScore += values[type] || 0;
       }
     });
 
@@ -92,12 +127,12 @@ export default function ChessPlay() {
       const diff = startCount.b[type] - currentCount.b[type];
       for (let i = 0; i < diff; i++) {
         captured.b.push(type);
-        wScore += values[type];
+        wScore += values[type] || 0;
       }
     });
 
-    captured.w.sort((a, b) => sortOrder[a] - sortOrder[b]);
-    captured.b.sort((a, b) => sortOrder[a] - sortOrder[b]);
+    captured.w.sort((a, b) => (sortOrder[a] || 5) - (sortOrder[b] || 5));
+    captured.b.sort((a, b) => (sortOrder[a] || 5) - (sortOrder[b] || 5));
 
     return { 
       capturedByWhite: captured.b,
@@ -129,7 +164,6 @@ export default function ChessPlay() {
         recordActivity();
         setVictoryStats({ xpGained });
       } else {
-        // Bot wins
         recordChessGame(difficulty, false);
         recordActivity();
         setVictoryStats({ xpGained: 0 });
@@ -144,82 +178,83 @@ export default function ChessPlay() {
   }, [winChessGame, recordActivity, streak, playerColor, difficulty, recordChessGame]);
 
   const makeAIMove = useCallback(() => {
-    if (game.isGameOver() || gameState !== 'playing') return;
+    if (!game || game.isGameOver() || gameState !== 'playing') return;
 
     setIsThinking(true);
     
-    // Beginner Bob (Easy) intentionally blunders by making a completely random move 100% of the time.
-    // This makes him extremely easy to beat and checkmate for absolute beginners.
-    if (difficulty === 'Easy') {
+    if (difficulty === 'Easy' || !workerRef.current) {
       setTimeout(() => {
-        const moves = game.moves();
-        const randomMove = moves[Math.floor(Math.random() * moves.length)];
-        const newGame = new Chess();
-        newGame.loadPgn(game.pgn());
-        newGame.move(randomMove);
-        updateGame(newGame);
+        try {
+          const moves = game.moves();
+          if (moves && moves.length > 0) {
+            const randomMove = moves[Math.floor(Math.random() * moves.length)];
+            const newGame = createChess(game.pgn());
+            newGame.move(randomMove);
+            updateGame(newGame);
+          }
+        } catch (e) {
+          console.error(e);
+        }
         setTimeout(() => {
           if (historyScrollRef.current) {
             historyScrollRef.current.scrollTop = historyScrollRef.current.scrollHeight;
           }
         }, 50);
         setIsThinking(false);
-      }, 500); // 0.5s artificial thinking time
+      }, 500);
       return;
     }
 
-    workerRef.current.onmessage = (e) => {
-      const message = typeof e.data === 'string' ? e.data : e.data.data;
-      console.log('Stockfish says:', message);
-      
-      if (message && message.startsWith('bestmove')) {
-        const moveStr = message.split(' ')[1]; // e.g. "e2e4"
-        const newGame = new Chess();
-        newGame.loadPgn(game.pgn());
+    try {
+      workerRef.current.onmessage = (e) => {
+        const message = typeof e.data === 'string' ? e.data : e.data?.data;
         
-        const moveMatch = moveStr.match(/^([a-h][1-8])([a-h][1-8])([qrbn])?$/);
-        if (moveMatch) {
-          newGame.move({ from: moveMatch[1], to: moveMatch[2], promotion: moveMatch[3] });
-        } else {
-          newGame.move(moveStr); // Fallback
-        }
-        
-        updateGame(newGame);
-        setTimeout(() => {
-          if (historyScrollRef.current) {
-            historyScrollRef.current.scrollTop = historyScrollRef.current.scrollHeight;
+        if (message && message.startsWith('bestmove')) {
+          const moveStr = message.split(' ')[1];
+          const newGame = createChess(game.pgn());
+          
+          const moveMatch = moveStr ? moveStr.match(/^([a-h][1-8])([a-h][1-8])([qrbn])?$/) : null;
+          if (moveMatch) {
+            newGame.move({ from: moveMatch[1], to: moveMatch[2], promotion: moveMatch[3] });
+          } else if (moveStr) {
+            try { newGame.move(moveStr); } catch (err) {}
           }
-        }, 50);
-        setIsThinking(false);
+          
+          updateGame(newGame);
+          setTimeout(() => {
+            if (historyScrollRef.current) {
+              historyScrollRef.current.scrollTop = historyScrollRef.current.scrollHeight;
+            }
+          }, 50);
+          setIsThinking(false);
+        }
+      };
+
+      if (difficulty === 'Medium') {
+        workerRef.current.postMessage('setoption name Skill Level value 10');
+      } else {
+        workerRef.current.postMessage('setoption name Skill Level value 20');
       }
-    };
 
-    if (difficulty === 'Easy') {
-      workerRef.current.postMessage('setoption name Skill Level value 0');
-    } else if (difficulty === 'Medium') {
-      workerRef.current.postMessage('setoption name Skill Level value 10');
-    } else {
-      workerRef.current.postMessage('setoption name Skill Level value 20');
+      workerRef.current.postMessage(`position fen ${game.fen()}`);
+      const depth = difficulty === 'Hard' ? 10 : 4;
+      workerRef.current.postMessage(`go depth ${depth}`);
+    } catch (err) {
+      console.error('Stockfish error:', err);
+      setIsThinking(false);
     }
-
-    workerRef.current.postMessage(`position fen ${game.fen()}`);
-    // Using movetime requires SharedArrayBuffer/Cross-Origin-Isolation which isn't available by default.
-    // Falling back to depth to prevent the engine from hanging forever.
-    const depth = difficulty === 'Hard' ? 10 : difficulty === 'Medium' ? 4 : 1;
-    workerRef.current.postMessage(`go depth ${depth}`);
-    
   }, [game, difficulty, updateGame, gameState]);
 
   useEffect(() => {
     const botColor = playerColor === 'w' ? 'b' : 'w';
-    if (gameState === 'playing' && difficulty && game.turn() === botColor && !game.isGameOver()) {
+    if (gameState === 'playing' && difficulty && game && game.turn() === botColor && !game.isGameOver()) {
       makeAIMove();
     }
   }, [game, makeAIMove, playerColor, gameState, difficulty]);
 
   const handleSquareClick = (square) => {
     const botColor = playerColor === 'w' ? 'b' : 'w';
-    if (game.turn() === botColor || game.isGameOver() || gameState !== 'playing') return;
+    if (!game || game.turn() === botColor || game.isGameOver() || gameState !== 'playing') return;
 
     if (selectedSquare) {
       const possibleMoves = legalMoves.filter(m => m.to === square);
@@ -231,8 +266,7 @@ export default function ChessPlay() {
           return;
         }
 
-        const newGame = new Chess();
-        newGame.loadPgn(game.pgn());
+        const newGame = createChess(game.pgn());
         try {
           newGame.move({
             from: selectedSquare,
@@ -275,7 +309,7 @@ export default function ChessPlay() {
       workerRef.current.onmessage = null;
     }
     setIsThinking(false);
-    updateGame(new Chess());
+    updateGame(createChess());
     setSelectedSquare(null);
     setLegalMoves([]);
     setGameState('playing');
@@ -293,7 +327,7 @@ export default function ChessPlay() {
     setSelectedOpponent(null);
     setIsFlipped(color === 'b');
     
-    const newGame = new Chess();
+    const newGame = createChess();
     updateGame(newGame);
     setSelectedSquare(null);
     setLegalMoves([]);
@@ -340,7 +374,7 @@ export default function ChessPlay() {
         workerRef.current.onmessage = null;
       }
       setIsThinking(false);
-      updateGame(new Chess());
+      updateGame(createChess());
       setSelectedSquare(null);
       setLegalMoves([]);
     } else {
@@ -359,8 +393,7 @@ export default function ChessPlay() {
   };
 
   const handlePromotionSelect = (pieceType) => {
-    const newGame = new Chess();
-    newGame.loadPgn(game.pgn());
+    const newGame = createChess(game.pgn());
     try {
       newGame.move({
         from: promotionPending.from,
@@ -448,9 +481,10 @@ export default function ChessPlay() {
             </>
           )}
         </div>
-        <div className="player-tagline" style={{ position: 'relative' }}>
-          Bot • {difficulty}
-          {isThinking && <span className="thinking-indicator" style={{ position: 'absolute', marginLeft: 6, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>(thinking...)</span>}
+        <div className="player-tagline">
+          {difficulty === 'Easy' ? 'Rating: 400 • Casual' : 
+           difficulty === 'Medium' ? 'Rating: 1200 • Tactical' : 'Rating: 2500 • Stockfish'}
+          {isThinking && <span style={{ color: '#16653e', fontWeight: 'bold', marginLeft: 6 }}>Thinking...</span>}
         </div>
       </div>
     </div>
@@ -611,7 +645,6 @@ export default function ChessPlay() {
       ) : (
         <>
         <div className="chess-play-layout">
-          
           {topIsBot ? renderBotProfile() : renderUserProfile()}
 
           <div className="board-outer-wrapper">
@@ -631,8 +664,8 @@ export default function ChessPlay() {
             {showRestartModal && (
               <div className="modal-overlay">
                 <div className="restart-modal">
-                  <h3>Restart Game?</h3>
-                  <p>Are you sure you want to abandon this match? This counts as a loss!</p>
+                  <h3>Restart Match?</h3>
+                  <p>Restarting will count current game as a loss.</p>
                   <div className="modal-actions">
                     <button className="btn primary" onClick={() => setShowRestartModal(false)}>Cancel</button>
                     <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmRestart}>Restart</button>
@@ -642,158 +675,97 @@ export default function ChessPlay() {
             )}
 
             {promotionPending && (
-              <div className="modal-overlay">
-                <div className="promotion-modal" style={{ background: '#fff', padding: 24, borderRadius: 20, textAlign: 'center', boxShadow: '0 12px 40px rgba(0,0,0,0.3)', minWidth: 300, animation: 'cinematicIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}>
-                  <h3 style={{ marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333', fontSize: '1.4rem' }}>Promote Pawn</h3>
-                  <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    {['q', 'r', 'n', 'b'].map(type => (
-                      <div 
+              <div className="modal-overlay" style={{ zIndex: 100 }}>
+                <div className="restart-modal" style={{ maxWidth: 320, padding: 20 }}>
+                  <h3 style={{ marginBottom: 12 }}>Promote Pawn</h3>
+                  <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: 16 }}>Select a piece to promote your pawn:</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 16 }}>
+                    {['q', 'r', 'b', 'n'].map(type => (
+                      <button
                         key={type}
                         onClick={() => handlePromotionSelect(type)}
-                        style={{ 
-                          width: 60, height: 60, background: '#f5f5f5', borderRadius: 12, 
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          cursor: 'pointer', border: '2px solid transparent',
-                          transition: 'all 0.2s ease'
+                        style={{
+                          background: 'white',
+                          border: '2px solid #16653e',
+                          borderRadius: 12,
+                          padding: 10,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 3px 0 #0e4329'
                         }}
-                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-primary)'; e.currentTarget.style.background = '#e8f5e9'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'transparent'; e.currentTarget.style.background = '#f5f5f5'; }}
                       >
-                        <img 
-                          src={PIECE_IMAGES[game.turn()][type]} 
-                          alt={type} 
-                          style={{ width: '85%', height: '85%' }}
-                        />
-                      </div>
+                        <img src={PIECE_IMAGES[playerColor][type]} alt={type} style={{ width: 36, height: 36 }} />
+                      </button>
                     ))}
                   </div>
-                  <button className="btn" style={{ marginTop: 24, width: '100%', background: '#f5f5f5', color: '#555' }} onClick={cancelPromotion}>Cancel</button>
+                  <button className="btn" onClick={cancelPromotion} style={{ width: '100%', background: '#eee', color: '#333' }}>Cancel</button>
                 </div>
               </div>
             )}
-            
-            <VictoryScreen
-              isOpen={(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && showOverlay}
-              title={gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : (game.turn() !== playerColor ? 'Checkmate!' : 'Game Over')}
-              subtitle={
-                gameState === 'resigned' 
-                  ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`
-                  : gameState === 'draw' 
-                  ? 'The game ended in a draw.' 
-                  : game.turn() !== playerColor 
-                  ? `You defeated ${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}!` 
-                  : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} won the game!`
-              }
-              xpGained={victoryStats?.xpGained || 0}
-              streak={streak}
-              hasPlayedToday={hasPlayedToday}
-              onContinue={() => setShowOverlay(false)}
-              onPlayAgain={() => { setShowOverlay(false); resetGame(); }}
-              continueText="Continue"
-            />
 
-            <div className={`board-container`}>
-              {(isFlipped ? [...board].reverse() : board).map((row, rIndexMapped) => {
-                const rIndex = isFlipped ? 7 - rIndexMapped : rIndexMapped;
-                return (isFlipped ? [...row].reverse() : row).map((piece, cIndexMapped) => {
-                  const cIndex = isFlipped ? 7 - cIndexMapped : cIndexMapped;
-                  const squareLabel = getSquareLabel(rIndex, cIndex);
-                  const isLight = (rIndex + cIndex) % 2 === 0;
-                  const isSelected = selectedSquare === squareLabel;
-                  const isLegal = legalMoves.some(m => m.to === squareLabel);
-                  const isLastMove = lastMove && (lastMove.from === squareLabel || lastMove.to === squareLabel);
-                  const isLeftEdge = cIndexMapped === 0;
-                  const isBottomEdge = rIndexMapped === 7;
-                  const rankLabel = isLeftEdge ? (8 - rIndex) : null;
-                  const fileLabel = isBottomEdge ? String.fromCharCode(97 + cIndex) : null;
+            <div className="chess-board">
+              {(isFlipped ? [7,6,5,4,3,2,1,0] : [0,1,2,3,4,5,6,7]).map(r => (
+                <div key={r} className="board-row">
+                  {(isFlipped ? [7,6,5,4,3,2,1,0] : [0,1,2,3,4,5,6,7]).map(c => {
+                    const squareLabel = getSquareLabel(r, c);
+                    const isDark = (r + c) % 2 === 1;
+                    const piece = game ? game.get(squareLabel) : null;
+                    const isSelected = selectedSquare === squareLabel;
+                    const isLegalMove = legalMoves.some(m => m.to === squareLabel);
+                    const isLastMoveSquare = lastMove && (lastMove.from === squareLabel || lastMove.to === squareLabel);
 
-                  return (
-                    <div 
-                      key={squareLabel}
-                      className={`square ${isLight ? 'light' : 'dark'} ${isSelected ? 'selected' : ''} ${isLastMove ? 'last-move' : ''}`}
-                      onClick={() => handleSquareClick(squareLabel)}
-                    >
-                      {rankLabel && <span className="coord-rank">{rankLabel}</span>}
-                      {fileLabel && <span className="coord-file">{fileLabel}</span>}
-                      
-                      {piece && (
-                        <img 
-                          src={PIECE_IMAGES[piece.color][piece.type]} 
-                          alt={`${piece.color} ${piece.type}`} 
-                          className="piece" 
-                        />
-                      )}
-                      {isLegal && <div className="legal-move-dot" />}
-                    </div>
-                  );
-                });
-              })}
+                    return (
+                      <div
+                        key={c}
+                        className={`square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isLastMoveSquare ? 'last-move' : ''}`}
+                        onClick={() => handleSquareClick(squareLabel)}
+                      >
+                        {c === 0 && <span className="rank-label">{8 - r}</span>}
+                        {r === 7 && <span className="file-label">{String.fromCharCode(97 + c)}</span>}
+                        
+                        {piece && (
+                          <img
+                            src={PIECE_IMAGES[piece.color][piece.type]}
+                            alt={`${piece.color} ${piece.type}`}
+                            className="piece-img"
+                          />
+                        )}
+                        {isLegalMove && <div className={`move-dot ${piece ? 'capture' : ''}`} />}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
           </div>
 
           {topIsBot ? renderUserProfile() : renderBotProfile()}
 
-          <div className="game-controls">
-            {gameState !== 'playing' ? (
-              <>
-                <button className="btn primary" onClick={resetGame}>
-                  <Play size={18} /> Rematch
-                </button>
-                {!showOverlay && (
-                  <button className="btn" onClick={() => setShowOverlay(true)} style={{ background: '#fff8e1', color: '#f57f17' }}>
-                    Show Results
-                  </button>
-                )}
-              </>
-            ) : (
-              <>
-                <button className="btn" onClick={() => setIsFlipped(!isFlipped)}>
-                  <RotateCw size={18} /> Flip
-                </button>
-                <button className="btn primary" onClick={handleRestartClick}>
-                  <Play size={18} /> Restart
-                </button>
-                <button className="btn danger" onClick={handleResign}>
-                  <Flag size={18} /> Resign
-                </button>
-              </>
-            )}
+          <div className="chess-action-bar" style={{ marginTop: 12 }}>
+            <button className="chess-btn" onClick={handleRestartClick} title="Restart">
+              <RotateCw size={16} /> Restart
+            </button>
+            <button className="chess-btn danger" onClick={handleResign} title="Resign">
+              <Flag size={16} /> Resign
+            </button>
           </div>
         </div>
 
-        <div className="move-history-panel-container" style={{ width: '100%', maxWidth: 480, margin: '24px auto 40px auto', background: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 8px 30px rgba(0,0,0,0.08)', border: '1px solid #eaeaea', display: 'flex', flexDirection: 'column', height: 260 }}>
-          <h2 style={{ margin: 0, padding: '16px 20px', background: '#1c7c54', color: 'white', textAlign: 'center', fontSize: '1.4rem', fontFamily: 'var(--font-heading)', letterSpacing: '0.5px' }}>
-            History
-          </h2>
-          <div style={{ flex: 1, overflowY: 'auto', padding: '10px 16px', background: '#fafafa' }} ref={historyScrollRef}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <tbody>
-                {history.reduce((acc, curr, i) => {
-                  if (i % 2 === 0) acc.push([curr]);
-                  else acc[acc.length - 1].push(curr);
-                  return acc;
-                }, []).map((pair, i) => {
-                  const isWhiteLast = pair.length === 1 && history.length === i * 2 + 1;
-                  const isBlackLast = pair.length === 2 && history.length === i * 2 + 2;
-                  
-                  return (
-                    <tr key={i} style={{ borderBottom: '1px solid #eee', background: i % 2 === 0 ? '#ffffff' : '#fafafa' }}>
-                      <td style={{ padding: '8px 12px', color: '#999', width: '40px', fontWeight: 700, fontSize: '0.9rem' }}>{i + 1}.</td>
-                      <td style={{ padding: '4px 12px', width: '50%' }}>
-                        {renderHistoryMove(pair[0], isWhiteLast)}
-                      </td>
-                      <td style={{ padding: '4px 12px', width: '50%' }}>
-                        {renderHistoryMove(pair[1], isBlackLast)}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            {history.length === 0 && <p style={{ color: '#aaa', fontSize: '0.9rem', textAlign: 'center', margin: '40px 0', fontWeight: 600 }}>Moves will appear here</p>}
-          </div>
-        </div>
-      </>
+        <VictoryScreen
+          isOpen={gameState !== 'playing' && showOverlay}
+          title={gameState === 'checkmate' && game && game.turn() !== playerColor ? 'Checkmate! You Won!' : 
+                 gameState === 'checkmate' ? 'Checkmate! Bot Won!' : 
+                 gameState === 'resigned' ? 'Game Resigned' : 'Stalemate / Draw!'}
+          subtitle={gameState === 'checkmate' && game && game.turn() !== playerColor ? 'Great tactical play!' : 'Better luck next match!'}
+          xpGained={victoryStats?.xpGained || 0}
+          streak={displayedStreak}
+          hasPlayedToday={hasPlayedToday}
+          onContinue={() => confirmBack()}
+          onPlayAgain={() => resetGame()}
+        />
+        </>
       )}
     </div>
   );
