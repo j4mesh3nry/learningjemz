@@ -10,7 +10,7 @@ import '../../pages/geo/geo.css';
 function GeoDashboard() {
   const navigate = useNavigate();
   const { level, streak, provincesCorrect, hasPlayedToday } = useGame();
-  const [tab, setTab] = useState<'learn' | 'play'>('learn');
+  const [tab, setTab] = useState<'learn' | 'play'>('play');
 
   return (
     <div className="geo-module-page">
@@ -58,7 +58,7 @@ function GeoDashboard() {
         </div>
       </div>
 
-      {/* Mode Selector: Learn vs Play */}
+      {/* Mode Selector: Play vs Learn */}
       <div style={{
         display: 'flex',
         background: '#f1f3f5',
@@ -66,29 +66,6 @@ function GeoDashboard() {
         borderRadius: 14,
         marginBottom: 20
       }}>
-        <button
-          onClick={() => setTab('learn')}
-          style={{
-            flex: 1,
-            padding: '10px 16px',
-            borderRadius: 10,
-            border: 'none',
-            background: tab === 'learn' ? '#ffffff' : 'transparent',
-            color: tab === 'learn' ? '#0066cc' : '#6c757d',
-            fontWeight: 800,
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            boxShadow: tab === 'learn' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
-            transition: 'all 0.15s ease',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 6
-          }}
-        >
-          <BookOpen size={16} color={tab === 'learn' ? '#0066cc' : '#6c757d'} />
-          Learn
-        </button>
         <button
           onClick={() => setTab('play')}
           style={{
@@ -111,6 +88,29 @@ function GeoDashboard() {
         >
           <Gamepad2 size={16} color={tab === 'play' ? '#0066cc' : '#6c757d'} />
           Play
+        </button>
+        <button
+          onClick={() => setTab('learn')}
+          style={{
+            flex: 1,
+            padding: '10px 16px',
+            borderRadius: 10,
+            border: 'none',
+            background: tab === 'learn' ? '#ffffff' : 'transparent',
+            color: tab === 'learn' ? '#0066cc' : '#6c757d',
+            fontWeight: 800,
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+            boxShadow: tab === 'learn' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+            transition: 'all 0.15s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6
+          }}
+        >
+          <BookOpen size={16} color={tab === 'learn' ? '#0066cc' : '#6c757d'} />
+          Learn
         </button>
       </div>
 
