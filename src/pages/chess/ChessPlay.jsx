@@ -524,73 +524,16 @@ export default function ChessPlay() {
             ←
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <h1 className="chess-page-title" style={{ margin: 0, color: '#1c7c54', fontSize: '1.35rem', fontWeight: 900 }}>
-              Bot Challenge
-            </h1>
-            <span style={{
-              background: '#e8f5e9',
-              color: '#2e7d32',
-              fontSize: '0.72rem',
-              fontWeight: 800,
-              padding: '3px 8px',
-              borderRadius: 12,
-              border: '1px solid #a5d6a7'
-            }}>
-              🤖 VS AI
-            </span>
+            <h1 className="chess-page-title" style={{ margin: 0, color: '#1c7c54', fontSize: '1.4rem', fontWeight: 900 }}>Play with Bot</h1>
           </div>
         </div>
+
+
       </div>
 
       {!difficulty ? (
         <div className="opponent-selection-screen">
-          {/* Opponent Selection Hero Card Banner */}
-          <div style={{
-            background: 'linear-gradient(135deg, #0e4d2e 0%, #1c7c54 100%)',
-            borderRadius: 20,
-            padding: '20px 20px',
-            color: '#ffffff',
-            marginBottom: 20,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 16,
-            boxShadow: '0 6px 20px rgba(28, 124, 84, 0.25)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <div style={{
-              fontSize: '2.4rem',
-              width: 56,
-              height: 56,
-              borderRadius: 16,
-              background: 'rgba(255, 255, 255, 0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0
-            }}>
-              ⚔️
-            </div>
-            <div>
-              <h2 style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '1.25rem',
-                fontWeight: 800,
-                margin: 0,
-                color: '#ffffff'
-              }}>
-                Choose Your Opponent
-              </h2>
-              <p style={{
-                margin: '4px 0 0',
-                fontSize: '0.85rem',
-                opacity: 0.9,
-                fontWeight: 500
-              }}>
-                Select an AI bot level to launch your chess battle!
-              </p>
-            </div>
-          </div>
+          <h2 style={{ textAlign: 'center', marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333' }}>Choose Your Opponent</h2>
           <div className="opponent-cards">
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-card-header">
