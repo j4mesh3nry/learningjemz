@@ -1,16 +1,16 @@
-// src/pages/geo/GeoHome.tsx
-import React, { lazy, Suspense } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { Card } from '../../components/Card';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import ProvinceQuiz from './ProvinceQuiz';
 const MapExplorer = lazy(() => import('./MapExplorer'));
 import { useGame } from '../../contexts/GameContext';
-import { Flame, Star } from 'lucide-react';
+import { Flame, Star, BookOpen, Gamepad2 } from 'lucide-react';
 import '../../pages/geo/geo.css';
 
 function GeoDashboard() {
   const navigate = useNavigate();
   const { level, streak, provincesCorrect, hasPlayedToday } = useGame();
+  const [tab, setTab] = useState<'learn' | 'play'>('learn');
 
   return (
     <div className="geo-module-page">
@@ -58,69 +58,137 @@ function GeoDashboard() {
         </div>
       </div>
 
-      {/* Active Modes */}
-      <h2 className="geo-section-heading">Expeditions</h2>
-
-      <div className="geo-card-list">
-        <Card className="geo-card-item" onClick={() => navigate('quiz')} ariaLabel="Start Province Quiz">
-          <div className="geo-card-icon">🎯</div>
-          <div className="geo-card-info">
-            <h3 className="geo-card-title">Province Quiz</h3>
-            <p className="geo-card-subtitle">{provincesCorrect || 0}/81 provinces mastered</p>
-          </div>
-          <div className="geo-card-arrow">→</div>
-        </Card>
-
-        <Card className="geo-card-item" onClick={() => navigate('explorer')} ariaLabel="Open Map Explorer">
-          <div className="geo-card-icon">🗺️</div>
-          <div className="geo-card-info">
-            <h3 className="geo-card-title">Map Explorer</h3>
-            <p className="geo-card-subtitle">Free roam interactive map</p>
-          </div>
-          <div className="geo-card-arrow">→</div>
-        </Card>
+      {/* Mode Selector: Learn vs Play */}
+      <div style={{
+        display: 'flex',
+        background: '#f1f3f5',
+        padding: '4px',
+        borderRadius: 14,
+        marginBottom: 20
+      }}>
+        <button
+          onClick={() => setTab('learn')}
+          style={{
+            flex: 1,
+            padding: '10px 16px',
+            borderRadius: 10,
+            border: 'none',
+            background: tab === 'learn' ? '#ffffff' : 'transparent',
+            color: tab === 'learn' ? '#0066cc' : '#6c757d',
+            fontWeight: 800,
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+            boxShadow: tab === 'learn' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+            transition: 'all 0.15s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6
+          }}
+        >
+          <BookOpen size={16} color={tab === 'learn' ? '#0066cc' : '#6c757d'} />
+          Learn
+        </button>
+        <button
+          onClick={() => setTab('play')}
+          style={{
+            flex: 1,
+            padding: '10px 16px',
+            borderRadius: 10,
+            border: 'none',
+            background: tab === 'play' ? '#ffffff' : 'transparent',
+            color: tab === 'play' ? '#0066cc' : '#6c757d',
+            fontWeight: 800,
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+            boxShadow: tab === 'play' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+            transition: 'all 0.15s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6
+          }}
+        >
+          <Gamepad2 size={16} color={tab === 'play' ? '#0066cc' : '#6c757d'} />
+          Play
+        </button>
       </div>
 
-      {/* Locked Modes */}
-      <h2 className="geo-section-heading">Future Expeditions (Locked)</h2>
-
-      <div className="geo-card-list">
-        <div className="geo-card-item locked" aria-disabled="true">
-          <div className="geo-card-icon">🏛️</div>
-          <div className="geo-card-info">
-            <h3 className="geo-card-title">Capital Quiz</h3>
-            <p className="geo-card-subtitle">Match provinces to their capitals</p>
+      {tab === 'learn' ? (
+        <>
+          {/* Active Learn Modes */}
+          <h2 className="geo-section-heading">Interactive Maps & Discovery</h2>
+          <div className="geo-card-list">
+            <Card className="geo-card-item" onClick={() => navigate('explorer')} ariaLabel="Open Map Explorer">
+              <div className="geo-card-icon">🗺️</div>
+              <div className="geo-card-info">
+                <h3 className="geo-card-title">Map Explorer</h3>
+                <p className="geo-card-subtitle">Free roam interactive map of Philippine provinces</p>
+              </div>
+              <div className="geo-card-arrow">→</div>
+            </Card>
           </div>
-          <div className="geo-lock-badge">🔒 Locked</div>
-        </div>
 
-        <div className="geo-card-item locked" aria-disabled="true">
-          <div className="geo-card-icon">🚩</div>
-          <div className="geo-card-info">
-            <h3 className="geo-card-title">Flag Guesser</h3>
-            <p className="geo-card-subtitle">Identify regional & provincial flags</p>
+          {/* Locked Learn Modes */}
+          <h2 className="geo-section-heading">Culture & Heritage (Locked)</h2>
+          <div className="geo-card-list">
+            <div className="geo-card-item locked" aria-disabled="true">
+              <div className="geo-card-icon">📍</div>
+              <div className="geo-card-info">
+                <h3 className="geo-card-title">Landmark Finder</h3>
+                <p className="geo-card-subtitle">Locate historical landmarks & natural wonders</p>
+              </div>
+              <div className="geo-lock-badge">🔒 Locked</div>
+            </div>
           </div>
-          <div className="geo-lock-badge">🔒 Locked</div>
-        </div>
+        </>
+      ) : (
+        <>
+          {/* Active Play & Earn Modes */}
+          <h2 className="geo-section-heading">Earn XP & Streaks</h2>
+          <div className="geo-card-list">
+            <Card className="geo-card-item" onClick={() => navigate('quiz')} ariaLabel="Start Province Quiz">
+              <div className="geo-card-icon">🎯</div>
+              <div className="geo-card-info">
+                <h3 className="geo-card-title">Province Quiz</h3>
+                <p className="geo-card-subtitle">{provincesCorrect || 0}/81 provinces mastered</p>
+              </div>
+              <div className="geo-card-arrow">→</div>
+            </Card>
+          </div>
 
-        <div className="geo-card-item locked" aria-disabled="true">
-          <div className="geo-card-icon">📍</div>
-          <div className="geo-card-info">
-            <h3 className="geo-card-title">Landmark Finder</h3>
-            <p className="geo-card-subtitle">Locate historical landmarks</p>
-          </div>
-          <div className="geo-lock-badge">🔒 Locked</div>
-        </div>
+          {/* Locked Play Modes */}
+          <h2 className="geo-section-heading">Geo Challenges (Locked)</h2>
+          <div className="geo-card-list">
+            <div className="geo-card-item locked" aria-disabled="true">
+              <div className="geo-card-icon">🏛️</div>
+              <div className="geo-card-info">
+                <h3 className="geo-card-title">Capital Quiz</h3>
+                <p className="geo-card-subtitle">Match provinces to their capitals</p>
+              </div>
+              <div className="geo-lock-badge">🔒 Locked</div>
+            </div>
 
-        <div className="geo-card-item locked" aria-disabled="true">
-          <div className="geo-card-icon">👥</div>
-          <div className="geo-card-info">
-            <h3 className="geo-card-title">Population Sorter</h3>
-            <p className="geo-card-subtitle">Rank provinces by population</p>
+            <div className="geo-card-item locked" aria-disabled="true">
+              <div className="geo-card-icon">🚩</div>
+              <div className="geo-card-info">
+                <h3 className="geo-card-title">Flag Guesser</h3>
+                <p className="geo-card-subtitle">Identify regional & provincial flags</p>
+              </div>
+              <div className="geo-lock-badge">🔒 Locked</div>
+            </div>
+
+            <div className="geo-card-item locked" aria-disabled="true">
+              <div className="geo-card-icon">👥</div>
+              <div className="geo-card-info">
+                <h3 className="geo-card-title">Population Sorter</h3>
+                <p className="geo-card-subtitle">Rank provinces by population under time limit</p>
+              </div>
+              <div className="geo-lock-badge">🔒 Locked</div>
+            </div>
           </div>
-          <div className="geo-lock-badge">🔒 Locked</div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }
