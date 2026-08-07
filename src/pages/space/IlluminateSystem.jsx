@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, Flame, Star, ArrowLeft } from 'lucide-react';
+import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
+import VictoryScreen from '../../components/VictoryScreen';
 import './space.css';
 
 const DIFFICULTIES = {
-  easy: { name: 'Easy', count: 8, label: 'Top 8 (Sun → Mars)', xp: 5 },
-  medium: { name: 'Medium', count: 15, label: 'Top 15 (Sun → Europa)', xp: 10 },
-  hard: { name: 'Hard', count: 35, label: 'All 35 (Sun → Salacia)', xp: 20 }
+  easy: { name: 'Easy', count: 8, label: 'Top 8 (Sun → Mars)', xp: 5, maxLives: 3 },
+  medium: { name: 'Medium', count: 15, label: 'Top 15 (Sun → Europa)', xp: 10, maxLives: 4 },
+  hard: { name: 'Hard', count: 35, label: 'All 35 (Sun → Salacia)', xp: 20, maxLives: 5 }
 };
 
 export default function IlluminateSystem() {
@@ -22,8 +23,39 @@ export default function IlluminateSystem() {
   const [inputValue, setInputValue] = useState('');
   const [isError, setIsError] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [lives, setLives] = useState(3);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [userUsedHint, setUserUsedHint] = useState(false);
+  const [personalBests, setPersonalBests] = useState({});
+  const [isNewRecord, setIsNewRecord] = useState(false);
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const inputRef = useRef(null);
+
+  // Load Personal Bests from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('illuminate_stats');
+      if (saved) setPersonalBests(JSON.parse(saved));
+    } catch (e) {}
+  }, []);
+
+  // Live Timer Effect
+  useEffect(() => {
+    let timer;
+    if (level && !isComplete && !isGameOver) {
+      timer = setInterval(() => {
+        setElapsedTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [level, isComplete, isGameOver]);
+
+  const formatTime = (secs) => {
+    const mins = Math.floor(secs / 60);
+    const remainingSecs = secs % 60;
+    return `${mins.toString().padStart(2, '0')}:${remainingSecs.toString().padStart(2, '0')}`;
+  };
 
   const scrollToCurrentPlanet = () => {
     setTimeout(() => {
@@ -35,10 +67,10 @@ export default function IlluminateSystem() {
   };
 
   useEffect(() => {
-    if (level && !isComplete) {
+    if (level && !isComplete && !isGameOver) {
       scrollToCurrentPlanet();
     }
-  }, [currentIndex, level, isComplete]);
+  }, [currentIndex, level, isComplete, isGameOver]);
 
   const startGame = (diffLevel) => {
     setLevel(diffLevel);
@@ -47,6 +79,11 @@ export default function IlluminateSystem() {
     setWrongAttempts(0);
     setInputValue('');
     setIsComplete(false);
+    setIsGameOver(false);
+    setLives(DIFFICULTIES[diffLevel].maxLives);
+    setElapsedTime(0);
+    setUserUsedHint(false);
+    setIsNewRecord(false);
     setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
     setTimeout(() => {
       inputRef.current?.focus({ preventScroll: true });
@@ -55,7 +92,7 @@ export default function IlluminateSystem() {
   };
 
   const submitAnswer = (guess = inputValue) => {
-    if (!guess.trim() || isComplete) return;
+    if (!guess.trim() || isComplete || isGameOver) return;
 
     const currentObject = gameData[currentIndex];
     const userGuess = guess.trim().toLowerCase();
@@ -69,12 +106,24 @@ export default function IlluminateSystem() {
       setInputValue('');
       setWrongAttempts(0);
       setIsError(false);
+      setUserUsedHint(false);
 
       if (nextIndex >= gameData.length) {
         // Game complete
         setIsComplete(true);
         setScoreData(prev => ({ ...prev, endTime: Date.now() }));
         
+        // Personal Best Record Check
+        const prevBest = personalBests[level];
+        if (!prevBest || elapsedTime < prevBest) {
+          setIsNewRecord(true);
+          const updated = { ...personalBests, [level]: elapsedTime };
+          setPersonalBests(updated);
+          try {
+            localStorage.setItem('illuminate_stats', JSON.stringify(updated));
+          } catch (e) {}
+        }
+
         let xpReward = DIFFICULTIES[level].xp;
         if (level === 'hard' && scoreData.hintsUsed === 0) {
           xpReward += 10; // Bonus for perfect hard
@@ -86,6 +135,18 @@ export default function IlluminateSystem() {
       setWrongAttempts(prev => prev + 1);
       setTimeout(() => setIsError(false), 500);
       setInputValue(''); // Clear on wrong
+
+      // Deduct Life
+      const remainingLives = lives - 1;
+      setLives(remainingLives);
+
+      if (remainingLives <= 0) {
+        setIsGameOver(true);
+        // Award partial XP for progress made
+        if (currentIndex > 0) {
+          addXp(Math.max(1, Math.floor(currentIndex * 0.5)));
+        }
+      }
     }
   };
 
@@ -95,17 +156,23 @@ export default function IlluminateSystem() {
   };
 
   const handleVirtualKey = (char) => {
-    if (isComplete) return;
+    if (isComplete || isGameOver) return;
     setInputValue(prev => prev + char);
   };
 
   const handleVirtualBackspace = () => {
-    if (isComplete) return;
+    if (isComplete || isGameOver) return;
     setInputValue(prev => prev.slice(0, -1));
   };
 
+  const handleUseHint = () => {
+    if (isComplete || isGameOver || userUsedHint) return;
+    setUserUsedHint(true);
+    setScoreData(prev => ({ ...prev, hintsUsed: prev.hintsUsed + 1 }));
+  };
+
   useEffect(() => {
-    if (!level || isComplete) return;
+    if (!level || isComplete || isGameOver) return;
 
     const handleKeyDown = (e) => {
       if (e.key === 'Backspace') {
@@ -124,18 +191,13 @@ export default function IlluminateSystem() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [level, isComplete, currentIndex, inputValue, gameData]);
+  }, [level, isComplete, isGameOver, currentIndex, inputValue, gameData]);
 
   // Derived hint
   let currentHint = null;
-  if (level && !isComplete) {
-    const targetName = gameData[currentIndex].name.split(' ')[0]; // use primary name for hint
-    if (wrongAttempts >= 5) {
-      currentHint = targetName.substring(0, 3) + '...';
-      if (!scoreData.countedHintForCurrent) {
-        setScoreData(prev => ({ ...prev, hintsUsed: prev.hintsUsed + 1, countedHintForCurrent: true }));
-      }
-    } else if (wrongAttempts >= 3) {
+  if (level && !isComplete && !isGameOver) {
+    const targetName = gameData[currentIndex].name.split(' ')[0];
+    if (userUsedHint || wrongAttempts >= 3) {
       currentHint = targetName.substring(0, 1) + '...';
     }
   }
@@ -183,7 +245,6 @@ export default function IlluminateSystem() {
               </h1>
             </div>
           </div>
-
         </div>
 
         {/* Section Heading & Subtitle */}
@@ -193,19 +254,32 @@ export default function IlluminateSystem() {
         </p>
         
         <div className="space-card-list">
-          {Object.entries(DIFFICULTIES).map(([key, diff]) => (
-            <div 
-              key={key} 
-              className="space-card-item"
-              onClick={() => startGame(key)}
-            >
-              <div className="space-card-info">
-                <h3 className="space-card-title">{diff.name}</h3>
-                <p className="space-card-subtitle">{diff.label}</p>
+          {Object.entries(DIFFICULTIES).map(([key, diff]) => {
+            const pbTime = personalBests[key];
+            return (
+              <div 
+                key={key} 
+                className="space-card-item"
+                onClick={() => startGame(key)}
+              >
+                <div className="space-card-info">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <h3 className="space-card-title">{diff.name}</h3>
+                    <span style={{ fontSize: '0.8rem', color: '#ff4d4d', fontWeight: 'bold' }}>
+                      {'❤️'.repeat(diff.maxLives)}
+                    </span>
+                  </div>
+                  <p className="space-card-subtitle">{diff.label}</p>
+                  {pbTime !== undefined && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', color: '#00e5ff', marginTop: '4px', fontWeight: 'bold' }}>
+                      <Zap size={14} color="#00e5ff" /> Best Time: {formatTime(pbTime)}
+                    </div>
+                  )}
+                </div>
+                <div className="space-card-arrow">→</div>
               </div>
-              <div className="space-card-arrow">→</div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     );
@@ -213,16 +287,43 @@ export default function IlluminateSystem() {
 
   return (
     <div className="space-module-page ss-dark-theme illum-game-container">
+      {/* Header Bar */}
       <div className="space-nav-header ss-header" style={{ flexShrink: 0 }}>
         <button className="space-back-btn" onClick={() => setLevel(null)}>←</button>
         <h1 className="space-page-title">Illuminate the System</h1>
       </div>
 
-      <div style={{ padding: '0 1rem', display: 'flex', justifyContent: 'space-between', color: '#fff', fontWeight: 'bold' }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <CheckCircle size={18} color="#4caf50" /> {currentIndex}/{gameData.length}
-        </span>
-        {currentHint && <span style={{color: '#ff9800'}}>Hint: {currentHint}</span>}
+      {/* Top Game Stats Bar (Timer, Progress, Lives, Hint Btn) */}
+      <div className="illum-stats-bar">
+        <div className="illum-stat-item">
+          <CheckCircle size={16} color="#4caf50" />
+          <span>{currentIndex}/{gameData.length}</span>
+        </div>
+
+        <div className="illum-stat-item">
+          <Clock size={16} color="#00e5ff" />
+          <span>{formatTime(elapsedTime)}</span>
+        </div>
+
+        <div className="illum-stat-item illum-hearts-item">
+          {Array.from({ length: DIFFICULTIES[level].maxLives }).map((_, i) => (
+            <Heart 
+              key={i} 
+              size={16} 
+              fill={i < lives ? '#ff4d4d' : 'rgba(255,255,255,0.1)'} 
+              color={i < lives ? '#ff4d4d' : '#555'} 
+            />
+          ))}
+        </div>
+
+        <button 
+          className={`illum-hint-btn ${userUsedHint ? 'used' : ''}`}
+          onClick={handleUseHint}
+          disabled={userUsedHint || isComplete || isGameOver}
+        >
+          <Lightbulb size={14} color={userUsedHint ? '#888' : '#ffb74d'} />
+          <span>{userUsedHint ? 'Hint Active' : 'Hint'}</span>
+        </button>
       </div>
 
       {/* Grid Box Container */}
@@ -259,8 +360,8 @@ export default function IlluminateSystem() {
         </div>
       </div>
 
-      {/* Simple Inline Input Display Bar (Directly below Grid Box) */}
-      {!isComplete && (
+      {/* Simple Inline Input Display Bar & Custom Keyboard */}
+      {!isComplete && !isGameOver && (
         <>
           <div className="illum-input-area">
             <form onSubmit={handleSubmit} style={{ width: '100%' }}>
@@ -270,7 +371,7 @@ export default function IlluminateSystem() {
                 value={inputValue}
                 readOnly
                 inputMode="none"
-                placeholder="Type answer..."
+                placeholder={currentHint ? `Hint: ${currentHint}` : "Type answer..."}
                 className={`illum-input ${isError ? 'illum-error' : ''}`}
               />
             </form>
@@ -302,24 +403,52 @@ export default function IlluminateSystem() {
         </>
       )}
 
-      {/* Victory Screen */}
-      {isComplete && (
+      {/* Reusable Victory Screen */}
+      <VictoryScreen
+        isOpen={isComplete}
+        title="System Illuminated!"
+        subtitle={
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', margin: '8px 0' }}>
+            <div style={{ color: '#e0e0e0', fontSize: '1rem' }}>
+              Time: <strong>{formatTime(elapsedTime)}</strong>
+            </div>
+            {isNewRecord && (
+              <div style={{ color: '#00e5ff', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Zap size={16} /> NEW PERSONAL BEST!
+              </div>
+            )}
+            <div style={{ color: '#ff4d4d', fontSize: '0.95rem' }}>
+              Lives Left: {'❤️'.repeat(lives)}
+            </div>
+          </div>
+        }
+        xpGained={DIFFICULTIES[level]?.xp || 10}
+        streak={streak}
+        hasPlayedToday={hasPlayedToday}
+        onContinue={() => setLevel(null)}
+        onPlayAgain={() => startGame(level)}
+        continueText="Back to Menu"
+      />
+
+      {/* Game Over Screen Overlay */}
+      {isGameOver && (
         <div className="ss-victory-overlay">
-          <div className="ss-victory-card">
-            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
-            <h2 style={{ fontSize: '2rem', marginBottom: '1rem', background: 'linear-gradient(45deg, #FFD700, #FFA500)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              System Illuminated!
+          <div className="ss-victory-card" style={{ border: '2px solid rgba(239, 83, 80, 0.4)' }}>
+            <div style={{ fontSize: '4rem', marginBottom: '0.5rem' }}>💔</div>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', color: '#ff4d4d', fontWeight: 900 }}>
+              Game Over
             </h2>
-            <p style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: '#e0e0e0' }}>
-              Time: {Math.floor((scoreData.endTime - scoreData.startTime) / 1000)}s
+            <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#e0e0e0' }}>
+              You ran out of lives!
             </p>
-            <p style={{ fontSize: '1.2rem', marginBottom: '2rem', color: '#e0e0e0' }}>
-              Hints used: {scoreData.hintsUsed}
+            <p style={{ fontSize: '0.95rem', marginBottom: '1.5rem', color: '#b0bec5' }}>
+              Illuminated <strong>{currentIndex} of {gameData.length}</strong> objects in {formatTime(elapsedTime)}.
             </p>
-            <button className="ss-btn-primary" onClick={() => setLevel(null)} style={{width: '100%', marginBottom: '1rem'}}>
-              Play Again
+
+            <button className="ss-btn-primary" onClick={() => startGame(level)} style={{ width: '100%', marginBottom: '0.75rem', background: 'linear-gradient(135deg, #1c7c54 0%, #155d3e 100%)' }}>
+              Try Again
             </button>
-            <button className="ss-btn-secondary" onClick={() => navigate('/space/objects-by-size')} style={{width: '100%'}}>
+            <button className="ss-btn-secondary" onClick={() => setLevel(null)} style={{ width: '100%' }}>
               Back to Menu
             </button>
           </div>
