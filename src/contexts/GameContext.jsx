@@ -197,6 +197,37 @@ export function GameProvider({ children }) {
     }
   }, [state, user]);
 
+  const resetProgress = useCallback(async () => {
+    setState(defaultState);
+    const storageKey = getStorageKey(user?.id);
+    localStorage.setItem(storageKey, JSON.stringify(defaultState));
+
+    if (user) {
+      const dbPayload = {
+        id: user.id,
+        xp: 0,
+        level: 1,
+        streak: 0,
+        max_streak: 0,
+        last_visit: null,
+        chess_wins: 0,
+        puzzles_solved: 0,
+        provinces_correct: 0,
+        reading_minutes: 0,
+        flashcards_mastered: 0,
+        books_reading: 0,
+        quiz_high_score: 0,
+        bot_stats: defaultState.botStats,
+        illuminate_stats: defaultState.illuminateStats,
+        name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
+        avatar: user.user_metadata?.avatar || '👤'
+      };
+      
+      await supabase.from('game_progress').upsert(dbPayload);
+      await supabase.from('achievements').delete().eq('user_id', user.id);
+    }
+  }, [user]);
+
   const unlockAchievement = useCallback(async (achievementId) => {
     if (state.achievements.some(a => a.id === achievementId)) return;
     
@@ -289,7 +320,8 @@ export function GameProvider({ children }) {
       addXP,
       winChessGame,
       recordChessGame,
-      recordIlluminateTime
+      recordIlluminateTime,
+      resetProgress
     }}>
       {children}
     </GameContext.Provider>
