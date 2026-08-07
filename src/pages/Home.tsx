@@ -3,8 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Header } from '../components/Header';
-import { useGame } from '../contexts/GameContext';
-import { Lock, Zap, ChevronRight, Sparkles, Trophy } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import '../index.css';
 
 const modules = [
@@ -13,9 +12,8 @@ const modules = [
     icon: '♟️',
     title: 'Chess',
     subtitle: 'Play, Puzzles & Lessons',
-    badge: '🔥 Popular',
     bg: 'linear-gradient(135deg, #0a3d24 0%, #16603b 100%)',
-    shadow: '0 6px 0 #052113',
+    shadow: '0 5px 0 #052113',
     pattern: 'chess',
   },
   {
@@ -23,9 +21,8 @@ const modules = [
     icon: '🪐',
     title: 'Space',
     subtitle: 'Planets, Moons & Stars',
-    badge: '✨ 3D Cosmos',
     bg: 'linear-gradient(135deg, #0b0c1e 0%, #181944 100%)',
-    shadow: '0 6px 0 #050512',
+    shadow: '0 5px 0 #050512',
     pattern: 'space',
   },
 ];
@@ -62,17 +59,6 @@ function StarDots() {
 
 export default function Home() {
   const navigate = useNavigate();
-  const { puzzlesSolved, flashcardsMastered, streak, hasPlayedToday } = useGame();
-
-  const getModuleStats = (to: string) => {
-    if (to === '/chess') {
-      return `${puzzlesSolved || 0} Puzzles Solved • 3 AI Bots`;
-    }
-    if (to === '/space') {
-      return `${flashcardsMastered || 0} Flashcards • 8 Planets`;
-    }
-    return '';
-  };
 
   return (
     <div style={{
@@ -93,8 +79,8 @@ export default function Home() {
         What do you want to play and learn?
       </h2>
 
-      {/* Module Cards */}
-      <div style={{ display: 'grid', gap: 16 }}>
+      {/* Clean & Simple Module Cards */}
+      <div style={{ display: 'grid', gap: 14 }}>
         {modules.map((m) => (
           <Card 
             key={m.to} 
@@ -102,7 +88,7 @@ export default function Home() {
             onClick={() => navigate(m.to)} 
             ariaLabel={m.title} 
             style={{
-              display: 'flex', flexDirection: 'column', gap: 12,
+              display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
               textDecoration: 'none', color: '#fff',
               background: m.bg, borderRadius: 20,
               padding: '18px 18px', position: 'relative', overflow: 'hidden',
@@ -117,57 +103,33 @@ export default function Home() {
           >
             {m.pattern === 'space' && <StarDots />}
 
-            {/* Top row with badge */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 1 }}>
-              <div style={{
-                fontSize: '2rem', width: 50, height: 50,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(255,255,255,0.18)', borderRadius: 14,
-                boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.2)',
-                flexShrink: 0,
-              }}>
-                {m.icon}
-              </div>
-              <div style={{
-                background: 'rgba(255,255,255,0.18)',
-                color: '#ffffff',
-                fontSize: '0.72rem',
-                fontWeight: 800,
-                padding: '4px 10px',
-                borderRadius: 20,
-                backdropFilter: 'blur(4px)',
-                border: '1px solid rgba(255,255,255,0.2)'
-              }}>
-                {m.badge}
-              </div>
+            {/* Module Icon Tile */}
+            <div style={{
+              fontSize: '2rem', width: 52, height: 52,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(255,255,255,0.18)', borderRadius: 16,
+              boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.2)',
+              flexShrink: 0, zIndex: 1
+            }}>
+              {m.icon}
             </div>
 
-            {/* Middle row: Title & Subtitle */}
-            <div style={{ position: 'relative', zIndex: 1 }}>
+            {/* Title & Subtitle */}
+            <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
               <h3 style={{
-                fontFamily: 'var(--font-heading)', fontSize: '1.3rem',
-                margin: 0, fontWeight: 800, letterSpacing: '-0.2px',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-              }}>
-                {m.title}
-                <ChevronRight size={20} color="rgba(255,255,255,0.8)" />
-              </h3>
+                fontFamily: 'var(--font-heading)', fontSize: '1.25rem',
+                margin: 0, fontWeight: 800, letterSpacing: '-0.2px'
+              }}>{m.title}</h3>
               <p style={{
-                margin: '3px 0 0', fontSize: '0.85rem', opacity: 0.88, fontWeight: 500
+                margin: '2px 0 0', fontSize: '0.85rem', opacity: 0.88, fontWeight: 500
               }}>{m.subtitle}</p>
             </div>
 
-            {/* Bottom row: Live stats pill */}
+            {/* Clean Right Arrow */}
             <div style={{
-              position: 'relative', zIndex: 1,
-              background: 'rgba(0,0,0,0.25)',
-              padding: '6px 12px', borderRadius: 10,
-              fontSize: '0.74rem', color: 'rgba(255,255,255,0.9)',
-              fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6,
-              marginTop: 2
-            }}>
-              <span>📊</span> {getModuleStats(m.to)}
-            </div>
+              fontSize: '1.2rem', opacity: 0.8,
+              position: 'relative', zIndex: 1, fontWeight: 'bold'
+            }}>→</div>
           </Card>
         ))}
       </div>
