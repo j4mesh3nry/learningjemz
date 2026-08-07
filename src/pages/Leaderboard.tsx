@@ -249,7 +249,7 @@ export default function Leaderboard() {
       {/* Pinned Bottom User Rank Bar */}
       {user && (
         <div style={{
-          position: 'fixed', bottom: 74, left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', bottom: 82, left: '50%', transform: 'translateX(-50%)',
           width: 'calc(100% - 32px)', maxWidth: 388,
           background: '#16653e',
           border: '2px solid #0e4329', boxShadow: '0 5px 0 #0e4329',
