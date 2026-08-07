@@ -98,7 +98,7 @@ export default function Store() {
           lineHeight: 1.5,
           fontWeight: 600
         }}>
-          We're preparing exclusive avatar skins, streak freezes, and XP boosters. Stay tuned!
+          Store items and features will be available soon. Stay tuned!
         </p>
       </div>
 
