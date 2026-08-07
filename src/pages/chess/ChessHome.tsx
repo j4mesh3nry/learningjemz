@@ -139,10 +139,10 @@ function ChessMenu() {
               <div className="chess-card-arrow">→</div>
             </Card>
             {/* Locked Play Modes merged into same list */}
-            <Card className="chess-card-item locked" ariaLabel="Secret Challenge (Locked)" onClick={() => {}}>
+            <Card className="chess-card-item locked" ariaLabel="Upcoming Challenge (Locked)" onClick={() => {}}>
               <div className="chess-card-icon">❓</div>
               <div className="chess-card-info">
-                <h3 className="chess-card-title">Secret Challenge</h3>
+                <h3 className="chess-card-title">Upcoming Challenge</h3>
                 <p className="chess-card-subtitle">Coming Soon...</p>
               </div>
               <div className="chess-lock-badge">🔒 Locked</div>

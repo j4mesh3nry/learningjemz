@@ -171,7 +171,7 @@ export default function Home() {
               gap: 5,
               whiteSpace: 'nowrap'
             }}>
-              <Lock size={12} color="#ffffff" /> Secret Module
+              <Lock size={12} color="#ffffff" /> Locked
             </div>
 
             {/* Blurred Card Content */}
