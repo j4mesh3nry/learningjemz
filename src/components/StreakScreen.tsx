@@ -30,6 +30,13 @@ export function markStreakShownToday(userId?: string): void {
   } catch {}
 }
 
+export function resetStreakShownForUser(userId?: string): void {
+  try {
+    localStorage.removeItem(getStreakStorageKey(userId));
+    localStorage.removeItem(getPlayedDatesStorageKey(userId));
+  } catch {}
+}
+
 export function getPlayedDates(userId?: string): string[] {
   try {
     const key = getPlayedDatesStorageKey(userId);
@@ -70,7 +77,7 @@ export default function StreakScreen({
   userId,
 }: StreakScreenProps) {
   const targetStreak = Math.max(1, streak);
-  const initialStreak = Math.max(1, targetStreak - 1);
+  const initialStreak = Math.max(0, targetStreak - 1);
 
   const [currentDisplayStreak, setCurrentDisplayStreak] = useState(initialStreak);
   const [plusOneState, setPlusOneState] = useState<'hidden' | 'fade-in' | 'fade-out'>('hidden');
@@ -96,12 +103,12 @@ export default function StreakScreen({
       setPlusOneState('hidden');
       setIsIgnited(false);
 
-      // Phase 1: Fade in +1 badge next to initial streak count (e.g. 10)
+      // Phase 1: Fade in +1 badge next to initial streak count
       const t1 = setTimeout(() => {
         setPlusOneState('fade-in');
       }, 350);
 
-      // Phase 2: Fade out +1 badge & transition count to target streak (e.g. 10 -> 11)
+      // Phase 2: Fade out +1 badge & transition count to target streak
       const t2 = setTimeout(() => {
         setPlusOneState('fade-out');
         setCurrentDisplayStreak(targetStreak);

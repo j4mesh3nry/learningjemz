@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState, useRef, useCallback } f
 import { supabase } from '../utils/supabase';
 import { useAuth } from './AuthContext';
 import { ACHIEVEMENTS } from '../utils/achievements';
+import { resetStreakShownForUser } from '../components/StreakScreen';
 
 const GameContext = createContext();
 
@@ -201,6 +202,7 @@ export function GameProvider({ children }) {
     setState(defaultState);
     const storageKey = getStorageKey(user?.id);
     localStorage.setItem(storageKey, JSON.stringify(defaultState));
+    resetStreakShownForUser(user?.id);
 
     if (user) {
       const dbPayload = {
