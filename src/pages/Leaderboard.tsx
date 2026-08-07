@@ -195,7 +195,7 @@ export default function Leaderboard() {
                     </span>
                     <span style={{ color: '#666', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       Lv. {leader.level || 1} {sortBy === 'streak' ? `• ${leader.xp || 0} XP` : (
-                        <>• <Flame size={13} color={leaderStreakIsZero ? "#888888" : "#ff4d4d"} fill={leaderStreakIsZero ? "#bbbbbb" : "#ff4d4d"} style={{ verticalAlign: 'middle', display: 'inline' }} /> <span style={{ color: leaderStreakIsZero ? '#757575' : '#e53935', fontWeight: 600 }}>{leaderStreak} {dayLabel}</span></>
+                        <>• <Flame size={13} color={leaderStreakIsZero ? "#888888" : "#ff4d4d"} fill={leaderStreakIsZero ? "#bbbbbb" : "#ff4d4d"} style={{ verticalAlign: 'middle', display: 'inline' }} /> <span style={{ color: leaderStreakIsZero ? '#757575' : '#e53935', fontWeight: 600 }}>{leaderStreak}</span></>
                       )}
                     </span>
                   </div>
@@ -211,7 +211,7 @@ export default function Leaderboard() {
                     {sortBy === 'streak' ? (
                       <>
                         <Flame size={16} color={leaderStreakIsZero ? "#888888" : "#ff4d4d"} fill={leaderStreakIsZero ? "#bbbbbb" : "#ff4d4d"} />
-                        <span style={{ color: leaderStreakIsZero ? '#757575' : '#e53935' }}>{leaderStreak} {dayLabel}</span>
+                        <span style={{ color: leaderStreakIsZero ? '#757575' : '#e53935' }}>{leaderStreak}</span>
                       </>
                     ) : (
                       <span style={{ color: 'var(--color-primary)' }}>{leader.xp || 0} XP</span>
@@ -250,7 +250,7 @@ export default function Leaderboard() {
               </span>
               <span style={{ color: '#666', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Lv. {level} {sortBy === 'streak' ? `• ${xp} XP` : (
-                  <>• <Flame size={13} color={myStreakIsZero ? "#888888" : "#ff4d4d"} fill={myStreakIsZero ? "#bbbbbb" : "#ff4d4d"} style={{ verticalAlign: 'middle', display: 'inline' }} /> <span style={{ color: myStreakIsZero ? '#757575' : '#e53935', fontWeight: 600 }}>{myStreak} {myDayLabel}</span></>
+                  <>• <Flame size={13} color={myStreakIsZero ? "#888888" : "#ff4d4d"} fill={myStreakIsZero ? "#bbbbbb" : "#ff4d4d"} style={{ verticalAlign: 'middle', display: 'inline' }} /> <span style={{ color: myStreakIsZero ? '#757575' : '#e53935', fontWeight: 600 }}>{myStreak}</span></>
                 )}
               </span>
             </div>
@@ -266,7 +266,7 @@ export default function Leaderboard() {
               {sortBy === 'streak' ? (
                 <>
                   <Flame size={16} color={myStreakIsZero ? "#888888" : "#ff4d4d"} fill={myStreakIsZero ? "#bbbbbb" : "#ff4d4d"} />
-                  <span style={{ color: myStreakIsZero ? '#757575' : '#e53935' }}>{myStreak} {myDayLabel}</span>
+                  <span style={{ color: myStreakIsZero ? '#757575' : '#e53935' }}>{myStreak}</span>
                 </>
               ) : (
                 <span style={{ color: 'var(--color-primary)' }}>{xp} XP</span>
