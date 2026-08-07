@@ -117,19 +117,21 @@ export default function Profile() {
           marginBottom: 24
         }}
       >
+        {/* Avatar Container */}
         <div
           onClick={() => setIsEditingAvatar(true)}
           style={{
-            width: 90,
-            height: 90,
+            width: 92,
+            height: 92,
             borderRadius: '50%',
             margin: '0 auto',
-            background: '#fff',
+            background: '#e1f0e2',
+            border: '3px solid #16653e',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '2.5rem',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+            fontSize: '2.6rem',
+            boxShadow: '0 4px 0 #0e4329',
             cursor: 'pointer',
             position: 'relative'
           }}
@@ -138,31 +140,32 @@ export default function Profile() {
           <div
             style={{
               position: 'absolute',
-              bottom: -2,
-              right: -2,
-              background: '#ffb400',
+              bottom: 0,
+              right: 0,
+              background: '#16653e',
               borderRadius: '50%',
-              width: 26,
-              height: 26,
+              width: 28,
+              height: 28,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '2px solid #fff',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-              color: '#222'
+              border: '2px solid #ffffff',
+              boxShadow: '0 2px 0 #0e4329',
+              color: '#ffffff'
             }}
           >
-            <Pencil size={12} strokeWidth={3} />
+            <Pencil size={13} strokeWidth={2.5} />
           </div>
         </div>
 
+        {/* User Name & Edit Button */}
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center', 
           gap: 8, 
-          marginTop: 20, 
-          marginBottom: 4,
+          marginTop: 16, 
+          marginBottom: 2,
           maxWidth: '100%',
           padding: '0 16px',
           boxSizing: 'border-box'
@@ -171,6 +174,8 @@ export default function Profile() {
             fontFamily: 'var(--font-heading)', 
             margin: 0, 
             fontSize: '1.6rem',
+            fontWeight: 800,
+            color: '#0f3825',
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -184,7 +189,7 @@ export default function Profile() {
               setIsEditingName(true);
             }}
             style={{
-              background: 'rgba(255,255,255,0.2)',
+              background: '#e1f0e2',
               borderRadius: '50%',
               width: 28,
               height: 28,
@@ -192,31 +197,38 @@ export default function Profile() {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              border: '1px solid rgba(255,255,255,0.4)',
+              border: '1.5px solid #b0cbaf',
               flexShrink: 0,
-              color: '#fff'
+              color: '#16653e'
             }}
           >
             <Pencil size={13} strokeWidth={2.5} />
           </div>
         </div>
-        <p style={{ opacity: 0.9, fontSize: '0.9rem', marginBottom: 20 }}>{user?.email}</p>
+
+        {/* Email */}
+        <p style={{ color: '#4e7361', fontSize: '0.85rem', marginBottom: 16, fontWeight: 600 }}>
+          {user?.email}
+        </p>
         
+        {/* Level & Title Pill */}
         <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: 6,
-            background: 'rgba(255,255,255,0.2)',
-            padding: '8px 16px',
+            background: '#e1f0e2',
+            padding: '6px 16px',
             borderRadius: 20,
-            backdropFilter: 'blur(10px)',
-            fontWeight: 600,
-            border: '1px solid rgba(255,255,255,0.3)'
+            fontWeight: 800,
+            fontSize: '0.88rem',
+            color: '#0f3825',
+            border: '2px solid #16653e',
+            boxShadow: '0 2px 0 #b0cbaf'
           }}
         >
           <span>Level {level}</span>
-          <span style={{ opacity: 0.5 }}>•</span>
+          <span style={{ color: '#b0cbaf' }}>•</span>
           <span>{level >= 10 ? '👑 Master' : level >= 5 ? '🎓 Scholar' : '🌱 Beginner'}</span>
         </div>
       </div>
