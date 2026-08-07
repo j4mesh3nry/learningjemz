@@ -3,15 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { useGame } from '../contexts/GameContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { ACHIEVEMENTS } from '../utils/achievements.js';
-import { Settings, LogOut, Trophy, BookOpen, Rocket, Lock, Pencil, Flame } from 'lucide-react';
+import { Settings, LogOut, Trophy, Lock, Pencil, Flame, Calendar as CalendarIcon } from 'lucide-react';
 import { updateAvatar, updateName } from '../api/supabase.js';
+import { getPlayedDates } from '../components/StreakScreen';
 import '../index.css';
 
 export default function Profile() {
-  const { xp, level, streak, hasPlayedToday, booksReading, readingMinutes, flashcardsMastered, quizHighScore, achievements } = useGame();
+  const { xp, level, streak, hasPlayedToday, achievements } = useGame();
   const { user, logout } = useAuth();
-
-
 
   const [avatar, setAvatar] = useState(() => user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar') || '👤');
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
@@ -20,6 +19,12 @@ export default function Profile() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState('');
   const [toast, setToast] = useState<string | null>(null);
+
+  const [playedDates, setPlayedDates] = useState<string[]>([]);
+
+  useEffect(() => {
+    setPlayedDates(getPlayedDates(user?.id));
+  }, [user?.id]);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -49,6 +54,15 @@ export default function Profile() {
     }
   };
 
+  // Calendar month math
+  const todayDate = new Date();
+  const year = todayDate.getFullYear();
+  const month = todayDate.getMonth();
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const monthName = todayDate.toLocaleString('default', { month: 'long' });
+  const todayDateStr = todayDate.toISOString().split('T')[0];
+
   return (
     <div className="container" style={{ paddingBottom: '100px' }}>
       {toast && (
@@ -56,6 +70,8 @@ export default function Profile() {
           {toast}
         </div>
       )}
+
+      {/* Sticky Header */}
       <div
         style={{
           position: 'sticky',
@@ -74,9 +90,10 @@ export default function Profile() {
           alignItems: 'center'
         }}
       >
-        <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.4rem' }}>Profile</h2>
+        <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.4rem' }}>Me</h2>
         <Settings size={24} color="var(--color-muted)" style={{ cursor: 'pointer' }} />
       </div>
+
       {/* ID Card / Avatar */}
       <div
         style={{
@@ -129,6 +146,7 @@ export default function Profile() {
             <Pencil size={12} strokeWidth={3} />
           </div>
         </div>
+
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
@@ -174,6 +192,7 @@ export default function Profile() {
           </div>
         </div>
         <p style={{ opacity: 0.9, fontSize: '0.9rem', marginBottom: 20 }}>{user?.email}</p>
+        
         <div
           style={{
             display: 'inline-flex',
@@ -192,13 +211,15 @@ export default function Profile() {
           <span>{level >= 10 ? '👑 Master' : level >= 5 ? '🎓 Scholar' : '🌱 Beginner'}</span>
         </div>
       </div>
+
       {/* Stats Row (Streak & XP) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 30 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#fff', padding: 20, borderRadius: 12, border: '1px solid #ffebee' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 24 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#fff', padding: 20, borderRadius: 20, border: '1px solid #ffebee', boxShadow: '0 4px 14px rgba(0,0,0,0.03)' }}>
           <Flame size={36} color={hasPlayedToday ? '#ff4d4d' : '#888888'} fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} />
           <strong style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)', color: hasPlayedToday ? '#e53935' : '#444444' }}>{streak}</strong>
-          <span style={{ color: '#666', fontSize: '0.9rem' }}>Day Streak</span>
+          <span style={{ color: '#666', fontSize: '0.9rem', fontWeight: 600 }}>Day Streak</span>
         </div>
+
         <div
           style={{
             padding: 20,
@@ -208,47 +229,91 @@ export default function Profile() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            boxShadow: '0 8px 16px rgba(255,180,0,0.06)'
+            boxShadow: '0 4px 14px rgba(255,180,0,0.06)'
           }}
         >
           <Trophy size={36} color="#ffb400" style={{ fill: '#ffb400' }} />
-          <strong style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)' }}>{xp}</strong>
-          <span style={{ fontSize: '0.85rem', color: 'var(--color-muted)', fontWeight: 500 }}>Total XP</span>
+          <strong style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)', color: '#b78103' }}>{xp}</strong>
+          <span style={{ fontSize: '0.85rem', color: 'var(--color-muted)', fontWeight: 600 }}>Total XP</span>
         </div>
       </div>
-      {/* Module Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 32 }}>
-        
-        <div style={{
-          background: 'linear-gradient(135deg, #b85c1e, #d66c24)', borderRadius: 20, padding: 20, color: '#fff',
-          boxShadow: '0 8px 24px rgba(184,92,30,0.25)', position: 'relative', overflow: 'hidden'
-        }}>
-          <div style={{ position: 'absolute', right: -10, top: -10, opacity: 0.1, transform: 'scale(2)' }}>
-            <BookOpen size={64} />
+
+      {/* Dedicated Streak Calendar Section (Replaces Reading & Space Stats) */}
+      <div style={{
+        background: '#ffffff',
+        border: '1px solid #eaeaea',
+        borderRadius: 24,
+        padding: 24,
+        boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
+        marginBottom: 32
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ background: '#e8f5e9', borderRadius: 12, padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CalendarIcon size={22} color="var(--color-primary)" />
+            </div>
+            <div>
+              <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.2rem', color: '#222' }}>Streak Calendar</h3>
+              <span style={{ fontSize: '0.8rem', color: '#777', fontWeight: 500 }}>{monthName} {year}</span>
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, opacity: 0.9 }}>
-            <BookOpen size={24} color="#fff" />
-            <strong style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem' }}>Reading</strong>
+          
+          <div style={{ display: 'flex', gap: 8 }}>
+            <span style={{ background: '#f5f5f5', padding: '6px 12px', borderRadius: 14, fontSize: '0.8rem', fontWeight: 700, color: '#444' }}>
+              {playedDates.length} Days Active
+            </span>
           </div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Books: <strong style={{color:'#fff'}}>{booksReading || 0}</strong></div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Mins: <strong style={{color:'#fff'}}>{readingMinutes || 0}</strong></div>
         </div>
 
+        {/* Monthly Calendar Grid */}
         <div style={{
-          background: 'linear-gradient(135deg, #0a0a1a, #1a1a3e)', borderRadius: 20, padding: 20, color: '#fff',
-          boxShadow: '0 8px 24px rgba(10,10,26,0.4)', position: 'relative', overflow: 'hidden'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(7, 1fr)',
+          gap: 6,
+          textAlign: 'center'
         }}>
-          <div style={{ position: 'absolute', right: -10, top: -10, opacity: 0.05, transform: 'scale(2)' }}>
-            <Rocket size={64} />
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, opacity: 0.9 }}>
-            <Rocket size={24} color="#fff" />
-            <strong style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem' }}>Space</strong>
-          </div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Mastered: <strong style={{color:'#fff'}}>{flashcardsMastered || 0}</strong></div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>Best: <strong style={{color:'#fff'}}>{quizHighScore || 0}%</strong></div>
-        </div>
+          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((dayHeader, i) => (
+            <div key={i} style={{ fontSize: '0.8rem', fontWeight: 800, color: '#999', paddingBottom: 6 }}>
+              {dayHeader}
+            </div>
+          ))}
 
+          {Array.from({ length: firstDayOfMonth }).map((_, i) => (
+            <div key={`empty-${i}`} style={{ height: 36 }} />
+          ))}
+
+          {Array.from({ length: daysInMonth }).map((_, i) => {
+            const dayNum = i + 1;
+            const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+            const isPlayed = playedDates.includes(dateString) || (dateString === todayDateStr && hasPlayedToday);
+
+            return (
+              <div
+                key={dayNum}
+                style={{
+                  height: 38,
+                  borderRadius: 12,
+                  background: isPlayed ? 'linear-gradient(135deg, #10b981 0%, #047857 100%)' : '#f8f9fa',
+                  border: isPlayed ? 'none' : '1px solid #eee',
+                  color: isPlayed ? '#ffffff' : '#666666',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.8rem',
+                  fontWeight: isPlayed ? 800 : 600,
+                  position: 'relative',
+                  boxShadow: isPlayed ? '0 3px 8px rgba(16,185,129,0.3)' : 'none'
+                }}
+              >
+                <span>{dayNum}</span>
+                {isPlayed && (
+                  <Flame size={10} color="#ffd600" fill="#ffd600" style={{ marginTop: 1 }} />
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Achievements */}
@@ -289,6 +354,7 @@ export default function Profile() {
           );
         })}
       </div>
+
       {/* Logout */}
       <div style={{ paddingBottom: 24 }}>
         <button
@@ -307,13 +373,15 @@ export default function Profile() {
             alignItems: 'center',
             justifyContent: 'center',
             gap: 8,
-            boxShadow: '0 4px 12px rgba(255,77,77,0.1)'
+            boxShadow: '0 4px 12px rgba(255,77,77,0.1)',
+            cursor: 'pointer'
           }}
         >
           <LogOut size={20} />
           Sign Out
         </button>
       </div>
+
       {/* Avatar Selection Modal */}
       {isEditingAvatar && (
         <div
@@ -388,6 +456,7 @@ export default function Profile() {
           </div>
         </div>
       )}
+
       {/* Name Edit Modal */}
       {isEditingName && (
         <div
