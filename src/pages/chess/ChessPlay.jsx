@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess as ChessJS } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -422,33 +422,61 @@ export default function ChessPlay() {
 
   const lastMove = history.length > 0 ? history[history.length - 1] : null;
 
-  const renderHistoryMove = (move, isLastMove) => {
-    if (!move) return null;
-    const isPawn = move.piece === 'p';
-    const sanText = isPawn ? move.san : move.san.replace(/^[NBRQK]/, '');
-    
+  const renderMoveHistoryList = () => {
+    if (!history || history.length === 0) {
+      return (
+        <div style={{ padding: '10px 14px', fontSize: '0.8rem', color: '#4e7361', fontStyle: 'italic', textAlign: 'center' }}>
+          No moves played yet. Make your first move!
+        </div>
+      );
+    }
+
+    const pairs = [];
+    for (let i = 0; i < history.length; i += 2) {
+      pairs.push({
+        moveNum: Math.floor(i / 2) + 1,
+        white: history[i],
+        black: history[i + 1] || null
+      });
+    }
+
     return (
-      <div style={{ 
-        display: 'flex', alignItems: 'center', gap: 6, 
-        padding: '4px 8px', borderRadius: 6,
-        background: isLastMove ? 'rgba(28, 124, 84, 0.1)' : 'transparent',
-        border: isLastMove ? '1px solid rgba(28, 124, 84, 0.3)' : '1px solid transparent',
-      }}>
-        {!isPawn && (
-          <img 
-            src={PIECE_IMAGES[move.color][move.piece]} 
-            alt={move.piece} 
-            style={{ width: 14, height: 14, opacity: 0.9 }} 
-          />
-        )}
-        <span style={{ 
-          color: isLastMove ? '#1c7c54' : '#444', 
-          fontWeight: isLastMove ? 800 : 600,
-          fontFamily: 'monospace',
-          fontSize: '0.9rem'
-        }}>
-          {sanText}
-        </span>
+      <div 
+        ref={historyScrollRef}
+        style={{ 
+          maxHeight: 110, 
+          overflowY: 'auto', 
+          padding: '8px 12px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 4 
+        }}
+      >
+        {pairs.map((pair) => {
+          const isWhiteLast = history[history.length - 1] === pair.white;
+          const isBlackLast = history[history.length - 1] === pair.black;
+          return (
+            <div key={pair.moveNum} style={{ display: 'grid', gridTemplateColumns: '32px 1fr 1fr', alignItems: 'center', fontSize: '0.82rem' }}>
+              <span style={{ fontWeight: 800, color: '#4e7361', fontSize: '0.78rem' }}>{pair.moveNum}.</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '2px 6px', borderRadius: 6, background: isWhiteLast ? '#e1f0e2' : 'transparent', fontWeight: isWhiteLast ? 800 : 600, color: '#0f3825' }}>
+                {pair.white && (
+                  <>
+                    <img src={PIECE_IMAGES.w[pair.white.piece]} alt={pair.white.piece} style={{ width: 14, height: 14 }} />
+                    <span>{pair.white.san}</span>
+                  </>
+                )}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '2px 6px', borderRadius: 6, background: isBlackLast ? '#e1f0e2' : 'transparent', fontWeight: isBlackLast ? 800 : 600, color: '#0f3825' }}>
+                {pair.black && (
+                  <>
+                    <img src={PIECE_IMAGES.b[pair.black.piece]} alt={pair.black.piece} style={{ width: 14, height: 14 }} />
+                    <span>{pair.black.san}</span>
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -458,9 +486,9 @@ export default function ChessPlay() {
   const renderBotProfile = () => (
     <div className="player-profile-banner">
       <div className="player-avatar">
-        {difficulty === 'Easy' ? <Bot size={24} color="#4caf50" /> : 
-         difficulty === 'Medium' ? <BrainCircuit size={24} color="#ff9800" /> : 
-         <Cpu size={24} color="#f44336" />}
+        {difficulty === 'Easy' ? <Bot size={24} color="#16653e" /> : 
+         difficulty === 'Medium' ? <BrainCircuit size={24} color="#d97706" /> : 
+         <Cpu size={24} color="#e53935" />}
       </div>
       <div className="player-info" style={{ minWidth: 0 }}>
         <div className="player-name" style={{ flexWrap: 'wrap' }}>
@@ -491,8 +519,8 @@ export default function ChessPlay() {
   );
 
   const renderUserProfile = () => (
-    <div className="player-profile-banner">
-      <div className="player-avatar" style={{ background: '#e3f2fd', fontSize: '1.2rem' }}>
+    <div className="player-profile-banner bottom">
+      <div className="player-avatar" style={{ background: '#e1f0e2', fontSize: '1.2rem' }}>
         {playerAvatar}
       </div>
       <div className="player-info" style={{ minWidth: 0 }}>
@@ -743,12 +771,55 @@ export default function ChessPlay() {
 
           {topIsBot ? renderUserProfile() : renderBotProfile()}
 
-          <div className="chess-action-bar" style={{ marginTop: 12 }}>
-            <button className="chess-btn" onClick={handleRestartClick} title="Restart">
-              <RotateCw size={16} /> Restart
+          {/* Scrollable Move History Box */}
+          <div style={{ width: '100%', background: '#ffffff', borderTop: '1.5px solid #b0cbaf' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 14px', background: '#f4f9f4', borderBottom: '1px solid #e1f0e2' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f3825', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <ScrollText size={14} color="#16653e" /> Move History ({history.length})
+              </span>
+            </div>
+            {renderMoveHistoryList()}
+          </div>
+
+          {/* Action Bar with Flip, Restart, Resign */}
+          <div style={{ display: 'flex', gap: 8, padding: 12, width: '100%', background: '#f8faf8', borderTop: '1.5px solid #b0cbaf', boxSizing: 'border-box' }}>
+            <button 
+              onClick={() => setIsFlipped(prev => !prev)} 
+              title="Flip Board"
+              style={{
+                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                padding: '9px 12px', background: '#ffffff', border: '2px solid #b0cbaf',
+                boxShadow: '0 3px 0 #b0cbaf', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
+                color: '#16653e', cursor: 'pointer'
+              }}
+            >
+              <RefreshCw size={15} /> Flip
             </button>
-            <button className="chess-btn danger" onClick={handleResign} title="Resign">
-              <Flag size={16} /> Resign
+
+            <button 
+              onClick={handleRestartClick} 
+              title="Restart Match"
+              style={{
+                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                padding: '9px 12px', background: '#ffffff', border: '2px solid #b0cbaf',
+                boxShadow: '0 3px 0 #b0cbaf', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
+                color: '#16653e', cursor: 'pointer'
+              }}
+            >
+              <RotateCw size={15} /> Restart
+            </button>
+
+            <button 
+              onClick={handleResign} 
+              title="Resign Match"
+              style={{
+                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                padding: '9px 12px', background: '#fff5f5', border: '2px solid #ffcdd2',
+                boxShadow: '0 3px 0 #ffcdd2', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
+                color: '#e53935', cursor: 'pointer'
+              }}
+            >
+              <Flag size={15} /> Resign
             </button>
           </div>
         </div>
