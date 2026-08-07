@@ -27,6 +27,7 @@ export default function IlluminateSystem() {
   const [lives, setLives] = useState(3);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [userUsedHint, setUserUsedHint] = useState(false);
+  const [hintsLeft, setHintsLeft] = useState(3);
   const [personalBests, setPersonalBests] = useState({});
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
@@ -83,6 +84,7 @@ export default function IlluminateSystem() {
     setLives(DIFFICULTIES[diffLevel].maxLives);
     setElapsedTime(0);
     setUserUsedHint(false);
+    setHintsLeft(3);
     setIsNewRecord(false);
     setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
     setTimeout(() => {
@@ -166,8 +168,9 @@ export default function IlluminateSystem() {
   };
 
   const handleUseHint = () => {
-    if (isComplete || isGameOver || userUsedHint) return;
+    if (isComplete || isGameOver || userUsedHint || hintsLeft <= 0) return;
     setUserUsedHint(true);
+    setHintsLeft(prev => prev - 1);
     setScoreData(prev => ({ ...prev, hintsUsed: prev.hintsUsed + 1 }));
   };
 
@@ -317,12 +320,12 @@ export default function IlluminateSystem() {
         </div>
 
         <button 
-          className={`illum-hint-btn ${userUsedHint ? 'used' : ''}`}
+          className={`illum-hint-btn ${userUsedHint || hintsLeft <= 0 ? 'used' : ''}`}
           onClick={handleUseHint}
-          disabled={userUsedHint || isComplete || isGameOver}
+          disabled={userUsedHint || hintsLeft <= 0 || isComplete || isGameOver}
         >
-          <Lightbulb size={14} color={userUsedHint ? '#888' : '#ffb74d'} />
-          <span>{userUsedHint ? 'Hint Active' : 'Hint'}</span>
+          <Lightbulb size={14} color={hintsLeft > 0 && !userUsedHint ? '#ffb74d' : '#888'} />
+          <span>{userUsedHint ? 'Hint Active' : `Hint (${hintsLeft})`}</span>
         </button>
       </div>
 
