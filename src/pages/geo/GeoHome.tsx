@@ -127,16 +127,12 @@ function GeoDashboard() {
               </div>
               <div className="geo-card-arrow">→</div>
             </Card>
-          </div>
-
-          {/* Locked Learn Modes */}
-          <h2 className="geo-section-heading">Culture & Heritage (Locked)</h2>
-          <div className="geo-card-list">
+            {/* Locked Learn Modes merged into same list */}
             <div className="geo-card-item locked" aria-disabled="true">
-              <div className="geo-card-icon">📍</div>
+              <div className="geo-card-icon">❓</div>
               <div className="geo-card-info">
-                <h3 className="geo-card-title">Landmark Finder</h3>
-                <p className="geo-card-subtitle">Locate historical landmarks & natural wonders</p>
+                <h3 className="geo-card-title">Mystery Module</h3>
+                <p className="geo-card-subtitle">Coming Soon...</p>
               </div>
               <div className="geo-lock-badge">🔒 Locked</div>
             </div>
@@ -155,34 +151,20 @@ function GeoDashboard() {
               </div>
               <div className="geo-card-arrow">→</div>
             </Card>
-          </div>
-
-          {/* Locked Play Modes */}
-          <h2 className="geo-section-heading">Geo Challenges (Locked)</h2>
-          <div className="geo-card-list">
+            {/* Locked Play Modes merged into same list */}
             <div className="geo-card-item locked" aria-disabled="true">
-              <div className="geo-card-icon">🏛️</div>
+              <div className="geo-card-icon">❓</div>
               <div className="geo-card-info">
-                <h3 className="geo-card-title">Capital Quiz</h3>
-                <p className="geo-card-subtitle">Match provinces to their capitals</p>
+                <h3 className="geo-card-title">Secret Challenge</h3>
+                <p className="geo-card-subtitle">Coming Soon...</p>
               </div>
               <div className="geo-lock-badge">🔒 Locked</div>
             </div>
-
             <div className="geo-card-item locked" aria-disabled="true">
-              <div className="geo-card-icon">🚩</div>
+              <div className="geo-card-icon">❓</div>
               <div className="geo-card-info">
-                <h3 className="geo-card-title">Flag Guesser</h3>
-                <p className="geo-card-subtitle">Identify regional & provincial flags</p>
-              </div>
-              <div className="geo-lock-badge">🔒 Locked</div>
-            </div>
-
-            <div className="geo-card-item locked" aria-disabled="true">
-              <div className="geo-card-icon">👥</div>
-              <div className="geo-card-info">
-                <h3 className="geo-card-title">Population Sorter</h3>
-                <p className="geo-card-subtitle">Rank provinces by population under time limit</p>
+                <h3 className="geo-card-title">Mystery Mode</h3>
+                <p className="geo-card-subtitle">Coming Soon...</p>
               </div>
               <div className="geo-lock-badge">🔒 Locked</div>
             </div>

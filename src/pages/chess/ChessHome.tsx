@@ -114,22 +114,12 @@ function ChessMenu() {
 
       {tab === 'learn' ? (
         <>
-          {/* Locked Learn Modes */}
-          <h2 className="chess-section-heading">Lessons & Opening Study</h2>
           <div className="chess-card-list">
-            <Card className="chess-card-item locked" ariaLabel="Mastery Lessons (Locked)" onClick={() => {}}>
-              <div className="chess-card-icon">🎓</div>
+            <Card className="chess-card-item locked" ariaLabel="Mystery Module (Locked)" onClick={() => {}}>
+              <div className="chess-card-icon">❓</div>
               <div className="chess-card-info">
-                <h3 className="chess-card-title">Mastery Lessons</h3>
-                <p className="chess-card-subtitle">Learn fundamentals & tactics step-by-step</p>
-              </div>
-              <div className="chess-lock-badge">🔒 Locked</div>
-            </Card>
-            <Card className="chess-card-item locked" ariaLabel="Opening Explorer (Locked)" onClick={() => {}}>
-              <div className="chess-card-icon">📖</div>
-              <div className="chess-card-info">
-                <h3 className="chess-card-title">Opening Explorer</h3>
-                <p className="chess-card-subtitle">Study popular openings & key variations</p>
+                <h3 className="chess-card-title">Mystery Module</h3>
+                <p className="chess-card-subtitle">Coming Soon...</p>
               </div>
               <div className="chess-lock-badge">🔒 Locked</div>
             </Card>
@@ -148,40 +138,20 @@ function ChessMenu() {
               </div>
               <div className="chess-card-arrow">→</div>
             </Card>
-          </div>
-
-          {/* Locked Play Modes */}
-          <h2 className="chess-section-heading">Tournaments & Challenges (Locked)</h2>
-          <div className="chess-card-list">
-            <Card className="chess-card-item locked" ariaLabel="Tactics Puzzles (Locked)" onClick={() => {}}>
-              <div className="chess-card-icon">🧩</div>
+            {/* Locked Play Modes merged into same list */}
+            <Card className="chess-card-item locked" ariaLabel="Secret Challenge (Locked)" onClick={() => {}}>
+              <div className="chess-card-icon">❓</div>
               <div className="chess-card-info">
-                <h3 className="chess-card-title">Tactics Puzzles</h3>
-                <p className="chess-card-subtitle">{puzzlesSolved || 0} puzzles completed</p>
+                <h3 className="chess-card-title">Secret Challenge</h3>
+                <p className="chess-card-subtitle">Coming Soon...</p>
               </div>
               <div className="chess-lock-badge">🔒 Locked</div>
             </Card>
-            <Card className="chess-card-item locked" ariaLabel="Grandmaster Tournaments (Locked)" onClick={() => {}}>
-              <div className="chess-card-icon">🏆</div>
+            <Card className="chess-card-item locked" ariaLabel="Mystery Mode (Locked)" onClick={() => {}}>
+              <div className="chess-card-icon">❓</div>
               <div className="chess-card-info">
-                <h3 className="chess-card-title">Grandmaster Tournaments</h3>
-                <p className="chess-card-subtitle">Compete in seasonal events</p>
-              </div>
-              <div className="chess-lock-badge">🔒 Locked</div>
-            </Card>
-            <Card className="chess-card-item locked" ariaLabel="Endgame Practice (Locked)" onClick={() => {}}>
-              <div className="chess-card-icon">⚡</div>
-              <div className="chess-card-info">
-                <h3 className="chess-card-title">Endgame Practice</h3>
-                <p className="chess-card-subtitle">Master checkmates & draws</p>
-              </div>
-              <div className="chess-lock-badge">🔒 Locked</div>
-            </Card>
-            <Card className="chess-card-item locked" ariaLabel="Daily Challenge (Locked)" onClick={() => {}}>
-              <div className="chess-card-icon">🎯</div>
-              <div className="chess-card-info">
-                <h3 className="chess-card-title">Daily Challenge</h3>
-                <p className="chess-card-subtitle">Unique high-level daily puzzle</p>
+                <h3 className="chess-card-title">Mystery Mode</h3>
+                <p className="chess-card-subtitle">Coming Soon...</p>
               </div>
               <div className="chess-lock-badge">🔒 Locked</div>
             </Card>

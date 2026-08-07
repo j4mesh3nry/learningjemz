@@ -251,16 +251,12 @@ const ReadingDashboard = () => {
               </div>
               <div className="reading-card-arrow">→</div>
             </Card>
-          </div>
-
-          {/* Locked Learn Modes */}
-          <h2 className="reading-section-heading">Community (Locked)</h2>
-          <div className="reading-card-list">
-            <Card className="reading-card-item locked" ariaLabel="Reading Clubs (Locked)" onClick={() => {}}>
-              <div className="reading-card-icon">👥</div>
+            {/* Locked Learn Modes merged into same list */}
+            <Card className="reading-card-item locked" ariaLabel="Mystery Module (Locked)" onClick={() => {}}>
+              <div className="reading-card-icon">❓</div>
               <div className="reading-card-info">
-                <h3 className="reading-card-title">Reading Clubs</h3>
-                <p className="reading-card-subtitle">Join community book chats & discussions</p>
+                <h3 className="reading-card-title">Mystery Module</h3>
+                <p className="reading-card-subtitle">Coming Soon...</p>
               </div>
               <div className="reading-lock-badge">🔒 Locked</div>
             </Card>
@@ -268,32 +264,22 @@ const ReadingDashboard = () => {
         </>
       ) : (
         <>
-          {/* Locked Play & Earn Modes */}
-          <h2 className="reading-section-heading">Earn XP & Reading Challenges (Locked)</h2>
+          {/* Placeholder Play & Earn Modes */}
+          <h2 className="reading-section-heading">Earn XP & Streaks</h2>
           <div className="reading-card-list">
-            <Card className="reading-card-item locked" ariaLabel="Comprehension Quiz (Locked)" onClick={() => {}}>
-              <div className="reading-card-icon">🎯</div>
+            <Card className="reading-card-item locked" ariaLabel="Secret Challenge (Locked)" onClick={() => {}}>
+              <div className="reading-card-icon">❓</div>
               <div className="reading-card-info">
-                <h3 className="reading-card-title">Comprehension Quiz</h3>
-                <p className="reading-card-subtitle">Test chapter understanding & earn XP</p>
+                <h3 className="reading-card-title">Secret Challenge</h3>
+                <p className="reading-card-subtitle">Coming Soon...</p>
               </div>
               <div className="reading-lock-badge">🔒 Locked</div>
             </Card>
-
-            <Card className="reading-card-item locked" ariaLabel="Speed Reading (Locked)" onClick={() => {}}>
-              <div className="reading-card-icon">⚡</div>
+            <Card className="reading-card-item locked" ariaLabel="Mystery Mode (Locked)" onClick={() => {}}>
+              <div className="reading-card-icon">❓</div>
               <div className="reading-card-info">
-                <h3 className="reading-card-title">Speed Reading</h3>
-                <p className="reading-card-subtitle">Accelerate reading pace under time limit</p>
-              </div>
-              <div className="reading-lock-badge">🔒 Locked</div>
-            </Card>
-
-            <Card className="reading-card-item locked" ariaLabel="Vocabulary Builder (Locked)" onClick={() => {}}>
-              <div className="reading-card-icon">🔖</div>
-              <div className="reading-card-info">
-                <h3 className="reading-card-title">Vocabulary Builder</h3>
-                <p className="reading-card-subtitle">Learn context-based words & solve challenges</p>
+                <h3 className="reading-card-title">Mystery Mode</h3>
+                <p className="reading-card-subtitle">Coming Soon...</p>
               </div>
               <div className="reading-lock-badge">🔒 Locked</div>
             </Card>

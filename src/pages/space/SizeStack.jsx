@@ -19,6 +19,8 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SPACE_OBJECTS_BY_SIZE } from '../../data/space-objects';
+import { useGame } from '../../contexts/GameContext';
+import { Flame, Star, ArrowLeft } from 'lucide-react';
 import './space.css';
 
 // A single sortable item component
@@ -65,6 +67,7 @@ function SortableItem({ id, item, isOverlay }) {
 
 export default function SizeStack() {
   const navigate = useNavigate();
+  const { level: gameLevel, streak, hasPlayedToday } = useGame();
   const [level, setLevel] = useState(null); // 'beginner', 'easy', 'medium', 'hard'
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
@@ -136,73 +139,64 @@ export default function SizeStack() {
 
   if (!level) {
     return (
-      <div className="space-module">
-        <div className="starfield">
-          {[...Array(50)].map((_, i) => (
-            <div key={i} className="star" style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`
-            }} />
-          ))}
-        </div>
-
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div 
-                onClick={() => navigate('/space/objects-by-size')}
-                style={{
-                  width: 40, height: 40, borderRadius: 20,
-                  background: 'rgba(255,255,255,0.1)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: 'pointer', border: '1px solid rgba(255,255,255,0.2)'
-                }}
-              >
-                ←
+      <div className="space-module-page">
+        {/* Navigation Header */}
+        <div className="space-nav-header">
+          <div className="space-header-left">
+            <button className="space-back-btn" onClick={() => navigate('/space/objects-by-size')} title="Back">
+              <ArrowLeft size={18} />
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{
+                fontSize: '1.1rem', width: 30, height: 30,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%)', borderRadius: 8,
+                boxShadow: '0 2px 6px rgba(26,26,62,0.3)'
+              }}>
+                📏
               </div>
-              <h1 className="space-page-title" style={{ margin: 0, color: '#fff', WebkitTextFillColor: '#fff', textShadow: '0 2px 8px rgba(255,255,255,0.3)' }}>
+              <h1 className="space-page-title" style={{ margin: 0, color: '#111324', fontSize: '1.3rem', fontWeight: 900 }}>
                 Size Stack
               </h1>
             </div>
           </div>
 
-          <div style={{ padding: '0 4px', marginBottom: '24px' }}>
-            <h2 style={{ color: '#fff', marginBottom: '8px' }}>Select Difficulty</h2>
-            <p style={{ color: '#d1c4e9', fontSize: '1.1rem', lineHeight: '1.5' }}>
-              Drag and drop the objects in order from LARGEST to SMALLEST.
-            </p>
+        </div>
+
+        {/* Section Heading & Subtitle */}
+        <h2 className="space-section-heading" style={{ marginTop: 16, marginBottom: 4 }}>Select Difficulty</h2>
+        <p style={{ color: '#4a4e69', fontSize: '0.95rem', lineHeight: '1.5', margin: '0 0 20px', fontWeight: 500 }}>
+          Drag and drop the objects in order from <strong>LARGEST</strong> to <strong>SMALLEST</strong>.
+        </p>
+        
+        <div className="space-card-list">
+          <div className="space-card-item" onClick={() => startGame('beginner')}>
+            <div className="space-card-info">
+              <h3 className="space-card-title">Beginner</h3>
+              <p className="space-card-subtitle">Top 5 objects</p>
+            </div>
+            <div className="space-card-arrow">→</div>
           </div>
-          
-          <div className="space-card-list">
-            <div className="space-card-item light-card" onClick={() => startGame('beginner')}>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Beginner</h3>
-                <p className="space-card-subtitle">Top 5 objects</p>
-              </div>
-              <div className="space-card-arrow">→</div>
+          <div className="space-card-item" onClick={() => startGame('easy')}>
+            <div className="space-card-info">
+              <h3 className="space-card-title">Easy</h3>
+              <p className="space-card-subtitle">Top 10 objects</p>
             </div>
-            <div className="space-card-item light-card" onClick={() => startGame('easy')}>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Easy</h3>
-                <p className="space-card-subtitle">Top 10 objects</p>
-              </div>
-              <div className="space-card-arrow">→</div>
+            <div className="space-card-arrow">→</div>
+          </div>
+          <div className="space-card-item" onClick={() => startGame('medium')}>
+            <div className="space-card-info">
+              <h3 className="space-card-title">Medium</h3>
+              <p className="space-card-subtitle">Top 20 objects</p>
             </div>
-            <div className="space-card-item light-card" onClick={() => startGame('medium')}>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Medium</h3>
-                <p className="space-card-subtitle">Top 20 objects</p>
-              </div>
-              <div className="space-card-arrow">→</div>
+            <div className="space-card-arrow">→</div>
+          </div>
+          <div className="space-card-item" onClick={() => startGame('hard')}>
+            <div className="space-card-info">
+              <h3 className="space-card-title">Hard</h3>
+              <p className="space-card-subtitle">All 35 objects</p>
             </div>
-            <div className="space-card-item light-card" onClick={() => startGame('hard')}>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Hard</h3>
-                <p className="space-card-subtitle">All 35 objects</p>
-              </div>
-              <div className="space-card-arrow">→</div>
-            </div>
+            <div className="space-card-arrow">→</div>
           </div>
         </div>
       </div>
