@@ -129,8 +129,28 @@ export default function Profile() {
             <Pencil size={12} strokeWidth={3} />
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 20, marginBottom: 4 }}>
-          <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.8rem' }}>{name}</h2>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          gap: 8, 
+          marginTop: 20, 
+          marginBottom: 4,
+          maxWidth: '100%',
+          padding: '0 16px',
+          boxSizing: 'border-box'
+        }}>
+          <h2 style={{ 
+            fontFamily: 'var(--font-heading)', 
+            margin: 0, 
+            fontSize: '1.6rem',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: 'calc(100% - 36px)'
+          }}>
+            {name}
+          </h2>
           <div
             onClick={() => {
               setTempName(name);
@@ -139,18 +159,18 @@ export default function Profile() {
             style={{
               background: 'rgba(255,255,255,0.2)',
               borderRadius: '50%',
-              width: 26,
-              height: 26,
+              width: 28,
+              height: 28,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               border: '1px solid rgba(255,255,255,0.4)',
-              transition: 'transform 0.1s ease',
+              flexShrink: 0,
               color: '#fff'
             }}
           >
-            <Pencil size={12} strokeWidth={2.5} />
+            <Pencil size={13} strokeWidth={2.5} />
           </div>
         </div>
         <p style={{ opacity: 0.9, fontSize: '0.9rem', marginBottom: 20 }}>{user?.email}</p>
@@ -401,8 +421,9 @@ export default function Profile() {
             <input
               type="text"
               value={tempName}
-              onChange={e => setTempName(e.target.value)}
-              placeholder="Enter your name..."
+              onChange={e => setTempName(e.target.value.slice(0, 20))}
+              maxLength={20}
+              placeholder="Enter your name (max 20 chars)..."
               style={{
                 width: '100%',
                 padding: '14px 16px',
@@ -413,7 +434,8 @@ export default function Profile() {
                 marginBottom: 24,
                 outline: 'none',
                 color: '#333',
-                background: '#fcfcfc'
+                background: '#fcfcfc',
+                boxSizing: 'border-box'
               }}
               autoFocus
             />
@@ -435,7 +457,7 @@ export default function Profile() {
               </button>
               <button
                 onClick={async () => {
-                  const trimmed = tempName.trim();
+                  const trimmed = tempName.trim().slice(0, 20);
                   if (trimmed) {
                     setName(trimmed);
                     localStorage.setItem('learningjemz_name', trimmed);
