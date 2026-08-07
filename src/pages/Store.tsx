@@ -56,7 +56,7 @@ export default function Store() {
     }}>
       <Header />
 
-      {/* Centered Glassmorphic "Coming Soon" Overlay */}
+      {/* Centered Clean "Coming Soon" Overlay Card */}
       <div style={{
         position: 'absolute',
         top: 150,
@@ -65,39 +65,38 @@ export default function Store() {
         width: 'calc(100% - 32px)',
         maxWidth: 380,
         zIndex: 50,
-        background: 'rgba(10, 46, 29, 0.88)',
-        backdropFilter: 'blur(12px)',
-        border: '2px solid #38d989',
-        boxShadow: '0 12px 36px rgba(0,0,0,0.35)',
+        background: '#ffffff',
+        border: '3px solid #1c7c54',
+        boxShadow: '0 6px 0 #125538',
         borderRadius: 24,
         padding: '32px 24px',
         textAlign: 'center',
-        color: '#ffffff'
+        color: '#0e3d26'
       }}>
         <div style={{
           width: 60, height: 60, borderRadius: '50%',
-          background: 'rgba(56, 217, 137, 0.15)',
-          border: '2px solid #38d989',
+          background: '#e8f3ed',
+          border: '2px solid #1c7c54',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto 16px'
         }}>
-          <Lock size={28} color="#38d989" />
+          <Lock size={28} color="#1c7c54" />
         </div>
         <h2 style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: '1.5rem',
+          fontSize: '1.4rem',
           margin: '0 0 8px 0',
           fontWeight: 800,
-          color: '#ffffff'
+          color: '#0e3d26'
         }}>
           Jemz Store — Coming Soon!
         </h2>
         <p style={{
           margin: 0,
           fontSize: '0.88rem',
-          color: 'rgba(255, 255, 255, 0.85)',
+          color: '#496c5b',
           lineHeight: 1.5,
-          fontWeight: 500
+          fontWeight: 600
         }}>
           We're preparing exclusive avatar skins, streak freezes, and XP boosters. Stay tuned!
         </p>

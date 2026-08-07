@@ -142,25 +142,24 @@ button:active { transform: scale(0.97); }
   text-decoration: none;
 }
 
-/* Bottom navigation bar - Deep Forest Green with Spacious Mint Active Pill States */
+/* Bottom navigation bar - Solid Forest Green without glow effects */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 68px;
-  padding-bottom: 8px;
+  height: 66px;
+  padding-bottom: 6px;
   padding-top: 6px;
-  background: #061e14;
+  background: #0d3822;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+  border-top: 2px solid #165636;
   z-index: 100;
 }
 .bottom-nav a {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.65);
   font-size: 0.72rem;
   font-weight: 700;
   text-decoration: none;
@@ -169,14 +168,13 @@ button:active { transform: scale(0.97); }
   align-items: center;
   gap: 3px;
   padding: 6px 14px;
-  border-radius: 14px;
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  transition: all 0.15s ease;
 }
 .bottom-nav a.active { 
-  color: #38d989;
-  background: rgba(56, 217, 137, 0.14);
-  border: 1px solid rgba(56, 217, 137, 0.25);
-  transform: translateY(-2px);
+  color: #ffffff;
+  background: #1a5e3c;
+  border: 1px solid #287a51;
 }
 
 /* Auth Styles */

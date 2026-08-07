@@ -159,20 +159,20 @@ export default function Home() {
               top: '50%', left: '50%',
               transform: 'translate(-50%, -50%)',
               zIndex: 10,
-              background: 'rgba(10, 46, 29, 0.92)',
+              background: '#1c7c54',
               color: '#ffffff',
               fontSize: '0.72rem',
               fontWeight: 800,
               padding: '6px 12px',
               borderRadius: 12,
-              border: '1px solid #38d989',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              border: '1.5px solid #0e3d26',
+              boxShadow: '0 3px 0 #0e3d26',
               display: 'flex',
               alignItems: 'center',
               gap: 5,
               whiteSpace: 'nowrap'
             }}>
-              <Lock size={12} color="#38d989" /> Secret Module
+              <Lock size={12} color="#ffffff" /> Secret Module
             </div>
 
             {/* Blurred Card Content */}

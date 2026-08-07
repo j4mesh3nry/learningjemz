@@ -13,27 +13,23 @@ export function Header() {
   return (
     <div style={{ 
       position: 'sticky', top: 0, zIndex: 100,
-      background: 'linear-gradient(180deg, #051b10 0%, #092618 100%)',
+      background: '#eaf2ed',
       paddingTop: 12, paddingBottom: 10,
       margin: '-24px -16px 14px -16px',
       paddingLeft: 16, paddingRight: 16,
-      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-      boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
-      borderBottomLeftRadius: 18,
-      borderBottomRightRadius: 18,
+      borderBottom: '2px solid #c2ded0',
     }}>
       {/* Compact Header Row */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         {/* Logo Area */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #1c7c54, #38d989)',
+            background: '#1c7c54',
             borderRadius: '9px',
             padding: '5px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(56, 217, 137, 0.3)'
           }}>
             <Gem size={18} color="#ffffff" strokeWidth={2.5} />
           </div>
@@ -42,34 +38,33 @@ export function Header() {
             fontSize: '1.35rem',
             fontWeight: 800,
             letterSpacing: '-0.3px',
-            color: '#ffffff',
+            color: '#0e3d26',
             margin: 0,
           }}>
-            Learning<span style={{ color: '#38d989' }}>Jemz</span>
+            Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
           </h1>
         </div>
 
         {/* Level & Streak Compact Pill */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          background: 'rgba(255, 255, 255, 0.07)',
-          backdropFilter: 'blur(8px)',
+          background: '#ffffff',
           padding: '4px 10px', borderRadius: 20,
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          border: '1.5px solid #c2ded0',
+          boxShadow: '0 2px 0 #c2ded0',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <Flame 
               size={13} 
-              color={hasPlayedToday ? '#ff5252' : 'rgba(255,255,255,0.4)'} 
-              fill={hasPlayedToday ? '#ff5252' : 'rgba(255,255,255,0.2)'} 
+              color={hasPlayedToday ? '#e53935' : '#888888'} 
+              fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
             />
-            <span style={{ fontWeight: 800, fontSize: '0.78rem', color: hasPlayedToday ? '#ff6b6b' : 'rgba(255,255,255,0.6)' }}>
+            <span style={{ fontWeight: 800, fontSize: '0.78rem', color: hasPlayedToday ? '#e53935' : '#555555' }}>
               {streak ?? 0}
             </span>
           </div>
 
-          <div style={{ width: 1, height: 12, background: 'rgba(255,255,255,0.15)' }} />
+          <div style={{ width: 1, height: 12, background: '#c2ded0' }} />
 
           <div 
             onClick={() => navigate('/profile')} 
@@ -77,24 +72,24 @@ export function Header() {
             aria-label="Go to Profile" 
             role="button"
           >
-            <Star size={13} color="#ffc107" fill="#ffc107" />
-            <span style={{ fontWeight: 800, fontSize: '0.78rem', color: '#ffca28' }}>Lv.{level}</span>
+            <Star size={13} color="#f57f17" fill="#ffb300" />
+            <span style={{ fontWeight: 800, fontSize: '0.78rem', color: '#f57f17' }}>Lv.{level}</span>
           </div>
         </div>
       </div>
 
-      {/* Ultra-Slim XP Progress Bar */}
+      {/* XP Progress Bar */}
       <div>
         <div style={{
-          height: 4, borderRadius: 2, background: 'rgba(255, 255, 255, 0.1)', overflow: 'hidden',
+          height: 5, borderRadius: 3, background: '#c2ded0', overflow: 'hidden',
         }}>
           <div style={{
-            height: '100%', borderRadius: 2, width: `${pct}%`,
-            background: 'linear-gradient(90deg, #1c7c54, #38d989)',
+            height: '100%', borderRadius: 3, width: `${pct}%`,
+            background: '#1c7c54',
             transition: 'width 0.4s ease',
           }} />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.66rem', color: 'rgba(255, 255, 255, 0.65)', marginTop: 3, fontWeight: 500 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: '#496c5b', marginTop: 3, fontWeight: 600 }}>
           <span>{xpInLevel}/100 XP</span>
           <span>Next: Lv.{level + 1}</span>
         </div>
