@@ -7,6 +7,21 @@ import { Trophy, Flame, Zap } from 'lucide-react';
 import { Header } from '../components/Header';
 import '../index.css';
 
+// Helper to calculate effective streak based on last_visit date
+const getEffectiveStreak = (item: any) => {
+  if (!item || !item.last_visit) return 0;
+  const todayStr = new Date().toDateString();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toDateString();
+
+  const itemDate = new Date(item.last_visit).toDateString();
+  if (itemDate === todayStr || itemDate === yesterdayStr) {
+    return item.streak || 0;
+  }
+  return 0;
+};
+
 export default function Leaderboard() {
   const { user } = useAuth();
   const { xp, level, streak } = useGame();
@@ -18,7 +33,7 @@ export default function Leaderboard() {
     if (isInitial) setLoading(true);
     const { data, error } = await supabase
       .from('game_progress')
-      .select('id, xp, level, streak, name, avatar')
+      .select('id, xp, level, streak, last_visit, name, avatar')
       .order(sortBy, { ascending: false })
       .order('xp', { ascending: false })
       .limit(50);
@@ -49,8 +64,8 @@ export default function Leaderboard() {
     setSortBy(newSortBy);
     // Instant in-memory sort to prevent layout jump/flicker
     setLeaders(prev => [...prev].sort((a, b) => {
-      const valA = Number(a[newSortBy]) || 0;
-      const valB = Number(b[newSortBy]) || 0;
+      const valA = newSortBy === 'streak' ? getEffectiveStreak(a) : (Number(a.xp) || 0);
+      const valB = newSortBy === 'streak' ? getEffectiveStreak(b) : (Number(b.xp) || 0);
       if (valB !== valA) return valB - valA;
       return (Number(b.xp) || 0) - (Number(a.xp) || 0);
     }));
@@ -156,7 +171,7 @@ export default function Leaderboard() {
               else if (rank === 3) rankDisplay = <div style={{ fontSize: '1.5rem' }}>🥉</div>;
               else rankDisplay = <div style={{ fontWeight: 700, color: '#999', fontSize: '1.1rem' }}>{rank}</div>;
 
-              const leaderStreak = leader.streak || 0;
+              const leaderStreak = getEffectiveStreak(leader);
               const leaderStreakIsZero = leaderStreak === 0;
               const dayLabel = (leaderStreak === 0 || leaderStreak === 1) ? 'Day' : 'Days';
 
