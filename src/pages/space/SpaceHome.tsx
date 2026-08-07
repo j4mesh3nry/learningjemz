@@ -137,18 +137,7 @@ function SpaceHub() {
               <div className="space-card-arrow">→</div>
             </Card>
 
-            <Card
-              className="space-card-item"
-              onClick={() => navigate('/space/illuminate')}
-              ariaLabel="Sun & Shadow Sim"
-            >
-              <div className="space-card-icon">☀️</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Sun & Shadow Sim</h3>
-                <p className="space-card-subtitle">Explore day, night & planetary light</p>
-              </div>
-              <div className="space-card-arrow">→</div>
-            </Card>
+
             <Card className="space-card-item locked" ariaLabel="Secret Challenge (Locked)" onClick={() => {}}>
               <div className="space-card-icon">❓</div>
               <div className="space-card-info">
@@ -185,18 +174,7 @@ function SpaceHub() {
               <div className="space-card-arrow">→</div>
             </Card>
 
-            <Card
-              className="space-card-item"
-              onClick={() => navigate('/space/size-stack')}
-              ariaLabel="Size Stack Challenge"
-            >
-              <div className="space-card-icon">🥞</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Size Stack Challenge</h3>
-                <p className="space-card-subtitle">Stack celestial bodies by scale</p>
-              </div>
-              <div className="space-card-arrow">→</div>
-            </Card>
+
 
             <Card
               className="space-card-item"
