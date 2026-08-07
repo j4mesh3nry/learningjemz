@@ -268,9 +268,11 @@ export default function IlluminateSystem() {
                 <div className="space-card-info">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <h3 className="space-card-title">{diff.name}</h3>
-                    <span style={{ fontSize: '0.8rem', color: '#ff4d4d', fontWeight: 'bold' }}>
-                      {'❤️'.repeat(diff.maxLives)}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                      {Array.from({ length: diff.maxLives }).map((_, i) => (
+                        <Heart key={i} size={13} fill="#ff4d4d" color="#ff4d4d" />
+                      ))}
+                    </div>
                   </div>
                   <p className="space-card-subtitle">{diff.label}</p>
                   {pbTime !== undefined && (
@@ -420,8 +422,13 @@ export default function IlluminateSystem() {
                 <Zap size={16} /> NEW PERSONAL BEST!
               </div>
             )}
-            <div style={{ color: '#ff4d4d', fontSize: '0.95rem' }}>
-              Lives Left: {'❤️'.repeat(lives)}
+            <div style={{ color: '#ff4d4d', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span>Lives Left:</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                {Array.from({ length: lives }).map((_, i) => (
+                  <Heart key={i} size={14} fill="#ff4d4d" color="#ff4d4d" />
+                ))}
+              </div>
             </div>
           </div>
         }
@@ -437,7 +444,14 @@ export default function IlluminateSystem() {
       {isGameOver && (
         <div className="ss-victory-overlay">
           <div className="ss-victory-card" style={{ border: '2px solid rgba(239, 83, 80, 0.4)' }}>
-            <div style={{ fontSize: '4rem', marginBottom: '0.5rem' }}>💔</div>
+            <div style={{
+              width: 60, height: 60, margin: '0 auto 0.75rem',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(239, 83, 80, 0.15)', border: '2px solid rgba(239, 83, 80, 0.4)',
+              borderRadius: '50%', boxShadow: '0 0 20px rgba(239, 83, 80, 0.3)'
+            }}>
+              <Heart size={30} color="#ef5350" fill="transparent" strokeWidth={2.5} />
+            </div>
             <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', color: '#ff4d4d', fontWeight: 900 }}>
               Game Over
             </h2>
