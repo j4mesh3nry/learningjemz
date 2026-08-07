@@ -58,7 +58,7 @@ export const getBookContent = async (_key) => {
 };
 
 export const getCoverUrl = (coverId, size = 'M') => {
-  if (!coverId) return null; // Can use a placeholder in UI
+  if (!coverId) return '';
   return `https://covers.openlibrary.org/b/id/${coverId}-${size}.jpg`;
 };
 

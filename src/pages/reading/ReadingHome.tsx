@@ -112,7 +112,7 @@ const LibraryView = () => {
           >
             <div style={{ height: 120, background: '#e1f0e2', borderRadius: 10, overflow: 'hidden', marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img
-                src={getCoverUrl(book.cover_i)}
+                src={getCoverUrl(book.cover_i || undefined)}
                 alt={book.title}
                 style={{ height: '100%', objectFit: 'cover' }}
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
