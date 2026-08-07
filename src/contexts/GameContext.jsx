@@ -6,8 +6,6 @@ import { ACHIEVEMENTS } from '../utils/achievements';
 
 const GameContext = createContext();
 
-const STORAGE_KEY = 'learningjemz-game-state';
-
 const defaultState = {
   xp: 0,
   level: 1,
@@ -34,9 +32,14 @@ const defaultState = {
   achievements: []
 };
 
-function getLocalState() {
+export function getStorageKey(userId) {
+  return userId ? `learningjemz-game-state_${userId}` : 'learningjemz-game-state_guest';
+}
+
+export function getLocalState(userId) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const key = getStorageKey(userId);
+    const raw = localStorage.getItem(key);
     return raw ? { ...defaultState, ...JSON.parse(raw) } : defaultState;
   } catch {
     return defaultState;
@@ -48,24 +51,24 @@ export function GameProvider({ children }) {
   const [state, setState] = useState(defaultState);
   const isInitialized = useRef(false);
 
-  // Initialize and Sync
+  // Initialize and Sync per logged-in User Account
   useEffect(() => {
     let isMounted = true;
     isInitialized.current = false; // Prevent saving old state while fetching
 
-    const initializeState = async () => {
-      const localState = getLocalState();
-      
-      if (!user) {
-        // If not logged in, just use local state
-        if (isMounted) {
-          setState(localState);
-          isInitialized.current = true;
-        }
-        return;
+    if (!user) {
+      if (isMounted) {
+        setState(getLocalState(null));
+        isInitialized.current = true;
       }
+      return;
+    }
 
-      // User is logged in, fetch from Supabase
+    // Reset to defaultState while fetching new user's progress from cloud
+    // to prevent previous user's in-memory state from leaking!
+    setState(defaultState);
+
+    const initializeState = async () => {
       const [progressResponse, achievementsResponse] = await Promise.all([
         supabase.from('game_progress').select('*').eq('id', user.id).single(),
         supabase.from('achievements').select('*').eq('user_id', user.id)
@@ -76,52 +79,50 @@ export function GameProvider({ children }) {
       if (!isMounted) return;
 
       if (data) {
-        // We have remote data, use it (camelCase it because DB uses snake_case)
+        // Remote data exists -> camelCase DB snake_case fields
         const remoteState = {
-          xp: data.xp,
-          level: data.level,
-          streak: data.streak,
-          maxStreak: data.max_streak,
-          lastVisit: data.last_visit,
-          chessWins: data.chess_wins,
-          puzzlesSolved: data.puzzles_solved,
-          provincesCorrect: data.provinces_correct,
-          readingMinutes: data.reading_minutes,
-          flashcardsMastered: data.flashcards_mastered,
-          booksReading: data.books_reading,
-          quizHighScore: data.quiz_high_score,
-          botStats: data.bot_stats || {
-            Easy: localState.botStats?.Easy || defaultState.botStats.Easy,
-            Medium: localState.botStats?.Medium || defaultState.botStats.Medium,
-            Hard: localState.botStats?.Hard || defaultState.botStats.Hard
-          },
-          illuminateStats: data.illuminate_stats || data.bot_stats?.illuminate || localState.illuminateStats || defaultState.illuminateStats,
+          xp: data.xp || 0,
+          level: data.level || 1,
+          streak: data.streak || 0,
+          maxStreak: data.max_streak || 0,
+          lastVisit: data.last_visit || null,
+          chessWins: data.chess_wins || 0,
+          puzzlesSolved: data.puzzles_solved || 0,
+          provincesCorrect: data.provinces_correct || 0,
+          readingMinutes: data.reading_minutes || 0,
+          flashcardsMastered: data.flashcards_mastered || 0,
+          booksReading: data.books_reading || 0,
+          quizHighScore: data.quiz_high_score || 0,
+          botStats: data.bot_stats || defaultState.botStats,
+          illuminateStats: data.illuminate_stats || data.bot_stats?.illuminate || defaultState.illuminateStats,
           achievements: achievementsData.map(a => ({ id: a.achievement_id, unlockedAt: a.unlocked_at }))
         };
         setState(remoteState);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(remoteState));
+        localStorage.setItem(getStorageKey(user.id), JSON.stringify(remoteState));
       } else if (error && error.code === 'PGRST116') {
-        // No row exists (first login), migrate local data to Supabase
+        // NEW USER ACCOUNT! Start fresh with defaultState (0 streak, 0 XP, level 1)
+        const cleanState = { ...defaultState };
         const dbPayload = {
           id: user.id,
-          xp: localState.xp,
-          level: localState.level,
-          streak: localState.streak,
-          max_streak: localState.maxStreak,
-          last_visit: localState.lastVisit,
-          chess_wins: localState.chessWins,
-          puzzles_solved: localState.puzzlesSolved,
-          provinces_correct: localState.provincesCorrect,
-          reading_minutes: localState.readingMinutes,
-          flashcards_mastered: localState.flashcardsMastered,
-          books_reading: localState.booksReading,
-          quiz_high_score: localState.quizHighScore,
-          bot_stats: { ...localState.botStats, illuminate: localState.illuminateStats },
+          xp: cleanState.xp,
+          level: cleanState.level,
+          streak: cleanState.streak,
+          max_streak: cleanState.maxStreak,
+          last_visit: cleanState.lastVisit,
+          chess_wins: cleanState.chessWins,
+          puzzles_solved: cleanState.puzzlesSolved,
+          provinces_correct: cleanState.provincesCorrect,
+          reading_minutes: cleanState.readingMinutes,
+          flashcards_mastered: cleanState.flashcardsMastered,
+          books_reading: cleanState.booksReading,
+          quiz_high_score: cleanState.quizHighScore,
+          bot_stats: { ...cleanState.botStats, illuminate: cleanState.illuminateStats },
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
           avatar: user.user_metadata?.avatar || '👤'
         };
         await supabase.from('game_progress').insert([dbPayload]);
-        setState(localState);
+        setState(cleanState);
+        localStorage.setItem(getStorageKey(user.id), JSON.stringify(cleanState));
       }
       
       isInitialized.current = true;
@@ -132,7 +133,7 @@ export function GameProvider({ children }) {
     return () => { isMounted = false; };
   }, [user]);
 
-  // Streak is now handled by recordActivity called upon completing a game/puzzle
+  // Streak activity recording
   const recordActivity = () => {
     const todayStr = new Date().toDateString();
 
@@ -165,11 +166,12 @@ export function GameProvider({ children }) {
     return true;
   };
 
-  // Save to DB and LocalStorage whenever state changes
+  // Save to DB and LocalStorage whenever state changes for current user
   useEffect(() => {
     if (!isInitialized.current) return;
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const storageKey = getStorageKey(user?.id);
+    localStorage.setItem(storageKey, JSON.stringify(state));
 
     if (user) {
       const dbPayload = {
@@ -198,142 +200,100 @@ export function GameProvider({ children }) {
   const unlockAchievement = useCallback(async (achievementId) => {
     if (state.achievements.some(a => a.id === achievementId)) return;
     
-    const newAchievement = { id: achievementId, unlockedAt: new Date().toISOString() };
-    setState(prev => ({ ...prev, achievements: [...prev.achievements, newAchievement] }));
+    const achievement = ACHIEVEMENTS.find(a => a.id === achievementId);
+    if (!achievement) return;
+
+    const unlockedAt = new Date().toISOString();
     
+    setState(prev => ({
+      ...prev,
+      achievements: [...prev.achievements, { id: achievementId, unlockedAt }]
+    }));
+
     if (user) {
       await supabase.from('achievements').insert([{
         user_id: user.id,
         achievement_id: achievementId,
-        unlocked_at: newAchievement.unlockedAt
+        unlocked_at: unlockedAt
       }]);
     }
   }, [state.achievements, user]);
 
-  // Auto-evaluate achievements
-  useEffect(() => {
-    if (!isInitialized.current) return;
-    
-    ACHIEVEMENTS.forEach(ach => {
-      if (ach.condition(state) && !state.achievements.some(a => a.id === ach.id)) {
-        unlockAchievement(ach.id);
-      }
-    });
-  }, [state, unlockAchievement]);
-
-  const addXp = (amount) => {
+  const addXP = useCallback((amount) => {
     setState(prev => {
-      const newTotal = prev.xp + amount;
-      const newLevel = Math.floor(newTotal / 100) + 1;
-      return { ...prev, xp: newTotal, level: newLevel };
-    });
-  };
-
-  const winChessGame = (difficulty = 'Easy') => {
-    const xpReward = difficulty === 'Hard' ? 20 : difficulty === 'Medium' ? 15 : 10;
-    setState(prev => ({ ...prev, chessWins: prev.chessWins + 1 }));
-    addXp(xpReward);
-    return xpReward;
-  };
-
-  const recordChessGame = (difficulty, won) => {
-    setState(prev => {
-      const currentStats = prev.botStats || defaultState.botStats;
-      const diffStats = currentStats[difficulty] || { played: 0, won: 0, lost: 0 };
-      
+      const newXP = (prev.xp || 0) + amount;
+      const newLevel = Math.floor(newXP / 100) + 1;
       return {
         ...prev,
+        xp: newXP,
+        level: newLevel
+      };
+    });
+  }, []);
+
+  const winChessGame = useCallback((difficulty) => {
+    const xpGained = difficulty === 'Hard' ? 30 : difficulty === 'Medium' ? 20 : 10;
+    addXP(xpGained);
+    return xpGained;
+  }, [addXP]);
+
+  const recordChessGame = useCallback((difficulty, won) => {
+    setState(prev => {
+      const currentBot = prev.botStats?.[difficulty] || { played: 0, won: 0, lost: 0 };
+      return {
+        ...prev,
+        chessWins: won ? (prev.chessWins || 0) + 1 : (prev.chessWins || 0),
         botStats: {
-          ...currentStats,
+          ...prev.botStats,
           [difficulty]: {
-            ...diffStats,
-            played: diffStats.played + 1,
-            won: diffStats.won + (won ? 1 : 0),
-            lost: diffStats.lost + (won ? 0 : 1)
+            played: currentBot.played + 1,
+            won: won ? currentBot.won + 1 : currentBot.won,
+            lost: won ? currentBot.lost : currentBot.lost + 1
           }
         }
       };
     });
-  };
-
-  const solvePuzzle = () => {
-    setState(prev => ({ ...prev, puzzlesSolved: prev.puzzlesSolved + 1 }));
-    addXp(5);
-  };
-
-  const answerProvinceCorrect = () => {
-    setState(prev => ({ ...prev, provincesCorrect: prev.provincesCorrect + 1 }));
-    addXp(2);
-  };
-
-  const masterFlashcard = () => {
-    setState(prev => ({ ...prev, flashcardsMastered: prev.flashcardsMastered + 1 }));
-    addXp(2);
-  };
-
-  const readForMinutes = (mins) => {
-    setState(prev => ({ ...prev, readingMinutes: prev.readingMinutes + mins }));
-    addXp(mins);
-  };
-
-  const startReadingBook = () => {
-    setState(prev => ({ ...prev, booksReading: prev.booksReading + 1 }));
-  };
-
-  const updateQuizHighScore = (score) => {
-    setState(prev => ({ ...prev, quizHighScore: Math.max(prev.quizHighScore, score) }));
-  };
+  }, []);
 
   const recordIlluminateTime = useCallback((difficulty, timeInSeconds) => {
-    let isNewBest = false;
     setState(prev => {
-      const currentPBs = prev.illuminateStats || defaultState.illuminateStats;
-      const currentBest = currentPBs[difficulty];
-      if (currentBest === null || currentBest === undefined || timeInSeconds < currentBest) {
-        isNewBest = true;
+      const currentStats = prev.illuminateStats || { easy: null, medium: null, hard: null };
+      const currentBest = currentStats[difficulty];
+      const isNewBest = currentBest === null || timeInSeconds < currentBest;
+      if (isNewBest) {
         return {
           ...prev,
           illuminateStats: {
-            ...currentPBs,
+            ...currentStats,
             [difficulty]: timeInSeconds
           }
         };
       }
       return prev;
     });
-    return isNewBest;
   }, []);
 
-  const todayStr = new Date().toDateString();
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toDateString();
+  const hasPlayedToday = (() => {
+    if (!state.lastVisit) return false;
+    const lastVisitDate = new Date(state.lastVisit);
+    if (isNaN(lastVisitDate.getTime())) return false;
+    return lastVisitDate.toDateString() === new Date().toDateString();
+  })();
 
-  const lastVisitDate = state.lastVisit ? new Date(state.lastVisit).toDateString() : null;
-  const hasPlayedToday = lastVisitDate === todayStr;
-  const hasPlayedYesterday = lastVisitDate === yesterdayStr;
-
-  // Streak is valid if user played today or yesterday; otherwise broken (0)
-  const currentStreak = (hasPlayedToday || hasPlayedYesterday) ? (state.streak || 0) : 0;
-
-  const value = { 
-    ...state, 
-    streak: currentStreak,
-    hasPlayedToday,
-    addXp,
-    winChessGame,
-    recordChessGame,
-    solvePuzzle,
-    answerProvinceCorrect,
-    masterFlashcard,
-    readForMinutes,
-    startReadingBook,
-    updateQuizHighScore,
-    recordActivity,
-    recordIlluminateTime
-  };
-
-  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
+  return (
+    <GameContext.Provider value={{
+      ...state,
+      hasPlayedToday,
+      recordActivity,
+      unlockAchievement,
+      addXP,
+      winChessGame,
+      recordChessGame,
+      recordIlluminateTime
+    }}>
+      {children}
+    </GameContext.Provider>
+  );
 }
 
 export function useGame() {

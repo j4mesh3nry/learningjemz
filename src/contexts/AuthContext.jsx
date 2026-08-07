@@ -46,9 +46,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    localStorage.removeItem('learningjemz_name');
-    localStorage.removeItem('learningjemz_avatar');
-    localStorage.removeItem('learningjemz-game-state');
+    // Clear all learningjemz keys on logout to prevent state pollution across user accounts
+    try {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('learningjemz')) {
+          localStorage.removeItem(key);
+        }
+      });
+    } catch {}
+
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };
