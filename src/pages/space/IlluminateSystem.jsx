@@ -21,46 +21,23 @@ export default function IlluminateSystem() {
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [isError, setIsError] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-  const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
-  
-  const containerRef = useRef(null);
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.visualViewport) return;
-    
-    const updateLayout = () => {
-      if (!containerRef.current) return;
-      // Precisely match the visual viewport to prevent keyboard overlap on iOS
-      containerRef.current.style.height = `${window.visualViewport.height}px`;
-      containerRef.current.style.top = `${window.visualViewport.offsetTop}px`;
-      window.scrollTo(0, 0);
-    };
-
-    window.visualViewport.addEventListener('resize', updateLayout);
-    window.visualViewport.addEventListener('scroll', updateLayout);
-    // Initial call
-    updateLayout();
-
-    return () => {
-      window.visualViewport.removeEventListener('resize', updateLayout);
-      window.visualViewport.removeEventListener('scroll', updateLayout);
-    };
-  }, []);
-
-  const scrollToCurrentPlanet = () => {
+  const scrollToCurrentPlanet = (isFocused = false) => {
     setTimeout(() => {
       const el = document.getElementById(`planet-${currentIndex}`);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // When focused, the top of the container might be pushed off-screen by the mobile keyboard.
+        // Using block: 'end' ensures the planet is positioned at the bottom of the grid container, 
+        // which is exactly where the user is looking (right above the input box).
+        el.scrollIntoView({ behavior: 'smooth', block: isFocused ? 'end' : 'center' });
       }
     }, 100);
   };
 
   useEffect(() => {
     if (level && !isComplete) {
-      scrollToCurrentPlanet();
+      scrollToCurrentPlanet(document.activeElement === inputRef.current);
     }
   }, [currentIndex, level, isComplete]);
 
@@ -75,7 +52,7 @@ export default function IlluminateSystem() {
     // Focus input on start without triggering browser page scroll
     setTimeout(() => {
       inputRef.current?.focus({ preventScroll: true });
-      scrollToCurrentPlanet();
+      scrollToCurrentPlanet(true);
     }, 100);
   };
 
@@ -204,11 +181,7 @@ export default function IlluminateSystem() {
   }
 
   return (
-    <div 
-      ref={containerRef}
-      className="space-module-page ss-dark-theme illum-game-container" 
-      style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 100 }}
-    >
+    <div className="space-module-page ss-dark-theme illum-game-container">
       <div className="space-nav-header ss-header" style={{ flexShrink: 0 }}>
         <button className="space-back-btn" onClick={() => setLevel(null)}>←</button>
         <h1 className="space-page-title">Illuminate the System</h1>
@@ -285,7 +258,8 @@ export default function IlluminateSystem() {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onFocus={scrollToCurrentPlanet}
+              onFocus={() => scrollToCurrentPlanet(true)}
+              onBlur={() => scrollToCurrentPlanet(false)}
               placeholder={`Type #${currentIndex + 1} (${gameData[currentIndex]?.type || 'Object'})...`}
               className={`illum-input ${isError ? 'illum-error' : ''}`}
               autoComplete="off"
