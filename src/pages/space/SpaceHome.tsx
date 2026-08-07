@@ -13,7 +13,7 @@ import './space.css';
 
 function SpaceHub() {
   const navigate = useNavigate();
-  const { level, streak, flashcardsMastered, quizHighScore, hasPlayedToday } = useGame();
+  const { level, streak, hasPlayedToday } = useGame();
 
   return (
     <div className="space-module-page">

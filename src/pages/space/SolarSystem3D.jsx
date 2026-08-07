@@ -1,8 +1,8 @@
 import React, { useState, useRef, useMemo, Suspense } from 'react';
-import { Canvas, useFrame, extend } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Html, useTexture, Preload } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, X, Info, ChevronRight } from 'lucide-react';
+import { ArrowLeft, X, Info } from 'lucide-react';
 import * as THREE from 'three';
 import { planets, sunData } from '../../data/space-data.js';
 import './space.css';
@@ -92,8 +92,6 @@ const Sun = React.forwardRef(({ onSelect }, ref) => {
   
   const meshRef = useRef();
   const sunTexture = useTexture(TEXTURE_PATHS.Sun);
-  const [hovered, setHovered] = useState(false);
-
   useFrame((_, delta) => {
     if (meshRef.current) meshRef.current.rotation.y += delta * 0.05;
   });
@@ -103,8 +101,8 @@ const Sun = React.forwardRef(({ onSelect }, ref) => {
       <mesh 
         ref={meshRef}
         onClick={(e) => { e.stopPropagation(); onSelect(sunData); }}
-        onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
-        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
+        onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { document.body.style.cursor = 'auto'; }}
       >
         <sphereGeometry args={[2.2, 64, 64]} />
         <meshBasicMaterial map={sunTexture} />
@@ -165,7 +163,7 @@ function Moon({ config }) {
 }
 
 /* ─── Planet component ─── */
-const Planet = React.forwardRef(({ data, config, onSelect, isSelected }, ref) => {
+const Planet = React.forwardRef(({ data, config, onSelect }, ref) => {
   const groupRef = useRef();
   
   React.useImperativeHandle(ref, () => groupRef.current);
@@ -268,7 +266,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, isSelected }, ref) =>
 });
 
 /* ─── Info Panel Component ─── */
-function InfoPanel({ planet, onClose, onFlashcards }) {
+function InfoPanel({ planet, onClose }) {
   if (!planet) return null;
   return (
     <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, padding: '0 12px 16px', animation: 'slideUp 0.3s ease' }}>
@@ -423,7 +421,7 @@ export default function SolarSystem3D() {
         <Preload all />
       </Canvas>
 
-      <InfoPanel planet={selected} onClose={() => setSelected(null)} onFlashcards={() => navigate('/space/flashcards')} />
+      <InfoPanel planet={selected} onClose={() => setSelected(null)} />
 
       <style>{`@keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`}</style>
     </div>

@@ -9,7 +9,7 @@ import '../../pages/geo/geo.css';
 
 function GeoDashboard() {
   const navigate = useNavigate();
-  const { xp, level, streak, provincesCorrect, hasPlayedToday } = useGame();
+  const { level, streak, provincesCorrect, hasPlayedToday } = useGame();
 
   return (
     <div className="geo-module-page">

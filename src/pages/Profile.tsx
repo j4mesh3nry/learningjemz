@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useGame } from '../contexts/GameContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { ACHIEVEMENTS } from '../utils/achievements.js';
-import { Settings, LogOut, Flame, Trophy, Map as MapIcon, BookOpen, Rocket, Check, Lock, Pencil } from 'lucide-react';
-import { supabase } from '../utils/supabase.js';
+import { Settings, LogOut, Trophy, BookOpen, Rocket, Lock, Pencil } from 'lucide-react';
 import { updateAvatar, updateName } from '../api/supabase.js';
 import '../index.css';
 
@@ -12,10 +11,7 @@ export default function Profile() {
   const { xp, level, streak, hasPlayedToday, booksReading, readingMinutes, flashcardsMastered, quizHighScore, achievements } = useGame();
   const { user, logout } = useAuth();
 
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const today = new Date().getDay(); // 0=Sun, 1=Mon
-  const currentDayIdx = today === 0 ? 6 : today - 1;
-  const refDayIdx = hasPlayedToday ? currentDayIdx : (currentDayIdx - 1 + 7) % 7;
+
 
   const [avatar, setAvatar] = useState(() => user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar') || '👤');
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);

@@ -16,12 +16,6 @@ export default function MapExplorer() {
     if (province) setSelectedProvince(province);
   };
 
-  const filteredProvinces = provinces.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTab = activeTab === 'All' || p.island_group === activeTab;
-    return matchesSearch && matchesTab;
-  });
-
   return (
     <div className="map-explorer">
       <div className="explorer-header">

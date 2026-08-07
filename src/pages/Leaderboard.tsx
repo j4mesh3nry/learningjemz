@@ -3,14 +3,13 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
-import { Trophy, Gem } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Trophy } from 'lucide-react';
 import { Header } from '../components/Header';
 import '../index.css';
 
 export default function Leaderboard() {
   const { user } = useAuth();
-  const { xp, level, streak } = useGame();
+  const { xp, level } = useGame();
   const [leaders, setLeaders] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -32,7 +31,7 @@ export default function Leaderboard() {
 
     const subscription = supabase
       .channel('public:game_progress')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'game_progress' }, payload => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'game_progress' }, () => {
         fetchLeaders();
       })
       .subscribe();
@@ -41,10 +40,6 @@ export default function Leaderboard() {
       supabase.removeChannel(subscription);
     };
   }, []);
-
-
-  const top3 = leaders.slice(0, 3);
-  const rest = leaders.slice(3);
 
   const currentUserRankIndex = leaders.findIndex(l => l.id === user?.id);
   const currentUserRank = currentUserRankIndex !== -1 ? currentUserRankIndex + 1 : '> 50';

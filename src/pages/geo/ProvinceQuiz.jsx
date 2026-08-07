@@ -26,7 +26,7 @@ export default function ProvinceQuiz() {
   const [sessionXp, setSessionXp] = useState(0);
   const [igniting, setIgniting] = useState(false);
   const [displayedStreak, setDisplayedStreak] = useState(0);
-  const { streak, recordActivity, hasPlayedToday } = useGame();
+  const { streak, recordActivity } = useGame();
 
   useEffect(() => {
     startNewGame();

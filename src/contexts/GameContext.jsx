@@ -1,5 +1,5 @@
 /* src/contexts/GameContext.jsx */
-import { createContext, useContext, useEffect, useState, useRef } from 'react';
+import { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from './AuthContext';
 import { ACHIEVEMENTS } from '../utils/achievements';
@@ -180,7 +180,7 @@ export function GameProvider({ children }) {
     }
   }, [state, user]);
 
-  const unlockAchievement = async (achievementId) => {
+  const unlockAchievement = useCallback(async (achievementId) => {
     if (state.achievements.some(a => a.id === achievementId)) return;
     
     const newAchievement = { id: achievementId, unlockedAt: new Date().toISOString() };
@@ -193,7 +193,7 @@ export function GameProvider({ children }) {
         unlocked_at: newAchievement.unlockedAt
       }]);
     }
-  };
+  }, [state.achievements, user]);
 
   // Auto-evaluate achievements
   useEffect(() => {
@@ -204,7 +204,7 @@ export function GameProvider({ children }) {
         unlockAchievement(ach.id);
       }
     });
-  }, [state]);
+  }, [state, unlockAchievement]);
 
   const addXp = (amount) => {
     setState(prev => {

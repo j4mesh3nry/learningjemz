@@ -1,7 +1,6 @@
 // src/pages/Home.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGame } from '../contexts/GameContext.jsx';
 import { Card } from '../components/Card';
 import { Header } from '../components/Header';
 import '../index.css';
@@ -35,7 +34,7 @@ const lockedModules = [
 ];
 
 function StarDots() {
-  const dots = Array.from({ length: 20 }, (_, i) => ({
+  const dots = Array.from({ length: 20 }, () => ({
     x: Math.random() * 100,
     y: Math.random() * 100,
     size: Math.random() * 2 + 1,
@@ -56,7 +55,7 @@ function StarDots() {
   );
 }
 
-import { Gem } from 'lucide-react';
+
 
 export default function Home() {
   const navigate = useNavigate();

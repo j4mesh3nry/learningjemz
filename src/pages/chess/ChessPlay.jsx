@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, Swords, Percent, Eye } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -32,7 +32,7 @@ export default function ChessPlay() {
   const [legalMoves, setLegalMoves] = useState([]);
   const [difficulty, setDifficulty] = useState(null); // null means in selection screen
   const [isFlipped, setIsFlipped] = useState(false);
-  const [status, setStatus] = useState('');
+  // const [status, setStatus] = useState(''); // removed unused state
   const [history, setHistory] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
   const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
@@ -47,7 +47,7 @@ export default function ChessPlay() {
   const [playerColor, setPlayerColor] = useState('w');
   const navigate = useNavigate();
   const historyScrollRef = React.useRef(null);
-  const { winChessGame, recordChessGame, addXp, level, streak, recordActivity, hasPlayedToday, botStats } = useGame();
+  const { winChessGame, recordChessGame, level, streak, recordActivity, hasPlayedToday, botStats } = useGame();
   const { user } = useAuth();
   const workerRef = React.useRef(null);
 

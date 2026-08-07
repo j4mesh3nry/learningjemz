@@ -22,13 +22,7 @@ const GeoHome = lazy(() => import('./pages/geo/GeoHome.tsx'));
 const ReadingHome = lazy(() => import('./pages/reading/ReadingHome.tsx'));
 const SpaceHome = lazy(() => import('./pages/space/SpaceHome.tsx'));
 
-// Placeholder components for new routes
-const Placeholder = ({ title }) => (
-  <div style={{ padding: '2rem', textAlign: 'center' }}>
-    <h2>{title}</h2>
-    <p>Coming Soon!</p>
-  </div>
-);
+
 
 // Loading spinner for Suspense fallback
 const LoadingFallback = () => (
@@ -84,7 +78,7 @@ function Layout() {
     if (location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/signup') {
       navigate('/', { replace: true });
     }
-  }, []);
+  }, [location.pathname, navigate]);
 
   return (
     <div style={{ paddingBottom: showNav ? '65px' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>

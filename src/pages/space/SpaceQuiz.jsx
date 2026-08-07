@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '../../contexts/GameContext.jsx';
 import { quizQuestions } from '../../data/space-data.js';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import './space.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -23,23 +23,9 @@ export default function SpaceQuiz() {
   const [igniting, setIgniting] = useState(false);
   const [displayedStreak, setDisplayedStreak] = useState(0);
   const [streakIncreased, setStreakIncreased] = useState(false);
-  const { streak, recordActivity, hasPlayedToday } = useGame();
+  const { streak, recordActivity } = useGame();
 
-  useEffect(() => {
-    startQuiz();
-  }, [filter]);
-
-  useEffect(() => {
-    let interval;
-    if (timerActive && timer > 0) {
-      interval = setInterval(() => setTimer(t => t - 1), 1000);
-    } else if (timer === 0 && timerActive) {
-      handleAnswer(-1); // Time out
-    }
-    return () => clearInterval(interval);
-  }, [timer, timerActive]);
-
-  const startQuiz = () => {
+  const startQuiz = useCallback(() => {
     let filtered = quizQuestions;
     if (filter !== 'all') {
       filtered = quizQuestions.filter(q => q.category === filter);
@@ -68,9 +54,33 @@ export default function SpaceQuiz() {
     setSessionXp(0);
     setIgniting(false);
     setStreakIncreased(false);
-  };
+  }, [filter]);
 
-  const handleAnswer = (index) => {
+  const finishQuiz = useCallback((finalScore) => {
+    setIsFinished(true);
+    setTimerActive(false);
+    
+    const savedStats = JSON.parse(localStorage.getItem('learningjemz-space-stats') || '{"cardsMastered":0,"quizHighScore":0,"planetsExplored":0}');
+    if (finalScore > savedStats.quizHighScore) {
+      savedStats.quizHighScore = finalScore;
+      localStorage.setItem('learningjemz-space-stats', JSON.stringify(savedStats));
+    }
+    
+    // Gamification
+    const oldStreak = streak;
+    setDisplayedStreak(oldStreak);
+    const didIncrease = recordActivity();
+    setStreakIncreased(didIncrease);
+    
+    if (didIncrease) {
+      setTimeout(() => {
+        setIgniting(true);
+        setDisplayedStreak(oldStreak + 1);
+      }, 800);
+    }
+  }, [streak, recordActivity]);
+
+  const handleAnswer = useCallback((index) => {
     if (selectedAnswer !== null) return;
     
     setSelectedAnswer(index);
@@ -93,31 +103,21 @@ export default function SpaceQuiz() {
         finishQuiz(score + (isCorrect ? 1 : 0));
       }
     }, 1500);
-  };
+  }, [selectedAnswer, questions, currentIndex, addXp, score, finishQuiz]);
 
-  const finishQuiz = (finalScore) => {
-    setIsFinished(true);
-    setTimerActive(false);
-    
-    const savedStats = JSON.parse(localStorage.getItem('learningjemz-space-stats') || '{"cardsMastered":0,"quizHighScore":0,"planetsExplored":0}');
-    if (finalScore > savedStats.quizHighScore) {
-      savedStats.quizHighScore = finalScore;
-      localStorage.setItem('learningjemz-space-stats', JSON.stringify(savedStats));
+  useEffect(() => {
+    startQuiz();
+  }, [filter, startQuiz]);
+
+  useEffect(() => {
+    let interval;
+    if (timerActive && timer > 0) {
+      interval = setInterval(() => setTimer(t => t - 1), 1000);
+    } else if (timer === 0 && timerActive) {
+      handleAnswer(-1); // Time out
     }
-    
-    // Gamification
-    const oldStreak = streak;
-    setDisplayedStreak(oldStreak);
-    const didIncrease = recordActivity();
-    setStreakIncreased(didIncrease);
-    
-    if (didIncrease) {
-      setTimeout(() => {
-        setIgniting(true);
-        setDisplayedStreak(oldStreak + 1);
-      }, 800);
-    }
-  };
+    return () => clearInterval(interval);
+  }, [timer, timerActive, handleAnswer]);
 
   if (isFinished) {
     const accuracy = Math.round((score / questions.length) * 100);

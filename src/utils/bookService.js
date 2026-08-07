@@ -51,7 +51,7 @@ export const getBookDetails = async (key) => {
   }
 };
 
-export const getBookContent = async (key) => {
+export const getBookContent = async (_key) => {
   // Internet Archive doesn't provide easy text extraction without authentication and specific formats.
   // We'll return null to use the fallback text in BookReader.
   return null;
