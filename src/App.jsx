@@ -66,6 +66,16 @@ function BottomNav() {
   );
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -82,7 +92,8 @@ function Layout() {
   }, []);
 
   return (
-    <div style={{ paddingBottom: showNav ? '65px' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>
+    <div style={{ paddingBottom: showNav ? '74px' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>
+      <ScrollToTop />
       <a href="#main-content" className="skip-link">Skip to content</a>
       <main id="main-content">
         <Suspense fallback={<LoadingFallback />}>
