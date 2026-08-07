@@ -59,8 +59,27 @@ export const AuthProvider = ({ children }) => {
     if (error) throw error;
   };
 
+  const deleteAccount = async () => {
+    if (!user) return;
+    try {
+      await supabase.from('achievements').delete().eq('user_id', user.id);
+      await supabase.from('game_progress').delete().eq('id', user.id);
+    } catch {}
+
+    try {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('learningjemz')) {
+          localStorage.removeItem(key);
+        }
+      });
+    } catch {}
+
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, deleteAccount }}>
       {!loading && children}
     </AuthContext.Provider>
   );
