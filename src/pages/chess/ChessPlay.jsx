@@ -518,22 +518,22 @@ export default function ChessPlay() {
 
   return (
     <div className="chess-module-page">
-      <div className="chess-nav-header">
+      <div className="chess-nav-header" style={{ marginBottom: 12 }}>
         <div className="chess-header-left">
           <button className="chess-back-btn" onClick={handleBackClick} title="Back">
             ←
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <h1 className="chess-page-title" style={{ margin: 0, color: '#1c7c54', fontSize: '1.4rem', fontWeight: 900 }}>Play with Bot</h1>
+            <h1 className="chess-page-title" style={{ margin: 0, color: '#1c7c54', fontSize: '1.4rem', fontWeight: 900 }}>Play vs AI</h1>
           </div>
         </div>
-
-
       </div>
 
       {!difficulty ? (
         <div className="opponent-selection-screen">
-          <h2 style={{ textAlign: 'center', marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333' }}>Choose Your Opponent</h2>
+          <p style={{ margin: '0 0 16px 4px', fontSize: '0.9rem', color: '#666', fontWeight: 600 }}>
+            Choose an opponent difficulty below
+          </p>
           <div className="opponent-cards">
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-card-header">
