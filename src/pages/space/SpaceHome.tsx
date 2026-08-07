@@ -41,12 +41,13 @@ function SpaceHub() {
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 3,
-            background: '#fff5f5', padding: '2px 8px', borderRadius: 12,
-            border: '1px solid #ffcdd2',
+            background: hasPlayedToday ? '#fff5f5' : '#f5f5f5',
+            padding: '2px 8px', borderRadius: 12,
+            border: hasPlayedToday ? '1px solid #ffcdd2' : '1px solid #e0e0e0',
           }}>
             <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '0.75rem' }}>🔥</span>
-            <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 800, fontSize: '0.7rem', color: '#e53935' }}>
-              {streak}
+            <span className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontWeight: 800, fontSize: '0.7rem', color: hasPlayedToday ? '#e53935' : '#757575' }}>
+              {streak ?? 0}
             </span>
           </div>
           <div onClick={() => navigate('/profile')} style={{

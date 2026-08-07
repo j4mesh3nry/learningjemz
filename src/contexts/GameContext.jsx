@@ -269,10 +269,20 @@ export function GameProvider({ children }) {
     setState(prev => ({ ...prev, quizHighScore: Math.max(prev.quizHighScore, score) }));
   };
 
-  const hasPlayedToday = state.lastVisit === new Date().toDateString();
+  const todayStr = new Date().toDateString();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toDateString();
+
+  const hasPlayedToday = state.lastVisit === todayStr;
+  const hasPlayedYesterday = state.lastVisit === yesterdayStr;
+
+  // Streak is valid if user played today or yesterday; otherwise broken (0)
+  const currentStreak = (hasPlayedToday || hasPlayedYesterday) ? (state.streak || 0) : 0;
 
   const value = { 
     ...state, 
+    streak: currentStreak,
     hasPlayedToday,
     addXp,
     winChessGame,
