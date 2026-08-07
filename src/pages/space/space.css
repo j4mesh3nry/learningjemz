@@ -1251,34 +1251,36 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   margin: 0 auto;
-  padding: 8px;
-  background: rgba(15, 17, 34, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 10px 6px calc(10px + env(safe-area-inset-bottom, 8px));
+  background: rgba(12, 14, 28, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px 18px 0 0;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6);
+  box-sizing: border-box;
 }
 
 .illum-keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 4px;
+  gap: 5px;
   width: 100%;
 }
 
 .illum-key {
   flex: 1;
-  max-width: 40px;
-  height: 42px;
+  min-width: 0;
+  height: 52px;
   border: none;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   cursor: pointer;
   display: flex;
@@ -1286,36 +1288,40 @@
   justify-content: center;
   user-select: none;
   touch-action: manipulation;
-  transition: background 0.15s, transform 0.1s;
+  transition: background 0.15s, transform 0.08s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .illum-key:active {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(0.94);
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(0.92);
 }
 
 .illum-key-backspace {
-  max-width: 52px;
-  background: rgba(239, 83, 80, 0.25);
-  color: #ef5350;
-  font-size: 1.1rem;
+  flex: 1.5;
+  background: rgba(239, 83, 80, 0.3);
+  color: #ff8a80;
+  font-size: 1.25rem;
 }
 
 .illum-key-space {
-  max-width: 120px;
-  background: rgba(255, 255, 255, 0.15);
-  font-size: 0.85rem;
+  flex: 2;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 0.9rem;
   font-weight: 800;
   letter-spacing: 1px;
 }
 
 .illum-key-enter {
-  max-width: 120px;
+  flex: 2;
+  height: 48px;
   background: linear-gradient(135deg, #1c7c54 0%, #155d3e 100%);
   color: #ffffff;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 800;
   letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(28, 124, 84, 0.4);
 }
 
 .illum-prompt-banner {
