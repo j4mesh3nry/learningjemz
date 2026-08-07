@@ -589,15 +589,18 @@ export default function ChessPlay() {
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, textAlign: 'center' }}>
                 {['Easy', 'Medium', 'Hard'].map(diff => {
-                  const stats = botStats[diff];
-                  const winRate = stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0;
+                  const stats = (botStats && botStats[diff]) ? botStats[diff] : { played: 0, won: 0, lost: 0 };
+                  const played = stats.played || 0;
+                  const won = stats.won || 0;
+                  const lost = stats.lost || 0;
+                  const winRate = played > 0 ? Math.round((won / played) * 100) : 0;
                   const color = diff === 'Easy' ? '#16653e' : diff === 'Medium' ? '#d97706' : '#e53935';
                   return (
                     <div key={diff} style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#e1f0e2', padding: '10px 8px', borderRadius: 12, border: '1.5px solid #b0cbaf', borderTop: `3px solid ${color}` }}>
                       <div style={{ fontWeight: 800, color: '#0f3825', fontSize: '0.85rem' }}>{diff}</div>
                       <div style={{ color: color, fontWeight: 900, fontSize: '1.15rem' }}>{winRate}% <span style={{ fontSize: '0.7rem', color: '#4e7361', fontWeight: 600 }}>WIN</span></div>
-                      <div style={{ fontSize: '0.8rem', color: '#666', marginTop: 4 }}>{stats.won}W - {stats.lost}L</div>
-                      <div style={{ fontSize: '0.75rem', color: '#aaa' }}>{stats.played} Matches</div>
+                      <div style={{ fontSize: '0.8rem', color: '#666', marginTop: 4 }}>{won}W - {lost}L</div>
+                      <div style={{ fontSize: '0.75rem', color: '#aaa' }}>{played} Matches</div>
                     </div>
                   );
                 })}
