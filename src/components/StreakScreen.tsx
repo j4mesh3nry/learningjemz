@@ -1,6 +1,6 @@
 // src/components/StreakScreen.tsx
 import React, { useEffect, useState } from 'react';
-import { Flame, Sparkles, Check, Zap } from 'lucide-react';
+import { Check } from 'lucide-react';
 import './streak.css';
 
 const STREAK_SHOWN_KEY = 'learningjemz_streak_shown_date';
@@ -28,7 +28,7 @@ export interface StreakScreenProps {
   forceShow?: boolean;
 }
 
-const DAYS_OF_WEEK = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const DAYS_HEADER = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
 export default function StreakScreen({
   isOpen,
@@ -36,23 +36,21 @@ export default function StreakScreen({
   onContinue,
   forceShow = false,
 }: StreakScreenProps) {
-  const [ignited, setIgnited] = useState(false);
+  const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      // Trigger entrance igniting animation sequence
-      const timer = setTimeout(() => setIgnited(true), 150);
+      const timer = setTimeout(() => setAnimated(true), 100);
       return () => clearTimeout(timer);
     } else {
-      setIgnited(false);
+      setAnimated(false);
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  // Check once-a-day requirement unless forceShow is true
+  // Enforce once-per-day rule unless forceShow is true
   if (!forceShow && hasShownStreakToday()) {
-    // Already shown today -> skip immediately
     onContinue();
     return null;
   }
@@ -65,77 +63,64 @@ export default function StreakScreen({
   const todayIndex = new Date().getDay(); // 0 = Sun, 1 = Mon...
 
   return (
-    <div className="streak-overlay" role="dialog" aria-modal="true" aria-label={`${streak} Day Streak!`}>
-      {/* Background Ember Particles */}
-      <div className="streak-particles">
-        <span className="ember p1">🔥</span>
-        <span className="ember p2">✨</span>
-        <span className="ember p3">⚡</span>
-        <span className="ember p4">✨</span>
-        <span className="ember p5">🔥</span>
-      </div>
-
-      <div className={`streak-card ${ignited ? 'ignited' : ''}`}>
-        {/* Top Flame Badge Container */}
-        <div className="streak-badge-wrapper">
-          <div className="streak-aura-ring ring-3" />
-          <div className="streak-aura-ring ring-2" />
-          <div className="streak-aura-ring ring-1" />
-          
-          <div className="streak-flame-circle">
-            <Flame
-              size={64}
-              color="#ff3d00"
-              fill="#ff6d00"
-              className="streak-main-flame"
-            />
-            <Sparkles size={26} color="#ffd600" className="streak-sparkle-icon" />
+    <div className="duo-streak-screen" role="dialog" aria-modal="true" aria-label={`${streak} day streak`}>
+      <div className={`duo-streak-content ${animated ? 'animated' : ''}`}>
+        {/* Cool Flaming Mascot with Sunglasses */}
+        <div className="duo-mascot-container">
+          <div className="duo-flame-aura" />
+          <div className="duo-mascot-flame">
+            <div className="duo-flame-inner">
+              <span className="duo-mascot-face" role="img" aria-label="Cool flame">😎</span>
+            </div>
           </div>
         </div>
 
-        {/* Big Number & Title */}
-        <div className="streak-count-title">
-          <span className="streak-number">{streak}</span>
-          <span className="streak-label">{streak === 1 ? 'DAY STREAK!' : 'DAYS STREAK!'}</span>
+        {/* Big Number & Lowercase Title */}
+        <div className="duo-streak-typography">
+          <div className="duo-streak-number">{streak}</div>
+          <div className="duo-streak-label">day streak</div>
         </div>
 
-        {/* Subtitle Slogan */}
-        <p className="streak-subtitle">
-          You're building a daily learning habit! Keep the flame burning tomorrow.
-        </p>
-
-        {/* 7-Day Week Calendar Streak Tracker */}
-        <div className="streak-week-tracker">
-          {DAYS_OF_WEEK.map((dayName, idx) => {
-            const isToday = idx === todayIndex;
-            const isPastActive = idx < todayIndex;
-            const isActive = isPastActive || isToday;
-
-            return (
-              <div
+        {/* 7-Day Pill Calendar Tracker (Exact Duolingo Screenshot match) */}
+        <div className="duo-calendar-wrapper">
+          <div className="duo-days-header">
+            {DAYS_HEADER.map((dayName, idx) => (
+              <span
                 key={idx}
-                className={`streak-day-item ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}`}
+                className={`duo-day-name ${idx === todayIndex ? 'today' : ''}`}
               >
-                <div className="streak-day-circle">
-                  {isToday ? (
-                    <Flame size={18} color="#ff3d00" fill="#ff6d00" />
-                  ) : isPastActive ? (
-                    <Check size={16} color="#ffffff" strokeWidth={3} />
+                {dayName}
+              </span>
+            ))}
+          </div>
+
+          <div className="duo-pill-bar">
+            {DAYS_HEADER.map((_, idx) => {
+              const isPastOrToday = idx <= todayIndex;
+              const isToday = idx === todayIndex;
+
+              return (
+                <div
+                  key={idx}
+                  className={`duo-pill-slot ${isPastOrToday ? 'active' : ''} ${isToday ? 'today' : ''}`}
+                >
+                  {isPastOrToday ? (
+                    <Check size={18} color="#e65100" strokeWidth={3.5} />
                   ) : (
-                    <span className="streak-day-dot" />
+                    <span className="duo-pending-circle" />
                   )}
                 </div>
-                <span className="streak-day-name">{dayName}</span>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
-        {/* Big Duolingo-style Action Button */}
-        <button className="streak-continue-btn" onClick={handleContinue}>
-          <span>CONTINUE</span>
-          <Zap size={20} fill="#ffffff" color="#ffffff" />
-        </button>
+        {/* Bottom Full-Width Action Button */}
+        <div className="duo-actions-footer">
+          <button className="duo-continue-btn" onClick={handleContinue}>
+            CONTINUE
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ describe('StreakScreen', () => {
     isOpen: true,
     streak: 5,
     onContinue: vi.fn(),
-    forceShow: true, // Use forceShow in tests so local storage mocks don't bypass rendering
+    forceShow: true,
   };
 
   beforeEach(() => {
@@ -24,13 +24,13 @@ describe('StreakScreen', () => {
   it('renders the streak screen with correct streak number when open', () => {
     render(<StreakScreen {...defaultProps} />);
     expect(screen.getByText('5')).toBeInTheDocument();
-    expect(screen.getByText('DAYS STREAK!')).toBeInTheDocument();
+    expect(screen.getByText('day streak')).toBeInTheDocument();
   });
 
-  it('renders "DAY STREAK!" when streak is 1', () => {
+  it('renders streak count and day streak label when streak is 1', () => {
     render(<StreakScreen {...defaultProps} streak={1} />);
     expect(screen.getByText('1')).toBeInTheDocument();
-    expect(screen.getByText('DAY STREAK!')).toBeInTheDocument();
+    expect(screen.getByText('day streak')).toBeInTheDocument();
   });
 
   it('calls onContinue and marks streak shown today when CONTINUE button is clicked', async () => {
