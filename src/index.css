@@ -112,7 +112,7 @@ body {
 /* Utility classes */
 .container {
   padding: var(--spacing-lg);
-  max-width: 420px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
@@ -142,12 +142,14 @@ button:active { transform: scale(0.97); }
   text-decoration: none;
 }
 
-/* Bottom navigation bar - Crisp White with Spacious Active State */
+/* Bottom navigation bar - Crisp White with Spacious Active State & Tablet Alignment */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  max-width: 640px;
+  margin: 0 auto;
   height: 74px;
   padding: 4px 8px;
   background: #ffffff;
@@ -157,7 +159,19 @@ button:active { transform: scale(0.97); }
   border-top: 2px solid #b0cbaf;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
   z-index: 100;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
 }
+
+@media (min-width: 640px) {
+  .bottom-nav {
+    bottom: 16px;
+    border: 2px solid #b0cbaf;
+    border-radius: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+}
+
 .bottom-nav a {
   color: #4e7361;
   font-size: 0.72rem;

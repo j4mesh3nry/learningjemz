@@ -65,7 +65,7 @@ export default function Home() {
       minHeight: '100vh', 
       background: 'var(--color-bg-page)',
       padding: '24px 16px 90px', 
-      maxWidth: 420, 
+      maxWidth: 640, 
       margin: '0 auto',
     }}>
       <Header />
@@ -79,8 +79,8 @@ export default function Home() {
         What would you like to explore today?
       </h2>
 
-      {/* Clean & Compact Module Cards */}
-      <div style={{ display: 'grid', gap: 12 }}>
+      {/* Clean & Compact Responsive Module Cards Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
         {modules.map((m) => (
           <Card 
             key={m.to} 
