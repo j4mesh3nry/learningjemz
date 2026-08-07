@@ -22,6 +22,7 @@ export default function IlluminateSystem() {
   const [inputValue, setInputValue] = useState('');
   const [isError, setIsError] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const [viewportHeight, setViewportHeight] = useState(() =>
     typeof window !== 'undefined' && window.visualViewport
       ? window.visualViewport.height
