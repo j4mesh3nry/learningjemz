@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
+import { useAuth } from '../../contexts/AuthContext';
 import VictoryScreen from '../../components/VictoryScreen';
 import './space.css';
 
@@ -15,6 +16,9 @@ const DIFFICULTIES = {
 export default function IlluminateSystem() {
   const navigate = useNavigate();
   const { level: userLevel, streak, hasPlayedToday, addXp } = useGame();
+  const { user } = useAuth();
+
+  const statsKey = user?.id ? `illuminate_stats_${user.id}` : 'illuminate_stats_guest';
   
   const [level, setLevel] = useState(null);
   const [gameData, setGameData] = useState([]);
@@ -33,13 +37,14 @@ export default function IlluminateSystem() {
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const inputRef = useRef(null);
 
-  // Load Personal Bests from localStorage
+  // Load Personal Bests for the current user account
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('illuminate_stats');
+      const saved = localStorage.getItem(statsKey);
       if (saved) setPersonalBests(JSON.parse(saved));
+      else setPersonalBests({});
     } catch (e) {}
-  }, []);
+  }, [statsKey]);
 
   // Live Timer Effect
   useEffect(() => {
@@ -122,7 +127,7 @@ export default function IlluminateSystem() {
           const updated = { ...personalBests, [level]: elapsedTime };
           setPersonalBests(updated);
           try {
-            localStorage.setItem('illuminate_stats', JSON.stringify(updated));
+            localStorage.setItem(statsKey, JSON.stringify(updated));
           } catch (e) {}
         }
 
