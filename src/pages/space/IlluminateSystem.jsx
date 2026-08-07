@@ -23,36 +23,6 @@ export default function IlluminateSystem() {
   const [isError, setIsError] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
-  const [viewportHeight, setViewportHeight] = useState(() =>
-    typeof window !== 'undefined' && window.visualViewport
-      ? window.visualViewport.height
-      : typeof window !== 'undefined'
-      ? window.innerHeight
-      : 600
-  );
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.visualViewport) return;
-
-    const handleResize = () => {
-      setViewportHeight(window.visualViewport.height);
-      window.scrollTo(0, 0);
-    };
-
-    const handleScroll = () => {
-      window.scrollTo(0, 0);
-    };
-
-    window.visualViewport.addEventListener('resize', handleResize);
-    window.visualViewport.addEventListener('scroll', handleScroll);
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.visualViewport.removeEventListener('resize', handleResize);
-      window.visualViewport.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   const inputRef = useRef(null);
 
@@ -194,22 +164,7 @@ export default function IlluminateSystem() {
 
   return (
     <div 
-      className="space-module-page ss-dark-theme" 
-      style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        height: `${viewportHeight}px`, 
-        maxHeight: `${viewportHeight}px`, 
-        overflow: 'hidden',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: '100%',
-        margin: '0 auto',
-        boxSizing: 'border-box'
-      }}
+      className="space-module-page ss-dark-theme illum-game-container" 
     >
       <div className="space-nav-header ss-header" style={{ flexShrink: 0 }}>
         <button className="space-back-btn" onClick={() => setLevel(null)}>←</button>
