@@ -43,38 +43,34 @@ export function Header() {
             Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
           </h1>
         </div>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 6,
+            display: 'flex', alignItems: 'center', gap: 4,
             background: hasPlayedToday ? '#fff5f5' : '#f0f0f0',
-            padding: '5px 12px', borderRadius: 16,
+            padding: '3px 10px', borderRadius: 14,
             border: hasPlayedToday ? '1px solid #ffcdd2' : '1px solid #d5d5d5',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-            flexShrink: 0
           }}>
             <Flame 
-              size={17} 
+              size={16} 
               color={hasPlayedToday ? '#ff4d4d' : '#888888'} 
               fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
             />
-            <span style={{ fontWeight: 800, fontSize: '0.85rem', color: hasPlayedToday ? '#e53935' : '#444444' }}>
+            <span style={{ fontWeight: 800, fontSize: '0.8rem', color: hasPlayedToday ? '#e53935' : '#444444' }}>
               {streak ?? 0}
             </span>
           </div>
           <div 
             onClick={() => navigate('/profile')} 
             style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              background: '#fff8e1', padding: '5px 12px', borderRadius: 16,
+              display: 'flex', alignItems: 'center', gap: 4,
+              background: '#fff8e1', padding: '3px 10px', borderRadius: 14,
               border: '1px solid #ffe082', cursor: 'pointer',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-              flexShrink: 0
             }} 
             aria-label="Go to Profile" 
             role="button"
           >
-            <Star size={17} color="#f57f17" fill="#ffb300" />
-            <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#f57f17' }}>Lv.{level}</span>
+            <Star size={16} color="#f57f17" fill="#ffb300" />
+            <span style={{ fontWeight: 800, fontSize: '0.8rem', color: '#f57f17' }}>Lv.{level}</span>
           </div>
         </div>
       </div>
