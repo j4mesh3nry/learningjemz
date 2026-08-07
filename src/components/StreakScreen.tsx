@@ -69,8 +69,12 @@ export default function StreakScreen({
   forceShow = false,
   userId,
 }: StreakScreenProps) {
-  const [animated, setAnimated] = useState(false);
-  const [showPlusOne, setShowPlusOne] = useState(false);
+  const targetStreak = Math.max(1, streak);
+  const initialStreak = Math.max(1, targetStreak - 1);
+
+  const [currentDisplayStreak, setCurrentDisplayStreak] = useState(initialStreak);
+  const [plusOneState, setPlusOneState] = useState<'hidden' | 'fade-in' | 'fade-out'>('hidden');
+  const [isIgnited, setIsIgnited] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [playedDates, setPlayedDates] = useState<string[]>([]);
   const hasHandledContinueRef = useRef(false);
@@ -87,20 +91,34 @@ export default function StreakScreen({
       recordPlayedDateToday(userId);
       setPlayedDates(getPlayedDates(userId));
 
-      const timer1 = setTimeout(() => setAnimated(true), 100);
-      const timer2 = setTimeout(() => setShowPlusOne(true), 300);
+      // Reset animation state
+      setCurrentDisplayStreak(initialStreak);
+      setPlusOneState('hidden');
+      setIsIgnited(false);
+
+      // Phase 1: Fade in +1 badge next to initial streak count (e.g. 10)
+      const t1 = setTimeout(() => {
+        setPlusOneState('fade-in');
+      }, 350);
+
+      // Phase 2: Fade out +1 badge & transition count to target streak (e.g. 10 -> 11)
+      const t2 = setTimeout(() => {
+        setPlusOneState('fade-out');
+        setCurrentDisplayStreak(targetStreak);
+        setIsIgnited(true);
+      }, 950);
 
       return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
+        clearTimeout(t1);
+        clearTimeout(t2);
       };
     } else {
       hasHandledContinueRef.current = false;
-      setAnimated(false);
-      setShowPlusOne(false);
+      setPlusOneState('hidden');
+      setIsIgnited(false);
       setShowCalendar(false);
     }
-  }, [isOpen, isAlreadyShown, userId, onContinue]);
+  }, [isOpen, isAlreadyShown, userId, onContinue, initialStreak, targetStreak]);
 
   if (!isOpen || isAlreadyShown) return null;
 
@@ -130,27 +148,35 @@ export default function StreakScreen({
 
   return (
     <div className="jemz-streak-screen" role="dialog" aria-modal="true" aria-label={`${streak} day streak`}>
-      <div className={`jemz-streak-content ${animated ? 'animated' : ''}`}>
-        {/* LearningJemz Logo Emblem + Flame Header */}
+      <div className="jemz-streak-content">
+        {/* LearningJemz Brand Gem & Flame Emblem Header */}
         <div className="jemz-mascot-wrapper">
           <div className="jemz-logo-badge">
-            <Gem size={38} color="#ffffff" strokeWidth={2.5} />
-            <Sparkles className="sparkle-badge" size={18} color="#ffd600" />
+            <Gem size={42} color="#ffffff" strokeWidth={2.5} />
+            <Sparkles className="sparkle-badge" size={20} color="#ffd600" />
           </div>
-          <div className="jemz-flame-badge">
-            <Flame size={28} color="#e65100" fill="#ff6d00" />
+          <div className={`jemz-flame-badge ${isIgnited ? 'ignited' : ''}`}>
+            <Flame size={32} color="#ff3d00" fill="#ff6d00" />
           </div>
         </div>
 
-        {/* Big Number, Label & Transition +1 Badge */}
+        {/* Big Number, Transitioning +1 Badge & Label */}
         <div className="jemz-streak-typography">
           <div className="jemz-streak-number-row">
-            <span className="jemz-streak-number">{streak}</span>
-            {showPlusOne && <span className="jemz-plus-one-badge">+1</span>}
+            <span key={currentDisplayStreak} className={`jemz-streak-number ${isIgnited ? 'ignite-pop' : ''}`}>
+              {currentDisplayStreak}
+            </span>
+            {plusOneState !== 'hidden' && (
+              <span className={`jemz-plus-one-badge ${plusOneState}`}>
+                +1
+              </span>
+            )}
           </div>
+
           <div className="jemz-streak-label">
-            {streak === 1 ? 'DAY STREAK!' : 'DAYS STREAK!'}
+            {currentDisplayStreak === 1 ? 'DAY STREAK!' : 'DAYS STREAK!'}
           </div>
+
           <p className="jemz-streak-subtitle">
             You're building your daily habit! Keep learning every day.
           </p>
@@ -177,13 +203,13 @@ export default function StreakScreen({
               return (
                 <div
                   key={idx}
-                  className={`jemz-pill-slot ${hasPlayed ? 'played' : 'unplayed'} ${isToday ? 'today' : ''}`}
+                  className={`jemz-pill-slot ${hasPlayed ? 'played' : 'unplayed'} ${isToday ? 'today' : ''} ${isToday && isIgnited ? 'ignite-slot' : ''}`}
                 >
                   {hasPlayed ? (
                     <Flame
                       size={20}
-                      color="#e65100"
-                      fill="#ff6d00"
+                      color={isToday ? "#ffffff" : "#ff6d00"}
+                      fill={isToday ? "#ffd600" : "#ff6d00"}
                     />
                   ) : (
                     <span className="jemz-unplayed-dot" />

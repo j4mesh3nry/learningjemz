@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import StreakScreen, { hasShownStreakToday, markStreakShownToday } from '../StreakScreen';
 
@@ -21,15 +21,24 @@ describe('StreakScreen', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders the streak screen with correct streak number when open', () => {
-    render(<StreakScreen {...defaultProps} />);
-    expect(screen.getByText('5')).toBeInTheDocument();
+  it('renders the streak screen and transitions to target streak number when open', async () => {
+    render(<StreakScreen {...defaultProps} streak={5} />);
+    // Starts at initial streak (4)
+    expect(screen.getByText('4')).toBeInTheDocument();
+    
+    // Transitions to target streak (5) after animation timer
+    await waitFor(() => {
+      expect(screen.getByText('5')).toBeInTheDocument();
+    }, { timeout: 1500 });
+
     expect(screen.getByText('DAYS STREAK!')).toBeInTheDocument();
   });
 
-  it('renders "DAY STREAK!" when streak is 1', () => {
+  it('renders "DAY STREAK!" when target streak is 1', async () => {
     render(<StreakScreen {...defaultProps} streak={1} />);
-    expect(screen.getByText('1')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('1')).toBeInTheDocument();
+    });
     expect(screen.getByText('DAY STREAK!')).toBeInTheDocument();
   });
 
