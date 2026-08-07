@@ -93,8 +93,8 @@ describe('VictoryScreen', () => {
     const user = userEvent.setup();
     render(<VictoryScreen {...defaultProps} disableDailyStreakModal={false} />);
     
-    // First game of day -> Orange Duolingo Streak Screen is displayed!
-    expect(screen.getByText('day streak')).toBeInTheDocument();
+    // First game of day -> LearningJemz Streak Screen is displayed!
+    expect(screen.getByText('DAYS STREAK!')).toBeInTheDocument();
     
     // Tap CONTINUE on StreakScreen
     const continueBtn = screen.getByRole('button', { name: /continue/i });
