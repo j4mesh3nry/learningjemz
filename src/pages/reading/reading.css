@@ -1,7 +1,7 @@
 /* Clean Mobile-First Reading Styles */
 .reading-module-page {
   min-height: 100vh;
-  background: #ffffff;
+  background: var(--color-bg-page, #d4e8d5);
   padding: 24px 16px 80px;
   max-width: 420px;
   margin: 0 auto;

@@ -3,11 +3,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
-import { Trophy, Flame, Zap, Crown, Award, Medal } from 'lucide-react';
+import { Trophy, Flame, Zap, Crown } from 'lucide-react';
 import { Header } from '../components/Header';
 import '../index.css';
 
-// Helper to calculate effective streak based on last_visit date
 const getEffectiveStreak = (item: any) => {
   if (!item || !item.last_visit) return 0;
   const todayStr = new Date().toDateString();
@@ -97,41 +96,41 @@ export default function Leaderboard() {
         marginBottom: 16
       }}>
         <h2 style={{
-          fontFamily: 'var(--font-heading)', fontSize: '1.3rem',
-          margin: 0, color: '#0e3d26', fontWeight: 800,
+          fontFamily: 'var(--font-heading)', fontSize: '1.25rem',
+          margin: 0, color: '#0f3825', fontWeight: 800,
           display: 'flex', alignItems: 'center', gap: '8px'
         }}>
-          <Trophy size={22} color="#ffb400" /> Leaderboard
+          <Trophy size={22} color="#d97706" /> Leaderboard
         </h2>
 
         {/* Tab Switcher */}
         <div style={{
-          display: 'flex', background: '#d5e6dc', padding: '3px',
-          borderRadius: 14, border: '1px solid #b7d6c5'
+          display: 'flex', background: '#ffffff', padding: '3px',
+          borderRadius: 14, border: '2px solid #b0cbaf'
         }}>
           <button
             onClick={() => handleTabChange('xp')}
             style={{
-              background: sortBy === 'xp' ? '#0e3d26' : 'transparent',
-              color: sortBy === 'xp' ? '#ffffff' : '#1c7c54',
+              background: sortBy === 'xp' ? '#16653e' : 'transparent',
+              color: sortBy === 'xp' ? '#ffffff' : '#4e7361',
               fontWeight: 800, fontSize: '0.78rem', padding: '6px 12px',
-              borderRadius: 11, border: 'none', cursor: 'pointer', transition: 'all 0.2s ease',
+              borderRadius: 11, border: 'none', cursor: 'pointer', transition: 'all 0.15s ease',
               display: 'flex', alignItems: 'center', gap: 4
             }}
           >
-            <Zap size={13} color={sortBy === 'xp' ? '#ffb400' : '#1c7c54'} /> XP
+            <Zap size={13} color={sortBy === 'xp' ? '#ffc107' : '#4e7361'} /> XP
           </button>
           <button
             onClick={() => handleTabChange('streak')}
             style={{
-              background: sortBy === 'streak' ? '#0e3d26' : 'transparent',
-              color: sortBy === 'streak' ? '#ffffff' : '#1c7c54',
+              background: sortBy === 'streak' ? '#16653e' : 'transparent',
+              color: sortBy === 'streak' ? '#ffffff' : '#4e7361',
               fontWeight: 800, fontSize: '0.78rem', padding: '6px 12px',
-              borderRadius: 11, border: 'none', cursor: 'pointer', transition: 'all 0.2s ease',
+              borderRadius: 11, border: 'none', cursor: 'pointer', transition: 'all 0.15s ease',
               display: 'flex', alignItems: 'center', gap: 4
             }}
           >
-            <Flame size={13} color={sortBy === 'streak' ? '#ff5252' : '#1c7c54'} /> Streak
+            <Flame size={13} color={sortBy === 'streak' ? '#ff5252' : '#4e7361'} /> Streak
           </button>
         </div>
       </div>
@@ -144,24 +143,24 @@ export default function Leaderboard() {
         }}>
           {/* 2nd Place */}
           <div style={{
-            background: 'linear-gradient(180deg, #ffffff 0%, #e2ece6 100%)',
-            borderRadius: 18, border: '2px solid #b2ccbe', boxShadow: '0 4px 0 #9cbcae',
+            background: '#ffffff',
+            borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
             padding: '12px 8px', textAlign: 'center', position: 'relative'
           }}>
-            <div style={{ fontSize: '1.5rem', marginTop: '-20px' }}>🥈</div>
+            <div style={{ fontSize: '1.4rem', marginTop: '-18px' }}>🥈</div>
             <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top2?.avatar || '👤'}</div>
-            <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#0e3d26', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#0f3825', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {top2?.name || 'Player'}
             </div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1c7c54', marginTop: 2 }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#16653e', marginTop: 2 }}>
               {sortBy === 'xp' ? `${top2?.xp || 0} XP` : `${getEffectiveStreak(top2)} Days`}
             </div>
           </div>
 
           {/* 1st Place (Gold Center Crown) */}
           <div style={{
-            background: 'linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%)',
-            borderRadius: 20, border: '2px solid #f59e0b', boxShadow: '0 6px 0 #d97706',
+            background: '#fffdf0',
+            borderRadius: 20, border: '2.5px solid #f59e0b', boxShadow: '0 5px 0 #d97706',
             padding: '16px 8px', textAlign: 'center', position: 'relative', transform: 'scale(1.05)', zIndex: 2
           }}>
             <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)' }}>
@@ -178,11 +177,11 @@ export default function Leaderboard() {
 
           {/* 3rd Place */}
           <div style={{
-            background: 'linear-gradient(180deg, #ffffff 0%, #f4eae4 100%)',
-            borderRadius: 18, border: '2px solid #d9bba8', boxShadow: '0 4px 0 #c2a28d',
+            background: '#ffffff',
+            borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
             padding: '12px 8px', textAlign: 'center', position: 'relative'
           }}>
-            <div style={{ fontSize: '1.5rem', marginTop: '-20px' }}>🥉</div>
+            <div style={{ fontSize: '1.4rem', marginTop: '-18px' }}>🥉</div>
             <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top3?.avatar || '👤'}</div>
             <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#4a2c1d', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {top3?.name || 'Player'}
@@ -197,7 +196,7 @@ export default function Leaderboard() {
       {/* Leaderboard List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '30px', color: '#1c7c54', fontWeight: 700 }}>
+          <div style={{ textAlign: 'center', padding: '30px', color: '#16653e', fontWeight: 700 }}>
             Loading rankings...
           </div>
         ) : (
@@ -210,9 +209,9 @@ export default function Leaderboard() {
                 key={item.id || idx}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  background: isMe ? '#dcf0e5' : '#ffffff',
-                  border: isMe ? '2px solid #1c7c54' : '1.5px solid #cce3d7',
-                  boxShadow: isMe ? '0 4px 0 #155d35' : '0 3px 0 #b7d6c5',
+                  background: isMe ? '#e1f0e2' : '#ffffff',
+                  border: isMe ? '2px solid #16653e' : '2px solid #b0cbaf',
+                  boxShadow: isMe ? '0 3px 0 #0e4329' : '0 3px 0 #b0cbaf',
                   borderRadius: 16, padding: '12px 14px',
                   transition: 'all 0.15s ease'
                 }}
@@ -220,8 +219,8 @@ export default function Leaderboard() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{
                     width: 28, height: 28, borderRadius: 10,
-                    background: isMe ? '#1c7c54' : '#e8f3ed',
-                    color: isMe ? '#ffffff' : '#0e3d26',
+                    background: isMe ? '#16653e' : '#e1f0e2',
+                    color: isMe ? '#ffffff' : '#0f3825',
                     fontWeight: 900, fontSize: '0.85rem',
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                   }}>
@@ -229,16 +228,16 @@ export default function Leaderboard() {
                   </div>
                   <div style={{ fontSize: '1.4rem' }}>{item.avatar || '👤'}</div>
                   <div>
-                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0e3d26' }}>
-                      {item.name || 'Learner'} {isMe && <span style={{ color: '#1c7c54', fontSize: '0.75rem' }}>(You)</span>}
+                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f3825' }}>
+                      {item.name || 'Learner'} {isMe && <span style={{ color: '#16653e', fontSize: '0.75rem' }}>(You)</span>}
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: '#496c5b', fontWeight: 600 }}>
+                    <div style={{ fontSize: '0.75rem', color: '#4e7361', fontWeight: 600 }}>
                       Level {item.level || 1}
                     </div>
                   </div>
                 </div>
 
-                <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: '#1c7c54' }}>
+                <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: '#16653e' }}>
                   {sortBy === 'xp' ? `${item.xp || 0} XP` : `${getEffectiveStreak(item)} Days`}
                 </div>
               </div>
@@ -252,22 +251,22 @@ export default function Leaderboard() {
         <div style={{
           position: 'fixed', bottom: 74, left: '50%', transform: 'translateX(-50%)',
           width: 'calc(100% - 32px)', maxWidth: 388,
-          background: 'linear-gradient(135deg, #0e3d26 0%, #16603b 100%)',
-          border: '2px solid #38d989', boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
+          background: '#16653e',
+          border: '2px solid #0e4329', boxShadow: '0 5px 0 #0e4329',
           borderRadius: 16, padding: '10px 16px', color: '#ffffff',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           zIndex: 90
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
-              background: '#38d989', color: '#0a2e1d', fontWeight: 900,
+              background: '#ffffff', color: '#16653e', fontWeight: 900,
               padding: '3px 8px', borderRadius: 8, fontSize: '0.8rem'
             }}>
               #{currentUserRank}
             </div>
             <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>Your Rank</div>
           </div>
-          <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#38d989' }}>
+          <div style={{ fontWeight: 900, fontSize: '0.9rem', color: '#ffffff' }}>
             {sortBy === 'xp' ? `${xp} XP` : `${streak} Days`}
           </div>
         </div>

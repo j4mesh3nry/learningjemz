@@ -36,8 +36,8 @@ function ChessMenu() {
 
         <div style={{
           display: 'flex', flexDirection: 'column', gap: 3,
-          background: '#fafafa', padding: '5px 9px', borderRadius: 12,
-          border: '1px solid #eaeaea', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+          background: '#ffffff', padding: '5px 9px', borderRadius: 12,
+          border: '2px solid #b0cbaf', boxShadow: '0 2px 0 #b0cbaf',
           minWidth: 76, boxSizing: 'border-box'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
@@ -46,12 +46,12 @@ function ChessMenu() {
               color={hasPlayedToday ? '#ff4d4d' : '#888888'} 
               fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
             />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#444444' }}>{streak ?? 0}</span>
+            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#4e7361' }}>{streak ?? 0}</span>
           </div>
-          <div style={{ height: 1, background: '#eee', margin: '1px 0' }} />
+          <div style={{ height: 1, background: '#b0cbaf', margin: '1px 0' }} />
           <div onClick={() => navigate('/profile')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, cursor: 'pointer' }}>
             <Star size={13} color="#f57f17" fill="#ffb300" />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#f57f17' }}>Lv.{level}</span>
+            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#d97706' }}>Lv.{level}</span>
           </div>
         </div>
       </div>
@@ -59,9 +59,11 @@ function ChessMenu() {
       {/* Mode Selector: Play vs Learn */}
       <div style={{
         display: 'flex',
-        background: '#f1f3f5',
+        background: '#ffffff',
         padding: '4px',
         borderRadius: 14,
+        border: '2px solid #b0cbaf',
+        boxShadow: '0 3px 0 #b0cbaf',
         marginBottom: 20
       }}>
         <button
@@ -71,12 +73,11 @@ function ChessMenu() {
             padding: '10px 16px',
             borderRadius: 10,
             border: 'none',
-            background: tab === 'play' ? '#ffffff' : 'transparent',
-            color: tab === 'play' ? '#1c7c54' : '#6c757d',
+            background: tab === 'play' ? '#16653e' : 'transparent',
+            color: tab === 'play' ? '#ffffff' : '#4e7361',
             fontWeight: 800,
             fontSize: '0.9rem',
             cursor: 'pointer',
-            boxShadow: tab === 'play' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
             transition: 'all 0.15s ease',
             display: 'flex',
             alignItems: 'center',
@@ -84,7 +85,7 @@ function ChessMenu() {
             gap: 6
           }}
         >
-          <Gamepad2 size={16} color={tab === 'play' ? '#1c7c54' : '#6c757d'} />
+          <Gamepad2 size={16} color={tab === 'play' ? '#ffffff' : '#4e7361'} />
           Play
         </button>
         <button
@@ -94,12 +95,11 @@ function ChessMenu() {
             padding: '10px 16px',
             borderRadius: 10,
             border: 'none',
-            background: tab === 'learn' ? '#ffffff' : 'transparent',
-            color: tab === 'learn' ? '#1c7c54' : '#6c757d',
+            background: tab === 'learn' ? '#16653e' : 'transparent',
+            color: tab === 'learn' ? '#ffffff' : '#4e7361',
             fontWeight: 800,
             fontSize: '0.9rem',
             cursor: 'pointer',
-            boxShadow: tab === 'learn' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
             transition: 'all 0.15s ease',
             display: 'flex',
             alignItems: 'center',
@@ -107,7 +107,7 @@ function ChessMenu() {
             gap: 6
           }}
         >
-          <BookOpen size={16} color={tab === 'learn' ? '#1c7c54' : '#6c757d'} />
+          <BookOpen size={16} color={tab === 'learn' ? '#ffffff' : '#4e7361'} />
           Learn
         </button>
       </div>

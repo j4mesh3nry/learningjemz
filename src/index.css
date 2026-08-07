@@ -4,24 +4,24 @@
 :root {
   color-scheme: light;
   
-  /* Primary palette - Emerald & Forest Green */
-  --color-primary: #1c7c54; 
-  --color-primary-light: #2eaf73;
-  --color-primary-dark: #0a2e1d;
-  --color-primary-forest: #0e3d26;
+  /* Primary palette - Forest & Sage Green */
+  --color-primary: #16653e; 
+  --color-primary-light: #288456;
+  --color-primary-dark: #0e4329;
+  --color-primary-forest: #0b3420;
 
   /* Module specific backgrounds */
-  --bg-chess: #0e4d2e; /* dark emerald */
-  --bg-geo: #0066cc;   /* Philippines teal */
-  --bg-reading: #d16f2c; /* warm amber */
-  --bg-space: #0a0a0a; /* deep space */
+  --bg-chess: #16653e;
+  --bg-geo: #0066cc;  
+  --bg-reading: #d16f2c;
+  --bg-space: #161936;
 
-  /* Neutral colors - Organic Mint/Sage Canvas */
-  --color-bg-page: #eaf2ed; /* soft mint-tinted background */
+  /* Neutral colors - Medium-Light Sage Green Canvas */
+  --color-bg-page: #d4e8d5; /* Medium-light sage green canvas */
   --color-bg-card: #ffffff;
-  --color-bg-dark: #0a2e1d;
-  --color-text: #173829;
-  --color-muted: #5b7e6e;
+  --color-bg-dark: #0e4329;
+  --color-text: #0f3825;
+  --color-muted: #4e7361;
 
   /* Accent / XP */
   --color-xp: #ffb400;
@@ -42,7 +42,7 @@
   --font-body: 'Inter', sans-serif;
 }
 
-/* Dark mode is disabled to maintain the gamified light theme consistently */
+/* Dark mode is disabled to maintain the gamified theme consistently */
 
 /* Global resets */
 *,
@@ -142,7 +142,7 @@ button:active { transform: scale(0.97); }
   text-decoration: none;
 }
 
-/* Bottom navigation bar - Solid Forest Green without glow effects */
+/* Bottom navigation bar - Crisp White with Solid Green Active State */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -151,15 +151,16 @@ button:active { transform: scale(0.97); }
   height: 66px;
   padding-bottom: 6px;
   padding-top: 6px;
-  background: #0d3822;
+  background: #ffffff;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  border-top: 2px solid #165636;
+  border-top: 2px solid #b0cbaf;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
   z-index: 100;
 }
 .bottom-nav a {
-  color: rgba(255, 255, 255, 0.65);
+  color: #4e7361;
   font-size: 0.72rem;
   font-weight: 700;
   text-decoration: none;
@@ -167,14 +168,14 @@ button:active { transform: scale(0.97); }
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  padding: 6px 14px;
+  padding: 5px 14px;
   border-radius: 12px;
   transition: all 0.15s ease;
 }
 .bottom-nav a.active { 
-  color: #ffffff;
-  background: #1a5e3c;
-  border: 1px solid #287a51;
+  color: #16653e;
+  background: #e1f0e2;
+  border: 2px solid #16653e;
 }
 
 /* Auth Styles */

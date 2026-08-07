@@ -79,25 +79,22 @@ export default function Profile() {
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          background: 'linear-gradient(180deg, #051b10 0%, #092618 100%)',
+          background: '#d4e8d5',
           paddingTop: 12,
           paddingBottom: 12,
           margin: '-24px -16px 20px -16px',
           paddingLeft: 16,
           paddingRight: 16,
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
+          borderBottom: '2px solid #b0cbaf',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderBottomLeftRadius: 18,
-          borderBottomRightRadius: 18,
         }}
       >
-        <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.25rem', color: '#ffffff', fontWeight: 800 }}>Profile</h2>
+        <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.25rem', color: '#0f3825', fontWeight: 800 }}>Profile</h2>
         <Settings
           size={20}
-          color="#38d989"
+          color="#16653e"
           style={{ cursor: 'pointer' }}
           onClick={() => navigate('/settings')}
           role="button"
@@ -105,17 +102,18 @@ export default function Profile() {
         />
       </div>
 
-      {/* ID Card / Avatar */}
+      {/* Profile Card */}
       <div
         style={{
-          background: 'linear-gradient(135deg, var(--color-primary-light), var(--color-primary-dark))',
+          background: '#ffffff',
           borderRadius: 24,
-          padding: 32,
-          color: 'white',
+          padding: 24,
+          color: '#0f3825',
           textAlign: 'center',
           position: 'relative',
           overflow: 'hidden',
-          boxShadow: '0 12px 32px rgba(28,124,84,0.25)',
+          border: '2.5px solid #b0cbaf',
+          boxShadow: '0 5px 0 #b0cbaf',
           marginBottom: 24
         }}
       >
