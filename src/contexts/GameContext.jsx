@@ -26,6 +26,11 @@ const defaultState = {
     Medium: { played: 0, won: 0, lost: 0 },
     Hard: { played: 0, won: 0, lost: 0 }
   },
+  illuminateStats: {
+    easy: null,
+    medium: null,
+    hard: null
+  },
   achievements: []
 };
 
@@ -90,6 +95,7 @@ export function GameProvider({ children }) {
             Medium: localState.botStats?.Medium || defaultState.botStats.Medium,
             Hard: localState.botStats?.Hard || defaultState.botStats.Hard
           },
+          illuminateStats: data.illuminate_stats || data.bot_stats?.illuminate || localState.illuminateStats || defaultState.illuminateStats,
           achievements: achievementsData.map(a => ({ id: a.achievement_id, unlockedAt: a.unlocked_at }))
         };
         setState(remoteState);
@@ -110,7 +116,7 @@ export function GameProvider({ children }) {
           flashcards_mastered: localState.flashcardsMastered,
           books_reading: localState.booksReading,
           quiz_high_score: localState.quizHighScore,
-          bot_stats: localState.botStats,
+          bot_stats: { ...localState.botStats, illuminate: localState.illuminateStats },
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
           avatar: user.user_metadata?.avatar || '👤'
         };
@@ -180,7 +186,7 @@ export function GameProvider({ children }) {
         flashcards_mastered: state.flashcardsMastered,
         books_reading: state.booksReading,
         quiz_high_score: state.quizHighScore,
-        bot_stats: state.botStats,
+        bot_stats: { ...state.botStats, illuminate: state.illuminateStats },
         name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
         avatar: user.user_metadata?.avatar || '👤'
       };
@@ -278,6 +284,26 @@ export function GameProvider({ children }) {
     setState(prev => ({ ...prev, quizHighScore: Math.max(prev.quizHighScore, score) }));
   };
 
+  const recordIlluminateTime = useCallback((difficulty, timeInSeconds) => {
+    let isNewBest = false;
+    setState(prev => {
+      const currentPBs = prev.illuminateStats || defaultState.illuminateStats;
+      const currentBest = currentPBs[difficulty];
+      if (currentBest === null || currentBest === undefined || timeInSeconds < currentBest) {
+        isNewBest = true;
+        return {
+          ...prev,
+          illuminateStats: {
+            ...currentPBs,
+            [difficulty]: timeInSeconds
+          }
+        };
+      }
+      return prev;
+    });
+    return isNewBest;
+  }, []);
+
   const todayStr = new Date().toDateString();
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -303,7 +329,8 @@ export function GameProvider({ children }) {
     readForMinutes,
     startReadingBook,
     updateQuizHighScore,
-    recordActivity
+    recordActivity,
+    recordIlluminateTime
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

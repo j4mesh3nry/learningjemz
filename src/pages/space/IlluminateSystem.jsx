@@ -15,10 +15,10 @@ const DIFFICULTIES = {
 
 export default function IlluminateSystem() {
   const navigate = useNavigate();
-  const { level: userLevel, streak, hasPlayedToday, addXp } = useGame();
+  const { level: userLevel, streak, hasPlayedToday, addXp, illuminateStats, recordIlluminateTime } = useGame();
   const { user } = useAuth();
 
-  const statsKey = user?.id ? `illuminate_stats_${user.id}` : 'illuminate_stats_guest';
+  const personalBests = illuminateStats || {};
   
   const [level, setLevel] = useState(null);
   const [gameData, setGameData] = useState([]);
@@ -32,19 +32,9 @@ export default function IlluminateSystem() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [userUsedHint, setUserUsedHint] = useState(false);
   const [hintsLeft, setHintsLeft] = useState(3);
-  const [personalBests, setPersonalBests] = useState({});
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const inputRef = useRef(null);
-
-  // Load Personal Bests for the current user account
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(statsKey);
-      if (saved) setPersonalBests(JSON.parse(saved));
-      else setPersonalBests({});
-    } catch (e) {}
-  }, [statsKey]);
 
   // Live Timer Effect
   useEffect(() => {
@@ -120,15 +110,10 @@ export default function IlluminateSystem() {
         setIsComplete(true);
         setScoreData(prev => ({ ...prev, endTime: Date.now() }));
         
-        // Personal Best Record Check
-        const prevBest = personalBests[level];
-        if (!prevBest || elapsedTime < prevBest) {
+        // Personal Best Record Check & Supabase Sync
+        const isNew = recordIlluminateTime(level, elapsedTime);
+        if (isNew) {
           setIsNewRecord(true);
-          const updated = { ...personalBests, [level]: elapsedTime };
-          setPersonalBests(updated);
-          try {
-            localStorage.setItem(statsKey, JSON.stringify(updated));
-          } catch (e) {}
         }
 
         let xpReward = DIFFICULTIES[level].xp;
