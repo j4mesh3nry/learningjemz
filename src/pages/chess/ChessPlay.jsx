@@ -485,26 +485,44 @@ export default function ChessPlay() {
 
   return (
     <div className="chess-module-page">
-      <div className="chess-nav-header" style={{ marginBottom: 12 }}>
+      <div className="chess-nav-header" style={{ marginBottom: 16 }}>
         <div className="chess-header-left">
-          <button className="chess-back-btn" onClick={handleBackClick} title="Back">
-            ←
+          <button 
+            onClick={handleBackClick} 
+            title="Back"
+            aria-label="Back"
+            style={{
+              background: '#ffffff',
+              border: '2px solid #b0cbaf',
+              boxShadow: '0 3px 0 #b0cbaf',
+              borderRadius: 14,
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#16653e',
+              cursor: 'pointer',
+              flexShrink: 0
+            }}
+          >
+            <ArrowLeft size={20} strokeWidth={2.5} />
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <h1 className="chess-page-title" style={{ margin: 0, color: '#1c7c54', fontSize: '1.4rem', fontWeight: 900 }}>Play vs AI</h1>
+            <h1 className="chess-page-title" style={{ margin: 0, color: '#0f3825', fontSize: '1.4rem', fontWeight: 900 }}>Play vs AI</h1>
           </div>
         </div>
       </div>
 
       {!difficulty ? (
         <div className="opponent-selection-screen">
-          <p style={{ margin: '0 0 16px 4px', fontSize: '0.9rem', color: '#666', fontWeight: 600 }}>
+          <p style={{ margin: '0 0 16px 4px', fontSize: '0.9rem', color: '#4e7361', fontWeight: 600 }}>
             Choose an opponent difficulty below
           </p>
           <div className="opponent-cards">
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-card-header">
-                <div className="opponent-avatar"><Bot size={40} color="#4caf50" /></div>
+                <div className="opponent-avatar"><Bot size={36} color="#16653e" /></div>
                 <div className="opponent-info">
                   <h3>Beginner Bob</h3>
                   <p>Easy • High blunder rate</p>
@@ -524,7 +542,7 @@ export default function ChessPlay() {
             </div>
             <div className={`opponent-card medium ${selectedOpponent === 'Medium' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Medium' ? null : 'Medium')}>
               <div className="opponent-card-header">
-                <div className="opponent-avatar"><BrainCircuit size={40} color="#ff9800" /></div>
+                <div className="opponent-avatar"><BrainCircuit size={36} color="#d97706" /></div>
                 <div className="opponent-info">
                   <h3>Intermediate Ivy</h3>
                   <p>Medium • Looks for captures</p>
@@ -544,7 +562,7 @@ export default function ChessPlay() {
             </div>
             <div className={`opponent-card hard ${selectedOpponent === 'Hard' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Hard' ? null : 'Hard')}>
               <div className="opponent-card-header">
-                <div className="opponent-avatar"><Cpu size={40} color="#f44336" /></div>
+                <div className="opponent-avatar"><Cpu size={36} color="#e53935" /></div>
                 <div className="opponent-info">
                   <h3>Grandmaster Gary</h3>
                   <p>Hard • Calculates deeply</p>
@@ -565,19 +583,19 @@ export default function ChessPlay() {
           </div>
           
           {botStats && (
-            <div className="global-stats-box" style={{ marginTop: 32, padding: 20, background: '#fff', borderRadius: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: '1px solid #eee' }}>
-              <h3 style={{ textAlign: 'center', marginBottom: 16, color: '#333', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                <Trophy size={20} color="#ffb300" /> Career Stats
+            <div className="global-stats-box" style={{ marginTop: 28, padding: 16, background: '#ffffff', borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf' }}>
+              <h3 style={{ textAlign: 'center', marginBottom: 14, color: '#0f3825', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <Trophy size={20} color="#d97706" /> Career Stats
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, textAlign: 'center' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, textAlign: 'center' }}>
                 {['Easy', 'Medium', 'Hard'].map(diff => {
                   const stats = botStats[diff];
                   const winRate = stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0;
-                  const color = diff === 'Easy' ? '#4caf50' : diff === 'Medium' ? '#ff9800' : '#f44336';
+                  const color = diff === 'Easy' ? '#16653e' : diff === 'Medium' ? '#d97706' : '#e53935';
                   return (
-                    <div key={diff} style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#f8f9fa', padding: '12px 8px', borderRadius: 12, borderTop: `3px solid ${color}` }}>
-                      <div style={{ fontWeight: 800, color: '#333', fontSize: '0.9rem' }}>{diff}</div>
-                      <div style={{ color: color, fontWeight: 900, fontSize: '1.2rem' }}>{winRate}% <span style={{ fontSize: '0.7rem', color: '#888', fontWeight: 600 }}>WIN</span></div>
+                    <div key={diff} style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#e1f0e2', padding: '10px 8px', borderRadius: 12, border: '1.5px solid #b0cbaf', borderTop: `3px solid ${color}` }}>
+                      <div style={{ fontWeight: 800, color: '#0f3825', fontSize: '0.85rem' }}>{diff}</div>
+                      <div style={{ color: color, fontWeight: 900, fontSize: '1.15rem' }}>{winRate}% <span style={{ fontSize: '0.7rem', color: '#4e7361', fontWeight: 600 }}>WIN</span></div>
                       <div style={{ fontSize: '0.8rem', color: '#666', marginTop: 4 }}>{stats.won}W - {stats.lost}L</div>
                       <div style={{ fontSize: '0.75rem', color: '#aaa' }}>{stats.played} Matches</div>
                     </div>

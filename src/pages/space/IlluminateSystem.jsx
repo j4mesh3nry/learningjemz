@@ -219,21 +219,39 @@ export default function IlluminateSystem() {
     return (
       <div className="space-module-page">
         {/* Navigation Header */}
-        <div className="space-nav-header">
+        <div className="space-nav-header" style={{ marginBottom: 16 }}>
           <div className="space-header-left">
-            <button className="space-back-btn" onClick={() => navigate('/space/objects-by-size')} title="Back">
-              <ArrowLeft size={18} />
+            <button 
+              onClick={() => navigate('/space/objects-by-size')} 
+              title="Back"
+              aria-label="Back"
+              style={{
+                background: '#ffffff',
+                border: '2px solid #b0cbaf',
+                boxShadow: '0 3px 0 #b0cbaf',
+                borderRadius: 14,
+                width: 40,
+                height: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#16653e',
+                cursor: 'pointer',
+                flexShrink: 0
+              }}
+            >
+              <ArrowLeft size={20} strokeWidth={2.5} />
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{
-                fontSize: '1.1rem', width: 30, height: 30,
+                fontSize: '1.1rem', width: 32, height: 32,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%)', borderRadius: 8,
-                boxShadow: '0 2px 6px rgba(26,26,62,0.3)'
+                background: '#161936', borderRadius: 10,
+                boxShadow: '0 2px 0 #0b0d1e'
               }}>
                 💡
               </div>
-              <h1 className="space-page-title" style={{ margin: 0, color: '#111324', fontSize: '1.3rem', fontWeight: 900 }}>
+              <h1 className="space-page-title" style={{ margin: 0, color: '#0f3825', fontSize: '1.35rem', fontWeight: 900 }}>
                 Illuminate the System
               </h1>
             </div>
@@ -241,38 +259,46 @@ export default function IlluminateSystem() {
         </div>
 
         {/* Section Heading & Subtitle */}
-        <h2 className="space-section-heading" style={{ marginTop: 16, marginBottom: 4 }}>Select Difficulty</h2>
-        <p style={{ color: '#4a4e69', fontSize: '0.95rem', lineHeight: '1.5', margin: '0 0 20px', fontWeight: 500 }}>
+        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', color: '#0f3825', fontWeight: 800, marginTop: 12, marginBottom: 4 }}>Select Difficulty</h2>
+        <p style={{ color: '#4e7361', fontSize: '0.88rem', lineHeight: '1.4', margin: '0 0 16px', fontWeight: 600 }}>
           Type the names of the objects in order from <strong>LARGEST</strong> to <strong>SMALLEST</strong>.
         </p>
         
-        <div className="space-card-list">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {Object.entries(DIFFICULTIES).map(([key, diff]) => (
             <div 
               key={key} 
               className="space-card-item"
               onClick={() => startGame(key)}
+              style={{
+                display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+                color: '#fff', background: '#16653e', borderRadius: 16,
+                padding: '12px 16px', position: 'relative', overflow: 'hidden',
+                boxShadow: '0 4px 0 #0e4329',
+                border: '2px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer'
+              }}
             >
               <div className="space-card-info">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <h3 className="space-card-title">{diff.name}</h3>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, lineHeight: 1.2 }}>{diff.name}</h3>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                     {Array.from({ length: diff.maxLives }).map((_, i) => (
                       <Heart key={i} size={13} fill="#ff4d4d" color="#ff4d4d" />
                     ))}
                   </div>
                 </div>
-                <p className="space-card-subtitle">{diff.label}</p>
+                <p style={{ margin: '2px 0 0', fontSize: '0.82rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2 }}>{diff.label}</p>
               </div>
-              <div className="space-card-arrow">→</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>→</div>
             </div>
           ))}
         </div>
 
-        {/* System Records & Personal Bests Box (Matching Chess Stats UI) */}
-        <div style={{ marginTop: 28, padding: 18, background: '#ffffff', borderRadius: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: '1px solid #eeeeee' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: '1rem', color: '#111324', marginBottom: 14 }}>
-            <Trophy size={20} color="#ffb300" /> Best Time Records
+        {/* System Records & Personal Bests Box */}
+        <div style={{ marginTop: 24, padding: 16, background: '#ffffff', borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: '1rem', color: '#0f3825', marginBottom: 12 }}>
+            <Trophy size={20} color="#d97706" /> Best Time Records
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
@@ -282,11 +308,11 @@ export default function IlluminateSystem() {
                 <div 
                   key={key} 
                   style={{
-                    background: '#f8f9fa',
+                    background: '#e1f0e2',
                     borderRadius: 12,
                     padding: '10px 8px',
                     textAlign: 'center',
-                    border: '1px solid #e9ecef',
+                    border: '1.5px solid #b0cbaf',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -294,10 +320,10 @@ export default function IlluminateSystem() {
                     gap: 4
                   }}
                 >
-                  <div style={{ fontSize: '0.8rem', color: '#6c757d', fontWeight: 700 }}>
+                  <div style={{ fontSize: '0.8rem', color: '#0f3825', fontWeight: 800 }}>
                     {diff.name}
                   </div>
-                  <div style={{ fontSize: '1.05rem', color: pbTime !== undefined ? '#1c7c54' : '#adb5bd', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <div style={{ fontSize: '1.05rem', color: pbTime !== undefined ? '#16653e' : '#4e7361', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 3 }}>
                     <Zap size={14} color={pbTime !== undefined ? '#ffb300' : '#adb5bd'} />
                     {pbTime !== undefined ? formatTime(pbTime) : '--:--'}
                   </div>
