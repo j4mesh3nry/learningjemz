@@ -7,7 +7,7 @@ import SolarSystem3D from './SolarSystem3D';
 import SizeStack from './SizeStack';
 import ObjectsBySizeMenu from './ObjectsBySizeMenu';
 import IlluminateSystem from './IlluminateSystem';
-import { Flame, Star, BookOpen, Gamepad2 } from 'lucide-react';
+import { Flame, Star, BookOpen, Gamepad2, ArrowLeft, Lock } from 'lucide-react';
 import { Card } from '../../components/Card';
 import './space.css';
 
@@ -21,19 +21,38 @@ function SpaceHub() {
       {/* Navigation Header */}
       <div className="space-nav-header">
         <div className="space-header-left">
-          <button className="space-back-btn" onClick={() => navigate('/')} title="Back to Home">
-            ←
+          <button 
+            onClick={() => navigate('/')} 
+            title="Back to Home"
+            aria-label="Back to Home"
+            style={{
+              background: '#ffffff',
+              border: '2px solid #b0cbaf',
+              boxShadow: '0 3px 0 #b0cbaf',
+              borderRadius: 14,
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#16653e',
+              cursor: 'pointer',
+              transition: 'transform 0.1s ease',
+              flexShrink: 0
+            }}
+          >
+            <ArrowLeft size={20} strokeWidth={2.5} />
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{
-              fontSize: '1.1rem', width: 30, height: 30,
+              fontSize: '1.1rem', width: 32, height: 32,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%)', borderRadius: 8,
-              boxShadow: '0 2px 6px rgba(26,26,62,0.3)'
+              background: '#161936', borderRadius: 10,
+              boxShadow: '0 2px 0 #0b0d1e'
             }}>
               🪐
             </div>
-            <h1 className="space-page-title" style={{ margin: 0, color: '#111324', fontSize: '1.4rem', fontWeight: 900 }}>
+            <h1 className="space-page-title" style={{ margin: 0, color: '#0f3825', fontSize: '1.4rem', fontWeight: 900 }}>
               Space
             </h1>
           </div>
@@ -41,8 +60,8 @@ function SpaceHub() {
 
         <div style={{
           display: 'flex', flexDirection: 'column', gap: 3,
-          background: '#fafafa', padding: '5px 9px', borderRadius: 12,
-          border: '1px solid #eaeaea', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+          background: '#ffffff', padding: '5px 9px', borderRadius: 12,
+          border: '2px solid #b0cbaf', boxShadow: '0 2px 0 #b0cbaf',
           minWidth: 76, boxSizing: 'border-box'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
@@ -51,14 +70,14 @@ function SpaceHub() {
               color={hasPlayedToday ? '#ff4d4d' : '#888888'} 
               fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
             />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#444444' }}>
+            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#4e7361' }}>
               {streak ?? 0}
             </span>
           </div>
-          <div style={{ height: 1, background: '#eee', margin: '1px 0' }} />
+          <div style={{ height: 1, background: '#b0cbaf', margin: '1px 0' }} />
           <div onClick={() => navigate('/profile')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, cursor: 'pointer' }}>
             <Star size={13} color="#f57f17" fill="#ffb300" />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#f57f17' }}>Lv.{level}</span>
+            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#d97706' }}>Lv.{level}</span>
           </div>
         </div>
       </div>
@@ -66,9 +85,11 @@ function SpaceHub() {
       {/* Mode Selector: Play vs Learn */}
       <div style={{
         display: 'flex',
-        background: '#f1f3f5',
+        background: '#ffffff',
         padding: '4px',
         borderRadius: 14,
+        border: '2px solid #b0cbaf',
+        boxShadow: '0 3px 0 #b0cbaf',
         marginBottom: 20
       }}>
         <button
@@ -78,12 +99,11 @@ function SpaceHub() {
             padding: '10px 16px',
             borderRadius: 10,
             border: 'none',
-            background: tab === 'play' ? '#ffffff' : 'transparent',
-            color: tab === 'play' ? '#1c7c54' : '#6c757d',
+            background: tab === 'play' ? '#16653e' : 'transparent',
+            color: tab === 'play' ? '#ffffff' : '#4e7361',
             fontWeight: 800,
             fontSize: '0.9rem',
             cursor: 'pointer',
-            boxShadow: tab === 'play' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
             transition: 'all 0.15s ease',
             display: 'flex',
             alignItems: 'center',
@@ -91,7 +111,7 @@ function SpaceHub() {
             gap: 6
           }}
         >
-          <Gamepad2 size={16} color={tab === 'play' ? '#1c7c54' : '#6c757d'} />
+          <Gamepad2 size={16} color={tab === 'play' ? '#ffffff' : '#4e7361'} />
           Play
         </button>
         <button
@@ -101,12 +121,11 @@ function SpaceHub() {
             padding: '10px 16px',
             borderRadius: 10,
             border: 'none',
-            background: tab === 'learn' ? '#ffffff' : 'transparent',
-            color: tab === 'learn' ? '#1c7c54' : '#6c757d',
+            background: tab === 'learn' ? '#16653e' : 'transparent',
+            color: tab === 'learn' ? '#ffffff' : '#4e7361',
             fontWeight: 800,
             fontSize: '0.9rem',
             cursor: 'pointer',
-            boxShadow: tab === 'learn' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
             transition: 'all 0.15s ease',
             display: 'flex',
             alignItems: 'center',
@@ -114,7 +133,7 @@ function SpaceHub() {
             gap: 6
           }}
         >
-          <BookOpen size={16} color={tab === 'learn' ? '#1c7c54' : '#6c757d'} />
+          <BookOpen size={16} color={tab === 'learn' ? '#ffffff' : '#4e7361'} />
           Learn
         </button>
       </div>
@@ -122,102 +141,151 @@ function SpaceHub() {
       {tab === 'learn' ? (
         <>
           {/* Active Learning Modes */}
-          <h2 className="space-section-heading">Exploration & Discovery</h2>
-          <div className="space-card-list">
+          <h2 style={{
+            fontFamily: 'var(--font-heading)', fontSize: '1.15rem',
+            margin: '0 0 14px 0', color: '#0f3825', fontWeight: 800
+          }}>
+            Exploration & Discovery
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <Card
               className="space-card-item"
               onClick={() => navigate('/space/solar-system')}
               ariaLabel="Solar Explorer"
+              style={{
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
+                textDecoration: 'none', color: '#fff',
+                background: '#161936', borderRadius: 20,
+                padding: '18px 18px', position: 'relative', overflow: 'hidden',
+                boxShadow: '0 5px 0 #0b0d1e',
+                border: '2px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer'
+              }}
             >
-              <div className="space-card-icon">🪐</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Solar Explorer</h3>
-                <p className="space-card-subtitle">Interactive 3D solar system map</p>
+              <div style={{
+                fontSize: '2rem', width: 50, height: 50,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(255,255,255,0.18)', borderRadius: 14,
+                flexShrink: 0
+              }}>
+                🪐
               </div>
-              <div className="space-card-arrow">→</div>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>Solar Explorer</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.82rem', opacity: 0.9, fontWeight: 500 }}>Interactive 3D solar system map</p>
+              </div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>→</div>
             </Card>
 
+            {/* Blurred Locked Card */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 16,
+              background: '#ffffff', borderRadius: 20,
+              border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+              padding: '18px', position: 'relative', overflow: 'hidden',
+              cursor: 'not-allowed'
+            }}>
+              <div style={{
+                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                zIndex: 10, background: '#16653e', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
+                padding: '6px 12px', borderRadius: 12, border: '1.5px solid #0e4329', boxShadow: '0 3px 0 #0e4329',
+                display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
+              }}>
+                <Lock size={12} color="#ffffff" /> Locked
+              </div>
 
-            <Card className="space-card-item locked" ariaLabel="Secret Challenge (Locked)" onClick={() => {}}>
-              <div className="space-card-icon">❓</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Secret Challenge</h3>
-                <p className="space-card-subtitle">Coming Soon...</p>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 16, width: '100%',
+                filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem', width: 48, height: 48,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: '#e1f0e2', borderRadius: 14, flexShrink: 0
+                }}>
+                  ✨
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825' }}>Deep Space Nebula</h3>
+                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500 }}>Stars & Galaxies Guide</p>
+                </div>
               </div>
-              <div className="space-lock-badge">🔒 Locked</div>
-            </Card>
-            <Card className="space-card-item locked" ariaLabel="Mystery Mode (Locked)" onClick={() => {}}>
-              <div className="space-card-icon">❓</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Mystery Mode</h3>
-                <p className="space-card-subtitle">Coming Soon...</p>
-              </div>
-              <div className="space-lock-badge">🔒 Locked</div>
-            </Card>
+            </div>
           </div>
         </>
       ) : (
         <>
           {/* Active Play & Earn Modes */}
-          <h2 className="space-section-heading">Earn XP & Streaks</h2>
-          <div className="space-card-list">
+          <h2 style={{
+            fontFamily: 'var(--font-heading)', fontSize: '1.15rem',
+            margin: '0 0 14px 0', color: '#0f3825', fontWeight: 800
+          }}>
+            Earn XP & Streaks
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <Card
               className="space-card-item"
               onClick={() => navigate('/space/objects-by-size')}
               ariaLabel="Objects by Size"
+              style={{
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
+                textDecoration: 'none', color: '#fff',
+                background: '#161936', borderRadius: 20,
+                padding: '18px 18px', position: 'relative', overflow: 'hidden',
+                boxShadow: '0 5px 0 #0b0d1e',
+                border: '2px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer'
+              }}
             >
-              <div className="space-card-icon">📏</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Objects by Size</h3>
-                <p className="space-card-subtitle">Master the 35 largest cosmic objects</p>
+              <div style={{
+                fontSize: '2rem', width: 50, height: 50,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(255,255,255,0.18)', borderRadius: 14,
+                flexShrink: 0
+              }}>
+                📏
               </div>
-              <div className="space-card-arrow">→</div>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>Objects by Size</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.82rem', opacity: 0.9, fontWeight: 500 }}>Master the 35 largest cosmic objects</p>
+              </div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>→</div>
             </Card>
 
+            {/* Blurred Locked Cards */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 16,
+              background: '#ffffff', borderRadius: 20,
+              border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+              padding: '18px', position: 'relative', overflow: 'hidden',
+              cursor: 'not-allowed'
+            }}>
+              <div style={{
+                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                zIndex: 10, background: '#16653e', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
+                padding: '6px 12px', borderRadius: 12, border: '1.5px solid #0e4329', boxShadow: '0 3px 0 #0e4329',
+                display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
+              }}>
+                <Lock size={12} color="#ffffff" /> Locked
+              </div>
 
-
-            <Card
-              className="space-card-item locked"
-              onClick={() => {}}
-              ariaLabel="Space Quiz (Under Development)"
-            >
-              <div className="space-card-icon">🎯</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Space Quiz</h3>
-                <p className="space-card-subtitle">Test cosmic knowledge & earn XP</p>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 16, width: '100%',
+                filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem', width: 48, height: 48,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: '#e1f0e2', borderRadius: 14, flexShrink: 0
+                }}>
+                  🎯
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825' }}>Space Quiz Challenge</h3>
+                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500 }}>Test cosmic knowledge & earn XP</p>
+                </div>
               </div>
-              <div className="space-lock-badge">🛠️ Under Development</div>
-            </Card>
-
-            <Card
-              className="space-card-item locked"
-              onClick={() => {}}
-              ariaLabel="Cosmic Cards (Under Development)"
-            >
-              <div className="space-card-icon">🎴</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Cosmic Cards</h3>
-                <p className="space-card-subtitle">Speed flashcards memory test</p>
-              </div>
-              <div className="space-lock-badge">🛠️ Under Development</div>
-            </Card>
-            {/* Locked Play Modes merged into same list */}
-            <Card className="space-card-item locked" ariaLabel="Secret Challenge (Locked)" onClick={() => {}}>
-              <div className="space-card-icon">❓</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Secret Challenge</h3>
-                <p className="space-card-subtitle">Coming Soon...</p>
-              </div>
-              <div className="space-lock-badge">🔒 Locked</div>
-            </Card>
-            <Card className="space-card-item locked" ariaLabel="Mystery Mode (Locked)" onClick={() => {}}>
-              <div className="space-card-icon">❓</div>
-              <div className="space-card-info">
-                <h3 className="space-card-title">Mystery Mode</h3>
-                <p className="space-card-subtitle">Coming Soon...</p>
-              </div>
-              <div className="space-lock-badge">🔒 Locked</div>
-            </Card>
+            </div>
           </div>
         </>
       )}
@@ -229,12 +297,12 @@ export default function SpaceHome() {
   return (
     <Routes>
       <Route path="/" element={<SpaceHub />} />
-      <Route path="flashcards" element={<Flashcards />} />
-      <Route path="quiz" element={<SpaceQuiz />} />
       <Route path="solar-system" element={<SolarSystem3D />} />
+      <Route path="illuminate" element={<IlluminateSystem />} />
       <Route path="objects-by-size" element={<ObjectsBySizeMenu />} />
       <Route path="size-stack" element={<SizeStack />} />
-      <Route path="illuminate" element={<IlluminateSystem />} />
+      <Route path="flashcards" element={<Flashcards />} />
+      <Route path="quiz" element={<SpaceQuiz />} />
     </Routes>
   );
 }

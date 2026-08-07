@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import ProvinceQuiz from './ProvinceQuiz';
 const MapExplorer = lazy(() => import('./MapExplorer'));
 import { useGame } from '../../contexts/GameContext';
-import { Flame, Star, BookOpen, Gamepad2 } from 'lucide-react';
+import { Flame, Star, BookOpen, Gamepad2, ArrowLeft, Lock } from 'lucide-react';
 import '../../pages/geo/geo.css';
 
 function GeoDashboard() {
@@ -17,29 +17,45 @@ function GeoDashboard() {
       {/* Navigation Header */}
       <div className="geo-nav-header">
         <div className="geo-header-left">
-          <button className="geo-back-btn" onClick={() => navigate('/')}
+          <button 
+            onClick={() => navigate('/')} 
             title="Back to Home"
             aria-label="Back to Home"
+            style={{
+              background: '#ffffff',
+              border: '2px solid #b0cbaf',
+              boxShadow: '0 3px 0 #b0cbaf',
+              borderRadius: 14,
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#16653e',
+              cursor: 'pointer',
+              transition: 'transform 0.1s ease',
+              flexShrink: 0
+            }}
           >
-            ←
+            <ArrowLeft size={20} strokeWidth={2.5} />
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{
-              fontSize: '1.1rem', width: 30, height: 30,
+              fontSize: '1.1rem', width: 32, height: 32,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'linear-gradient(135deg, #004e92 0%, #0077b6 100%)', borderRadius: 8,
-              boxShadow: '0 2px 6px rgba(0,119,182,0.3)'
+              background: '#0066cc', borderRadius: 10,
+              boxShadow: '0 2px 0 #004488'
             }}>
               🌍
             </div>
-            <h1 className="geo-page-title" style={{ margin: 0, color: '#0066cc', fontSize: '1.4rem', fontWeight: 900 }}>Geography</h1>
+            <h1 className="geo-page-title" style={{ margin: 0, color: '#0f3825', fontSize: '1.4rem', fontWeight: 900 }}>Geography</h1>
           </div>
         </div>
 
         <div style={{
           display: 'flex', flexDirection: 'column', gap: 3,
-          background: '#fafafa', padding: '5px 9px', borderRadius: 12,
-          border: '1px solid #eaeaea', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+          background: '#ffffff', padding: '5px 9px', borderRadius: 12,
+          border: '2px solid #b0cbaf', boxShadow: '0 2px 0 #b0cbaf',
           minWidth: 76, boxSizing: 'border-box'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
@@ -48,12 +64,12 @@ function GeoDashboard() {
               color={hasPlayedToday ? '#ff4d4d' : '#888888'} 
               fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
             />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#444444' }}>{streak ?? 0}</span>
+            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#4e7361' }}>{streak ?? 0}</span>
           </div>
-          <div style={{ height: 1, background: '#eee', margin: '1px 0' }} />
-          <div onClick={() => navigate('/profile')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, cursor: 'pointer' }} aria-label="Go to Profile" role="button">
+          <div style={{ height: 1, background: '#b0cbaf', margin: '1px 0' }} />
+          <div onClick={() => navigate('/profile')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, cursor: 'pointer' }}>
             <Star size={13} color="#f57f17" fill="#ffb300" />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#f57f17' }}>Lv.{level}</span>
+            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#d97706' }}>Lv.{level}</span>
           </div>
         </div>
       </div>
@@ -61,9 +77,11 @@ function GeoDashboard() {
       {/* Mode Selector: Play vs Learn */}
       <div style={{
         display: 'flex',
-        background: '#f1f3f5',
+        background: '#ffffff',
         padding: '4px',
         borderRadius: 14,
+        border: '2px solid #b0cbaf',
+        boxShadow: '0 3px 0 #b0cbaf',
         marginBottom: 20
       }}>
         <button
@@ -73,12 +91,11 @@ function GeoDashboard() {
             padding: '10px 16px',
             borderRadius: 10,
             border: 'none',
-            background: tab === 'play' ? '#ffffff' : 'transparent',
-            color: tab === 'play' ? '#0066cc' : '#6c757d',
+            background: tab === 'play' ? '#16653e' : 'transparent',
+            color: tab === 'play' ? '#ffffff' : '#4e7361',
             fontWeight: 800,
             fontSize: '0.9rem',
             cursor: 'pointer',
-            boxShadow: tab === 'play' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
             transition: 'all 0.15s ease',
             display: 'flex',
             alignItems: 'center',
@@ -86,7 +103,7 @@ function GeoDashboard() {
             gap: 6
           }}
         >
-          <Gamepad2 size={16} color={tab === 'play' ? '#0066cc' : '#6c757d'} />
+          <Gamepad2 size={16} color={tab === 'play' ? '#ffffff' : '#4e7361'} />
           Play
         </button>
         <button
@@ -96,12 +113,11 @@ function GeoDashboard() {
             padding: '10px 16px',
             borderRadius: 10,
             border: 'none',
-            background: tab === 'learn' ? '#ffffff' : 'transparent',
-            color: tab === 'learn' ? '#0066cc' : '#6c757d',
+            background: tab === 'learn' ? '#16653e' : 'transparent',
+            color: tab === 'learn' ? '#ffffff' : '#4e7361',
             fontWeight: 800,
             fontSize: '0.9rem',
             cursor: 'pointer',
-            boxShadow: tab === 'learn' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
             transition: 'all 0.15s ease',
             display: 'flex',
             alignItems: 'center',
@@ -109,64 +125,157 @@ function GeoDashboard() {
             gap: 6
           }}
         >
-          <BookOpen size={16} color={tab === 'learn' ? '#0066cc' : '#6c757d'} />
+          <BookOpen size={16} color={tab === 'learn' ? '#ffffff' : '#4e7361'} />
           Learn
         </button>
       </div>
 
       {tab === 'learn' ? (
         <>
-          {/* Active Learn Modes */}
-          <h2 className="geo-section-heading">Interactive Maps & Discovery</h2>
-          <div className="geo-card-list">
-            <Card className="geo-card-item" onClick={() => navigate('explorer')} ariaLabel="Open Map Explorer">
-              <div className="geo-card-icon">🗺️</div>
-              <div className="geo-card-info">
-                <h3 className="geo-card-title">Map Explorer</h3>
-                <p className="geo-card-subtitle">Free roam interactive map of Philippine provinces</p>
+          <h2 style={{
+            fontFamily: 'var(--font-heading)', fontSize: '1.15rem',
+            margin: '0 0 14px 0', color: '#0f3825', fontWeight: 800
+          }}>
+            Exploration & Discovery
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <Card
+              className="geo-card-item"
+              onClick={() => navigate('/geo/explorer')}
+              ariaLabel="Map Explorer"
+              style={{
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
+                textDecoration: 'none', color: '#fff',
+                background: '#0066cc', borderRadius: 20,
+                padding: '18px 18px', position: 'relative', overflow: 'hidden',
+                boxShadow: '0 5px 0 #004488',
+                border: '2px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{
+                fontSize: '2rem', width: 50, height: 50,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(255,255,255,0.18)', borderRadius: 14,
+                flexShrink: 0
+              }}>
+                🗺️
               </div>
-              <div className="geo-card-arrow">→</div>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>Interactive Map</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.82rem', opacity: 0.9, fontWeight: 500 }}>Explore Philippine provinces</p>
+              </div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>→</div>
             </Card>
-            {/* Locked Learn Modes merged into same list */}
-            <div className="geo-card-item locked" aria-disabled="true">
-              <div className="geo-card-icon">❓</div>
-              <div className="geo-card-info">
-                <h3 className="geo-card-title">Mystery Module</h3>
-                <p className="geo-card-subtitle">Coming Soon...</p>
+
+            {/* Blurred Locked Card */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 16,
+              background: '#ffffff', borderRadius: 20,
+              border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+              padding: '18px', position: 'relative', overflow: 'hidden',
+              cursor: 'not-allowed'
+            }}>
+              <div style={{
+                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                zIndex: 10, background: '#16653e', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
+                padding: '6px 12px', borderRadius: 12, border: '1.5px solid #0e4329', boxShadow: '0 3px 0 #0e4329',
+                display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
+              }}>
+                <Lock size={12} color="#ffffff" /> Locked
               </div>
-              <div className="geo-lock-badge">🔒 Locked</div>
+
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 16, width: '100%',
+                filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem', width: 48, height: 48,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: '#e1f0e2', borderRadius: 14, flexShrink: 0
+                }}>
+                  🏔️
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825' }}>Landmarks & Wonders</h3>
+                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500 }}>Philippine Geography Guide</p>
+                </div>
+              </div>
             </div>
           </div>
         </>
       ) : (
         <>
           {/* Active Play & Earn Modes */}
-          <h2 className="geo-section-heading">Earn XP & Streaks</h2>
-          <div className="geo-card-list">
-            <Card className="geo-card-item" onClick={() => navigate('quiz')} ariaLabel="Start Province Quiz">
-              <div className="geo-card-icon">🎯</div>
-              <div className="geo-card-info">
-                <h3 className="geo-card-title">Province Quiz</h3>
-                <p className="geo-card-subtitle">{provincesCorrect || 0}/81 provinces mastered</p>
+          <h2 style={{
+            fontFamily: 'var(--font-heading)', fontSize: '1.15rem',
+            margin: '0 0 14px 0', color: '#0f3825', fontWeight: 800
+          }}>
+            Earn XP & Streaks
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <Card
+              className="geo-card-item"
+              onClick={() => navigate('/geo/quiz')}
+              ariaLabel="Province Quiz"
+              style={{
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
+                textDecoration: 'none', color: '#fff',
+                background: '#0066cc', borderRadius: 20,
+                padding: '18px 18px', position: 'relative', overflow: 'hidden',
+                boxShadow: '0 5px 0 #004488',
+                border: '2px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{
+                fontSize: '2rem', width: 50, height: 50,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(255,255,255,0.18)', borderRadius: 14,
+                flexShrink: 0
+              }}>
+                🎯
               </div>
-              <div className="geo-card-arrow">→</div>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>Province Quiz</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.82rem', opacity: 0.9, fontWeight: 500 }}>{provincesCorrect || 0}/81 provinces mastered</p>
+              </div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>→</div>
             </Card>
-            {/* Locked Play Modes merged into same list */}
-            <div className="geo-card-item locked" aria-disabled="true">
-              <div className="geo-card-icon">❓</div>
-              <div className="geo-card-info">
-                <h3 className="geo-card-title">Secret Challenge</h3>
-                <p className="geo-card-subtitle">Coming Soon...</p>
+
+            {/* Blurred Locked Card */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 16,
+              background: '#ffffff', borderRadius: 20,
+              border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+              padding: '18px', position: 'relative', overflow: 'hidden',
+              cursor: 'not-allowed'
+            }}>
+              <div style={{
+                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                zIndex: 10, background: '#16653e', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
+                padding: '6px 12px', borderRadius: 12, border: '1.5px solid #0e4329', boxShadow: '0 3px 0 #0e4329',
+                display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
+              }}>
+                <Lock size={12} color="#ffffff" /> Locked
               </div>
-              <div className="geo-lock-badge">🔒 Locked</div>
-            </div>
-            <div className="geo-card-item locked" aria-disabled="true">
-              <div className="geo-card-icon">❓</div>
-              <div className="geo-card-info">
-                <h3 className="geo-card-title">Mystery Mode</h3>
-                <p className="geo-card-subtitle">Coming Soon...</p>
+
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 16, width: '100%',
+                filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem', width: 48, height: 48,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: '#e1f0e2', borderRadius: 14, flexShrink: 0
+                }}>
+                  🚩
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825' }}>Capital Speed Match</h3>
+                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500 }}>Match regional capitals fast</p>
+                </div>
               </div>
-              <div className="geo-lock-badge">🔒 Locked</div>
             </div>
           </div>
         </>
