@@ -78,7 +78,8 @@ function Layout() {
     if (location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/signup') {
       navigate('/', { replace: true });
     }
-  }, [location.pathname, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div style={{ paddingBottom: showNav ? '65px' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>
