@@ -238,7 +238,7 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Dedicated Streak Calendar Section (Replaces Reading & Space Stats) */}
+      {/* Dedicated Streak Calendar Section */}
       <div style={{
         background: '#ffffff',
         border: '1px solid #eaeaea',
@@ -256,12 +256,6 @@ export default function Profile() {
               <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.2rem', color: '#222' }}>Streak Calendar</h3>
               <span style={{ fontSize: '0.8rem', color: '#777', fontWeight: 500 }}>{monthName} {year}</span>
             </div>
-          </div>
-          
-          <div style={{ display: 'flex', gap: 8 }}>
-            <span style={{ background: '#f5f5f5', padding: '6px 12px', borderRadius: 14, fontSize: '0.8rem', fontWeight: 700, color: '#444' }}>
-              {playedDates.length} Days Active
-            </span>
           </div>
         </div>
 

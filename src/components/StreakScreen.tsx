@@ -224,18 +224,6 @@ export default function StreakScreen({
               </button>
             </div>
 
-            {/* Calendar Summary Stats */}
-            <div className="jemz-calendar-summary">
-              <div className="jemz-sum-box">
-                <span className="jemz-sum-val">{playedDates.length}</span>
-                <span className="jemz-sum-lbl">Days Active</span>
-              </div>
-              <div className="jemz-sum-box">
-                <span className="jemz-sum-val">{streak}</span>
-                <span className="jemz-sum-lbl">Current Streak</span>
-              </div>
-            </div>
-
             {/* Monthly Calendar Grid */}
             <div className="jemz-month-grid">
               {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (

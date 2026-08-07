@@ -54,13 +54,12 @@ describe('StreakScreen', () => {
     const calBtn = screen.getByRole('button', { name: /view streak calendar/i });
     await user.click(calBtn);
 
-    expect(screen.getByText('Days Active')).toBeInTheDocument();
-    expect(screen.getByText('Current Streak')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /close calendar/i })).toBeInTheDocument();
 
     const closeBtn = screen.getByRole('button', { name: /close calendar/i });
     await user.click(closeBtn);
 
-    expect(screen.queryByText('Days Active')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /close calendar/i })).not.toBeInTheDocument();
   });
 
   it('skips rendering and calls onContinue immediately if already shown today (when forceShow is false)', () => {
