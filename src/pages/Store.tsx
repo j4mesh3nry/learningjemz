@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Header } from '../components/Header';
 import { useGame } from '../contexts/GameContext';
-import { Gem, Flame, Zap, Shield, Sparkles, Check, ShoppingBag } from 'lucide-react';
+import { Gem, Lock, ShoppingBag, Check } from 'lucide-react';
 import '../index.css';
 
 const STORE_ITEMS = [
@@ -46,107 +46,108 @@ const STORE_ITEMS = [
 
 export default function Store() {
   const { xp } = useGame();
-  // Jemz balance calculation based on total XP or local state
-  const [jemz, setJemz] = useState<number>(() => {
-    const saved = localStorage.getItem('learningjemz_jemz');
-    return saved ? parseInt(saved, 10) : Math.max(100, Math.floor(xp / 2) + 50);
-  });
-
-  const [purchased, setPurchased] = useState<string[]>(() => {
-    const saved = localStorage.getItem('learningjemz_purchased');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [toast, setToast] = useState<string | null>(null);
-
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const handleBuy = (item: typeof STORE_ITEMS[0]) => {
-    if (purchased.includes(item.id)) {
-      showToast(`You already own ${item.name}!`);
-      return;
-    }
-
-    if (jemz < item.price) {
-      showToast(`Not enough Jemz! You need 💎 ${item.price - jemz} more.`);
-      return;
-    }
-
-    const newBalance = jemz - item.price;
-    setJemz(newBalance);
-    localStorage.setItem('learningjemz_jemz', newBalance.toString());
-
-    const newPurchased = [...purchased, item.id];
-    setPurchased(newPurchased);
-    localStorage.setItem('learningjemz_purchased', JSON.stringify(newPurchased));
-
-    showToast(`Successfully unlocked ${item.name}! 🎉`);
-  };
+  const [jemz] = useState<number>(() => Math.max(100, Math.floor(xp / 2) + 50));
 
   return (
     <div style={{
       minHeight: '100vh', background: 'var(--color-bg-page)',
       padding: '24px 16px 90px', maxWidth: 420, margin: '0 auto',
+      position: 'relative'
     }}>
       <Header />
 
-      {/* Toast Notification */}
-      {toast && (
-        <div style={{
-          position: 'fixed', top: 70, left: '50%', transform: 'translateX(-50%)',
-          background: '#0e3d26', color: '#38d989', border: '1px solid #38d989',
-          padding: '10px 18px', borderRadius: 14, fontWeight: 700, fontSize: '0.85rem',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.3)', zIndex: 200, textAlign: 'center'
-        }}>
-          {toast}
-        </div>
-      )}
-
-      {/* Title & Currency Balance Banner */}
+      {/* Centered Glassmorphic "Coming Soon" Overlay */}
       <div style={{
-        background: 'linear-gradient(135deg, #0e3d26 0%, #16603b 100%)',
-        borderRadius: 20, padding: '16px 18px', marginBottom: 20,
-        boxShadow: '0 6px 0 #072415', color: '#ffffff',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        border: '1px solid rgba(255,255,255,0.15)'
+        position: 'absolute',
+        top: 150,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: 'calc(100% - 32px)',
+        maxWidth: 380,
+        zIndex: 50,
+        background: 'rgba(10, 46, 29, 0.88)',
+        backdropFilter: 'blur(12px)',
+        border: '2px solid #38d989',
+        boxShadow: '0 12px 36px rgba(0,0,0,0.35)',
+        borderRadius: 24,
+        padding: '32px 24px',
+        textAlign: 'center',
+        color: '#ffffff'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #1c7c54, #38d989)',
-            borderRadius: 14, padding: '8px', display: 'flex',
-            alignItems: 'center', justifyContent: 'center'
-          }}>
-            <ShoppingBag size={22} color="#ffffff" />
-          </div>
-          <div>
-            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', margin: 0, fontWeight: 800 }}>
-              Jemz Store
-            </h2>
-            <div style={{ fontSize: '0.75rem', opacity: 0.85, fontWeight: 500 }}>
-              Power up your learning!
-            </div>
-          </div>
-        </div>
-
-        {/* Currency Balance Badge */}
         <div style={{
-          background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
-          padding: '6px 12px', borderRadius: 16, display: 'flex', alignItems: 'center', gap: 6
+          width: 60, height: 60, borderRadius: '50%',
+          background: 'rgba(56, 217, 137, 0.15)',
+          border: '2px solid #38d989',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 16px'
         }}>
-          <Gem size={18} color="#38d989" fill="#38d989" />
-          <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#ffffff' }}>{jemz}</span>
+          <Lock size={28} color="#38d989" />
         </div>
+        <h2 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '1.5rem',
+          margin: '0 0 8px 0',
+          fontWeight: 800,
+          color: '#ffffff'
+        }}>
+          Jemz Store — Coming Soon!
+        </h2>
+        <p style={{
+          margin: 0,
+          fontSize: '0.88rem',
+          color: 'rgba(255, 255, 255, 0.85)',
+          lineHeight: 1.5,
+          fontWeight: 500
+        }}>
+          We're preparing exclusive avatar skins, streak freezes, and XP boosters. Stay tuned!
+        </p>
       </div>
 
-      {/* Shop Item List */}
-      <div style={{ display: 'grid', gap: 14 }}>
-        {STORE_ITEMS.map((item) => {
-          const isOwned = purchased.includes(item.id);
+      {/* Blurred Store Content Backdrop */}
+      <div style={{
+        filter: 'blur(6px)',
+        opacity: 0.55,
+        pointerEvents: 'none',
+        userSelect: 'none'
+      }}>
+        {/* Title & Currency Balance Banner */}
+        <div style={{
+          background: 'linear-gradient(135deg, #0e3d26 0%, #16603b 100%)',
+          borderRadius: 20, padding: '16px 18px', marginBottom: 20,
+          boxShadow: '0 6px 0 #072415', color: '#ffffff',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          border: '1px solid rgba(255,255,255,0.15)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              background: 'linear-gradient(135deg, #1c7c54, #38d989)',
+              borderRadius: 14, padding: '8px', display: 'flex',
+              alignItems: 'center', justifyContent: 'center'
+            }}>
+              <ShoppingBag size={22} color="#ffffff" />
+            </div>
+            <div>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', margin: 0, fontWeight: 800 }}>
+                Jemz Store
+              </h2>
+              <div style={{ fontSize: '0.75rem', opacity: 0.85, fontWeight: 500 }}>
+                Power up your learning!
+              </div>
+            </div>
+          </div>
 
-          return (
+          <div style={{
+            background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
+            padding: '6px 12px', borderRadius: 16, display: 'flex', alignItems: 'center', gap: 6
+          }}>
+            <Gem size={18} color="#38d989" fill="#38d989" />
+            <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#ffffff' }}>{jemz}</span>
+          </div>
+        </div>
+
+        {/* Shop Item List */}
+        <div style={{ display: 'grid', gap: 14 }}>
+          {STORE_ITEMS.map((item) => (
             <div
               key={item.id}
               style={{
@@ -194,33 +195,27 @@ export default function Store() {
               </div>
 
               <button
-                onClick={() => handleBuy(item)}
-                disabled={isOwned}
+                disabled
                 style={{
-                  background: isOwned ? '#e0e0e0' : 'var(--color-primary)',
-                  color: isOwned ? '#666666' : '#ffffff',
+                  background: 'var(--color-primary)',
+                  color: '#ffffff',
                   fontWeight: 800,
                   fontSize: '0.85rem',
                   padding: '10px 14px',
                   borderRadius: 14,
                   border: 'none',
-                  boxShadow: isOwned ? 'none' : '0 4px 0 #0e3d26',
-                  cursor: isOwned ? 'default' : 'pointer',
+                  boxShadow: '0 4px 0 #0e3d26',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 4,
                   whiteSpace: 'nowrap'
                 }}
               >
-                {isOwned ? (
-                  <><Check size={14} /> Owned</>
-                ) : (
-                  <><Gem size={14} color="#ffffff" /> {item.price}</>
-                )}
+                <Gem size={14} color="#ffffff" /> {item.price}
               </button>
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
     </div>
   );

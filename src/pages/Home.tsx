@@ -84,66 +84,14 @@ export default function Home() {
     }}>
       <Header />
 
-      {/* Daily Mission Banner */}
-      <div style={{
-        background: 'linear-gradient(135deg, #104e30 0%, #1c7c54 100%)',
-        borderRadius: 20,
-        padding: '14px 16px',
-        marginBottom: 20,
-        boxShadow: '0 6px 0 #092c1b',
-        color: '#ffffff',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        border: '1px solid rgba(255,255,255,0.15)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{
-            background: 'rgba(255,255,255,0.15)',
-            width: 44, height: 44, borderRadius: 14,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.4rem'
-          }}>
-            ⚡
-          </div>
-          <div>
-            <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#38d989' }}>
-              Daily Mission
-            </div>
-            <div style={{ fontSize: '0.92rem', fontWeight: 700, marginTop: 2 }}>
-              {hasPlayedToday ? 'Daily streak ignited! 🔥' : 'Play 1 game to ignite your streak!'}
-            </div>
-          </div>
-        </div>
-        <button
-          onClick={() => navigate('/chess')}
-          style={{
-            background: '#ffffff',
-            color: '#0e3d26',
-            fontWeight: 800,
-            fontSize: '0.8rem',
-            padding: '8px 12px',
-            borderRadius: 12,
-            boxShadow: '0 3px 0 #c2dfd1',
-            border: 'none',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          {hasPlayedToday ? 'Keep Playing' : 'Ignite 🔥'}
-        </button>
-      </div>
-
       {/* Main Section Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-        <h2 style={{
-          fontFamily: 'var(--font-heading)', fontSize: '1.2rem',
-          margin: 0, color: '#0e3d26', fontWeight: 800,
-          display: 'flex', alignItems: 'center', gap: '6px'
-        }}>
-          What do you want to play and learn?
-        </h2>
-        <span style={{ fontSize: '0.78rem', color: '#496c5b', fontWeight: 700 }}>2 Available</span>
-      </div>
+      <h2 style={{
+        fontFamily: 'var(--font-heading)', fontSize: '1.2rem',
+        marginBottom: 14, color: '#0e3d26', fontWeight: 800,
+        display: 'flex', alignItems: 'center', gap: '6px'
+      }}>
+        What do you want to play and learn?
+      </h2>
 
       {/* Module Cards */}
       <div style={{ display: 'grid', gap: 16 }}>
@@ -225,16 +173,13 @@ export default function Home() {
       </div>
 
       {/* Locked Modules Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 30, marginBottom: 14 }}>
-        <h2 style={{
-          fontFamily: 'var(--font-heading)', fontSize: '1.2rem',
-          margin: 0, color: '#0e3d26', fontWeight: 800,
-          display: 'flex', alignItems: 'center', gap: '6px'
-        }}>
-          <span>🚀</span> Coming Soon
-        </h2>
-        <span style={{ fontSize: '0.78rem', color: '#496c5b', fontWeight: 700 }}>5 Modules</span>
-      </div>
+      <h2 style={{
+        fontFamily: 'var(--font-heading)', fontSize: '1.2rem',
+        marginTop: 30, marginBottom: 14, color: '#0e3d26', fontWeight: 800,
+        display: 'flex', alignItems: 'center', gap: '6px'
+      }}>
+        <span>🚀</span> Coming Soon
+      </h2>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
         {lockedModules.map((m) => (
