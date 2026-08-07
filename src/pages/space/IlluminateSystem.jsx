@@ -25,13 +25,6 @@ export default function IlluminateSystem() {
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   
   const inputRef = useRef(null);
-  const currentItemRef = useRef(null);
-
-  useEffect(() => {
-    if (level && !isComplete && currentItemRef.current) {
-      currentItemRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, [currentIndex, level, isComplete]);
 
   const startGame = (diffLevel) => {
     setLevel(diffLevel);
@@ -41,8 +34,8 @@ export default function IlluminateSystem() {
     setInputValue('');
     setIsComplete(false);
     setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
-    // Focus input on start
-    setTimeout(() => inputRef.current?.focus(), 100);
+    // Focus input on start without triggering browser page scroll
+    setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 100);
   };
 
   const handleSubmit = (e) => {
@@ -195,7 +188,6 @@ export default function IlluminateSystem() {
             return (
               <div 
                 key={obj.id} 
-                ref={isCurrent ? currentItemRef : null}
                 className={`illum-circle-wrapper ${isCurrent ? 'illum-current' : ''}`}
               >
                 <div 
@@ -247,9 +239,6 @@ export default function IlluminateSystem() {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onFocus={() => {
-                currentItemRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }}
               placeholder={`Type #${currentIndex + 1} (${gameData[currentIndex]?.type || 'Object'})...`}
               className={`illum-input ${isError ? 'illum-error' : ''}`}
               autoComplete="off"
