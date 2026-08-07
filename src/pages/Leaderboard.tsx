@@ -162,43 +162,44 @@ export default function Leaderboard() {
 
               return (
                 <div key={leader.id} style={{
-                  display: 'flex', alignItems: 'center', padding: '16px',
+                  display: 'flex', alignItems: 'center', padding: '14px 16px',
                   background: isMe ? '#f0fdf4' : '#fff', 
                   borderRadius: 16,
                   border: isMe ? '2px solid #4caf50' : '1px solid #eaeaea',
                   boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
                 }}>
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 36 }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, flexShrink: 0 }}>
                     {rankDisplay}
                   </div>
-                  <div style={{ fontSize: '2rem', margin: '0 16px 0 8px', background: '#f8f9fa', borderRadius: '50%', padding: 4 }}>
+                  <div style={{ fontSize: '1.8rem', margin: '0 12px 0 8px', background: '#f8f9fa', borderRadius: '50%', padding: 4, flexShrink: 0 }}>
                     {leader.avatar || '👤'}
                   </div>
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, paddingRight: 8 }}>
                     <span style={{ fontWeight: 700, color: '#333', fontSize: '1.05rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {leader.name || 'Learner'}
                     </span>
-                    <span style={{ color: '#666', fontSize: '0.85rem' }}>
+                    <span style={{ color: '#666', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       Lv. {leader.level || 1} {sortBy === 'streak' ? `• ${leader.xp || 0} XP` : (
-                        <>• <span className={leaderStreakIsZero ? 'unlit-icon' : ''}>🔥</span> <span className={leaderStreakIsZero ? 'unlit-text' : ''}>{leaderStreak} {dayLabel}</span></>
+                        <>• <span className={leaderStreakIsZero ? 'unlit-icon' : ''}>🔥</span> <span style={{ color: leaderStreakIsZero ? '#757575' : '#e53935', fontWeight: 600 }}>{leaderStreak} {dayLabel}</span></>
                       )}
                     </span>
                   </div>
                   <div style={{
                     fontWeight: 800,
-                    color: sortBy === 'streak' ? (leaderStreakIsZero ? '#9e9e9e' : '#e53935') : 'var(--color-primary)',
-                    fontSize: '1.05rem',
+                    fontSize: '1.02rem',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 4
+                    gap: 4,
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap'
                   }}>
                     {sortBy === 'streak' ? (
                       <>
                         <span className={leaderStreakIsZero ? 'unlit-icon' : ''}>🔥</span>
-                        <span className={leaderStreakIsZero ? 'unlit-text' : ''}>{leaderStreak} {dayLabel}</span>
+                        <span style={{ color: leaderStreakIsZero ? '#757575' : '#e53935' }}>{leaderStreak} {dayLabel}</span>
                       </>
                     ) : (
-                      <>{leader.xp || 0} XP</>
+                      <span style={{ color: 'var(--color-primary)' }}>{leader.xp || 0} XP</span>
                     )}
                   </div>
                 </div>
@@ -222,37 +223,38 @@ export default function Leaderboard() {
             boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
             border: '2px solid var(--color-primary)'
           }}>
-            <div style={{ fontWeight: 700, color: 'var(--color-primary)', width: 24, fontSize: '1rem', display: 'flex', justifyContent: 'center' }}>
+            <div style={{ fontWeight: 700, color: 'var(--color-primary)', width: 24, fontSize: '1rem', display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
               {currentUserRank}
             </div>
-            <div style={{ fontSize: '2rem', margin: '0 16px 0 8px', background: '#f8f9fa', borderRadius: '50%', padding: 4 }}>
+            <div style={{ fontSize: '1.8rem', margin: '0 12px 0 8px', background: '#f8f9fa', borderRadius: '50%', padding: 4, flexShrink: 0 }}>
               {currentUserData?.avatar || user?.user_metadata?.avatar || '👤'}
             </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, paddingRight: 8 }}>
               <span style={{ fontWeight: 700, color: 'var(--color-primary-dark)', fontSize: '1.05rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {currentUserData?.name || user?.user_metadata?.name || 'You'}
               </span>
-              <span style={{ color: '#666', fontSize: '0.85rem' }}>
+              <span style={{ color: '#666', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Lv. {level} {sortBy === 'streak' ? `• ${xp} XP` : (
-                  <>• <span className={myStreakIsZero ? 'unlit-icon' : ''}>🔥</span> <span className={myStreakIsZero ? 'unlit-text' : ''}>{myStreak} {myDayLabel}</span></>
+                  <>• <span className={myStreakIsZero ? 'unlit-icon' : ''}>🔥</span> <span style={{ color: myStreakIsZero ? '#757575' : '#e53935', fontWeight: 600 }}>{myStreak} {myDayLabel}</span></>
                 )}
               </span>
             </div>
             <div style={{
               fontWeight: 800,
-              color: sortBy === 'streak' ? (myStreakIsZero ? '#9e9e9e' : '#e53935') : 'var(--color-primary)',
-              fontSize: '1.05rem',
+              fontSize: '1.02rem',
               display: 'flex',
               alignItems: 'center',
-              gap: 4
+              gap: 4,
+              flexShrink: 0,
+              whiteSpace: 'nowrap'
             }}>
               {sortBy === 'streak' ? (
                 <>
                   <span className={myStreakIsZero ? 'unlit-icon' : ''}>🔥</span>
-                  <span className={myStreakIsZero ? 'unlit-text' : ''}>{myStreak} {myDayLabel}</span>
+                  <span style={{ color: myStreakIsZero ? '#757575' : '#e53935' }}>{myStreak} {myDayLabel}</span>
                 </>
               ) : (
-                <>{xp} XP</>
+                <span style={{ color: 'var(--color-primary)' }}>{xp} XP</span>
               )}
             </div>
           </div>
