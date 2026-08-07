@@ -142,38 +142,41 @@ button:active { transform: scale(0.97); }
   text-decoration: none;
 }
 
-/* Bottom navigation bar - Deep Forest Green with Mint Active States */
+/* Bottom navigation bar - Deep Forest Green with Spacious Mint Active Pill States */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 66px;
-  padding-bottom: 6px;
+  height: 68px;
+  padding-bottom: 8px;
   padding-top: 6px;
-  background: #082618;
+  background: #061e14;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
   z-index: 100;
 }
 .bottom-nav a {
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 0.75rem;
-  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.72rem;
+  font-weight: 700;
   text-decoration: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4px 12px;
-  border-radius: 12px;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  gap: 3px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  transition: all 0.2s ease;
 }
 .bottom-nav a.active { 
   color: #38d989;
-  background: rgba(56, 217, 137, 0.12);
+  background: rgba(56, 217, 137, 0.14);
+  border: 1px solid rgba(56, 217, 137, 0.25);
+  transform: translateY(-2px);
 }
 
 /* Auth Styles */

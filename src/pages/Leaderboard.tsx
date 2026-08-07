@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
-import { Trophy, Flame, Zap } from 'lucide-react';
+import { Trophy, Flame, Zap, Crown, Award, Medal } from 'lucide-react';
 import { Header } from '../components/Header';
 import '../index.css';
 
@@ -68,7 +68,6 @@ export default function Leaderboard() {
   const handleTabChange = (newSortBy: 'xp' | 'streak') => {
     if (newSortBy === sortBy) return;
     setSortBy(newSortBy);
-    // Instant in-memory sort to prevent layout jump/flicker
     setLeaders(prev => [...prev].sort((a, b) => {
       const valA = newSortBy === 'streak' ? getEffectiveStreak(a) : (Number(a.xp) || 0);
       const valB = newSortBy === 'streak' ? getEffectiveStreak(b) : (Number(b.xp) || 0);
@@ -79,205 +78,197 @@ export default function Leaderboard() {
 
   const currentUserRankIndex = leaders.findIndex(l => l.id === user?.id);
   const currentUserRank = currentUserRankIndex !== -1 ? currentUserRankIndex + 1 : '> 50';
-  const currentUserData = currentUserRankIndex !== -1 ? leaders[currentUserRankIndex] : null;
 
-  const myStreak = streak || 0;
-  const myStreakIsZero = myStreak === 0;
-  const myDayLabel = (myStreak === 0 || myStreak === 1) ? 'Day' : 'Days';
+  const top1 = leaders[0];
+  const top2 = leaders[1];
+  const top3 = leaders[2];
+  const restLeaders = leaders.slice(3);
 
   return (
     <div style={{
-      minHeight: '100vh', background: '#ffffff',
-      padding: '24px 16px 80px', maxWidth: 420, margin: '0 auto',
+      minHeight: '100vh', background: 'var(--color-bg-page)',
+      padding: '24px 16px 100px', maxWidth: 420, margin: '0 auto',
     }}>
       <Header />
 
+      {/* Title & Tabs Header */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         marginBottom: 16
       }}>
         <h2 style={{
           fontFamily: 'var(--font-heading)', fontSize: '1.3rem',
-          margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: 8
+          margin: 0, color: '#0e3d26', fontWeight: 800,
+          display: 'flex', alignItems: 'center', gap: '8px'
         }}>
-          <Trophy size={24} color="#f57f17" /> Leaderboard
+          <Trophy size={22} color="#ffb400" /> Leaderboard
         </h2>
-      </div>
 
-      {/* Filter Tabs */}
-      <div style={{
-        display: 'flex',
-        background: '#f1f3f5',
-        padding: '4px',
-        borderRadius: 14,
-        marginBottom: 20
-      }}>
-        <button
-          onClick={() => handleTabChange('xp')}
-          style={{
-            flex: 1,
-            padding: '10px 16px',
-            borderRadius: 10,
-            border: 'none',
-            background: sortBy === 'xp' ? '#ffffff' : 'transparent',
-            color: sortBy === 'xp' ? 'var(--color-primary-dark)' : '#6c757d',
-            fontWeight: 700,
-            fontSize: '0.88rem',
-            cursor: 'pointer',
-            boxShadow: sortBy === 'xp' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
-            transition: 'all 0.15s ease',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 6
-          }}
-        >
-          <Zap size={16} color={sortBy === 'xp' ? 'var(--color-primary)' : '#6c757d'} />
-          XP Rank
-        </button>
-        <button
-          onClick={() => handleTabChange('streak')}
-          style={{
-            flex: 1,
-            padding: '10px 16px',
-            borderRadius: 10,
-            border: 'none',
-            background: sortBy === 'streak' ? '#ffffff' : 'transparent',
-            color: sortBy === 'streak' ? '#e53935' : '#6c757d',
-            fontWeight: 700,
-            fontSize: '0.88rem',
-            cursor: 'pointer',
-            boxShadow: sortBy === 'streak' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
-            transition: 'all 0.15s ease',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 6
-          }}
-        >
-          <Flame size={16} color={sortBy === 'streak' ? '#e53935' : '#6c757d'} />
-          Streak Rank
-        </button>
-      </div>
-
-      {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: 'var(--color-primary)', fontWeight: 'bold' }}>
-          Loading Leaderboards...
+        {/* Tab Switcher */}
+        <div style={{
+          display: 'flex', background: '#d5e6dc', padding: '3px',
+          borderRadius: 14, border: '1px solid #b7d6c5'
+        }}>
+          <button
+            onClick={() => handleTabChange('xp')}
+            style={{
+              background: sortBy === 'xp' ? '#0e3d26' : 'transparent',
+              color: sortBy === 'xp' ? '#ffffff' : '#1c7c54',
+              fontWeight: 800, fontSize: '0.78rem', padding: '6px 12px',
+              borderRadius: 11, border: 'none', cursor: 'pointer', transition: 'all 0.2s ease',
+              display: 'flex', alignItems: 'center', gap: 4
+            }}
+          >
+            <Zap size={13} color={sortBy === 'xp' ? '#ffb400' : '#1c7c54'} /> XP
+          </button>
+          <button
+            onClick={() => handleTabChange('streak')}
+            style={{
+              background: sortBy === 'streak' ? '#0e3d26' : 'transparent',
+              color: sortBy === 'streak' ? '#ffffff' : '#1c7c54',
+              fontWeight: 800, fontSize: '0.78rem', padding: '6px 12px',
+              borderRadius: 11, border: 'none', cursor: 'pointer', transition: 'all 0.2s ease',
+              display: 'flex', alignItems: 'center', gap: 4
+            }}
+          >
+            <Flame size={13} color={sortBy === 'streak' ? '#ff5252' : '#1c7c54'} /> Streak
+          </button>
         </div>
-      ) : (
-        <>
-          {/* List for All Ranks */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {leaders.map((leader, index) => {
-              const rank = index + 1;
-              const isMe = leader.id === user?.id;
-              let rankDisplay;
-              if (rank === 1) rankDisplay = <div style={{ fontSize: '1.5rem' }}>🥇</div>;
-              else if (rank === 2) rankDisplay = <div style={{ fontSize: '1.5rem' }}>🥈</div>;
-              else if (rank === 3) rankDisplay = <div style={{ fontSize: '1.5rem' }}>🥉</div>;
-              else rankDisplay = <div style={{ fontWeight: 700, color: '#999', fontSize: '1.1rem' }}>{rank}</div>;
+      </div>
 
-              const leaderStreak = getEffectiveStreak(leader);
-              const leaderStreakIsZero = leaderStreak === 0;
-              const dayLabel = (leaderStreak === 0 || leaderStreak === 1) ? 'Day' : 'Days';
-
-              return (
-                <div key={leader.id} style={{
-                  display: 'flex', alignItems: 'center', padding: '14px 16px',
-                  background: isMe ? '#f0fdf4' : '#fff', 
-                  borderRadius: 16,
-                  border: isMe ? '2px solid #4caf50' : '1px solid #eaeaea',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, flexShrink: 0 }}>
-                    {rankDisplay}
-                  </div>
-                  <div style={{ fontSize: '1.8rem', margin: '0 12px 0 8px', background: '#f8f9fa', borderRadius: '50%', padding: 4, flexShrink: 0 }}>
-                    {leader.avatar || '👤'}
-                  </div>
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, paddingRight: 8 }}>
-                    <span style={{ fontWeight: 700, color: '#333', fontSize: '1.05rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {leader.name || 'Learner'}
-                    </span>
-                    <span style={{ color: '#666', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      Lv. {leader.level || 1} {sortBy === 'streak' ? `• ${leader.xp || 0} XP` : (
-                        <>• <Flame size={13} color={leaderStreakIsZero ? "#888888" : "#ff4d4d"} fill={leaderStreakIsZero ? "#bbbbbb" : "#ff4d4d"} style={{ verticalAlign: 'middle', display: 'inline' }} /> <span style={{ color: leaderStreakIsZero ? '#757575' : '#e53935', fontWeight: 600 }}>{leaderStreak}</span></>
-                      )}
-                    </span>
-                  </div>
-                  <div style={{
-                    fontWeight: 800,
-                    fontSize: '1.02rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 4,
-                    flexShrink: 0,
-                    whiteSpace: 'nowrap'
-                  }}>
-                    {sortBy === 'streak' ? (
-                      <>
-                        <Flame size={16} color={leaderStreakIsZero ? "#888888" : "#ff4d4d"} fill={leaderStreakIsZero ? "#bbbbbb" : "#ff4d4d"} />
-                        <span style={{ color: leaderStreakIsZero ? '#757575' : '#e53935' }}>{leaderStreak}</span>
-                      </>
-                    ) : (
-                      <span style={{ color: 'var(--color-primary)' }}>{leader.xp || 0} XP</span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+      {/* Gamified Top 3 Podium */}
+      {leaders.length >= 3 && (
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1fr 1.1fr 1fr', gap: 8,
+          alignItems: 'flex-end', marginBottom: 20, paddingTop: 12
+        }}>
+          {/* 2nd Place */}
+          <div style={{
+            background: 'linear-gradient(180deg, #ffffff 0%, #e2ece6 100%)',
+            borderRadius: 18, border: '2px solid #b2ccbe', boxShadow: '0 4px 0 #9cbcae',
+            padding: '12px 8px', textAlign: 'center', position: 'relative'
+          }}>
+            <div style={{ fontSize: '1.5rem', marginTop: '-20px' }}>🥈</div>
+            <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top2?.avatar || '👤'}</div>
+            <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#0e3d26', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {top2?.name || 'Player'}
+            </div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1c7c54', marginTop: 2 }}>
+              {sortBy === 'xp' ? `${top2?.xp || 0} XP` : `${getEffectiveStreak(top2)} Days`}
+            </div>
           </div>
-        </>
+
+          {/* 1st Place (Gold Center Crown) */}
+          <div style={{
+            background: 'linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%)',
+            borderRadius: 20, border: '2px solid #f59e0b', boxShadow: '0 6px 0 #d97706',
+            padding: '16px 8px', textAlign: 'center', position: 'relative', transform: 'scale(1.05)', zIndex: 2
+          }}>
+            <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)' }}>
+              <Crown size={24} color="#f59e0b" fill="#fbbf24" />
+            </div>
+            <div style={{ fontSize: '2.2rem', margin: '6px 0 2px' }}>{top1?.avatar || '👑'}</div>
+            <div style={{ fontWeight: 900, fontSize: '0.92rem', color: '#78350f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {top1?.name || 'Champion'}
+            </div>
+            <div style={{ fontSize: '0.82rem', fontWeight: 900, color: '#d97706', marginTop: 2 }}>
+              {sortBy === 'xp' ? `${top1?.xp || 0} XP` : `${getEffectiveStreak(top1)} Days`}
+            </div>
+          </div>
+
+          {/* 3rd Place */}
+          <div style={{
+            background: 'linear-gradient(180deg, #ffffff 0%, #f4eae4 100%)',
+            borderRadius: 18, border: '2px solid #d9bba8', boxShadow: '0 4px 0 #c2a28d',
+            padding: '12px 8px', textAlign: 'center', position: 'relative'
+          }}>
+            <div style={{ fontSize: '1.5rem', marginTop: '-20px' }}>🥉</div>
+            <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top3?.avatar || '👤'}</div>
+            <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#4a2c1d', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {top3?.name || 'Player'}
+            </div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#b45309', marginTop: 2 }}>
+              {sortBy === 'xp' ? `${top3?.xp || 0} XP` : `${getEffectiveStreak(top3)} Days`}
+            </div>
+          </div>
+        </div>
       )}
 
-      {/* Sticky Current User */}
-      {!loading && user && (
+      {/* Leaderboard List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '30px', color: '#1c7c54', fontWeight: 700 }}>
+            Loading rankings...
+          </div>
+        ) : (
+          (leaders.length > 3 ? restLeaders : leaders).map((item, idx) => {
+            const actualRank = leaders.length > 3 ? idx + 4 : idx + 1;
+            const isMe = item.id === user?.id;
+
+            return (
+              <div
+                key={item.id || idx}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  background: isMe ? '#dcf0e5' : '#ffffff',
+                  border: isMe ? '2px solid #1c7c54' : '1.5px solid #cce3d7',
+                  boxShadow: isMe ? '0 4px 0 #155d35' : '0 3px 0 #b7d6c5',
+                  borderRadius: 16, padding: '12px 14px',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: 10,
+                    background: isMe ? '#1c7c54' : '#e8f3ed',
+                    color: isMe ? '#ffffff' : '#0e3d26',
+                    fontWeight: 900, fontSize: '0.85rem',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    {actualRank}
+                  </div>
+                  <div style={{ fontSize: '1.4rem' }}>{item.avatar || '👤'}</div>
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0e3d26' }}>
+                      {item.name || 'Learner'} {isMe && <span style={{ color: '#1c7c54', fontSize: '0.75rem' }}>(You)</span>}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#496c5b', fontWeight: 600 }}>
+                      Level {item.level || 1}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: '#1c7c54' }}>
+                  {sortBy === 'xp' ? `${item.xp || 0} XP` : `${getEffectiveStreak(item)} Days`}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Pinned Bottom User Rank Bar */}
+      {user && (
         <div style={{
-          position: 'fixed', bottom: 70, left: '50%', transform: 'translateX(-50%)',
-          width: '100%', maxWidth: 420, padding: '0 16px', boxSizing: 'border-box',
-          zIndex: 50
+          position: 'fixed', bottom: 74, left: '50%', transform: 'translateX(-50%)',
+          width: 'calc(100% - 32px)', maxWidth: 388,
+          background: 'linear-gradient(135deg, #0e3d26 0%, #16603b 100%)',
+          border: '2px solid #38d989', boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
+          borderRadius: 16, padding: '10px 16px', color: '#ffffff',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          zIndex: 90
         }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', padding: '12px 16px',
-            background: '#ffffff',
-            borderRadius: 16, 
-            boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
-            border: '2px solid var(--color-primary)'
-          }}>
-            <div style={{ fontWeight: 700, color: 'var(--color-primary)', width: 24, fontSize: '1rem', display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
-              {currentUserRank}
-            </div>
-            <div style={{ fontSize: '1.8rem', margin: '0 12px 0 8px', background: '#f8f9fa', borderRadius: '50%', padding: 4, flexShrink: 0 }}>
-              {currentUserData?.avatar || user?.user_metadata?.avatar || '👤'}
-            </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, paddingRight: 8 }}>
-              <span style={{ fontWeight: 700, color: 'var(--color-primary-dark)', fontSize: '1.05rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {currentUserData?.name || user?.user_metadata?.name || 'You'}
-              </span>
-              <span style={{ color: '#666', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                Lv. {level} {sortBy === 'streak' ? `• ${xp} XP` : (
-                  <>• <Flame size={13} color={myStreakIsZero ? "#888888" : "#ff4d4d"} fill={myStreakIsZero ? "#bbbbbb" : "#ff4d4d"} style={{ verticalAlign: 'middle', display: 'inline' }} /> <span style={{ color: myStreakIsZero ? '#757575' : '#e53935', fontWeight: 600 }}>{myStreak}</span></>
-                )}
-              </span>
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
-              fontWeight: 800,
-              fontSize: '1.02rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              flexShrink: 0,
-              whiteSpace: 'nowrap'
+              background: '#38d989', color: '#0a2e1d', fontWeight: 900,
+              padding: '3px 8px', borderRadius: 8, fontSize: '0.8rem'
             }}>
-              {sortBy === 'streak' ? (
-                <>
-                  <Flame size={16} color={myStreakIsZero ? "#888888" : "#ff4d4d"} fill={myStreakIsZero ? "#bbbbbb" : "#ff4d4d"} />
-                  <span style={{ color: myStreakIsZero ? '#757575' : '#e53935' }}>{myStreak}</span>
-                </>
-              ) : (
-                <span style={{ color: 'var(--color-primary)' }}>{xp} XP</span>
-              )}
+              #{currentUserRank}
             </div>
+            <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>Your Rank</div>
+          </div>
+          <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#38d989' }}>
+            {sortBy === 'xp' ? `${xp} XP` : `${streak} Days`}
           </div>
         </div>
       )}

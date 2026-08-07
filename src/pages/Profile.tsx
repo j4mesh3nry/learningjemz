@@ -73,29 +73,31 @@ export default function Profile() {
         </div>
       )}
 
-      {/* Sticky Header */}
+      {/* Compact Sticky Header */}
       <div
         style={{
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          background: '#ffffff',
-          paddingTop: 24,
-          paddingBottom: 16,
-          margin: '-24px -16px 24px -16px',
+          background: 'linear-gradient(180deg, #051b10 0%, #092618 100%)',
+          paddingTop: 12,
+          paddingBottom: 12,
+          margin: '-24px -16px 20px -16px',
           paddingLeft: 16,
           paddingRight: 16,
-          borderBottom: '1px solid #eaeaea',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          borderBottomLeftRadius: 18,
+          borderBottomRightRadius: 18,
         }}
       >
-        <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.4rem' }}>Me</h2>
+        <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.25rem', color: '#ffffff', fontWeight: 800 }}>Profile</h2>
         <Settings
-          size={24}
-          color="var(--color-muted)"
+          size={20}
+          color="#38d989"
           style={{ cursor: 'pointer' }}
           onClick={() => navigate('/settings')}
           role="button"
