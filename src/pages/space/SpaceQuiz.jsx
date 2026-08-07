@@ -67,18 +67,8 @@ export default function SpaceQuiz() {
     }
     
     // Gamification
-    const oldStreak = streak;
-    setDisplayedStreak(oldStreak);
-    const didIncrease = recordActivity();
-    setStreakIncreased(didIncrease);
-    
-    if (didIncrease) {
-      setTimeout(() => {
-        setIgniting(true);
-        setDisplayedStreak(oldStreak + 1);
-      }, 800);
-    }
-  }, [streak, recordActivity]);
+    recordActivity();
+  }, [recordActivity]);
 
   const handleAnswer = useCallback((index) => {
     if (selectedAnswer !== null) return;
@@ -126,23 +116,14 @@ export default function SpaceQuiz() {
         <VictoryScreen
           isOpen={true}
           title="Quiz Complete!"
+          subtitle={`You scored ${score} out of ${questions.length} (${accuracy}% accuracy)`}
           xpGained={sessionXp}
-          streak={displayedStreak}
-          igniting={igniting}
-          streakIncreased={streakIncreased}
-          onContinue={startQuiz}
-        >
-          <div className="results-stats" style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 20 }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.2rem', color: '#ffb400', fontWeight: 'bold' }}>{score} / {questions.length}</div>
-              <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: '#ccc' }}>Score</div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.2rem', color: '#4caf50', fontWeight: 'bold' }}>{accuracy}%</div>
-              <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: '#ccc' }}>Accuracy</div>
-            </div>
-          </div>
-        </VictoryScreen>
+          streak={streak}
+          hasPlayedToday={hasPlayedToday}
+          onContinue={() => navigate('/space')}
+          onPlayAgain={startQuiz}
+          continueText="Continue"
+        />
         
         <div className="space-nav" style={{ filter: 'blur(4px)' }}>
           <button onClick={() => navigate('/space')} className="back-btn"><ArrowLeft /> Back to Space</button>

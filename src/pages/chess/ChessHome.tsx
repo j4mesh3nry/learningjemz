@@ -1,15 +1,15 @@
-// src/pages/chess/ChessHome.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useGame } from '../../contexts/GameContext';
 import ChessPlay from './ChessPlay';
-import { Flame, Star } from 'lucide-react';
+import { Flame, Star, BookOpen, Gamepad2 } from 'lucide-react';
 import { Card } from '../../components/Card';
 import './chess.css';
 
 function ChessMenu() {
   const navigate = useNavigate();
   const { level, streak, puzzlesSolved, hasPlayedToday } = useGame();
+  const [tab, setTab] = useState<'learn' | 'play'>('play');
 
   return (
     <div className="chess-module-page">
@@ -56,73 +56,138 @@ function ChessMenu() {
         </div>
       </div>
 
-      {/* Active Modes */}
-      <h2 className="chess-section-heading">Training Modes</h2>
-
-      <div className="chess-card-list">
-        <Card className="chess-card-item" onClick={() => navigate('play')} ariaLabel="Play with Bot">
-          <div className="chess-card-icon">🤖</div>
-          <div className="chess-card-info">
-            <h3 className="chess-card-title">Play with Bot</h3>
-            <p className="chess-card-subtitle">Practice against smart AI opponents</p>
-          </div>
-          <div className="chess-card-arrow">→</div>
-        </Card>
+      {/* Mode Selector: Play vs Learn */}
+      <div style={{
+        display: 'flex',
+        background: '#f1f3f5',
+        padding: '4px',
+        borderRadius: 14,
+        marginBottom: 20
+      }}>
+        <button
+          onClick={() => setTab('play')}
+          style={{
+            flex: 1,
+            padding: '10px 16px',
+            borderRadius: 10,
+            border: 'none',
+            background: tab === 'play' ? '#ffffff' : 'transparent',
+            color: tab === 'play' ? '#1c7c54' : '#6c757d',
+            fontWeight: 800,
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+            boxShadow: tab === 'play' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+            transition: 'all 0.15s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6
+          }}
+        >
+          <Gamepad2 size={16} color={tab === 'play' ? '#1c7c54' : '#6c757d'} />
+          Play
+        </button>
+        <button
+          onClick={() => setTab('learn')}
+          style={{
+            flex: 1,
+            padding: '10px 16px',
+            borderRadius: 10,
+            border: 'none',
+            background: tab === 'learn' ? '#ffffff' : 'transparent',
+            color: tab === 'learn' ? '#1c7c54' : '#6c757d',
+            fontWeight: 800,
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+            boxShadow: tab === 'learn' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+            transition: 'all 0.15s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6
+          }}
+        >
+          <BookOpen size={16} color={tab === 'learn' ? '#1c7c54' : '#6c757d'} />
+          Learn
+        </button>
       </div>
 
-      {/* Locked Modes */}
-      <h2 className="chess-section-heading">Future Modes (Locked)</h2>
+      {tab === 'learn' ? (
+        <>
+          {/* Locked Learn Modes */}
+          <h2 className="chess-section-heading">Lessons & Opening Study</h2>
+          <div className="chess-card-list">
+            <Card className="chess-card-item locked" ariaLabel="Mastery Lessons (Locked)" onClick={() => {}}>
+              <div className="chess-card-icon">🎓</div>
+              <div className="chess-card-info">
+                <h3 className="chess-card-title">Mastery Lessons</h3>
+                <p className="chess-card-subtitle">Learn fundamentals & tactics step-by-step</p>
+              </div>
+              <div className="chess-lock-badge">🔒 Locked</div>
+            </Card>
+            <Card className="chess-card-item locked" ariaLabel="Opening Explorer (Locked)" onClick={() => {}}>
+              <div className="chess-card-icon">📖</div>
+              <div className="chess-card-info">
+                <h3 className="chess-card-title">Opening Explorer</h3>
+                <p className="chess-card-subtitle">Study popular openings & key variations</p>
+              </div>
+              <div className="chess-lock-badge">🔒 Locked</div>
+            </Card>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Active Play & Earn Modes */}
+          <h2 className="chess-section-heading">Earn XP & Streaks</h2>
+          <div className="chess-card-list">
+            <Card className="chess-card-item" onClick={() => navigate('play')} ariaLabel="Play with Bot">
+              <div className="chess-card-icon">🤖</div>
+              <div className="chess-card-info">
+                <h3 className="chess-card-title">Play with Bot</h3>
+                <p className="chess-card-subtitle">Practice against AI bots & earn XP</p>
+              </div>
+              <div className="chess-card-arrow">→</div>
+            </Card>
+          </div>
 
-      <div className="chess-card-list">
-        <Card className="chess-card-item locked" ariaLabel="Tactics Puzzles (Locked)" onClick={() => {}}>
-          <div className="chess-card-icon">🧩</div>
-          <div className="chess-card-info">
-            <h3 className="chess-card-title">Tactics Puzzles</h3>
-            <p className="chess-card-subtitle">{puzzlesSolved || 0} puzzles completed</p>
+          {/* Locked Play Modes */}
+          <h2 className="chess-section-heading">Tournaments & Challenges (Locked)</h2>
+          <div className="chess-card-list">
+            <Card className="chess-card-item locked" ariaLabel="Tactics Puzzles (Locked)" onClick={() => {}}>
+              <div className="chess-card-icon">🧩</div>
+              <div className="chess-card-info">
+                <h3 className="chess-card-title">Tactics Puzzles</h3>
+                <p className="chess-card-subtitle">{puzzlesSolved || 0} puzzles completed</p>
+              </div>
+              <div className="chess-lock-badge">🔒 Locked</div>
+            </Card>
+            <Card className="chess-card-item locked" ariaLabel="Grandmaster Tournaments (Locked)" onClick={() => {}}>
+              <div className="chess-card-icon">🏆</div>
+              <div className="chess-card-info">
+                <h3 className="chess-card-title">Grandmaster Tournaments</h3>
+                <p className="chess-card-subtitle">Compete in seasonal events</p>
+              </div>
+              <div className="chess-lock-badge">🔒 Locked</div>
+            </Card>
+            <Card className="chess-card-item locked" ariaLabel="Endgame Practice (Locked)" onClick={() => {}}>
+              <div className="chess-card-icon">⚡</div>
+              <div className="chess-card-info">
+                <h3 className="chess-card-title">Endgame Practice</h3>
+                <p className="chess-card-subtitle">Master checkmates & draws</p>
+              </div>
+              <div className="chess-lock-badge">🔒 Locked</div>
+            </Card>
+            <Card className="chess-card-item locked" ariaLabel="Daily Challenge (Locked)" onClick={() => {}}>
+              <div className="chess-card-icon">🎯</div>
+              <div className="chess-card-info">
+                <h3 className="chess-card-title">Daily Challenge</h3>
+                <p className="chess-card-subtitle">Unique high-level daily puzzle</p>
+              </div>
+              <div className="chess-lock-badge">🔒 Locked</div>
+            </Card>
           </div>
-          <div className="chess-lock-badge">🔒 Locked</div>
-        </Card>
-        <Card className="chess-card-item locked" ariaLabel="Mastery Lessons (Locked)" onClick={() => {}}>
-          <div className="chess-card-icon">🎓</div>
-          <div className="chess-card-info">
-            <h3 className="chess-card-title">Mastery Lessons</h3>
-            <p className="chess-card-subtitle">Learn fundamentals & strategies</p>
-          </div>
-          <div className="chess-lock-badge">🔒 Locked</div>
-        </Card>
-        <Card className="chess-card-item locked" ariaLabel="Grandmaster Tournaments (Locked)" onClick={() => {}}>
-          <div className="chess-card-icon">🏆</div>
-          <div className="chess-card-info">
-            <h3 className="chess-card-title">Grandmaster Tournaments</h3>
-            <p className="chess-card-subtitle">Compete in seasonal events</p>
-          </div>
-          <div className="chess-lock-badge">🔒 Locked</div>
-        </Card>
-        <Card className="chess-card-item locked" ariaLabel="Endgame Practice (Locked)" onClick={() => {}}>
-          <div className="chess-card-icon">⚡</div>
-          <div className="chess-card-info">
-            <h3 className="chess-card-title">Endgame Practice</h3>
-            <p className="chess-card-subtitle">Master checkmates & draws</p>
-          </div>
-          <div className="chess-lock-badge">🔒 Locked</div>
-        </Card>
-        <Card className="chess-card-item locked" ariaLabel="Opening Explorer (Locked)" onClick={() => {}}>
-          <div className="chess-card-icon">📖</div>
-          <div className="chess-card-info">
-            <h3 className="chess-card-title">Opening Explorer</h3>
-            <p className="chess-card-subtitle">Study popular chess openings</p>
-          </div>
-          <div className="chess-lock-badge">🔒 Locked</div>
-        </Card>
-        <Card className="chess-card-item locked" ariaLabel="Daily Challenge (Locked)" onClick={() => {}}>
-          <div className="chess-card-icon">🎯</div>
-          <div className="chess-card-info">
-            <h3 className="chess-card-title">Daily Challenge</h3>
-            <p className="chess-card-subtitle">Unique high-level daily puzzle</p>
-          </div>
-          <div className="chess-lock-badge">🔒 Locked</div>
-        </Card>
-      </div>
+        </>
+      )}
     </div>
   );
 }

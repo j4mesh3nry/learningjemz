@@ -89,17 +89,7 @@ export default function ProvinceQuiz() {
     localStorage.setItem('learningjemz-geo-stats', JSON.stringify(stats));
     
     // Gamification
-    const oldStreak = streak;
-    setDisplayedStreak(oldStreak);
-    const didIncrease = recordActivity();
-    setStreakIncreased(didIncrease);
-    
-    if (didIncrease) {
-      setTimeout(() => {
-        setIgniting(true);
-        setDisplayedStreak(oldStreak + 1);
-      }, 800);
-    }
+    recordActivity();
   };
 
   if (queue.length === 0) return <div>Loading...</div>;
@@ -127,14 +117,14 @@ export default function ProvinceQuiz() {
           <VictoryScreen
             isOpen={true}
             title="Quiz Complete!"
+            subtitle={`You mastered ${score} out of 81 Philippine provinces!`}
             xpGained={sessionXp}
-            streak={displayedStreak}
-            igniting={igniting}
-            streakIncreased={streakIncreased}
-            onContinue={startNewGame}
-          >
-            <p style={{ margin: 0 }}>You got {score} / 81 provinces correct!</p>
-          </VictoryScreen>
+            streak={streak}
+            hasPlayedToday={hasPlayedToday}
+            onContinue={() => navigate('/geo')}
+            onPlayAgain={startNewGame}
+            continueText="Continue"
+          />
           <div className="map-wrapper" style={{ filter: 'blur(4px)' }}>
             <PhilippineMap
               onProvinceClick={() => {}}

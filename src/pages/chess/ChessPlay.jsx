@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, Flame, Star } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -123,56 +123,23 @@ export default function ChessPlay() {
     if (newGame.isCheckmate()) {
       setGameState('checkmate');
       setShowOverlay(true);
-      const oldStreak = streak;
       if (newGame.turn() !== playerColor) {
         const xpGained = winChessGame(difficulty);
         recordChessGame(difficulty, true);
-        const streakIncreased = recordActivity();
-        
-        setVictoryStats({ streakIncreased, xpGained });
-        setDisplayedStreak(oldStreak);
-        
-        if (streakIncreased) {
-          setTimeout(() => {
-            setIgniting(true);
-            setDisplayedStreak(oldStreak + 1);
-          }, 800);
-        } else {
-          setDisplayedStreak(oldStreak);
-        }
+        recordActivity();
+        setVictoryStats({ xpGained });
       } else {
         // Bot wins
         recordChessGame(difficulty, false);
-        const streakIncreased = recordActivity(); // Award streak for trying
-        setVictoryStats({ streakIncreased, xpGained: 0 });
-        setDisplayedStreak(oldStreak);
-        
-        if (streakIncreased) {
-          setTimeout(() => {
-            setIgniting(true);
-            setDisplayedStreak(oldStreak + 1);
-          }, 800);
-        } else {
-          setDisplayedStreak(oldStreak);
-        }
+        recordActivity();
+        setVictoryStats({ xpGained: 0 });
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
       setShowOverlay(true);
       recordChessGame(difficulty, false);
-      const oldStreak = streak;
-      const streakIncreased = recordActivity(); // Award streak for trying
-      setVictoryStats({ streakIncreased, xpGained: 0 });
-      setDisplayedStreak(oldStreak);
-      
-      if (streakIncreased) {
-        setTimeout(() => {
-          setIgniting(true);
-          setDisplayedStreak(oldStreak + 1);
-        }, 800);
-      } else {
-        setDisplayedStreak(oldStreak);
-      }
+      recordActivity();
+      setVictoryStats({ xpGained: 0 });
     }
   }, [winChessGame, recordActivity, streak, playerColor, difficulty, recordChessGame]);
 
@@ -518,41 +485,22 @@ export default function ChessPlay() {
 
   return (
     <div className="chess-module-page">
-      <div className="chess-nav-header">
+      <div className="chess-nav-header" style={{ marginBottom: 12 }}>
         <div className="chess-header-left">
           <button className="chess-back-btn" onClick={handleBackClick} title="Back">
             ←
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <h1 className="chess-page-title" style={{ margin: 0, color: '#1c7c54', fontSize: '1.4rem', fontWeight: 900 }}>Play with Bot</h1>
-          </div>
-        </div>
-
-        <div style={{
-          display: 'flex', flexDirection: 'column', gap: 3,
-          background: '#fafafa', padding: '5px 9px', borderRadius: 12,
-          border: '1px solid #eaeaea', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-          minWidth: 76, boxSizing: 'border-box'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
-            <Flame 
-              size={13} 
-              color={hasPlayedToday ? '#ff4d4d' : '#888888'} 
-              fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
-            />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#444444' }}>{streak ?? 0}</span>
-          </div>
-          <div style={{ height: 1, background: '#eee', margin: '1px 0' }} />
-          <div onClick={() => navigate('/profile')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, cursor: 'pointer' }}>
-            <Star size={13} color="#f57f17" fill="#ffb300" />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#f57f17' }}>Lv.{level}</span>
+            <h1 className="chess-page-title" style={{ margin: 0, color: '#1c7c54', fontSize: '1.4rem', fontWeight: 900 }}>Play vs AI</h1>
           </div>
         </div>
       </div>
 
       {!difficulty ? (
         <div className="opponent-selection-screen">
-          <h2 style={{ textAlign: 'center', marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333' }}>Choose Your Opponent</h2>
+          <p style={{ margin: '0 0 16px 4px', fontSize: '0.9rem', color: '#666', fontWeight: 600 }}>
+            Choose an opponent difficulty below
+          </p>
           <div className="opponent-cards">
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-card-header">
@@ -705,21 +653,23 @@ export default function ChessPlay() {
             
             <VictoryScreen
               isOpen={(gameState === 'resigned' || gameState === 'checkmate' || gameState === 'draw') && showOverlay}
-              title={gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : 'Checkmate!'}
+              title={gameState === 'resigned' ? 'You Resigned' : gameState === 'draw' ? 'Draw!' : (game.turn() !== playerColor ? 'Checkmate!' : 'Game Over')}
+              subtitle={
+                gameState === 'resigned' 
+                  ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`
+                  : gameState === 'draw' 
+                  ? 'The game ended in a draw.' 
+                  : game.turn() !== playerColor 
+                  ? `You defeated ${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}!` 
+                  : `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} won the game!`
+              }
               xpGained={victoryStats?.xpGained || 0}
-              streak={displayedStreak}
-              igniting={igniting}
-              streakIncreased={victoryStats?.streakIncreased || false}
+              streak={streak}
+              hasPlayedToday={hasPlayedToday}
               onContinue={() => setShowOverlay(false)}
-              customMessage={gameState === 'checkmate' ? (game.turn() === playerColor ? 'Beginner Bob wins!' : 'You win!') : undefined}
-            >
-              <p>
-                {gameState === 'resigned' ? `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!` :
-                 gameState === 'draw' ? 'The game is a draw.' :
-                 game.turn() !== playerColor ? `You defeated ${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}!` :
-                 `${difficulty === 'Easy' ? 'Beginner Bob' : difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'} wins!`}
-              </p>
-            </VictoryScreen>
+              onPlayAgain={() => { setShowOverlay(false); resetGame(); }}
+              continueText="Continue"
+            />
 
             <div className={`board-container`}>
               {(isFlipped ? [...board].reverse() : board).map((row, rIndexMapped) => {

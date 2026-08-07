@@ -39,7 +39,13 @@ export default function Leaderboard() {
       .limit(50);
 
     if (!error && data) {
-      setLeaders(data);
+      const sortedData = [...data].sort((a, b) => {
+        const valA = sortBy === 'streak' ? getEffectiveStreak(a) : (Number(a.xp) || 0);
+        const valB = sortBy === 'streak' ? getEffectiveStreak(b) : (Number(b.xp) || 0);
+        if (valB !== valA) return valB - valA;
+        return (Number(b.xp) || 0) - (Number(a.xp) || 0);
+      });
+      setLeaders(sortedData);
     }
     setLoading(false);
   }, [sortBy]);
