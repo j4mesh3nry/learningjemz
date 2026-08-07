@@ -226,28 +226,60 @@ export default function IlluminateSystem() {
         </div>
       </div>
 
-      {/* Input Area */}
+      {/* Floating Input & Target Preview Area */}
       {!isComplete && (
         <div className="illum-input-area">
           <div className="illum-prompt-banner">
-            <div className="illum-prompt-header">
-              <span className="illum-step-badge">
-                #{currentIndex + 1} of {gameData.length}
-              </span>
-              <span className="illum-type-badge">
-                {gameData[currentIndex]?.type}
-              </span>
-              {currentHint && (
-                <span className="illum-hint-badge">
-                  Hint: {currentHint}
-                </span>
+            <div className="illum-target-preview-row">
+              {/* Visual Planet Target Circle Preview */}
+              {gameData[currentIndex] && (
+                <div className="illum-target-preview-circle-wrapper">
+                  <div 
+                    className={`illum-circle illum-shadow ${getGlowClass(gameData[currentIndex].type)}`}
+                    style={{ 
+                      width: '42px', 
+                      height: '42px', 
+                      transform: `scale(${Math.max(0.7, getRelativeSize(currentIndex))})`,
+                      boxShadow: '0 0 12px rgba(255, 255, 255, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.85rem',
+                      fontWeight: 'bold',
+                      color: 'rgba(255,255,255,0.7)'
+                    }}
+                  >
+                    #{currentIndex + 1}
+                  </div>
+                </div>
               )}
-            </div>
-            {currentIndex > 0 && (
-              <div className="illum-after-text">
-                After: <strong>{gameData[currentIndex - 1].name.split(' ')[0]}</strong>
+
+              {/* Target Info & Badges */}
+              <div className="illum-target-info">
+                <div className="illum-prompt-header">
+                  <span className="illum-step-badge">
+                    #{currentIndex + 1} of {gameData.length}
+                  </span>
+                  <span className="illum-type-badge">
+                    {gameData[currentIndex]?.type}
+                  </span>
+                  {currentHint && (
+                    <span className="illum-hint-badge">
+                      Hint: {currentHint}
+                    </span>
+                  )}
+                </div>
+                {currentIndex > 0 ? (
+                  <div className="illum-after-text">
+                    Order Clue: After <strong>{gameData[currentIndex - 1].name.split(' ')[0]}</strong>
+                  </div>
+                ) : (
+                  <div className="illum-after-text">
+                    Order Clue: <strong>Largest Object in System</strong>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
