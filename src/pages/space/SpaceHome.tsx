@@ -186,7 +186,7 @@ function SpaceHub() {
                 <h3 className="space-card-title">Space Quiz</h3>
                 <p className="space-card-subtitle">Test cosmic knowledge & earn XP</p>
               </div>
-              <div className="space-lock-badge">🔒 Locked</div>
+              <div className="space-lock-badge">🛠️ Under Development</div>
             </Card>
 
             <Card
@@ -199,7 +199,7 @@ function SpaceHub() {
                 <h3 className="space-card-title">Cosmic Cards</h3>
                 <p className="space-card-subtitle">Speed flashcards memory test</p>
               </div>
-              <div className="space-lock-badge">🔒 Locked</div>
+              <div className="space-lock-badge">🛠️ Under Development</div>
             </Card>
             {/* Locked Play Modes merged into same list */}
             <Card className="space-card-item locked" ariaLabel="Secret Challenge (Locked)" onClick={() => {}}>
