@@ -152,8 +152,8 @@ export default function Leaderboard() {
             <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#0f3825', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {top2?.name || 'Player'}
             </div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#16653e', marginTop: 2 }}>
-              {sortBy === 'xp' ? `${top2?.xp || 0} XP` : `${getEffectiveStreak(top2)} Days`}
+            <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#16653e', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+              {sortBy === 'xp' ? `${top2?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top2)}</>}
             </div>
           </div>
 
@@ -170,8 +170,8 @@ export default function Leaderboard() {
             <div style={{ fontWeight: 900, fontSize: '0.92rem', color: '#78350f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {top1?.name || 'Champion'}
             </div>
-            <div style={{ fontSize: '0.82rem', fontWeight: 900, color: '#d97706', marginTop: 2 }}>
-              {sortBy === 'xp' ? `${top1?.xp || 0} XP` : `${getEffectiveStreak(top1)} Days`}
+            <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#d97706', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+              {sortBy === 'xp' ? `${top1?.xp || 0} XP` : <><Flame size={14} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top1)}</>}
             </div>
           </div>
 
@@ -186,8 +186,8 @@ export default function Leaderboard() {
             <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#4a2c1d', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {top3?.name || 'Player'}
             </div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#b45309', marginTop: 2 }}>
-              {sortBy === 'xp' ? `${top3?.xp || 0} XP` : `${getEffectiveStreak(top3)} Days`}
+            <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#b45309', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+              {sortBy === 'xp' ? `${top3?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top3)}</>}
             </div>
           </div>
         </div>
@@ -237,8 +237,8 @@ export default function Leaderboard() {
                   </div>
                 </div>
 
-                <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: '#16653e' }}>
-                  {sortBy === 'xp' ? `${item.xp || 0} XP` : `${getEffectiveStreak(item)} Days`}
+                <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: '#16653e', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  {sortBy === 'xp' ? `${item.xp || 0} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(item)}</>}
                 </div>
               </div>
             );
@@ -266,8 +266,8 @@ export default function Leaderboard() {
             </div>
             <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>Your Rank</div>
           </div>
-          <div style={{ fontWeight: 900, fontSize: '0.9rem', color: '#ffffff' }}>
-            {sortBy === 'xp' ? `${xp} XP` : `${streak} Days`}
+          <div style={{ fontWeight: 900, fontSize: '0.9rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: 4 }}>
+            {sortBy === 'xp' ? `${xp} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {streak}</>}
           </div>
         </div>
       )}
