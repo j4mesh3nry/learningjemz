@@ -54,12 +54,11 @@ export default function IlluminateSystem() {
     }, 100);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!inputValue.trim() || isComplete) return;
+  const submitAnswer = (guess = inputValue) => {
+    if (!guess.trim() || isComplete) return;
 
     const currentObject = gameData[currentIndex];
-    const userGuess = inputValue.trim().toLowerCase();
+    const userGuess = guess.trim().toLowerCase();
     
     // Check if guess matches any accepted names
     const isCorrect = currentObject.acceptedNames.some(name => userGuess === name);
@@ -88,10 +87,44 @@ export default function IlluminateSystem() {
       setTimeout(() => setIsError(false), 500);
       setInputValue(''); // Clear on wrong
     }
-    
-    // Maintain focus
-    inputRef.current?.focus();
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    submitAnswer(inputValue);
+  };
+
+  const handleVirtualKey = (char) => {
+    if (isComplete) return;
+    setInputValue(prev => prev + char);
+  };
+
+  const handleVirtualBackspace = () => {
+    if (isComplete) return;
+    setInputValue(prev => prev.slice(0, -1));
+  };
+
+  useEffect(() => {
+    if (!level || isComplete) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        setInputValue(prev => prev.slice(0, -1));
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        submitAnswer(inputValue);
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        setInputValue(prev => prev + ' ');
+      } else if (e.key.length === 1 && /[a-zA-Z0-9]/.test(e.key)) {
+        setInputValue(prev => prev + e.key.toUpperCase());
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [level, isComplete, currentIndex, inputValue, gameData]);
 
   // Derived hint
   let currentHint = null;
@@ -226,22 +259,47 @@ export default function IlluminateSystem() {
         </div>
       </div>
 
-      {/* Simple Inline Input Bar (Directly below Grid Box) */}
+      {/* Simple Inline Input Display Bar (Directly below Grid Box) */}
       {!isComplete && (
-        <div className="illum-input-area">
-          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-            <input
-              ref={inputRef}
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder={`Type #${currentIndex + 1} (${gameData[currentIndex]?.type || 'Object'})...`}
-              className={`illum-input ${isError ? 'illum-error' : ''}`}
-              autoComplete="off"
-              autoFocus
-            />
-          </form>
-        </div>
+        <>
+          <div className="illum-input-area">
+            <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                readOnly
+                inputMode="none"
+                placeholder={`Tap keys for #${currentIndex + 1} (${gameData[currentIndex]?.type || 'Object'})...`}
+                className={`illum-input ${isError ? 'illum-error' : ''}`}
+              />
+            </form>
+          </div>
+
+          {/* Custom On-Screen Touch Keyboard Box */}
+          <div className="illum-custom-keyboard">
+            <div className="illum-keyboard-row">
+              {['Q','W','E','R','T','Y','U','I','O','P'].map(k => (
+                <button key={k} type="button" className="illum-key" onClick={() => handleVirtualKey(k)}>{k}</button>
+              ))}
+            </div>
+            <div className="illum-keyboard-row">
+              {['A','S','D','F','G','H','J','K','L'].map(k => (
+                <button key={k} type="button" className="illum-key" onClick={() => handleVirtualKey(k)}>{k}</button>
+              ))}
+            </div>
+            <div className="illum-keyboard-row">
+              {['Z','X','C','V','B','N','M'].map(k => (
+                <button key={k} type="button" className="illum-key" onClick={() => handleVirtualKey(k)}>{k}</button>
+              ))}
+              <button type="button" className="illum-key illum-key-backspace" onClick={handleVirtualBackspace}>⌫</button>
+            </div>
+            <div className="illum-keyboard-row">
+              <button type="button" className="illum-key illum-key-space" onClick={() => handleVirtualKey(' ')}>SPACE</button>
+              <button type="button" className="illum-key illum-key-enter" onClick={() => submitAnswer(inputValue)}>SUBMIT ↵</button>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Victory Screen */}
