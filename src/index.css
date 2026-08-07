@@ -267,3 +267,12 @@ button:active { transform: scale(0.97); }
 .auth-link a:hover {
   text-decoration: underline;
 }
+
+/* Global Unlit Streak Utility Classes */
+.unlit-icon {
+  filter: grayscale(100%) opacity(40%);
+}
+
+.unlit-text {
+  color: #9e9e9e !important;
+}

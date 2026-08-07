@@ -14,7 +14,8 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState<boolean>(true);
   const [sortBy, setSortBy] = useState<'xp' | 'streak'>('xp');
 
-  const fetchLeaders = useCallback(async () => {
+  const fetchLeaders = useCallback(async (isInitial = false) => {
+    if (isInitial) setLoading(true);
     const { data, error } = await supabase
       .from('game_progress')
       .select('id, xp, level, streak, name, avatar')
@@ -29,23 +30,39 @@ export default function Leaderboard() {
   }, [sortBy]);
 
   useEffect(() => {
-    fetchLeaders();
+    fetchLeaders(leaders.length === 0);
 
     const subscription = supabase
       .channel('public:game_progress')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'game_progress' }, () => {
-        fetchLeaders();
+        fetchLeaders(false);
       })
       .subscribe();
 
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [fetchLeaders]);
+  }, [fetchLeaders, leaders.length]);
+
+  const handleTabChange = (newSortBy: 'xp' | 'streak') => {
+    if (newSortBy === sortBy) return;
+    setSortBy(newSortBy);
+    // Instant in-memory sort to prevent layout jump/flicker
+    setLeaders(prev => [...prev].sort((a, b) => {
+      const valA = Number(a[newSortBy]) || 0;
+      const valB = Number(b[newSortBy]) || 0;
+      if (valB !== valA) return valB - valA;
+      return (Number(b.xp) || 0) - (Number(a.xp) || 0);
+    }));
+  };
 
   const currentUserRankIndex = leaders.findIndex(l => l.id === user?.id);
   const currentUserRank = currentUserRankIndex !== -1 ? currentUserRankIndex + 1 : '> 50';
   const currentUserData = currentUserRankIndex !== -1 ? leaders[currentUserRankIndex] : null;
+
+  const myStreak = streak || 0;
+  const myStreakIsZero = myStreak === 0;
+  const myDayLabel = (myStreak === 0 || myStreak === 1) ? 'Day' : 'Days';
 
   return (
     <div style={{
@@ -75,7 +92,7 @@ export default function Leaderboard() {
         marginBottom: 20
       }}>
         <button
-          onClick={() => setSortBy('xp')}
+          onClick={() => handleTabChange('xp')}
           style={{
             flex: 1,
             padding: '10px 16px',
@@ -87,7 +104,7 @@ export default function Leaderboard() {
             fontSize: '0.88rem',
             cursor: 'pointer',
             boxShadow: sortBy === 'xp' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
-            transition: 'all 0.2s ease',
+            transition: 'all 0.15s ease',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -98,7 +115,7 @@ export default function Leaderboard() {
           XP Rank
         </button>
         <button
-          onClick={() => setSortBy('streak')}
+          onClick={() => handleTabChange('streak')}
           style={{
             flex: 1,
             padding: '10px 16px',
@@ -110,7 +127,7 @@ export default function Leaderboard() {
             fontSize: '0.88rem',
             cursor: 'pointer',
             boxShadow: sortBy === 'streak' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
-            transition: 'all 0.2s ease',
+            transition: 'all 0.15s ease',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -139,6 +156,10 @@ export default function Leaderboard() {
               else if (rank === 3) rankDisplay = <div style={{ fontSize: '1.5rem' }}>🥉</div>;
               else rankDisplay = <div style={{ fontWeight: 700, color: '#999', fontSize: '1.1rem' }}>{rank}</div>;
 
+              const leaderStreak = leader.streak || 0;
+              const leaderStreakIsZero = leaderStreak === 0;
+              const dayLabel = (leaderStreak === 0 || leaderStreak === 1) ? 'Day' : 'Days';
+
               return (
                 <div key={leader.id} style={{
                   display: 'flex', alignItems: 'center', padding: '16px',
@@ -158,19 +179,24 @@ export default function Leaderboard() {
                       {leader.name || 'Learner'}
                     </span>
                     <span style={{ color: '#666', fontSize: '0.85rem' }}>
-                      Lv. {leader.level || 1} {sortBy === 'streak' ? `• ${leader.xp || 0} XP` : `• 🔥 ${leader.streak || 0} Streak`}
+                      Lv. {leader.level || 1} {sortBy === 'streak' ? `• ${leader.xp || 0} XP` : (
+                        <>• <span className={leaderStreakIsZero ? 'unlit-icon' : ''}>🔥</span> <span className={leaderStreakIsZero ? 'unlit-text' : ''}>{leaderStreak} {dayLabel}</span></>
+                      )}
                     </span>
                   </div>
                   <div style={{
                     fontWeight: 800,
-                    color: sortBy === 'streak' ? '#e53935' : 'var(--color-primary)',
+                    color: sortBy === 'streak' ? (leaderStreakIsZero ? '#9e9e9e' : '#e53935') : 'var(--color-primary)',
                     fontSize: '1.05rem',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 4
                   }}>
                     {sortBy === 'streak' ? (
-                      <>🔥 {leader.streak || 0} Days</>
+                      <>
+                        <span className={leaderStreakIsZero ? 'unlit-icon' : ''}>🔥</span>
+                        <span className={leaderStreakIsZero ? 'unlit-text' : ''}>{leaderStreak} {dayLabel}</span>
+                      </>
                     ) : (
                       <>{leader.xp || 0} XP</>
                     )}
@@ -207,19 +233,24 @@ export default function Leaderboard() {
                 {currentUserData?.name || user?.user_metadata?.name || 'You'}
               </span>
               <span style={{ color: '#666', fontSize: '0.85rem' }}>
-                Lv. {level} {sortBy === 'streak' ? `• ${xp} XP` : `• 🔥 ${streak} Streak`}
+                Lv. {level} {sortBy === 'streak' ? `• ${xp} XP` : (
+                  <>• <span className={myStreakIsZero ? 'unlit-icon' : ''}>🔥</span> <span className={myStreakIsZero ? 'unlit-text' : ''}>{myStreak} {myDayLabel}</span></>
+                )}
               </span>
             </div>
             <div style={{
               fontWeight: 800,
-              color: sortBy === 'streak' ? '#e53935' : 'var(--color-primary)',
+              color: sortBy === 'streak' ? (myStreakIsZero ? '#9e9e9e' : '#e53935') : 'var(--color-primary)',
               fontSize: '1.05rem',
               display: 'flex',
               alignItems: 'center',
               gap: 4
             }}>
               {sortBy === 'streak' ? (
-                <>🔥 {streak} Days</>
+                <>
+                  <span className={myStreakIsZero ? 'unlit-icon' : ''}>🔥</span>
+                  <span className={myStreakIsZero ? 'unlit-text' : ''}>{myStreak} {myDayLabel}</span>
+                </>
               ) : (
                 <>{xp} XP</>
               )}
