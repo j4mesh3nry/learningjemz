@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useGame } from '../contexts/GameContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { ACHIEVEMENTS } from '../utils/achievements.js';
-import { Settings, LogOut, Trophy, BookOpen, Rocket, Lock, Pencil } from 'lucide-react';
+import { Settings, LogOut, Trophy, BookOpen, Rocket, Lock, Pencil, Flame } from 'lucide-react';
 import { updateAvatar, updateName } from '../api/supabase.js';
 import '../index.css';
 
@@ -175,8 +175,8 @@ export default function Profile() {
       {/* Stats Row (Streak & XP) */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 30 }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#fff', padding: 20, borderRadius: 12, border: '1px solid #ffebee' }}>
-          <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '2rem' }}>🔥</span>
-          <strong className={!hasPlayedToday ? "unlit-text" : ""} style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)' }}>{streak}</strong>
+          <Flame size={36} color={hasPlayedToday ? '#ff4d4d' : '#888888'} fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} />
+          <strong style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)', color: hasPlayedToday ? '#e53935' : '#444444' }}>{streak}</strong>
           <span style={{ color: '#666', fontSize: '0.9rem' }}>Day Streak</span>
         </div>
         <div

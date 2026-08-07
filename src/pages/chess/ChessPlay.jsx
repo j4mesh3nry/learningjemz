@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, Flame, Star } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -528,23 +528,27 @@ export default function ChessPlay() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 3,
+            display: 'flex', alignItems: 'center', gap: 4,
             background: hasPlayedToday ? '#fff5f5' : '#f0f0f0',
-            padding: '2px 8px', borderRadius: 12,
+            padding: '3px 10px', borderRadius: 14,
             border: hasPlayedToday ? '1px solid #ffcdd2' : '1px solid #d5d5d5',
           }}>
-            <span className={!hasPlayedToday ? "unlit-icon" : ""} style={{ fontSize: '0.75rem' }}>🔥</span>
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#444444' }}>{streak ?? 0}</span>
+            <Flame 
+              size={16} 
+              color={hasPlayedToday ? '#ff4d4d' : '#888888'} 
+              fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
+            />
+            <span style={{ fontWeight: 800, fontSize: '0.8rem', color: hasPlayedToday ? '#e53935' : '#444444' }}>{streak ?? 0}</span>
           </div>
           <div onClick={() => navigate('/profile')} style={{
-            display: 'flex', alignItems: 'center', gap: 3,
-            background: '#fff8e1', padding: '2px 8px', borderRadius: 12,
+            display: 'flex', alignItems: 'center', gap: 4,
+            background: '#fff8e1', padding: '3px 10px', borderRadius: 14,
             border: '1px solid #ffe082', cursor: 'pointer',
           }}>
-            <span style={{ fontSize: '0.75rem' }}>⭐</span>
-            <span style={{ fontWeight: 800, fontSize: '0.7rem', color: '#f57f17' }}>Lv.{level}</span>
+            <Star size={16} color="#f57f17" fill="#ffb300" />
+            <span style={{ fontWeight: 800, fontSize: '0.8rem', color: '#f57f17' }}>Lv.{level}</span>
           </div>
         </div>
       </div>
