@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw } from 'lucide-react';
+import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
 import VictoryScreen from '../../components/VictoryScreen';
@@ -257,34 +257,64 @@ export default function IlluminateSystem() {
         </p>
         
         <div className="space-card-list">
-          {Object.entries(DIFFICULTIES).map(([key, diff]) => {
-            const pbTime = personalBests[key];
-            return (
-              <div 
-                key={key} 
-                className="space-card-item"
-                onClick={() => startGame(key)}
-              >
-                <div className="space-card-info">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <h3 className="space-card-title">{diff.name}</h3>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                      {Array.from({ length: diff.maxLives }).map((_, i) => (
-                        <Heart key={i} size={13} fill="#ff4d4d" color="#ff4d4d" />
-                      ))}
-                    </div>
+          {Object.entries(DIFFICULTIES).map(([key, diff]) => (
+            <div 
+              key={key} 
+              className="space-card-item"
+              onClick={() => startGame(key)}
+            >
+              <div className="space-card-info">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h3 className="space-card-title">{diff.name}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                    {Array.from({ length: diff.maxLives }).map((_, i) => (
+                      <Heart key={i} size={13} fill="#ff4d4d" color="#ff4d4d" />
+                    ))}
                   </div>
-                  <p className="space-card-subtitle">{diff.label}</p>
-                  {pbTime !== undefined && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', color: '#00e5ff', marginTop: '4px', fontWeight: 'bold' }}>
-                      <Zap size={14} color="#00e5ff" /> Best Time: {formatTime(pbTime)}
-                    </div>
-                  )}
                 </div>
-                <div className="space-card-arrow">→</div>
+                <p className="space-card-subtitle">{diff.label}</p>
               </div>
-            );
-          })}
+              <div className="space-card-arrow">→</div>
+            </div>
+          ))}
+        </div>
+
+        {/* System Records & Personal Bests Box (Matching Chess Stats UI) */}
+        <div style={{ marginTop: 28, padding: 18, background: '#ffffff', borderRadius: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: '1px solid #eeeeee' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: '1rem', color: '#111324', marginBottom: 14 }}>
+            <Trophy size={20} color="#ffb300" /> Best Time Records
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+            {Object.entries(DIFFICULTIES).map(([key, diff]) => {
+              const pbTime = personalBests[key];
+              return (
+                <div 
+                  key={key} 
+                  style={{
+                    background: '#f8f9fa',
+                    borderRadius: 12,
+                    padding: '10px 8px',
+                    textAlign: 'center',
+                    border: '1px solid #e9ecef',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 4
+                  }}
+                >
+                  <div style={{ fontSize: '0.8rem', color: '#6c757d', fontWeight: 700 }}>
+                    {diff.name}
+                  </div>
+                  <div style={{ fontSize: '1.05rem', color: pbTime !== undefined ? '#1c7c54' : '#adb5bd', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 3 }}>
+                    <Zap size={14} color={pbTime !== undefined ? '#ffb300' : '#adb5bd'} />
+                    {pbTime !== undefined ? formatTime(pbTime) : '--:--'}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
