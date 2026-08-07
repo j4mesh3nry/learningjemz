@@ -1,5 +1,5 @@
 // src/components/StreakScreen.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Flame, Gem, Sparkles, Calendar as CalendarIcon, X } from 'lucide-react';
 import './streak.css';
 
@@ -73,12 +73,14 @@ export default function StreakScreen({
   const [showPlusOne, setShowPlusOne] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [playedDates, setPlayedDates] = useState<string[]>([]);
+  const hasHandledContinueRef = useRef(false);
 
   const isAlreadyShown = !forceShow && hasShownStreakToday(userId);
 
   useEffect(() => {
     if (isOpen) {
-      if (isAlreadyShown) {
+      if (isAlreadyShown && !hasHandledContinueRef.current) {
+        hasHandledContinueRef.current = true;
         onContinue();
         return;
       }
@@ -86,13 +88,14 @@ export default function StreakScreen({
       setPlayedDates(getPlayedDates(userId));
 
       const timer1 = setTimeout(() => setAnimated(true), 100);
-      const timer2 = setTimeout(() => setShowPlusOne(true), 350);
+      const timer2 = setTimeout(() => setShowPlusOne(true), 300);
 
       return () => {
         clearTimeout(timer1);
         clearTimeout(timer2);
       };
     } else {
+      hasHandledContinueRef.current = false;
       setAnimated(false);
       setShowPlusOne(false);
       setShowCalendar(false);
@@ -102,6 +105,7 @@ export default function StreakScreen({
   if (!isOpen || isAlreadyShown) return null;
 
   const handleContinue = () => {
+    hasHandledContinueRef.current = true;
     markStreakShownToday(userId);
     onContinue();
   };
@@ -126,25 +130,15 @@ export default function StreakScreen({
 
   return (
     <div className="jemz-streak-screen" role="dialog" aria-modal="true" aria-label={`${streak} day streak`}>
-      {/* Background Emerald Particle Embers */}
-      <div className="jemz-streak-particles">
-        <span className="jemz-particle p1">✨</span>
-        <span className="jemz-particle p2">🔥</span>
-        <span className="jemz-particle p3">💎</span>
-        <span className="jemz-particle p4">✨</span>
-        <span className="jemz-particle p5">🔥</span>
-      </div>
-
       <div className={`jemz-streak-content ${animated ? 'animated' : ''}`}>
         {/* LearningJemz Logo Emblem + Flame Header */}
         <div className="jemz-mascot-wrapper">
-          <div className="jemz-aura-glow" />
           <div className="jemz-logo-badge">
             <Gem size={38} color="#ffffff" strokeWidth={2.5} />
-            <Sparkles className="sparkle-badge" size={20} color="#ffd600" />
+            <Sparkles className="sparkle-badge" size={18} color="#ffd600" />
           </div>
           <div className="jemz-flame-badge">
-            <Flame size={48} color="#ff3d00" fill="#ff6d00" className="jemz-main-flame" />
+            <Flame size={28} color="#e65100" fill="#ff6d00" />
           </div>
         </div>
 
@@ -188,9 +182,8 @@ export default function StreakScreen({
                   {hasPlayed ? (
                     <Flame
                       size={20}
-                      color="#ff3d00"
+                      color="#e65100"
                       fill="#ff6d00"
-                      className={isToday ? 'ignite-today' : ''}
                     />
                   ) : (
                     <span className="jemz-unplayed-dot" />
@@ -223,11 +216,11 @@ export default function StreakScreen({
           <div className="jemz-calendar-modal">
             <div className="jemz-calendar-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CalendarIcon size={22} color="#10b981" />
+                <CalendarIcon size={20} color="#10b981" />
                 <h3 className="jemz-calendar-title">{monthName} {year}</h3>
               </div>
               <button className="jemz-close-btn" onClick={() => setShowCalendar(false)}>
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
@@ -262,7 +255,7 @@ export default function StreakScreen({
                     className={`jemz-month-day ${isPlayed ? 'played' : ''}`}
                   >
                     <span>{dayNum}</span>
-                    {isPlayed && <Flame size={12} color="#ff3d00" fill="#ff6d00" className="cal-flame" />}
+                    {isPlayed && <Flame size={12} color="#e65100" fill="#ff6d00" className="cal-flame" />}
                   </div>
                 );
               })}
