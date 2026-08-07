@@ -83,13 +83,7 @@ function Layout() {
   const showNavPaths = ['/', '/leaderboards', '/store', '/profile'];
   const showNav = user && showNavPaths.includes(location.pathname);
 
-  // Force redirect to Home on refresh/initial mount
-  useEffect(() => {
-    if (location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/signup') {
-      navigate('/', { replace: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
 
   return (
     <div style={{ paddingBottom: showNav ? '74px' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>

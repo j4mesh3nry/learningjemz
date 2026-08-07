@@ -249,11 +249,13 @@ function ChessMenu() {
   );
 }
 
+import ErrorBoundary from '../../components/ErrorBoundary';
+
 export default function ChessHome() {
   return (
     <Routes>
       <Route path="/" element={<ChessMenu />} />
-      <Route path="play" element={<ChessPlay />} />
+      <Route path="play" element={<ErrorBoundary fallbackTitle="Chess Error"><ChessPlay /></ErrorBoundary>} />
     </Routes>
   );
 }
