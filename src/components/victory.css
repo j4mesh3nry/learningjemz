@@ -176,10 +176,10 @@
   100% { transform: scale(1); }
 }
 
-.unlit-icon {
+.victory-card .unlit-icon {
   filter: grayscale(100%) opacity(40%);
 }
-.unlit-text {
+.victory-card .unlit-text {
   color: rgba(255, 255, 255, 0.3) !important;
 }
 
