@@ -771,16 +771,6 @@ export default function ChessPlay() {
 
           {topIsBot ? renderUserProfile() : renderBotProfile()}
 
-          {/* Scrollable Move History Box */}
-          <div style={{ width: '100%', background: '#ffffff', borderTop: '1.5px solid #b0cbaf' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 14px', background: '#f4f9f4', borderBottom: '1px solid #e1f0e2' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f3825', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <ScrollText size={14} color="#16653e" /> Move History ({history.length})
-              </span>
-            </div>
-            {renderMoveHistoryList()}
-          </div>
-
           {/* Action Bar with Flip, Restart, Resign */}
           <div style={{ display: 'flex', gap: 8, padding: 12, width: '100%', background: '#f8faf8', borderTop: '1.5px solid #b0cbaf', boxSizing: 'border-box' }}>
             <button 
@@ -821,6 +811,16 @@ export default function ChessPlay() {
             >
               <Flag size={15} /> Resign
             </button>
+          </div>
+
+          {/* Scrollable Move History Box */}
+          <div style={{ width: '100%', background: '#ffffff', borderTop: '1.5px solid #b0cbaf' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 14px', background: '#f4f9f4', borderBottom: '1px solid #e1f0e2' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f3825', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <ScrollText size={14} color="#16653e" /> Move History ({history.length})
+              </span>
+            </div>
+            {renderMoveHistoryList()}
           </div>
         </div>
 
