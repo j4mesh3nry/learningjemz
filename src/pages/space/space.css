@@ -1227,9 +1227,6 @@
 .illum-game-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* fallback for older browsers */
-  height: 100dvh; /* dynamic viewport height - shrinks with keyboard */
-  max-height: 100dvh;
   overflow: hidden;
   padding: 0;
 }

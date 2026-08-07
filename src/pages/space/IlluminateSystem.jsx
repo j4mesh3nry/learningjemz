@@ -23,8 +23,46 @@ export default function IlluminateSystem() {
   const [isError, setIsError] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
-
+  
+  const containerRef = useRef(null);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return;
+    
+    const updateLayout = () => {
+      if (!containerRef.current) return;
+      // Precisely match the visual viewport to prevent keyboard overlap on iOS
+      containerRef.current.style.height = `${window.visualViewport.height}px`;
+      containerRef.current.style.top = `${window.visualViewport.offsetTop}px`;
+      window.scrollTo(0, 0);
+    };
+
+    window.visualViewport.addEventListener('resize', updateLayout);
+    window.visualViewport.addEventListener('scroll', updateLayout);
+    // Initial call
+    updateLayout();
+
+    return () => {
+      window.visualViewport.removeEventListener('resize', updateLayout);
+      window.visualViewport.removeEventListener('scroll', updateLayout);
+    };
+  }, []);
+
+  const scrollToCurrentPlanet = () => {
+    setTimeout(() => {
+      const el = document.getElementById(`planet-${currentIndex}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  };
+
+  useEffect(() => {
+    if (level && !isComplete) {
+      scrollToCurrentPlanet();
+    }
+  }, [currentIndex, level, isComplete]);
 
   const startGame = (diffLevel) => {
     setLevel(diffLevel);
@@ -35,7 +73,10 @@ export default function IlluminateSystem() {
     setIsComplete(false);
     setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
     // Focus input on start without triggering browser page scroll
-    setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 100);
+    setTimeout(() => {
+      inputRef.current?.focus({ preventScroll: true });
+      scrollToCurrentPlanet();
+    }, 100);
   };
 
   const handleSubmit = (e) => {
@@ -164,7 +205,9 @@ export default function IlluminateSystem() {
 
   return (
     <div 
+      ref={containerRef}
       className="space-module-page ss-dark-theme illum-game-container" 
+      style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 100 }}
     >
       <div className="space-nav-header ss-header" style={{ flexShrink: 0 }}>
         <button className="space-back-btn" onClick={() => setLevel(null)}>←</button>
@@ -190,6 +233,7 @@ export default function IlluminateSystem() {
             return (
               <div 
                 key={obj.id} 
+                id={`planet-${i}`}
                 className={`illum-circle-wrapper ${isCurrent ? 'illum-current' : ''}`}
               >
                 <div 
@@ -241,6 +285,7 @@ export default function IlluminateSystem() {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              onFocus={scrollToCurrentPlanet}
               placeholder={`Type #${currentIndex + 1} (${gameData[currentIndex]?.type || 'Object'})...`}
               className={`illum-input ${isError ? 'illum-error' : ''}`}
               autoComplete="off"
