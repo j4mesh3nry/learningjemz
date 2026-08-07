@@ -1244,44 +1244,44 @@
   flex-shrink: 0;
   width: 100%;
   padding: 0;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
 }
 
 .illum-custom-keyboard {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
-  max-width: 520px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 10px 6px calc(10px + env(safe-area-inset-bottom, 8px));
-  background: rgba(12, 14, 28, 0.95);
+  padding: 6px 3px calc(6px + env(safe-area-inset-bottom, 4px));
+  background: rgba(10, 12, 24, 0.96);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 18px 18px 0 0;
+  border-radius: 14px 14px 0 0;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
   box-sizing: border-box;
 }
 
 .illum-keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 3px;
   width: 100%;
 }
 
 .illum-key {
   flex: 1;
   min-width: 0;
-  height: 52px;
+  height: 58px;
   border: none;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.16);
   color: #ffffff;
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1289,36 +1289,36 @@
   user-select: none;
   touch-action: manipulation;
   transition: background 0.15s, transform 0.08s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
 }
 
 .illum-key:active {
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.4);
   transform: scale(0.92);
 }
 
 .illum-key-backspace {
-  flex: 1.5;
-  background: rgba(239, 83, 80, 0.3);
+  flex: 1.4;
+  background: rgba(239, 83, 80, 0.35);
   color: #ff8a80;
-  font-size: 1.25rem;
+  font-size: 1.35rem;
 }
 
 .illum-key-space {
   flex: 2;
-  height: 48px;
-  background: rgba(255, 255, 255, 0.18);
-  font-size: 0.9rem;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: 1px;
 }
 
 .illum-key-enter {
-  flex: 2;
-  height: 48px;
+  flex: 2.2;
+  height: 52px;
   background: linear-gradient(135deg, #1c7c54 0%, #155d3e 100%);
   color: #ffffff;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: 1px;
   box-shadow: 0 4px 12px rgba(28, 124, 84, 0.4);
@@ -1409,14 +1409,17 @@
 
 .illum-input {
   width: 100%;
-  padding: 1rem;
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  height: 38px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.05);
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
   text-align: center;
   transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 .illum-input:focus {
