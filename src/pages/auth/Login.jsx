@@ -120,7 +120,7 @@ export default function Login() {
             </h2>
 
             {successMessage && (
-              <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '12px', borderRadius: '12px', marginBottom: '20px', fontSize: '0.9rem', textAlign: 'center', border: '1px solid #c8e6c9', fontWeight: 600 }}>
+              <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '10px 12px', borderRadius: '12px', marginBottom: '20px', fontSize: '0.8rem', textAlign: 'center', border: '1px solid #c8e6c9', fontWeight: 500 }}>
                 {successMessage}
               </div>
             )}
