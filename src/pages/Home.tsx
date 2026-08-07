@@ -144,8 +144,8 @@ export default function Home() {
       </h2>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-        {lockedModules.map((m) => (
-          <div key={m.title} style={{
+        {lockedModules.map((m, idx) => (
+          <div key={idx} style={{
             display: 'flex', flexDirection: 'column', gap: 8,
             background: '#ffffff', borderRadius: 18,
             border: '2px solid #cce3d7',
@@ -153,40 +153,56 @@ export default function Home() {
             padding: '14px', position: 'relative', overflow: 'hidden',
             cursor: 'not-allowed'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{
-                fontSize: '1.8rem', width: 44, height: 44,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: '#e8f3ed', borderRadius: 12,
-                flexShrink: 0,
-                opacity: 0.85
-              }}>
-                {m.icon}
-              </div>
-              <div style={{
-                background: '#dcf0e5',
-                color: '#165e3d',
-                fontSize: '0.68rem',
-                fontWeight: 800,
-                padding: '4px 7px',
-                borderRadius: 10,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '3px'
-              }}>
-                <Lock size={11} /> Locked
-              </div>
+            {/* Crisp Unblurred Locked Badge Overlay */}
+            <div style={{
+              position: 'absolute',
+              top: '50%', left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 10,
+              background: 'rgba(10, 46, 29, 0.92)',
+              color: '#ffffff',
+              fontSize: '0.72rem',
+              fontWeight: 800,
+              padding: '6px 12px',
+              borderRadius: 12,
+              border: '1px solid #38d989',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              whiteSpace: 'nowrap'
+            }}>
+              <Lock size={12} color="#38d989" /> Secret Module
             </div>
 
-            <div>
-              <h3 style={{
-                fontFamily: 'var(--font-heading)', fontSize: '1.05rem',
-                margin: 0, fontWeight: 800,
-                color: '#0e3d26'
-              }}>{m.title}</h3>
-              <p style={{
-                margin: '2px 0 0', fontSize: '0.78rem', color: '#496c5b', fontWeight: 500
-              }}>{m.subtitle}</p>
+            {/* Blurred Card Content */}
+            <div style={{
+              filter: 'blur(7px)',
+              opacity: 0.4,
+              pointerEvents: 'none',
+              userSelect: 'none'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{
+                  fontSize: '1.8rem', width: 44, height: 44,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: '#e8f3ed', borderRadius: 12,
+                  flexShrink: 0
+                }}>
+                  {m.icon}
+                </div>
+              </div>
+
+              <div style={{ marginTop: 8 }}>
+                <h3 style={{
+                  fontFamily: 'var(--font-heading)', fontSize: '1.05rem',
+                  margin: 0, fontWeight: 800,
+                  color: '#0e3d26'
+                }}>{m.title}</h3>
+                <p style={{
+                  margin: '2px 0 0', fontSize: '0.78rem', color: '#496c5b', fontWeight: 500
+                }}>{m.subtitle}</p>
+              </div>
             </div>
           </div>
         ))}
