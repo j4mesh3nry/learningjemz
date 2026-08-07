@@ -270,7 +270,7 @@ export default function IlluminateSystem() {
                 value={inputValue}
                 readOnly
                 inputMode="none"
-                placeholder={`Tap keys for #${currentIndex + 1} (${gameData[currentIndex]?.type || 'Object'})...`}
+                placeholder="Type answer..."
                 className={`illum-input ${isError ? 'illum-error' : ''}`}
               />
             </form>
