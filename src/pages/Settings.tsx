@@ -1,36 +1,17 @@
 // src/pages/Settings.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useGame } from '../contexts/GameContext';
 import { useAuth } from '../contexts/AuthContext';
-import { RotateCcw, Moon, Sun, Trash2 } from 'lucide-react';
+import { RotateCcw, Trash2 } from 'lucide-react';
 
 const Settings = () => {
   const { resetProgress } = useGame();
   const auth = useAuth() || {};
   const deleteAccount = auth.deleteAccount;
-  const user = auth.user;
-
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('darkMode');
-    if (saved !== null) return saved === 'true';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
 
   const [showResetModal, setShowResetModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('darkMode', String(darkMode));
-  }, [darkMode]);
-
-  const toggle = () => setDarkMode(prev => !prev);
 
   const handleReset = async () => {
     if (resetProgress) {
@@ -60,26 +41,18 @@ const Settings = () => {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <button
-          className="btn-primary"
-          onClick={toggle}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14, borderRadius: 16 }}
-        >
-          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-          <span>{darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}</span>
-        </button>
-
-        <button
           onClick={() => setShowResetModal(true)}
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: 8,
-            padding: 14,
+            padding: 16,
             borderRadius: 16,
             background: '#fff',
             border: '2px solid #ff9800',
             color: '#e65100',
+            fontSize: '1rem',
             fontWeight: 700,
             fontFamily: 'var(--font-heading)',
             cursor: 'pointer',
@@ -90,29 +63,28 @@ const Settings = () => {
           <span>Reset Account Progress</span>
         </button>
 
-        {user && (
-          <button
-            onClick={() => setShowDeleteModal(true)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              padding: 14,
-              borderRadius: 16,
-              background: '#fff',
-              border: '2px solid #ff4d4d',
-              color: '#ff4d4d',
-              fontWeight: 700,
-              fontFamily: 'var(--font-heading)',
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(255,77,77,0.1)'
-            }}
-          >
-            <Trash2 size={18} />
-            <span>Delete Account</span>
-          </button>
-        )}
+        <button
+          onClick={() => setShowDeleteModal(true)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            padding: 16,
+            borderRadius: 16,
+            background: '#fff',
+            border: '2px solid #ff4d4d',
+            color: '#ff4d4d',
+            fontSize: '1rem',
+            fontWeight: 700,
+            fontFamily: 'var(--font-heading)',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(255,77,77,0.1)'
+          }}
+        >
+          <Trash2 size={18} />
+          <span>Delete Account</span>
+        </button>
       </div>
 
       {/* Reset Progress Modal */}

@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Settings from '../Settings';
-import * as GameContext from '../../contexts/GameContext';
 
 vi.mock('../../contexts/GameContext', () => ({
   useGame: () => ({
@@ -10,39 +9,46 @@ vi.mock('../../contexts/GameContext', () => ({
   }),
 }));
 
+vi.mock('../../contexts/AuthContext', () => ({
+  useAuth: () => ({
+    user: { id: 'test-user-id', email: 'test@example.com' },
+    deleteAccount: vi.fn(),
+  }),
+}));
+
 describe('Settings', () => {
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.classList.remove('dark');
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('renders Settings header', () => {
+  it('renders Settings header and action buttons', () => {
     render(<Settings />);
     expect(screen.getByRole('heading', { name: /settings/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /reset account progress/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /delete account/i })).toBeInTheDocument();
   });
 
-  it('toggles dark mode', async () => {
+  it('opens reset progress modal on click', async () => {
     const user = userEvent.setup();
     render(<Settings />);
     
-    const button = screen.getByRole('button', { name: /switch to dark mode/i });
-    
-    expect(document.documentElement.classList.contains('dark')).toBe(false);
+    const resetButton = screen.getByRole('button', { name: /reset account progress/i });
+    await user.click(resetButton);
 
-    await user.click(button);
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-    expect(screen.getByRole('button', { name: /switch to light mode/i })).toBeInTheDocument();
-    expect(localStorage.getItem('darkMode')).toBe('true');
+    expect(screen.getByRole('heading', { name: /reset account progress\?/i })).toBeInTheDocument();
   });
 
-  it('loads saved dark mode preference', () => {
-    localStorage.setItem('darkMode', 'true');
+  it('opens delete account modal on click', async () => {
+    const user = userEvent.setup();
     render(<Settings />);
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-    expect(screen.getByRole('button', { name: /switch to light mode/i })).toBeInTheDocument();
+    
+    const deleteButton = screen.getByRole('button', { name: /delete account/i });
+    await user.click(deleteButton);
+
+    expect(screen.getByRole('heading', { name: /delete account\?/i })).toBeInTheDocument();
   });
 });
