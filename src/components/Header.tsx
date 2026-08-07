@@ -1,87 +1,47 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext.jsx';
-import { useAuth } from '../contexts/AuthContext.jsx';
 import { Gem, Flame, Star } from 'lucide-react';
 import '../index.css';
 
 export function Header() {
   const { xp, level, streak, hasPlayedToday } = useGame();
-  const { user } = useAuth();
-  const navigate = useNavigate();
-
   const xpInLevel = xp - (level - 1) * 100;
   const pct = Math.min(xpInLevel, 100);
-
-  const displayName = user?.user_metadata?.name || 'Learner';
-  const avatarEmoji = user?.user_metadata?.avatar || '👤';
+  const navigate = useNavigate();
 
   return (
     <div style={{ 
       position: 'sticky', top: 0, zIndex: 100, background: '#ffffff',
-      paddingTop: 24, paddingBottom: 18, margin: '-24px -16px 20px -16px', paddingLeft: 16, paddingRight: 16,
+      paddingTop: 28, paddingBottom: 20, margin: '-24px -16px 20px -16px', paddingLeft: 16, paddingRight: 16,
       borderBottom: '1px solid #eaeaea',
       boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
     }}>
-      {/* Top row: Title, User Pill, and Badges */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-        {/* Logo & User Identity Area */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'nowrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{
-              background: 'linear-gradient(135deg, #1c7c54, #4caf50)',
-              borderRadius: '9px',
-              padding: '5px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 3px 10px rgba(76, 175, 80, 0.25)'
-            }}>
-              <Gem size={19} color="#ffffff" strokeWidth={2.5} />
-            </div>
-            <h1 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1.35rem',
-              fontWeight: 800,
-              letterSpacing: '-0.5px',
-              color: '#1a202c',
-              margin: 0,
-              whiteSpace: 'nowrap'
-            }}>
-              Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
-            </h1>
+      {/* Top row: Title and Badges */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        {/* Logo Area */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #1c7c54, #4caf50)',
+            borderRadius: '10px',
+            padding: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 3px 10px rgba(76, 175, 80, 0.25)'
+          }}>
+            <Gem size={22} color="#ffffff" strokeWidth={2.5} />
           </div>
-
-          {/* User Profile Identity Pill */}
-          <div 
-            onClick={() => navigate('/profile')} 
-            style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              background: '#f8f9fa', padding: '3px 8px 3px 3px', borderRadius: 20,
-              border: '1px solid #e9ecef', cursor: 'pointer',
-              boxShadow: '0 2px 5px rgba(0,0,0,0.03)',
-              transition: 'all 0.15s ease',
-              flexShrink: 1, minWidth: 0
-            }}
-            aria-label="Go to Profile"
-            role="button"
-            title="Go to Profile"
-          >
-            <div style={{
-              fontSize: '1.1rem', width: 26, height: 26, borderRadius: '50%',
-              background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 1.5px 4px rgba(0,0,0,0.1)', border: '1.5px solid #4caf50',
-              flexShrink: 0
-            }}>
-              {avatarEmoji}
-            </div>
-            <span style={{
-              fontWeight: 700, fontSize: '0.78rem', color: '#333',
-              maxWidth: 75, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
-            }}>
-              {displayName}
-            </span>
-          </div>
+          <h1 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '1.6rem',
+            fontWeight: 800,
+            letterSpacing: '-0.5px',
+            color: '#1a202c',
+            margin: 0,
+          }}>
+            Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
+          </h1>
         </div>
         <div style={{
           display: 'flex', flexDirection: 'column', gap: 3,
