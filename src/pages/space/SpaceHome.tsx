@@ -181,7 +181,7 @@ function SpaceHub() {
               onClick={() => {}}
               ariaLabel="Space Quiz (Under Development)"
             >
-              <div className="space-card-icon">❓</div>
+              <div className="space-card-icon">🎯</div>
               <div className="space-card-info">
                 <h3 className="space-card-title">Space Quiz</h3>
                 <p className="space-card-subtitle">Test cosmic knowledge & earn XP</p>
