@@ -453,6 +453,69 @@ export default function ChessPlay() {
     );
   };
 
+  const topIsBot = playerColor === 'w' ? !isFlipped : isFlipped;
+
+  const renderBotProfile = () => (
+    <div className="player-profile-banner">
+      <div className="player-avatar">
+        {difficulty === 'Easy' ? <Bot size={24} color="#4caf50" /> : 
+         difficulty === 'Medium' ? <BrainCircuit size={24} color="#ff9800" /> : 
+         <Cpu size={24} color="#f44336" />}
+      </div>
+      <div className="player-info" style={{ minWidth: 0 }}>
+        <div className="player-name" style={{ flexWrap: 'wrap' }}>
+          <span style={{ whiteSpace: 'nowrap' }}>
+            {difficulty === 'Easy' ? 'Beginner Bob' : 
+             difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}
+          </span>
+          
+          {botCapturedPieces.length > 0 && (
+            <>
+              <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+                {botCapturedPieces.map((type, i) => (
+                  <img key={i} src={PIECE_IMAGES[botCapturedColor][type]} alt={type} style={{ width: 14, height: 14 }} />
+                ))}
+                {botScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{botScoreDiff}</span>}
+              </div>
+            </>
+          )}
+        </div>
+        <div className="player-tagline" style={{ position: 'relative' }}>
+          Bot • {difficulty}
+          {isThinking && <span className="thinking-indicator" style={{ position: 'absolute', marginLeft: 6, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>(thinking...)</span>}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderUserProfile = () => (
+    <div className="player-profile-banner">
+      <div className="player-avatar" style={{ background: '#e3f2fd', fontSize: '1.2rem' }}>
+        {playerAvatar}
+      </div>
+      <div className="player-info" style={{ minWidth: 0 }}>
+        <div className="player-name" style={{ flexWrap: 'wrap' }}>
+          <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+            {playerName}
+          </span>
+          {playerCapturedPieces.length > 0 && (
+            <>
+              <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+                {playerCapturedPieces.map((type, i) => (
+                  <img key={i} src={PIECE_IMAGES[playerCapturedColor][type]} alt={type} style={{ width: 14, height: 14 }} />
+                ))}
+                {playerScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{playerScoreDiff}</span>}
+              </div>
+            </>
+          )}
+        </div>
+        <div className="player-tagline">Lv.{level} • 🔥 {streak} Streak</div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="chess-module-page">
       <div className="chess-nav-header">
@@ -557,37 +620,7 @@ export default function ChessPlay() {
         <>
         <div className="chess-play-layout">
           
-          <div className="player-profile-banner">
-            <div className="player-avatar">
-              {difficulty === 'Easy' ? <Bot size={24} color="#4caf50" /> : 
-               difficulty === 'Medium' ? <BrainCircuit size={24} color="#ff9800" /> : 
-               <Cpu size={24} color="#f44336" />}
-            </div>
-            <div className="player-info" style={{ minWidth: 0 }}>
-              <div className="player-name" style={{ flexWrap: 'wrap' }}>
-                <span style={{ whiteSpace: 'nowrap' }}>
-                  {difficulty === 'Easy' ? 'Beginner Bob' : 
-                   difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}
-                </span>
-                
-                {botCapturedPieces.length > 0 && (
-                  <>
-                    <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                      {botCapturedPieces.map((type, i) => (
-                        <img key={i} src={PIECE_IMAGES[botCapturedColor][type]} alt={type} style={{ width: 14, height: 14 }} />
-                      ))}
-                      {botScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{botScoreDiff}</span>}
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="player-tagline" style={{ position: 'relative' }}>
-                Bot • {difficulty}
-                {isThinking && <span className="thinking-indicator" style={{ position: 'absolute', marginLeft: 6, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>(thinking...)</span>}
-              </div>
-            </div>
-          </div>
+          {topIsBot ? renderBotProfile() : renderUserProfile()}
 
           <div className="board-outer-wrapper">
             {showBackModal && (
@@ -704,30 +737,7 @@ export default function ChessPlay() {
             </div>
           </div>
 
-          <div className="player-profile-banner">
-            <div className="player-avatar" style={{ background: '#e3f2fd', fontSize: '1.2rem' }}>
-              {playerAvatar}
-            </div>
-            <div className="player-info" style={{ minWidth: 0 }}>
-              <div className="player-name" style={{ flexWrap: 'wrap' }}>
-                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
-                  {playerName}
-                </span>
-                {playerCapturedPieces.length > 0 && (
-                  <>
-                    <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                      {playerCapturedPieces.map((type, i) => (
-                        <img key={i} src={PIECE_IMAGES[playerCapturedColor][type]} alt={type} style={{ width: 14, height: 14 }} />
-                      ))}
-                      {playerScoreDiff > 0 && <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#555', marginLeft: 4 }}>+{playerScoreDiff}</span>}
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="player-tagline">Lv.{level} • 🔥 {streak} Streak</div>
-            </div>
-          </div>
+          {topIsBot ? renderUserProfile() : renderBotProfile()}
 
           <div className="game-controls">
             {gameState !== 'playing' ? (
