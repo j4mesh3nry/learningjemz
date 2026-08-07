@@ -553,41 +553,62 @@ export default function ChessPlay() {
           <h2 style={{ textAlign: 'center', marginBottom: 20, fontFamily: 'var(--font-heading)', color: '#333' }}>Choose Your Opponent</h2>
           <div className="opponent-cards">
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
-              <div className="opponent-avatar"><Bot size={40} color="#4caf50" /></div>
-              <div className="opponent-info" style={{ flex: 1 }}>
-                <h3>Beginner Bob</h3>
-                <p>Easy • High blunder rate</p>
+              <div className="opponent-card-header">
+                <div className="opponent-avatar"><Bot size={40} color="#4caf50" /></div>
+                <div className="opponent-info">
+                  <h3>Beginner Bob</h3>
+                  <p>Easy • High blunder rate</p>
+                </div>
               </div>
               {selectedOpponent === 'Easy' && (
-                <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
-                  <button onClick={() => startGame('Easy', 'w')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#f8f9fa', border: '1px solid #dee2e6', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#333', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>White</button>
-                  <button onClick={() => startGame('Easy', 'b')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#343a40', border: '1px solid #212529', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#fff', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>Black</button>
+                <div className="color-select-bar" onClick={e => e.stopPropagation()}>
+                  <span className="color-select-label">Play as:</span>
+                  <button className="color-btn white" onClick={() => startGame('Easy', 'w')}>
+                    <span style={{ fontSize: '1.1rem' }}>♔</span> White
+                  </button>
+                  <button className="color-btn black" onClick={() => startGame('Easy', 'b')}>
+                    <span style={{ fontSize: '1.1rem' }}>♚</span> Black
+                  </button>
                 </div>
               )}
             </div>
             <div className={`opponent-card medium ${selectedOpponent === 'Medium' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Medium' ? null : 'Medium')}>
-              <div className="opponent-avatar"><BrainCircuit size={40} color="#ff9800" /></div>
-              <div className="opponent-info" style={{ flex: 1 }}>
-                <h3>Intermediate Ivy</h3>
-                <p>Medium • Looks for captures</p>
+              <div className="opponent-card-header">
+                <div className="opponent-avatar"><BrainCircuit size={40} color="#ff9800" /></div>
+                <div className="opponent-info">
+                  <h3>Intermediate Ivy</h3>
+                  <p>Medium • Looks for captures</p>
+                </div>
               </div>
               {selectedOpponent === 'Medium' && (
-                <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
-                  <button onClick={() => startGame('Medium', 'w')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#f8f9fa', border: '1px solid #dee2e6', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#333', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>White</button>
-                  <button onClick={() => startGame('Medium', 'b')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#343a40', border: '1px solid #212529', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#fff', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>Black</button>
+                <div className="color-select-bar" onClick={e => e.stopPropagation()}>
+                  <span className="color-select-label">Play as:</span>
+                  <button className="color-btn white" onClick={() => startGame('Medium', 'w')}>
+                    <span style={{ fontSize: '1.1rem' }}>♔</span> White
+                  </button>
+                  <button className="color-btn black" onClick={() => startGame('Medium', 'b')}>
+                    <span style={{ fontSize: '1.1rem' }}>♚</span> Black
+                  </button>
                 </div>
               )}
             </div>
             <div className={`opponent-card hard ${selectedOpponent === 'Hard' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Hard' ? null : 'Hard')}>
-              <div className="opponent-avatar"><Cpu size={40} color="#f44336" /></div>
-              <div className="opponent-info" style={{ flex: 1 }}>
-                <h3>Grandmaster Gary</h3>
-                <p>Hard • Calculates deeply</p>
+              <div className="opponent-card-header">
+                <div className="opponent-avatar"><Cpu size={40} color="#f44336" /></div>
+                <div className="opponent-info">
+                  <h3>Grandmaster Gary</h3>
+                  <p>Hard • Calculates deeply</p>
+                </div>
               </div>
               {selectedOpponent === 'Hard' && (
-                <div style={{ display: 'flex', gap: 6, animation: 'fadeIn 0.2s' }} onClick={e => e.stopPropagation()}>
-                  <button onClick={() => startGame('Hard', 'w')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#f8f9fa', border: '1px solid #dee2e6', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#333', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>White</button>
-                  <button onClick={() => startGame('Hard', 'b')} style={{ padding: '8px 14px', borderRadius: '20px', background: '#343a40', border: '1px solid #212529', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, color: '#fff', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>Black</button>
+                <div className="color-select-bar" onClick={e => e.stopPropagation()}>
+                  <span className="color-select-label">Play as:</span>
+                  <button className="color-btn white" onClick={() => startGame('Hard', 'w')}>
+                    <span style={{ fontSize: '1.1rem' }}>♔</span> White
+                  </button>
+                  <button className="color-btn black" onClick={() => startGame('Hard', 'b')}>
+                    <span style={{ fontSize: '1.1rem' }}>♚</span> Black
+                  </button>
                 </div>
               )}
             </div>
