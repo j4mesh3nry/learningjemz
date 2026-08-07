@@ -42,16 +42,16 @@ export default function ObjectsBySizeMenu() {
       {/* Mode List */}
       <div className="space-card-list">
         <Card
-          className="space-card-item"
-          onClick={() => navigate('/space/size-stack')}
-          ariaLabel="Size Stack"
+          className="space-card-item locked"
+          onClick={() => {}}
+          ariaLabel="Size Stack (Under Development)"
         >
           <div className="space-card-icon">📏</div>
           <div className="space-card-info">
             <h3 className="space-card-title">Size Stack</h3>
             <p className="space-card-subtitle">Drag and drop to order the planets</p>
           </div>
-          <div className="space-card-arrow">→</div>
+          <div className="space-lock-badge">🛠️ Under Development</div>
         </Card>
 
         <Card
