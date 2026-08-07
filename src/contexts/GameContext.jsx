@@ -274,8 +274,9 @@ export function GameProvider({ children }) {
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = yesterday.toDateString();
 
-  const hasPlayedToday = state.lastVisit === todayStr;
-  const hasPlayedYesterday = state.lastVisit === yesterdayStr;
+  const lastVisitDate = state.lastVisit ? new Date(state.lastVisit).toDateString() : null;
+  const hasPlayedToday = lastVisitDate === todayStr;
+  const hasPlayedYesterday = lastVisitDate === yesterdayStr;
 
   // Streak is valid if user played today or yesterday; otherwise broken (0)
   const currentStreak = (hasPlayedToday || hasPlayedYesterday) ? (state.streak || 0) : 0;
