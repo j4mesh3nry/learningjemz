@@ -1,10 +1,12 @@
 // src/pages/Settings.tsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext';
 import { useAuth } from '../contexts/AuthContext';
-import { RotateCcw, Trash2 } from 'lucide-react';
+import { RotateCcw, Trash2, ArrowLeft } from 'lucide-react';
 
 const Settings = () => {
+  const navigate = useNavigate();
   const { resetProgress } = useGame();
   const auth = useAuth() || {};
   const deleteAccount = auth.deleteAccount;
@@ -30,8 +32,38 @@ const Settings = () => {
   };
 
   return (
-    <div className="container" style={{ paddingTop: '2rem', paddingBottom: '100px', maxWidth: 420, margin: '0 auto' }}>
-      <h2 className="text-center" style={{ fontFamily: 'var(--font-heading)', marginBottom: '1.5rem' }}>Settings</h2>
+    <div className="container" style={{ paddingTop: '1.5rem', paddingBottom: '100px', maxWidth: 420, margin: '0 auto' }}>
+      {/* Header with Back Button */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: '2rem'
+      }}>
+        <button
+          onClick={() => navigate('/profile')}
+          aria-label="Go back to Me page"
+          style={{
+            background: '#ffffff',
+            border: '1px solid #eaeaea',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 42,
+            height: 42,
+            borderRadius: 14,
+            color: '#333',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+          }}
+        >
+          <ArrowLeft size={22} />
+        </button>
+
+        <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.4rem' }}>Settings</h2>
+
+        <div style={{ width: 42 }} />
+      </div>
 
       {resetSuccess && (
         <div style={{ background: '#e8f5e9', border: '1px solid #a5d6a7', color: '#2e7d32', padding: 12, borderRadius: 12, textAlign: 'center', marginBottom: 16, fontWeight: 600 }}>

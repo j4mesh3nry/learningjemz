@@ -4,15 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { ACHIEVEMENTS } from '../utils/achievements.js';
-import { Settings, LogOut, Trophy, Lock, Pencil, Flame, Calendar as CalendarIcon, RotateCcw, Trash2 } from 'lucide-react';
+import { Settings, LogOut, Trophy, Lock, Pencil, Flame, Calendar as CalendarIcon } from 'lucide-react';
 import { updateAvatar, updateName } from '../api/supabase.js';
 import { getPlayedDates } from '../components/StreakScreen';
 import '../index.css';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { xp, level, streak, hasPlayedToday, achievements, resetProgress } = useGame();
-  const { user, logout, deleteAccount } = useAuth();
+  const { xp, level, streak, hasPlayedToday, achievements } = useGame();
+  const { user, logout } = useAuth();
 
   const [avatar, setAvatar] = useState(() => user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar') || '👤');
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
@@ -22,8 +22,6 @@ export default function Profile() {
   const [tempName, setTempName] = useState('');
   const [toast, setToast] = useState<string | null>(null);
 
-  const [showResetModal, setShowResetModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [playedDates, setPlayedDates] = useState<string[]>([]);
 
   useEffect(() => {
@@ -33,21 +31,6 @@ export default function Profile() {
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(null), 3000);
-  };
-
-  const handleResetProgress = async () => {
-    if (resetProgress) {
-      await resetProgress();
-    }
-    setShowResetModal(false);
-    showToast('Account progress reset to 0');
-  };
-
-  const handleDeleteAccount = async () => {
-    if (deleteAccount) {
-      await deleteAccount();
-    }
-    setShowDeleteModal(false);
   };
 
   const PFP_OPTIONS = ['👤', '🦊', '🦉', '🐯', '🐼', '🐸', '🐶', '🦄', '🤖', '👽', '🦸‍♂️', '👩‍🚀', '🐱', '🦁'];
@@ -375,58 +358,8 @@ export default function Profile() {
         })}
       </div>
 
-      {/* Account Action Buttons (Reset Progress, Delete Account & Logout) */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 24 }}>
-        <button
-          onClick={() => setShowResetModal(true)}
-          style={{
-            width: '100%',
-            padding: 16,
-            borderRadius: 16,
-            background: '#fff',
-            border: '2px solid #ff9800',
-            color: '#e65100',
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1rem',
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-            boxShadow: '0 4px 12px rgba(255,152,0,0.1)',
-            cursor: 'pointer'
-          }}
-        >
-          <RotateCcw size={18} />
-          Reset Account Progress
-        </button>
-
-        {user && (
-          <button
-            onClick={() => setShowDeleteModal(true)}
-            style={{
-              width: '100%',
-              padding: 16,
-              borderRadius: 16,
-              background: '#fff',
-              border: '2px solid #ff4d4d',
-              color: '#ff4d4d',
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1rem',
-              fontWeight: 700,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              boxShadow: '0 4px 12px rgba(255,77,77,0.1)',
-              cursor: 'pointer'
-            }}
-          >
-            <Trash2 size={18} />
-            Delete Account
-          </button>
-        )}
-
+      {/* Logout Action Button */}
+      <div style={{ paddingBottom: 24 }}>
         <button
           onClick={logout}
           style={{
@@ -450,66 +383,6 @@ export default function Profile() {
           Sign Out
         </button>
       </div>
-
-      {/* Reset Progress Confirmation Modal */}
-      {showResetModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.6)', zIndex: 2000, display: 'flex',
-          alignItems: 'center', justifyContent: 'center', padding: 20
-        }}>
-          <div style={{ background: '#fff', padding: 24, borderRadius: 20, maxWidth: 340, width: '100%', textAlign: 'center' }}>
-            <h3 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 12px 0', color: '#333' }}>Reset Account Progress?</h3>
-            <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: 20, lineHeight: 1.4 }}>
-              This will reset your Streak, XP, Level, and game records to 0. This cannot be undone.
-            </p>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button
-                onClick={() => setShowResetModal(false)}
-                style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', background: '#eee', color: '#444', fontWeight: 600, cursor: 'pointer' }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleResetProgress}
-                style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', background: '#ff9800', color: '#fff', fontWeight: 700, cursor: 'pointer' }}
-              >
-                Yes, Reset
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Account Confirmation Modal */}
-      {showDeleteModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.6)', zIndex: 2000, display: 'flex',
-          alignItems: 'center', justifyContent: 'center', padding: 20
-        }}>
-          <div style={{ background: '#fff', padding: 24, borderRadius: 20, maxWidth: 340, width: '100%', textAlign: 'center' }}>
-            <h3 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 12px 0', color: '#d32f2f' }}>Delete Account?</h3>
-            <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: 20, lineHeight: 1.4 }}>
-              This will permanently delete your account data, achievements, and progress. You will be signed out immediately.
-            </p>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button
-                onClick={() => setShowDeleteModal(false)}
-                style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', background: '#eee', color: '#444', fontWeight: 600, cursor: 'pointer' }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteAccount}
-                style={{ flex: 1, padding: 12, borderRadius: 12, border: 'none', background: '#ff4d4d', color: '#fff', fontWeight: 700, cursor: 'pointer' }}
-              >
-                Yes, Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Avatar Selection Modal */}
       {isEditingAvatar && (
