@@ -11,18 +11,18 @@ const modules = [
     to: '/chess',
     icon: '♟️',
     title: 'Chess',
-    subtitle: 'Play, Puzzles & Lessons',
+    subtitle: 'Play against AI & Puzzles',
     bg: '#16653e',
-    shadow: '0 5px 0 #0e4329',
+    shadow: '0 4px 0 #0e4329',
     pattern: 'chess',
   },
   {
     to: '/space',
     icon: '🪐',
     title: 'Space',
-    subtitle: 'Planets, Moons & Stars',
+    subtitle: 'Planets & Solar System',
     bg: '#161936',
-    shadow: '0 5px 0 #0b0d1e',
+    shadow: '0 4px 0 #0b0d1e',
     pattern: 'space',
   },
 ];
@@ -79,8 +79,8 @@ export default function Home() {
         What do you want to play and learn?
       </h2>
 
-      {/* Clean & Simple Module Cards */}
-      <div style={{ display: 'grid', gap: 14 }}>
+      {/* Clean & Compact Module Cards */}
+      <div style={{ display: 'grid', gap: 12 }}>
         {modules.map((m) => (
           <Card 
             key={m.to} 
@@ -88,16 +88,16 @@ export default function Home() {
             onClick={() => navigate(m.to)} 
             ariaLabel={m.title} 
             style={{
-              display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
+              display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 14,
               textDecoration: 'none', color: '#fff',
-              background: m.bg, borderRadius: 20,
-              padding: '18px 18px', position: 'relative', overflow: 'hidden',
+              background: m.bg, borderRadius: 16,
+              padding: '12px 16px', position: 'relative', overflow: 'hidden',
               boxShadow: m.shadow,
               border: '2px solid rgba(255,255,255,0.2)',
               transition: 'transform 0.1s ease, boxShadow 0.1s ease',
               cursor: 'pointer'
             }}
-            onMouseDown={e => { e.currentTarget.style.transform = 'translateY(3px)'; e.currentTarget.style.boxShadow = '0 2px 0 #0e4329'; }}
+            onMouseDown={e => { e.currentTarget.style.transform = 'translateY(2px)'; e.currentTarget.style.boxShadow = '0 2px 0 #0e4329'; }}
             onMouseUp={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = m.shadow; }}
             onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = m.shadow; }}
           >
@@ -105,28 +105,29 @@ export default function Home() {
 
             {/* Module Icon Tile */}
             <div style={{
-              fontSize: '2rem', width: 52, height: 52,
+              fontSize: '1.6rem', width: 44, height: 44,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'rgba(255,255,255,0.18)', borderRadius: 16,
+              background: 'rgba(255,255,255,0.18)', borderRadius: 12,
               flexShrink: 0, zIndex: 1
             }}>
               {m.icon}
             </div>
 
             {/* Title & Subtitle */}
-            <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
+            <div style={{ position: 'relative', zIndex: 1, flex: 1, minWidth: 0 }}>
               <h3 style={{
-                fontFamily: 'var(--font-heading)', fontSize: '1.25rem',
-                margin: 0, fontWeight: 800, letterSpacing: '-0.2px'
+                fontFamily: 'var(--font-heading)', fontSize: '1.1rem',
+                margin: 0, fontWeight: 800, letterSpacing: '-0.2px', lineHeight: 1.2
               }}>{m.title}</h3>
               <p style={{
-                margin: '2px 0 0', fontSize: '0.85rem', opacity: 0.9, fontWeight: 500
+                margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2,
+                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'
               }}>{m.subtitle}</p>
             </div>
 
             {/* Clean Right Arrow */}
             <div style={{
-              fontSize: '1.2rem', opacity: 0.85,
+              fontSize: '1.1rem', opacity: 0.85,
               position: 'relative', zIndex: 1, fontWeight: 'bold'
             }}>→</div>
           </Card>

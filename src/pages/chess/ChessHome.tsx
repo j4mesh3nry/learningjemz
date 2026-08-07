@@ -83,7 +83,7 @@ function ChessMenu() {
         borderRadius: 14,
         border: '2px solid #b0cbaf',
         boxShadow: '0 3px 0 #b0cbaf',
-        marginBottom: 20
+        marginBottom: 18
       }}>
         <button
           onClick={() => setTab('play')}
@@ -135,10 +135,10 @@ function ChessMenu() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Blurred Locked Card */}
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 16,
-            background: '#ffffff', borderRadius: 20,
+            display: 'flex', alignItems: 'center', gap: 14,
+            background: '#ffffff', borderRadius: 16,
             border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
-            padding: '18px', position: 'relative', overflow: 'hidden',
+            padding: '12px 16px', position: 'relative', overflow: 'hidden',
             cursor: 'not-allowed'
           }}>
             <div style={{
@@ -151,19 +151,19 @@ function ChessMenu() {
             </div>
 
             <div style={{
-              display: 'flex', alignItems: 'center', gap: 16, width: '100%',
+              display: 'flex', alignItems: 'center', gap: 14, width: '100%',
               filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
             }}>
               <div style={{
-                fontSize: '1.8rem', width: 48, height: 48,
+                fontSize: '1.6rem', width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: '#e1f0e2', borderRadius: 14, flexShrink: 0
+                background: '#e1f0e2', borderRadius: 12, flexShrink: 0
               }}>
                 📚
               </div>
-              <div>
-                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825' }}>Chess Tactics & Lessons</h3>
-                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500 }}>Interactive Puzzles & Guides</p>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Chess Lessons</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Interactive Puzzles & Guides</p>
               </div>
             </div>
           </div>
@@ -173,7 +173,7 @@ function ChessMenu() {
           {/* Active Play & Earn Modes */}
           <h2 style={{
             fontFamily: 'var(--font-heading)', fontSize: '1.15rem',
-            margin: '0 0 14px 0', color: '#0f3825', fontWeight: 800
+            margin: '0 0 12px 0', color: '#0f3825', fontWeight: 800
           }}>
             Earn XP & Streaks
           </h2>
@@ -184,36 +184,36 @@ function ChessMenu() {
               onClick={() => navigate('play')} 
               ariaLabel="Play with Bot"
               style={{
-                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 14,
                 textDecoration: 'none', color: '#fff',
-                background: '#16653e', borderRadius: 20,
-                padding: '18px 18px', position: 'relative', overflow: 'hidden',
-                boxShadow: '0 5px 0 #0e4329',
+                background: '#16653e', borderRadius: 16,
+                padding: '12px 16px', position: 'relative', overflow: 'hidden',
+                boxShadow: '0 4px 0 #0e4329',
                 border: '2px solid rgba(255,255,255,0.2)',
                 cursor: 'pointer'
               }}
             >
               <div style={{
-                fontSize: '2rem', width: 50, height: 50,
+                fontSize: '1.6rem', width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(255,255,255,0.18)', borderRadius: 14,
+                background: 'rgba(255,255,255,0.18)', borderRadius: 12,
                 flexShrink: 0
               }}>
                 🤖
               </div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>Play with Bot</h3>
-                <p style={{ margin: '2px 0 0', fontSize: '0.82rem', opacity: 0.9, fontWeight: 500 }}>Practice against AI bots & earn XP</p>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>Play with Bot</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Practice against AI bots</p>
               </div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>→</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>→</div>
             </Card>
 
             {/* Blurred Locked Cards */}
             <div style={{
-              display: 'flex', alignItems: 'center', gap: 16,
-              background: '#ffffff', borderRadius: 20,
+              display: 'flex', alignItems: 'center', gap: 14,
+              background: '#ffffff', borderRadius: 16,
               border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
-              padding: '18px', position: 'relative', overflow: 'hidden',
+              padding: '12px 16px', position: 'relative', overflow: 'hidden',
               cursor: 'not-allowed'
             }}>
               <div style={{
@@ -226,53 +226,19 @@ function ChessMenu() {
               </div>
 
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 16, width: '100%',
+                display: 'flex', alignItems: 'center', gap: 14, width: '100%',
                 filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
               }}>
                 <div style={{
-                  fontSize: '1.8rem', width: 48, height: 48,
+                  fontSize: '1.6rem', width: 44, height: 44,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: '#e1f0e2', borderRadius: 14, flexShrink: 0
+                  background: '#e1f0e2', borderRadius: 12, flexShrink: 0
                 }}>
                   ⚔️
                 </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825' }}>Speed Chess Blitz</h3>
-                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500 }}>Timed Rapid Challenges</p>
-                </div>
-              </div>
-            </div>
-
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 16,
-              background: '#ffffff', borderRadius: 20,
-              border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
-              padding: '18px', position: 'relative', overflow: 'hidden',
-              cursor: 'not-allowed'
-            }}>
-              <div style={{
-                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                zIndex: 10, background: '#16653e', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
-                padding: '6px 12px', borderRadius: 12, border: '1.5px solid #0e4329', boxShadow: '0 3px 0 #0e4329',
-                display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
-              }}>
-                <Lock size={12} color="#ffffff" /> Locked
-              </div>
-
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 16, width: '100%',
-                filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
-              }}>
-                <div style={{
-                  fontSize: '1.8rem', width: 48, height: 48,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: '#e1f0e2', borderRadius: 14, flexShrink: 0
-                }}>
-                  🏆
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825' }}>Grandmaster Tournament</h3>
-                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500 }}>Global Ranked Matches</p>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Speed Blitz</h3>
+                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Timed Rapid Challenges</p>
                 </div>
               </div>
             </div>

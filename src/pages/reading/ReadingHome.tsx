@@ -1,7 +1,7 @@
 // src/pages/reading/ReadingHome.tsx
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Plus, BookOpen, Trash2, Flame, Star, Gamepad2 } from 'lucide-react';
+import { Plus, BookOpen, Trash2, Flame, Star, Gamepad2, ArrowLeft, Lock } from 'lucide-react';
 import { getLibrary, getReadingProgress, getCoverUrl, removeFromLibrary } from '../../utils/bookService';
 import { useGame } from '../../contexts/GameContext';
 import BookSearch from './BookSearch';
@@ -46,81 +46,99 @@ const LibraryView = () => {
   const completedCount = library.filter(b => b.progress >= 100).length;
 
   return (
-    <div className="library-view" style={{ background: '#f5f5f5', minHeight: '100vh', padding: '1rem' }}>
+    <div className="library-view" style={{ background: 'var(--color-bg-page)', minHeight: '100vh', padding: '1rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-        <button onClick={() => navigate('/reading')} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>←</button>
-        <h2 style={{ margin: 0 }}>My Library</h2>
+        <button 
+          onClick={() => navigate('/reading')}
+          title="Back to Reading"
+          aria-label="Back to Reading"
+          style={{
+            background: '#ffffff',
+            border: '2px solid #b0cbaf',
+            boxShadow: '0 3px 0 #b0cbaf',
+            borderRadius: 14,
+            width: 40,
+            height: 40,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#16653e',
+            cursor: 'pointer',
+            flexShrink: 0
+          }}
+        >
+          <ArrowLeft size={20} strokeWidth={2.5} />
+        </button>
+        <h2 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.4rem', color: '#0f3825', fontWeight: 800 }}>My Library</h2>
       </div>
 
-      <div className="reading-stats">
-        <div className="stat-card">
-          <span className="stat-value">{readingCount}</span>
-          <span className="stat-label">Reading</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-value">{completedCount}</span>
-          <span className="stat-label">Completed</span>
-        </div>
-      </div>
-
-      <div className="filter-tabs">
-        {['All', 'Reading', 'Completed'].map(tab => (
+      <div className="filter-chips" style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}>
+        {['All', 'Reading', 'Completed'].map(f => (
           <button
-            key={tab}
-            className={`filter-tab ${filter === tab ? 'active' : ''}`}
-            onClick={() => setFilter(tab)}
+            key={f}
+            onClick={() => setFilter(f)}
+            style={{
+              padding: '6px 14px',
+              borderRadius: 12,
+              border: filter === f ? '2px solid #16653e' : '2px solid #b0cbaf',
+              background: filter === f ? '#16653e' : '#ffffff',
+              color: filter === f ? '#ffffff' : '#4e7361',
+              fontWeight: 800,
+              fontSize: '0.8rem',
+              cursor: 'pointer'
+            }}
           >
-            {tab}
+            {f} {f === 'All' ? `(${library.length})` : f === 'Reading' ? `(${readingCount})` : `(${completedCount})`}
           </button>
         ))}
       </div>
 
-      {filteredLibrary.length === 0 ? (
-        <div className="empty-state">
-          <BookOpen className="empty-icon" size={64} />
-          <p>Your library is empty!</p>
-          <p className="empty-subtitle">Tap + to find books</p>
-        </div>
-      ) : (
-        <div className="books-grid">
-          {filteredLibrary.map(book => (
-            <Card
-              key={book.key}
-              className="book-card"
-              onClick={() => navigate(`/reading/read/${encodeURIComponent(book.key)}`)}
-              ariaLabel={`Read ${book.title}`}
-            >
+      <div className="book-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+        {filteredLibrary.map(book => (
+          <div
+            key={book.key}
+            onClick={() => navigate(`/reading/read/${encodeURIComponent(book.key)}`)}
+            style={{
+              background: '#ffffff',
+              borderRadius: 16,
+              border: '2px solid #b0cbaf',
+              boxShadow: '0 4px 0 #b0cbaf',
+              padding: 12,
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'relative',
+              cursor: 'pointer'
+            }}
+          >
+            <div style={{ height: 120, background: '#e1f0e2', borderRadius: 10, overflow: 'hidden', marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img
+                src={getCoverUrl(book.cover_i)}
+                alt={book.title}
+                style={{ height: '100%', objectFit: 'cover' }}
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              />
+              <BookOpen size={32} color="#16653e" />
+            </div>
+            <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f3825', margin: '0 0 2px 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {book.title}
+            </h3>
+            <p style={{ fontSize: '0.75rem', color: '#4e7361', margin: '0 0 8px 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {book.author_name ? book.author_name.join(', ') : 'Unknown Author'}
+            </p>
+            <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#16653e' }}>
+                {book.progress || 0}% Read
+              </span>
               <button
-                className="remove-btn"
                 onClick={(e) => handleRemove(e, book.key)}
-                title="Remove book"
+                style={{ background: 'transparent', border: 'none', color: '#e53935', cursor: 'pointer', padding: 4 }}
               >
                 <Trash2 size={16} />
               </button>
-              <div className="book-cover">
-                {book.coverId ? (
-                  <img src={getCoverUrl(book.coverId, 'M') || undefined} alt={book.title} />
-                ) : (
-                  <div className="cover-placeholder"><span>{book.title}</span></div>
-                )}
-              </div>
-              <div className="book-info">
-                <h3 className="book-title">{book.title}</h3>
-                <p className="book-author">{book.author}</p>
-                {book.progress > 0 && (
-                  <div className="progress-container">
-                    <div className="progress-bar-fill" style={{ width: `${Math.min(book.progress, 100)}%` }} />
-                  </div>
-                )}
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      <button className="fab" onClick={() => navigate('/reading/search')}>
-        <Plus size={24} />
-      </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -128,7 +146,7 @@ const LibraryView = () => {
 const ReadingDashboard = () => {
   const navigate = useNavigate();
   const { level, streak, booksReading, hasPlayedToday } = useGame();
-  const [tab, setTab] = useState<'learn' | 'play'>('play');
+  const [tab, setTab] = useState<'play' | 'learn'>('play');
 
   return (
     <div className="reading-module-page">
@@ -202,7 +220,7 @@ const ReadingDashboard = () => {
         borderRadius: 14,
         border: '2px solid #b0cbaf',
         boxShadow: '0 3px 0 #b0cbaf',
-        marginBottom: 20
+        marginBottom: 18
       }}>
         <button
           onClick={() => setTab('play')}
@@ -255,7 +273,7 @@ const ReadingDashboard = () => {
           {/* Active Learn Modes */}
           <h2 style={{
             fontFamily: 'var(--font-heading)', fontSize: '1.15rem',
-            margin: '0 0 14px 0', color: '#0f3825', fontWeight: 800
+            margin: '0 0 12px 0', color: '#0f3825', fontWeight: 800
           }}>
             Books & Library
           </h2>
@@ -265,28 +283,28 @@ const ReadingDashboard = () => {
               onClick={() => navigate('library')} 
               ariaLabel="My Library"
               style={{
-                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 14,
                 textDecoration: 'none', color: '#fff',
-                background: '#d16f2c', borderRadius: 20,
-                padding: '18px 18px', position: 'relative', overflow: 'hidden',
-                boxShadow: '0 5px 0 #8c4212',
+                background: '#d16f2c', borderRadius: 16,
+                padding: '12px 16px', position: 'relative', overflow: 'hidden',
+                boxShadow: '0 4px 0 #8c4212',
                 border: '2px solid rgba(255,255,255,0.2)',
                 cursor: 'pointer'
               }}
             >
               <div style={{
-                fontSize: '2rem', width: 50, height: 50,
+                fontSize: '1.6rem', width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(255,255,255,0.18)', borderRadius: 14,
+                background: 'rgba(255,255,255,0.18)', borderRadius: 12,
                 flexShrink: 0
               }}>
                 📚
               </div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>My Library</h3>
-                <p style={{ margin: '2px 0 0', fontSize: '0.82rem', opacity: 0.9, fontWeight: 500 }}>{booksReading || 0} books in progress</p>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>My Library</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Books in progress</p>
               </div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>→</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>→</div>
             </Card>
 
             <Card 
@@ -294,28 +312,28 @@ const ReadingDashboard = () => {
               onClick={() => navigate('search')} 
               ariaLabel="Book Search"
               style={{
-                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16,
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 14,
                 textDecoration: 'none', color: '#fff',
-                background: '#d16f2c', borderRadius: 20,
-                padding: '18px 18px', position: 'relative', overflow: 'hidden',
-                boxShadow: '0 5px 0 #8c4212',
+                background: '#d16f2c', borderRadius: 16,
+                padding: '12px 16px', position: 'relative', overflow: 'hidden',
+                boxShadow: '0 4px 0 #8c4212',
                 border: '2px solid rgba(255,255,255,0.2)',
                 cursor: 'pointer'
               }}
             >
               <div style={{
-                fontSize: '2rem', width: 50, height: 50,
+                fontSize: '1.6rem', width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(255,255,255,0.18)', borderRadius: 14,
+                background: 'rgba(255,255,255,0.18)', borderRadius: 12,
                 flexShrink: 0
               }}>
                 🔍
               </div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>Book Search</h3>
-                <p style={{ margin: '2px 0 0', fontSize: '0.82rem', opacity: 0.9, fontWeight: 500 }}>Find new books & classic novels to read</p>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>Book Search</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Find classic novels</p>
               </div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>→</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>→</div>
             </Card>
           </div>
         </>
@@ -324,16 +342,16 @@ const ReadingDashboard = () => {
           {/* Placeholder Play & Earn Modes */}
           <h2 style={{
             fontFamily: 'var(--font-heading)', fontSize: '1.15rem',
-            margin: '0 0 14px 0', color: '#0f3825', fontWeight: 800
+            margin: '0 0 12px 0', color: '#0f3825', fontWeight: 800
           }}>
             Earn XP & Streaks
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{
-              display: 'flex', alignItems: 'center', gap: 16,
-              background: '#ffffff', borderRadius: 20,
+              display: 'flex', alignItems: 'center', gap: 14,
+              background: '#ffffff', borderRadius: 16,
               border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
-              padding: '18px', position: 'relative', overflow: 'hidden',
+              padding: '12px 16px', position: 'relative', overflow: 'hidden',
               cursor: 'not-allowed'
             }}>
               <div style={{
@@ -346,19 +364,19 @@ const ReadingDashboard = () => {
               </div>
 
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 16, width: '100%',
+                display: 'flex', alignItems: 'center', gap: 14, width: '100%',
                 filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
               }}>
                 <div style={{
-                  fontSize: '1.8rem', width: 48, height: 48,
+                  fontSize: '1.6rem', width: 44, height: 44,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: '#e1f0e2', borderRadius: 14, flexShrink: 0
+                  background: '#e1f0e2', borderRadius: 12, flexShrink: 0
                 }}>
                   📖
                 </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825' }}>Reading Comprehension Quiz</h3>
-                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500 }}>Answer story questions for XP</p>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Reading Quiz</h3>
+                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Answer story questions for XP</p>
                 </div>
               </div>
             </div>
