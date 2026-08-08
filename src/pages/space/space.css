@@ -1304,14 +1304,14 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  padding: 10px 6px calc(10px + env(safe-area-inset-bottom, 8px));
+  padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 6px));
   background: rgba(14, 18, 30, 0.98);
   border-top: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 18px 18px 0 0;
+  border-radius: 16px 16px 0 0;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.8);
@@ -1321,19 +1321,19 @@
 .illum-keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   width: 100%;
 }
 
 .illum-key {
   flex: 1;
   min-width: 0;
-  height: 64px;
+  height: 48px;
   border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 10px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.22);
   color: #ffffff;
-  font-size: 1.4rem;
+  font-size: 1.18rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
@@ -1342,7 +1342,7 @@
   user-select: none;
   touch-action: manipulation;
   transition: all 0.1s ease;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 .illum-key:active {
@@ -1356,29 +1356,29 @@
   background: rgba(239, 83, 80, 0.45);
   border: 1px solid rgba(239, 83, 80, 0.6);
   color: #ffffff;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 .illum-key-space {
   flex: 2.2;
-  height: 60px;
+  height: 46px;
   background: rgba(255, 255, 255, 0.28);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 900;
   letter-spacing: 1px;
 }
 
 .illum-key-enter {
   flex: 2.4;
-  height: 60px;
-  background: #16653e;
-  border: 1.5px solid #0e4329;
+  height: 46px;
+  background: linear-gradient(135deg, #1e2044 0%, #11132b 100%);
+  border: 1.5px solid #38bdf8;
   color: #ffffff;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 900;
   letter-spacing: 1px;
-  box-shadow: 0 3px 0 #0e4329;
+  box-shadow: 0 2px 0 #0b0d1e;
 }
 
 .illum-prompt-banner {
