@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess as ChessJS } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText, Sparkles } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText, Sparkles, Target } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -587,16 +587,30 @@ export default function ChessPlay() {
             margin: 0, color: '#ffffff', fontSize: '1.25rem',
             fontFamily: 'var(--font-heading)', fontWeight: 900
           }}>
-            Play vs AI
+            Play with Bot
           </h1>
         </div>
       </div>
 
       {!difficulty ? (
         <div className="opponent-selection-screen">
-          <p style={{ margin: '0 0 16px 4px', fontSize: '0.9rem', color: '#4e7361', fontWeight: 600 }}>
-            Choose an opponent difficulty below
-          </p>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            background: '#ffffff',
+            border: '2px solid #b0cbaf',
+            boxShadow: '0 2.5px 0 #b0cbaf',
+            borderRadius: 12,
+            padding: '6px 14px',
+            marginBottom: 16,
+            fontSize: '0.82rem',
+            color: '#0f3825',
+            fontWeight: 700,
+            width: 'fit-content'
+          }}>
+            <Target size={14} color="#16653e" /> Choose an opponent difficulty below
+          </div>
           <div className="opponent-cards">
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-card-header">

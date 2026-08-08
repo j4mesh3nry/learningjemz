@@ -215,31 +215,34 @@
   flex-direction: column;
   align-items: stretch;
   background: #ffffff;
-  border: 2px solid #eaeaea;
-  border-radius: 16px;
+  border: 2px solid #b0cbaf;
+  border-radius: 18px;
   padding: 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 0 #b0cbaf;
 }
 
 .opponent-card:hover {
   transform: translateY(-2px);
 }
 
-.opponent-card.easy:hover {
-  border-color: #4caf50;
-  box-shadow: 0 6px 15px rgba(76, 175, 80, 0.15);
+.opponent-card.easy:hover,
+.opponent-card.easy.selected {
+  border-color: #16653e;
+  box-shadow: 0 4px 0 #16653e;
 }
 
-.opponent-card.medium:hover {
-  border-color: #ff9800;
-  box-shadow: 0 6px 15px rgba(255, 152, 0, 0.15);
+.opponent-card.medium:hover,
+.opponent-card.medium.selected {
+  border-color: #d97706;
+  box-shadow: 0 4px 0 #d97706;
 }
 
-.opponent-card.hard:hover {
-  border-color: #f44336;
-  box-shadow: 0 6px 15px rgba(244, 67, 54, 0.15);
+.opponent-card.hard:hover,
+.opponent-card.hard.selected {
+  border-color: #e53935;
+  box-shadow: 0 4px 0 #e53935;
 }
 
 .opponent-card-header {
