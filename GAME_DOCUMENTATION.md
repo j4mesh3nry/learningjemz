@@ -7,7 +7,20 @@
 
 ---
 
-## 2. Design System & Visual Aesthetics
+## 2. Platform & Hosting Integrations
+- **GitHub**: Repository `j4mesh3nry/learningjemz`
+  - Active Production Branch: `main`
+  - Primary Dev Branch: `dev`
+- **Vercel Deployment**: Live URL: `https://learningjemz.vercel.app`
+  - Headers: `Cache-Control: no-cache, no-store, must-revalidate` for `index.html` and `sw.js`.
+- **Supabase Backend**: Realtime Database & User Auth
+  - Environment Variables required in `.env.local` / Vercel:
+    - `VITE_SUPABASE_URL`
+    - `VITE_SUPABASE_ANON_KEY`
+
+---
+
+## 3. Design System & Visual Aesthetics
 - **Theme Palette**:
   - **Canvas Background**: Medium-Light Sage Green (`#d4e8d5`).
   - **Primary Headers & Text**: Forest Green (`#0f3825` & `#16653e`).
@@ -23,7 +36,7 @@
 
 ---
 
-## 3. Core Gamification Mechanics
+## 4. Core Gamification Mechanics
 
 ### Streak System
 - **Logic**: Tracks consecutive daily activity completion.
@@ -40,7 +53,7 @@
 
 ---
 
-## 4. Module Specifications
+## 5. Module Specifications
 
 ### ♟️ Chess Module (`/chess`)
 - **Components**: `ChessHome.tsx`, `ChessPlay.jsx`, `chess.css`.
@@ -65,10 +78,22 @@
 
 ---
 
-## 5. Technical Infrastructure & CI/CD
-- **Routing**: `React Router v7` with `ErrorBoundary` wrappers. Deep linking enabled without unwanted home redirects.
-- **Service Worker / PWA**: Direct cache invalidation script in `index.html` and `vercel.json` headers (`Cache-Control: no-cache, no-store, must-revalidate`).
-- **Git Branching Strategy**:
-  - `main`: Live Production (Vercel deployment target).
-  - `dev`: Primary Integration & Development base.
-  - `feature/*`: Module-scoped feature branches (`feature/chess-module`, `feature/space-module`, `feature/geo-module`, `feature/reading-module`, `feature/gamification-core`, `feature/ui-design-system`).
+## 6. Backend & Supabase Database Schema
+
+### Table 1: `game_progress`
+- `id` (UUID, Primary Key, references `auth.users.id`)
+- `name` (Text) — Display Name
+- `avatar` (Text) — Profile Avatar Identifier
+- `xp` (Integer) — Total accumulated Experience Points
+- `level` (Integer) — Player Level
+- `streak` (Integer) — Active daily streak count
+- `last_active_date` (Text / Date) — ISO timestamp of last recorded activity
+- `bot_stats` (JSONB) — Win/Loss/Draw record vs Stockfish Bot levels
+- `illuminate_stats` (JSONB) — Best completion times and scores in Space Illuminate
+- `puzzles_solved` (Integer) — Total count of solved chess/subject puzzles
+
+### Table 2: `achievements`
+- `id` (UUID, Primary Key)
+- `user_id` (UUID, references `auth.users.id`)
+- `achievement_id` (Text) — Badge / achievement identifier
+- `unlocked_at` (Timestamp) — Date unlocked
