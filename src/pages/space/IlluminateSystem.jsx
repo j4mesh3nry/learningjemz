@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy } from 'lucide-react';
-import { SPACE_OBJECTS_BY_SIZE, OBJECT_MNEMONICS } from '../../data/space-objects';
+import { SPACE_OBJECTS_BY_SIZE, getMnemonicUpToIndex } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
 import VictoryScreen from '../../components/VictoryScreen';
@@ -197,20 +197,19 @@ export default function IlluminateSystem() {
     }
 
     const mainName = obj.name.split(' ')[0];
+    const firstLetter = mainName[0].toUpperCase();
+
     if (type === 'letter') {
+      setInputValue(firstLetter);
       setActiveHintBubble({
         type: 'letter',
-        title: '🔤 Letter Hint',
-        text: `Starts with letter "${mainName[0].toUpperCase()}"`,
-        details: `${mainName.length} letters in object name`
+        text: `Starts with "${firstLetter}" (${mainName.length} letters)`
       });
     } else if (type === 'mnemonic') {
-      const mnem = OBJECT_MNEMONICS[obj.id] || { word: mainName[0], sentence: '' };
+      const lineProgress = getMnemonicUpToIndex(currentIndex);
       setActiveHintBubble({
         type: 'mnemonic',
-        title: '🧠 Mnemonic Word Clue',
-        text: `Mnemonic Word: "${mnem.word}"`,
-        details: `Sentence: "${mnem.sentence}"`
+        text: lineProgress
       });
     }
     setShowHintModal(false);
@@ -458,14 +457,89 @@ export default function IlluminateSystem() {
           ))}
         </div>
 
-        <button 
-          className={`illum-hint-btn ${hintsLeft <= 0 && !activeHintBubble ? 'used' : ''}`}
-          onClick={handleUseHint}
-          disabled={(hintsLeft <= 0 && !activeHintBubble) || isComplete || isGameOver}
-        >
-          <Lightbulb size={14} color={activeHintBubble ? '#00e5ff' : hintsLeft > 0 ? '#ffb74d' : '#888'} />
-          <span>{activeHintBubble ? 'View Hint' : `Hint (${hintsLeft})`}</span>
-        </button>
+        {/* Hint Button & Speech Bubble Wrapper */}
+        <div style={{ position: 'relative' }}>
+          {/* Speech Bubble Clue attached directly above Hint button */}
+          {activeHintBubble && (
+            <div style={{
+              position: 'absolute',
+              bottom: 'calc(100% + 10px)',
+              right: 0,
+              background: '#161936',
+              border: '2px solid #2e7d32',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.45)',
+              borderRadius: 14,
+              padding: '8px 12px',
+              color: '#ffffff',
+              zIndex: 100,
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              minWidth: 170,
+              maxWidth: 260
+            }}>
+              {/* Pointer Arrow pointing down to Hint button */}
+              <div style={{
+                position: 'absolute',
+                bottom: -6,
+                right: 22,
+                width: 10,
+                height: 10,
+                background: '#161936',
+                borderRight: '2px solid #2e7d32',
+                borderBottom: '2px solid #2e7d32',
+                transform: 'rotate(45deg)'
+              }} />
+
+              <div style={{ flex: 1 }}>
+                {activeHintBubble.type === 'letter' ? (
+                  <div>
+                    <span style={{ color: '#38bdf8', fontWeight: 800 }}>Letter Clue: </span>
+                    <span>{activeHintBubble.text}</span>
+                  </div>
+                ) : (
+                  <div>
+                    <span style={{ color: '#fbbf24', fontWeight: 800 }}>Mnemonic Line: </span>
+                    <div style={{ fontSize: '0.76rem', color: '#e2e8f0', marginTop: 2, lineHeight: 1.35 }}>
+                      "{activeHintBubble.text}"
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveHintBubble(null)}
+                style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  border: 'none',
+                  borderRadius: 6,
+                  color: '#ffffff',
+                  width: 20,
+                  height: 20,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          <button 
+            className={`illum-hint-btn ${hintsLeft <= 0 && !activeHintBubble ? 'used' : ''}`}
+            onClick={handleUseHint}
+            disabled={(hintsLeft <= 0 && !activeHintBubble) || isComplete || isGameOver}
+          >
+            <Lightbulb size={14} color={activeHintBubble ? '#fbbf24' : hintsLeft > 0 ? '#ffb74d' : '#888'} />
+            <span>{activeHintBubble ? 'View Hint' : `Hint (${hintsLeft})`}</span>
+          </button>
+        </div>
       </div>
 
       {/* Grid Box Container */}
@@ -505,64 +579,6 @@ export default function IlluminateSystem() {
       {/* Simple Inline Input Display Bar & Custom Keyboard */}
       {!isComplete && !isGameOver && (
         <>
-          {/* Chat / Speech Bubble Hint Clue Overlay */}
-          {activeHintBubble && (
-            <div style={{
-              position: 'relative',
-              width: '100%',
-              marginBottom: 8,
-              background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
-              border: activeHintBubble.type === 'mnemonic' ? '2px solid #f59e0b' : '2px solid #00e5ff',
-              boxShadow: activeHintBubble.type === 'mnemonic' ? '0 4px 15px rgba(245, 158, 11, 0.3)' : '0 4px 15px rgba(0, 229, 255, 0.3)',
-              borderRadius: 16,
-              padding: '10px 14px',
-              color: '#ffffff',
-              zIndex: 10
-            }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
-                <div>
-                  <div style={{
-                    fontSize: '0.78rem',
-                    fontWeight: 800,
-                    color: activeHintBubble.type === 'mnemonic' ? '#fbbf24' : '#00e5ff',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                    marginBottom: 2
-                  }}>
-                    {activeHintBubble.title}
-                  </div>
-                  <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff' }}>
-                    {activeHintBubble.text}
-                  </div>
-                  {activeHintBubble.details && (
-                    <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.7)', marginTop: 2, fontStyle: 'italic' }}>
-                      {activeHintBubble.details}
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveHintBubble(null)}
-                  style={{
-                    background: 'rgba(255,255,255,0.1)',
-                    border: 'none',
-                    borderRadius: 8,
-                    color: '#ffffff',
-                    width: 24,
-                    height: 24,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer'
-                  }}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          )}
-
           <div className="illum-input-area">
             <form onSubmit={handleSubmit} style={{ width: '100%' }}>
               <input
@@ -614,30 +630,30 @@ export default function IlluminateSystem() {
             background: '#161936',
             border: '2px solid #2e7d32',
             boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
-            borderRadius: 22,
-            padding: '20px',
+            borderRadius: 24,
+            padding: '24px 20px',
             maxWidth: 340,
             width: '100%',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '1.8rem', marginBottom: 4 }}>💡</div>
-            <h3 style={{ margin: 0, color: '#ffffff', fontSize: '1.15rem', fontWeight: 900 }}>
+            <div style={{ fontSize: '2.2rem', marginBottom: 6 }}>💡</div>
+            <h3 style={{ margin: 0, color: '#ffffff', fontSize: '1.25rem', fontWeight: 900 }}>
               Choose Hint Type
             </h3>
-            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginTop: 4, marginBottom: 16 }}>
+            <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.75)', marginTop: 4, marginBottom: 18 }}>
               Select a hint clue for this object ({hintsLeft} left):
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <button
                 type="button"
                 onClick={() => handleSelectHintType('letter')}
                 style={{
-                  background: 'linear-gradient(135deg, #0088cc 0%, #004488 100%)',
-                  border: '2px solid #00e5ff',
-                  boxShadow: '0 3px 0 #003366',
-                  borderRadius: 14,
-                  padding: '12px 14px',
+                  background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                  border: '2px solid #38bdf8',
+                  boxShadow: '0 3px 0 #0369a1',
+                  borderRadius: 16,
+                  padding: '14px 16px',
                   color: '#ffffff',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -647,10 +663,13 @@ export default function IlluminateSystem() {
                   gap: 12
                 }}
               >
-                <span style={{ fontSize: '1.4rem' }}>🔤</span>
+                <div style={{
+                  fontSize: '0.8rem', fontWeight: 900, background: 'rgba(255,255,255,0.2)',
+                  padding: '4px 6px', borderRadius: 6, flexShrink: 0
+                }}>abc</div>
                 <div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 900 }}>Letter Clue</div>
-                  <div style={{ fontSize: '0.74rem', opacity: 0.85, fontWeight: 500 }}>Reveals starting letter & name length</div>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 900 }}>Letter Clue</div>
+                  <div style={{ fontSize: '0.75rem', opacity: 0.9, fontWeight: 500 }}>Fills starting letter & length</div>
                 </div>
               </button>
 
@@ -658,11 +677,11 @@ export default function IlluminateSystem() {
                 type="button"
                 onClick={() => handleSelectHintType('mnemonic')}
                 style={{
-                  background: 'linear-gradient(135deg, #d97706 0%, #78350f 100%)',
+                  background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
                   border: '2px solid #fbbf24',
-                  boxShadow: '0 3px 0 #5c2406',
-                  borderRadius: 14,
-                  padding: '12px 14px',
+                  boxShadow: '0 3px 0 #78350f',
+                  borderRadius: 16,
+                  padding: '14px 16px',
                   color: '#ffffff',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -674,8 +693,8 @@ export default function IlluminateSystem() {
               >
                 <span style={{ fontSize: '1.4rem' }}>🧠</span>
                 <div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 900 }}>Mnemonic Word Clue</div>
-                  <div style={{ fontSize: '0.74rem', opacity: 0.85, fontWeight: 500 }}>Reveals the object's mnemonic word</div>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 900 }}>Mnemonic Word Clue</div>
+                  <div style={{ fontSize: '0.75rem', opacity: 0.9, fontWeight: 500 }}>Reveals sentence progress up to this object</div>
                 </div>
               </button>
             </div>
@@ -684,11 +703,11 @@ export default function IlluminateSystem() {
               type="button"
               onClick={() => setShowHintModal(false)}
               style={{
-                marginTop: 14,
+                marginTop: 18,
                 background: 'transparent',
                 border: 'none',
-                color: 'rgba(255,255,255,0.6)',
-                fontSize: '0.82rem',
+                color: 'rgba(255,255,255,0.7)',
+                fontSize: '0.88rem',
                 fontWeight: 700,
                 cursor: 'pointer'
               }}
