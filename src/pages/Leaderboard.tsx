@@ -328,8 +328,8 @@ export default function Leaderboard() {
           })
         )}
 
-        {/* Open Spots Invitation Tile if Top 20 is not full */}
-        {top20Leaders.length > 0 && top20Leaders.length < 20 && (
+        {/* Open Spots Invitation Tile if Top 20 is not full and user is not in Top 20 yet */}
+        {!isUserInTop20 && top20Leaders.length > 0 && top20Leaders.length < 20 && (
           <div style={{
             background: 'rgba(225, 240, 226, 0.6)',
             borderRadius: 16, border: '2px dashed #b0cbaf',
