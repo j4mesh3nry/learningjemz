@@ -24,15 +24,11 @@ const SpaceHome = lazy(() => import('./pages/space/SpaceHome.tsx'));
 
 
 
+import JemzLoader from './components/JemzLoader';
+
 // Loading spinner for Suspense fallback
 const LoadingFallback = () => (
-  <div style={{
-    display: 'flex', justifyContent: 'center', alignItems: 'center',
-    height: '100vh', color: 'var(--color-primary)', fontWeight: 'bold',
-    fontFamily: 'var(--font-heading)', fontSize: '1.1rem',
-  }}>
-    Loading...
-  </div>
+  <JemzLoader message="Loading LearningJemz..." subtext="Preparing your experience" fullScreen={true} />
 );
 
 function BottomNav() {
