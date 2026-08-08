@@ -677,23 +677,6 @@ export default function IlluminateSystem() {
 
       {/* Grid Box Container */}
       <div className="illum-grid-container">
-        <div style={{ textAlign: 'center', marginBottom: 6, flexShrink: 0 }}>
-          <span style={{
-            fontSize: '0.73rem',
-            fontStyle: 'italic',
-            color: 'rgba(255, 255, 255, 0.65)',
-            background: 'rgba(255, 255, 255, 0.05)',
-            padding: '3px 10px',
-            borderRadius: '12px',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '4px'
-          }}>
-            <Sparkles size={11} color="#00e5ff" /> guess then tap for details
-          </span>
-        </div>
-
         <div className="illum-grid">
           {gameData.map((obj, i) => {
             const isRevealed = i < currentIndex;
