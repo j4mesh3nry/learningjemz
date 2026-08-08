@@ -325,7 +325,7 @@ export default function ObjectsBySizeMenu() {
           opacity: 0.8
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', fontWeight: 800, color: '#4e7361' }}>
-            <span style={{ fontSize: '1rem' }}>📏</span> Size Stack Challenge
+            <span style={{ fontSize: '1rem' }}>📏</span> <span style={{ filter: 'blur(6px)', userSelect: 'none' }}>Size Stack Challenge</span>
           </div>
           <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#16653e', background: '#e1f0e2', padding: '2px 8px', borderRadius: 6 }}>
             🔒 Locked
