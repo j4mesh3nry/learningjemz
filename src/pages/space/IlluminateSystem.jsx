@@ -350,10 +350,49 @@ export default function IlluminateSystem() {
 
   return (
     <div className="space-module-page ss-dark-theme illum-game-container">
-      {/* Header Bar */}
-      <div className="space-nav-header ss-header" style={{ flexShrink: 0 }}>
-        <button className="space-back-btn" onClick={() => navigate('/space/objects-by-size')}>←</button>
-        <h1 className="space-page-title">Illuminate the System</h1>
+      {/* Header Container with Separated Back Button & Long Green Banner */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, flexShrink: 0 }}>
+        {/* Separated Back Button */}
+        <button 
+          onClick={() => navigate('/space/objects-by-size')} 
+          title="Back to Objects by Size"
+          aria-label="Back to Objects by Size"
+          style={{
+            background: '#ffffff',
+            border: '2px solid #b0cbaf',
+            boxShadow: '0 3px 0 #b0cbaf',
+            borderRadius: 14,
+            width: 44,
+            height: 44,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#16653e',
+            cursor: 'pointer',
+            flexShrink: 0
+          }}
+        >
+          <ArrowLeft size={22} strokeWidth={2.5} />
+        </button>
+
+        {/* Long Green Banner Rectangle */}
+        <div style={{
+          flex: 1,
+          background: 'linear-gradient(135deg, #16653e 0%, #0d462b 100%)',
+          borderRadius: 16,
+          border: '2px solid #0f3825',
+          boxShadow: '0 4px 0 #092c1d',
+          padding: '10px 18px',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <h1 style={{
+            margin: 0, color: '#ffffff', fontSize: '1.2rem',
+            fontFamily: 'var(--font-heading)', fontWeight: 900
+          }}>
+            Illuminate the System
+          </h1>
+        </div>
       </div>
 
       {/* Top Game Stats Bar (Timer, Progress, Lives, Hint Btn) */}
