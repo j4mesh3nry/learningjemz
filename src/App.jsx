@@ -86,7 +86,7 @@ function Layout() {
 
 
   return (
-    <div style={{ paddingBottom: showNav ? '74px' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>
+    <div style={{ paddingBottom: showNav ? 'calc(88px + env(safe-area-inset-bottom, 12px))' : '0', minHeight: '100vh', boxSizing: 'border-box' }}>
       <ScrollToTop />
       <a href="#main-content" className="skip-link">Skip to content</a>
       <main id="main-content">
