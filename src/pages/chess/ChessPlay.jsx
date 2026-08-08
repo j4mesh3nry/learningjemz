@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess as ChessJS } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText, Sparkles } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -547,8 +547,27 @@ export default function ChessPlay() {
 
   return (
     <div className="chess-module-page">
-      <div className="chess-nav-header" style={{ marginBottom: 16 }}>
-        <div className="chess-header-left">
+      {/* Dynamic Long Green Header Banner */}
+      <div style={{
+        background: 'linear-gradient(135deg, #16653e 0%, #0d462b 100%)',
+        borderRadius: 20,
+        border: '2.5px solid #0f3825',
+        boxShadow: '0 5px 0 #092c1d',
+        padding: '16px 20px',
+        marginBottom: 20,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Subtle Background Glow Accent */}
+        <div style={{
+          position: 'absolute', right: -20, top: -20, width: 120, height: 120,
+          background: 'rgba(255, 255, 255, 0.08)', borderRadius: '50%', pointerEvents: 'none'
+        }} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, zIndex: 1 }}>
           <button 
             onClick={handleBackClick} 
             title="Back"
@@ -558,8 +577,8 @@ export default function ChessPlay() {
               border: '2px solid #b0cbaf',
               boxShadow: '0 3px 0 #b0cbaf',
               borderRadius: 14,
-              width: 40,
-              height: 40,
+              width: 42,
+              height: 42,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -568,19 +587,38 @@ export default function ChessPlay() {
               flexShrink: 0
             }}
           >
-            <ArrowLeft size={20} strokeWidth={2.5} />
+            <ArrowLeft size={22} strokeWidth={2.5} />
           </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <h1 className="chess-page-title" style={{ margin: 0, color: '#0f3825', fontSize: '1.4rem', fontWeight: 900 }}>Play vs AI</h1>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Bot size={22} color="#ffd54f" />
+              <h1 style={{
+                margin: 0, color: '#ffffff', fontSize: '1.35rem',
+                fontFamily: 'var(--font-heading)', fontWeight: 900
+              }}>
+                Play with Bot
+              </h1>
+            </div>
+            {!difficulty && (
+              <div style={{ fontSize: '0.82rem', color: '#c8e6c9', fontWeight: 600, marginTop: 2 }}>
+                Choose an opponent difficulty below
+              </div>
+            )}
           </div>
+        </div>
+
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.15)',
+          padding: '6px 12px', borderRadius: 12,
+          color: '#ffffff', fontWeight: 800, fontSize: '0.78rem',
+          display: 'flex', alignItems: 'center', gap: 6, zIndex: 1
+        }}>
+          <Sparkles size={14} color="#ffd54f" /> AI Mode
         </div>
       </div>
 
       {!difficulty ? (
         <div className="opponent-selection-screen">
-          <p style={{ margin: '0 0 16px 4px', fontSize: '0.9rem', color: '#4e7361', fontWeight: 600 }}>
-            Choose an opponent difficulty below
-          </p>
           <div className="opponent-cards">
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-card-header">
