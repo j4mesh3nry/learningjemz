@@ -236,41 +236,100 @@ export default function ObjectsBySizeMenu() {
         </div>
       </div>
 
-      {/* Best Time Records Widget - Labeled for Illuminate the System */}
-      <div style={{ marginTop: 24, padding: 16, background: '#ffffff', borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: '0.92rem', color: '#0f3825', marginBottom: 12 }}>
-          <Trophy size={18} color="#d97706" /> Best Time Records — Illuminate the System
+      {/* Organized Best Time Records Hub */}
+      <div style={{
+        marginTop: 20,
+        background: '#ffffff',
+        borderRadius: 20,
+        border: '2px solid #b0cbaf',
+        boxShadow: '0 4px 0 #b0cbaf',
+        padding: '16px 18px'
+      }}>
+        {/* Main Section Header */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 14,
+          paddingBottom: 10,
+          borderBottom: '2px solid #e1f0e2'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 900, fontSize: '1rem', color: '#0f3825' }}>
+            <Trophy size={20} color="#d97706" /> Best Time Records
+          </div>
+          <span style={{ fontSize: '0.75rem', color: '#16653e', fontWeight: 800, background: '#e1f0e2', padding: '3px 10px', borderRadius: 8 }}>
+            Objects by Size
+          </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
-          {Object.entries(DIFFICULTIES).map(([key, diff]) => {
-            const pbTime = personalBests[key];
-            return (
-              <div 
-                key={key} 
-                style={{
-                  background: '#e1f0e2',
-                  borderRadius: 14,
-                  padding: '10px 8px',
-                  textAlign: 'center',
-                  border: '1.5px solid #b0cbaf',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 4
-                }}
-              >
-                <div style={{ fontSize: '0.8rem', color: '#0f3825', fontWeight: 800 }}>
-                  {diff.name}
+        {/* Game 1: Illuminate the System Records */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            fontSize: '0.84rem', fontWeight: 800, color: '#0f3825',
+            marginBottom: 8
+          }}>
+            <span style={{ fontSize: '1rem' }}>💡</span> Illuminate the System
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+            {Object.entries(DIFFICULTIES).map(([key, diff]) => {
+              const pbTime = personalBests[key];
+              const hasRecord = pbTime !== undefined && pbTime !== null && pbTime > 0;
+              return (
+                <div 
+                  key={key} 
+                  style={{
+                    background: hasRecord ? '#f0f9f1' : '#f8faf8',
+                    borderRadius: 14,
+                    padding: '10px 8px',
+                    textAlign: 'center',
+                    border: `2px solid ${hasRecord ? diff.color : '#c8dbc7'}`,
+                    boxShadow: hasRecord ? `0 2.5px 0 ${diff.color}` : 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 4
+                  }}
+                >
+                  <div style={{ fontSize: '0.78rem', color: '#0f3825', fontWeight: 800 }}>
+                    {diff.name}
+                  </div>
+                  <div style={{
+                    fontSize: '1rem',
+                    color: hasRecord ? '#0f3825' : '#888888',
+                    fontWeight: 900,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 3
+                  }}>
+                    <Zap size={13} color={hasRecord ? '#ffb300' : '#cccccc'} fill={hasRecord ? '#ffb300' : 'none'} />
+                    {formatTime(pbTime)}
+                  </div>
                 </div>
-                <div style={{ fontSize: '1.05rem', color: pbTime !== undefined && pbTime !== null ? '#16653e' : '#4e7361', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 3 }}>
-                  <Zap size={14} color={pbTime !== undefined && pbTime !== null ? '#ffb300' : '#adb5bd'} />
-                  {formatTime(pbTime)}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Game 2: Size Stack Challenge Records (Future Placeholder) */}
+        <div style={{
+          background: '#f8faf8',
+          borderRadius: 14,
+          border: '1.5px dashed #b0cbaf',
+          padding: '10px 14px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          opacity: 0.8
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', fontWeight: 800, color: '#4e7361' }}>
+            <span style={{ fontSize: '1rem' }}>📏</span> Size Stack Challenge
+          </div>
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#16653e', background: '#e1f0e2', padding: '2px 8px', borderRadius: 6 }}>
+            🔒 Locked
+          </span>
         </div>
       </div>
     </div>
