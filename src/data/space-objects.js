@@ -9,6 +9,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Center of Solar System',
     funFact: 'Contains 99.86% of all mass in the Solar System.',
     img: '/textures/objects/sun.jpg',
+    fallback: '☀️',
     acceptedNames: ['sun']
   },
   {
@@ -21,6 +22,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: '5th Planet from Sun',
     funFact: 'The largest planet with a storm called the Great Red Spot raging for centuries.',
     img: '/textures/objects/jupiter.jpg',
+    fallback: '🪐',
     acceptedNames: ['jupiter']
   },
   {
@@ -33,6 +35,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: '6th Planet from Sun',
     funFact: 'Famous for its spectacular, complex ring system made of ice and rock.',
     img: '/textures/objects/saturn.jpg',
+    fallback: '🪐',
     acceptedNames: ['saturn']
   },
   {
@@ -45,6 +48,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: '7th Planet from Sun',
     funFact: 'Rotates on its side and has a pale blue color from methane gas.',
     img: '/textures/objects/uranus.jpg',
+    fallback: '🧊',
     acceptedNames: ['uranus']
   },
   {
@@ -57,6 +61,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: '8th Planet from Sun',
     funFact: 'The most distant major planet with supersonic winds reaching 2,100 km/h.',
     img: '/textures/objects/neptune.jpg',
+    fallback: '🧊',
     acceptedNames: ['neptune']
   },
   {
@@ -69,6 +74,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: '3rd Planet from Sun',
     funFact: 'The only planet known to harbor life, with liquid oceans covering 71% of its surface.',
     img: '/textures/objects/earth.jpg',
+    fallback: '🌍',
     acceptedNames: ['earth']
   },
   {
@@ -81,6 +87,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: '2nd Planet from Sun',
     funFact: 'Hottest planet in our solar system due to a runaway greenhouse effect.',
     img: '/textures/objects/venus.jpg',
+    fallback: '🪐',
     acceptedNames: ['venus']
   },
   {
@@ -93,6 +100,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: '4th Planet from Sun',
     funFact: 'Known as the Red Planet and home to Olympus Mons, the largest volcano in the solar system.',
     img: '/textures/objects/mars.jpg',
+    fallback: '🔴',
     acceptedNames: ['mars']
   },
   {
@@ -105,6 +113,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Jupiter (Largest Moon)',
     funFact: 'The largest moon in the solar system, even bigger than the planet Mercury.',
     img: '/textures/objects/ganymede.jpg',
+    fallback: '🌖',
     acceptedNames: ['ganymede']
   },
   {
@@ -117,6 +126,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Saturn',
     funFact: 'The only moon with a thick atmosphere and liquid methane lakes on its surface.',
     img: '/textures/objects/titan.jpg',
+    fallback: '🌗',
     acceptedNames: ['titan']
   },
   {
@@ -129,6 +139,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: '1st Planet from Sun',
     funFact: 'The fastest planet in the solar system, orbiting the Sun every 88 Earth days.',
     img: '/textures/objects/mercury.jpg',
+    fallback: '🪐',
     acceptedNames: ['mercury']
   },
   {
@@ -141,6 +152,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Jupiter',
     funFact: 'Has one of the most heavily cratered surfaces in the entire solar system.',
     img: '/textures/objects/callisto.jpg',
+    fallback: '🌑',
     acceptedNames: ['callisto']
   },
   {
@@ -153,6 +165,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Jupiter',
     funFact: 'The most volcanically active celestial body in the entire solar system.',
     img: '/textures/objects/io.jpg',
+    fallback: '🟡',
     acceptedNames: ['io']
   },
   {
@@ -165,6 +178,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Earth',
     funFact: "Earth's only natural satellite, regulating ocean tides and stabilizing axial tilt.",
     img: '/textures/objects/moon.jpg',
+    fallback: '🌕',
     acceptedNames: ['luna', 'moon', 'luna (moon)']
   },
   {
@@ -177,6 +191,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Jupiter',
     funFact: 'Hides a vast liquid water ocean beneath its bright, ice-covered crust.',
     img: '/textures/objects/europa.jpg',
+    fallback: '🧊',
     acceptedNames: ['europa']
   },
   {
@@ -189,6 +204,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Neptune',
     funFact: "Orbits Neptune in the opposite direction of the planet's rotation (retrograde).",
     img: '/textures/objects/triton.jpg',
+    fallback: '🔵',
     acceptedNames: ['triton']
   },
   {
@@ -201,6 +217,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Kuiper Belt',
     funFact: 'Famous dwarf planet featuring a massive heart-shaped nitrogen glacier named Tombaugh Regio.',
     img: '/textures/objects/pluto.jpg',
+    fallback: '❄️',
     acceptedNames: ['pluto']
   },
   {
@@ -213,6 +230,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Scattered Disc (Kuiper Belt)',
     funFact: "A massive distant dwarf planet whose discovery led to Pluto's reclassification in 2006.",
     img: '/textures/objects/eris.jpg',
+    fallback: '☄️',
     acceptedNames: ['eris']
   },
   {
@@ -225,6 +243,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Uranus',
     funFact: "The largest moon of Uranus, named after the queen of fairies in Shakespeare's play.",
     img: '/textures/objects/titania.jpg',
+    fallback: '🌑',
     acceptedNames: ['titania']
   },
   {
@@ -237,6 +256,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Kuiper Belt',
     funFact: 'Spins so rapidly that it has stretched into an elongated football-like ellipsoid.',
     img: '/textures/objects/haumea.jpg',
+    fallback: '🥚',
     acceptedNames: ['haumea']
   },
   {
@@ -249,6 +269,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Saturn',
     funFact: "Saturn's second-largest moon, composed primarily of water ice with a rocky core.",
     img: '/textures/objects/rhea.jpg',
+    fallback: '🌑',
     acceptedNames: ['rhea']
   },
   {
@@ -261,6 +282,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Uranus',
     funFact: 'The outermost major moon of Uranus, covered in heavy impact craters and dark deposits.',
     img: '/textures/objects/oberon.jpg',
+    fallback: '🌑',
     acceptedNames: ['oberon']
   },
   {
@@ -273,6 +295,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Saturn',
     funFact: 'Distinctive two-toned moon with one pitch-black hemisphere and one bright icy hemisphere.',
     img: '/textures/objects/iapetus.jpg',
+    fallback: '☯️',
     acceptedNames: ['iapetus']
   },
   {
@@ -285,6 +308,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Kuiper Belt',
     funFact: 'Extremely cold dwarf planet covered in frozen methane ice, named after a Rapa Nui deity.',
     img: '/textures/objects/makemake.jpg',
+    fallback: '☄️',
     acceptedNames: ['makemake']
   },
   {
@@ -309,6 +333,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Pluto',
     funFact: 'So large compared to Pluto that they orbit a shared center of mass outside Pluto.',
     img: '/textures/objects/charon.jpg',
+    fallback: '🌑',
     acceptedNames: ['charon']
   },
   {
@@ -333,6 +358,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Uranus',
     funFact: "Has the brightest surface of all Uranus's moons with deep fault canyons across its terrain.",
     img: '/textures/objects/ariel.jpg',
+    fallback: '✨',
     acceptedNames: ['ariel']
   },
   {
@@ -345,6 +371,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Saturn',
     funFact: 'Features dramatic bright ice cliffs formed by tectonic fractures across its icy surface.',
     img: '/textures/objects/dione.jpg',
+    fallback: '🧊',
     acceptedNames: ['dione']
   },
   {
@@ -369,6 +396,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Orbits Saturn',
     funFact: 'Dominated by Ithaca Chasma, a giant canyon trench stretching 2,000 km across its surface.',
     img: '/textures/objects/tethys.jpg',
+    fallback: '🪐',
     acceptedNames: ['tethys']
   },
   {
@@ -381,6 +409,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Asteroid Belt',
     funFact: 'The largest object in the asteroid belt and the first dwarf planet visited by spacecraft.',
     img: '/textures/objects/ceres.jpg',
+    fallback: '☄️',
     acceptedNames: ['ceres']
   },
   {
@@ -417,6 +446,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     orbitalOrder: 'Kuiper Belt',
     funFact: 'Very dark trans-Neptunian object named after the Roman goddess of saltwater.',
     img: '/textures/objects/salacia.jpg',
+    fallback: '☄️',
     acceptedNames: ['salacia', '120347 salacia']
   }
 ];

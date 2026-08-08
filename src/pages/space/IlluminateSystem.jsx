@@ -13,6 +13,27 @@ const DIFFICULTIES = {
   hard: { name: 'Hard', count: 35, label: 'All 35 (Sun → Salacia)', xp: 20, maxLives: 5 }
 };
 
+function SafeObjectImage({ src, alt, fallbackEmoji, className }) {
+  const [imgError, setImgError] = useState(false);
+
+  useEffect(() => {
+    setImgError(false);
+  }, [src]);
+
+  if (!src || imgError) {
+    return <span className="illum-fallback">{fallbackEmoji || '🪐'}</span>;
+  }
+
+  return (
+    <img 
+      src={src} 
+      alt={alt} 
+      className={className} 
+      onError={() => setImgError(true)} 
+    />
+  );
+}
+
 export default function IlluminateSystem() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -658,11 +679,12 @@ export default function IlluminateSystem() {
                   style={{ transform: `scale(${scale})` }}
                 >
                   {isRevealed ? (
-                    obj.img ? (
-                      <img src={obj.img} alt={obj.name} className="illum-img" />
-                    ) : (
-                      <span className="illum-fallback">{obj.fallback}</span>
-                    )
+                    <SafeObjectImage 
+                      src={obj.img} 
+                      alt={obj.name} 
+                      fallbackEmoji={obj.fallback} 
+                      className="illum-img" 
+                    />
                   ) : (
                     <span className="illum-clue-icon-overlay">🔍</span>
                   )}
@@ -765,11 +787,11 @@ export default function IlluminateSystem() {
               <div className="illum-fact-card-body">
                 <div className="illum-fact-header">
                   <div className="illum-fact-avatar">
-                    {selectedCard.obj.img ? (
-                      <img src={selectedCard.obj.img} alt={selectedCard.obj.name} />
-                    ) : (
-                      <span className="illum-fact-avatar-fallback">{selectedCard.obj.fallback || '🪐'}</span>
-                    )}
+                    <SafeObjectImage 
+                      src={selectedCard.obj.img} 
+                      alt={selectedCard.obj.name} 
+                      fallbackEmoji={selectedCard.obj.fallback} 
+                    />
                   </div>
                   <div className="illum-fact-title-box">
                     <h3 className="illum-fact-name">{selectedCard.obj.name}</h3>

@@ -1209,8 +1209,15 @@
 }
 
 .illum-current .illum-shadow {
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(0,0,0,0.8);
+  border-color: #00e5ff;
+  box-shadow: 0 0 16px #00e5ff, inset 0 0 12px rgba(0, 229, 255, 0.4);
+  animation: pulseCurrentTarget 1.8s infinite ease-in-out;
+}
+
+@keyframes pulseCurrentTarget {
+  0% { box-shadow: 0 0 12px #00e5ff, inset 0 0 8px rgba(0, 229, 255, 0.3); border-color: #00e5ff; }
+  50% { box-shadow: 0 0 24px #00e5ff, inset 0 0 16px rgba(0, 229, 255, 0.6); border-color: #ffffff; }
+  100% { box-shadow: 0 0 12px #00e5ff, inset 0 0 8px rgba(0, 229, 255, 0.3); border-color: #00e5ff; }
 }
 
 /* Reveal Animation */
@@ -1768,9 +1775,15 @@
 }
 
 .illum-unrevealed-label {
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.65);
   margin-top: 4px;
+}
+
+.illum-current .illum-unrevealed-label {
+  color: #00e5ff !important;
+  font-weight: 800 !important;
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
 }
 
