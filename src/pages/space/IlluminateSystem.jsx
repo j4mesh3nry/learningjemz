@@ -860,8 +860,6 @@ export default function IlluminateSystem() {
           </div>
         }
         xpGained={(DIFFICULTIES[level]?.xp || 10) + (level === 'hard' && scoreData.hintsUsed === 0 ? 10 : 0)}
-        streak={streak}
-        hasPlayedToday={hasPlayedToday}
         onContinue={() => setLevel(null)}
         onPlayAgain={() => startGame(level)}
         continueText="Back to Menu"

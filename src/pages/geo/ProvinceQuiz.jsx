@@ -116,11 +116,10 @@ export default function ProvinceQuiz() {
         <>
           <VictoryScreen
             isOpen={true}
+            theme="geo"
             title="Quiz Complete!"
             subtitle={`You mastered ${score} out of 81 Philippine provinces!`}
             xpGained={sessionXp}
-            streak={streak}
-            hasPlayedToday={hasPlayedToday}
             onContinue={() => navigate('/geo')}
             onPlayAgain={startNewGame}
             continueText="Continue"

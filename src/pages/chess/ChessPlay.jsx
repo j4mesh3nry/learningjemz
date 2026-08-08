@@ -856,13 +856,12 @@ export default function ChessPlay() {
 
         <VictoryScreen
           isOpen={gameState !== 'playing' && showOverlay}
+          theme="chess"
           title={gameState === 'checkmate' && game && game.turn() !== playerColor ? 'Checkmate! You Won!' : 
                  gameState === 'checkmate' ? 'Checkmate! Bot Won!' : 
                  gameState === 'resigned' ? 'Game Resigned' : 'Stalemate / Draw!'}
           subtitle={gameState === 'checkmate' && game && game.turn() !== playerColor ? 'Great tactical play!' : 'Better luck next match!'}
           xpGained={victoryStats?.xpGained || 0}
-          streak={displayedStreak}
-          hasPlayedToday={hasPlayedToday}
           onContinue={() => confirmBack()}
           onPlayAgain={() => resetGame()}
         />

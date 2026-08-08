@@ -12,6 +12,7 @@ const defaultState = {
   xp: 0,
   level: 1,
   streak: 0,
+  previousStreak: 0,
   maxStreak: 0,
   lastVisit: null,
   playedDates: [],
@@ -95,11 +96,29 @@ export function GameProvider({ children }) {
         const lastVisitDate = data.last_visit || null;
         const filledPlayedDates = backfillPlayedDates(streakCount, lastVisitDate, rawDates);
 
+        let initialPrevStreak = Math.max(0, streakCount - 1);
+        if (lastVisitDate) {
+          const lastVisitStr = getLocalDateString(new Date(lastVisitDate));
+          const todayStr = getLocalDateString(new Date());
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterdayStr = getLocalDateString(yesterday);
+
+          if (lastVisitStr === yesterdayStr) {
+            // User visited yesterday! Their streak as of yesterday was streakCount
+            initialPrevStreak = streakCount;
+          } else if (lastVisitStr === todayStr) {
+            // Already visited today
+            initialPrevStreak = Math.max(0, streakCount - 1);
+          }
+        }
+
         // Remote data exists -> camelCase DB snake_case fields
         const remoteState = {
           xp: data.xp || 0,
           level: data.level || 1,
           streak: streakCount,
+          previousStreak: initialPrevStreak,
           maxStreak: data.max_streak || 0,
           lastVisit: lastVisitDate,
           playedDates: filledPlayedDates,
@@ -151,7 +170,7 @@ export function GameProvider({ children }) {
     return () => { isMounted = false; };
   }, [user]);
 
-  // Streak activity recording with local date precision & played dates tracking
+  // Streak activity recording with exact transition calculation & auto-backfill
   const recordActivity = useCallback(() => {
     const today = new Date();
     const todayStr = getLocalDateString(today);
@@ -159,27 +178,33 @@ export function GameProvider({ children }) {
     let streakResult = { previousStreak: 0, currentStreak: 0, isNewDay: false };
 
     setState(prev => {
-      const currentPlayed = Array.isArray(prev.playedDates) ? prev.playedDates : [];
-      let lastVisitStr = null;
-      if (prev.lastVisit) {
-        lastVisitStr = getLocalDateString(new Date(prev.lastVisit));
-      }
-
+      let lastVisitStr = prev.lastVisit ? getLocalDateString(new Date(prev.lastVisit)) : null;
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       const yesterdayStr = getLocalDateString(yesterday);
 
-      let newStreak = 1;
       const prevStreakCount = prev.streak || 0;
+      let newStreak = 1;
+      let prevStreakForAnim = prevStreakCount;
 
       if (lastVisitStr === todayStr) {
+        // User already played today
         newStreak = prevStreakCount > 0 ? prevStreakCount : 1;
+        prevStreakForAnim = Math.max(0, newStreak - 1);
       } else if (lastVisitStr === yesterdayStr) {
+        // Active consecutive day! Increment streak (e.g., 1 -> 2)
+        prevStreakForAnim = prevStreakCount;
         newStreak = prevStreakCount + 1;
       } else if (!lastVisitStr && prevStreakCount > 0) {
+        prevStreakForAnim = prevStreakCount;
         newStreak = prevStreakCount + 1;
+      } else {
+        // Streak broken
+        prevStreakForAnim = 0;
+        newStreak = 1;
       }
 
+      const currentPlayed = Array.isArray(prev.playedDates) ? prev.playedDates : [];
       const updatedPlayedDates = backfillPlayedDates(
         newStreak,
         todayStr,
@@ -193,7 +218,7 @@ export function GameProvider({ children }) {
       } catch {}
 
       streakResult = {
-        previousStreak: prevStreakCount,
+        previousStreak: prevStreakForAnim,
         currentStreak: newStreak,
         isNewDay: lastVisitStr !== todayStr
       };
@@ -201,6 +226,7 @@ export function GameProvider({ children }) {
       return {
         ...prev,
         streak: newStreak,
+        previousStreak: prevStreakForAnim,
         maxStreak: Math.max(prev.maxStreak || 0, newStreak),
         lastVisit: todayStr,
         playedDates: updatedPlayedDates

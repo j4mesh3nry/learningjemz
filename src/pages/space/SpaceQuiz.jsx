@@ -119,8 +119,6 @@ export default function SpaceQuiz() {
           title="Quiz Complete!"
           subtitle={`You scored ${score} out of ${questions.length} (${accuracy}% accuracy)`}
           xpGained={sessionXp}
-          streak={streak}
-          hasPlayedToday={hasPlayedToday}
           onContinue={() => navigate('/space')}
           onPlayAgain={startQuiz}
           continueText="Continue"

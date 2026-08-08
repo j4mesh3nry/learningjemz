@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Flame, Trophy, Sparkles, Gem } from 'lucide-react';
 import StreakScreen, { hasShownStreakToday } from './StreakScreen';
 import { useAuth } from '../contexts/AuthContext';
+import { useGame } from '../contexts/GameContext';
 import './victory.css';
 
 export interface VictoryScreenProps {
@@ -11,6 +12,7 @@ export interface VictoryScreenProps {
   subtitle?: React.ReactNode;
   xpGained?: number;
   streak?: number;
+  previousStreak?: number;
   hasPlayedToday?: boolean;
   theme?: 'default' | 'space' | 'chess' | 'geo' | 'reading' | 'dark';
   onContinue: () => void;
@@ -25,8 +27,9 @@ export default function VictoryScreen({
   title = "Victory!",
   subtitle,
   xpGained = 0,
-  streak = 0,
-  hasPlayedToday = true,
+  streak: propStreak,
+  previousStreak: propPreviousStreak,
+  hasPlayedToday: propHasPlayedToday,
   theme = 'default',
   onContinue,
   onPlayAgain,
@@ -35,13 +38,29 @@ export default function VictoryScreen({
   disableDailyStreakModal = false,
 }: VictoryScreenProps) {
   const { user } = useAuth();
+  const gameContext = useGame();
   const userId = user?.id;
+
+  const activeStreak = propStreak !== undefined && propStreak > 0 
+    ? propStreak 
+    : (gameContext?.streak || 1);
+
+  const activePreviousStreak = propPreviousStreak !== undefined 
+    ? propPreviousStreak 
+    : (gameContext?.previousStreak !== undefined 
+      ? gameContext.previousStreak 
+      : Math.max(0, activeStreak - 1));
+
+  const activeHasPlayedToday = propHasPlayedToday !== undefined 
+    ? propHasPlayedToday 
+    : (gameContext?.hasPlayedToday ?? true);
+
   const [showingStreakModal, setShowingStreakModal] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       // Trigger daily streak solo screen only once a day per account
-      const shouldTrigger = !disableDailyStreakModal && streak > 0 && !hasShownStreakToday(userId);
+      const shouldTrigger = !disableDailyStreakModal && activeStreak > 0 && !hasShownStreakToday(userId);
       if (shouldTrigger) {
         setShowingStreakModal(true);
       } else {
@@ -50,7 +69,7 @@ export default function VictoryScreen({
     } else {
       setShowingStreakModal(false);
     }
-  }, [isOpen, streak, disableDailyStreakModal, userId]);
+  }, [isOpen, activeStreak, disableDailyStreakModal, userId]);
 
   if (!isOpen) return null;
 
@@ -59,7 +78,8 @@ export default function VictoryScreen({
     return (
       <StreakScreen
         isOpen={true}
-        streak={streak || 1}
+        streak={activeStreak}
+        previousStreak={activePreviousStreak}
         userId={userId}
         onContinue={() => setShowingStreakModal(false)}
       />
@@ -87,16 +107,16 @@ export default function VictoryScreen({
         {/* Rewards Row (Streak & XP) */}
         <div className="victory-clean-rewards">
           {/* Day Streak Box */}
-          <div className={`reward-box streak-box ${hasPlayedToday ? 'active-streak' : 'unlit-streak'}`}>
+          <div className={`reward-box streak-box ${activeHasPlayedToday ? 'active-streak' : 'unlit-streak'}`}>
             <div className="reward-icon-wrap flame-bounce">
               <Flame
                 size={24}
-                color={hasPlayedToday ? '#ff4d4d' : '#888888'}
-                fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'}
+                color={activeHasPlayedToday ? '#ff4d4d' : '#888888'}
+                fill={activeHasPlayedToday ? '#ff4d4d' : '#bbbbbb'}
               />
             </div>
             <div className="reward-text-wrap">
-              <span className="reward-val">{streak}</span>
+              <span className="reward-val">{activeStreak}</span>
               <span className="reward-lbl">Day Streak</span>
             </div>
           </div>
