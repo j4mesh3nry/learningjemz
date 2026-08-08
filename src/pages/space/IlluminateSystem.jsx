@@ -679,7 +679,7 @@ export default function IlluminateSystem() {
                 value={inputValue}
                 readOnly
                 inputMode="none"
-                placeholder={currentHint ? `Hint: ${currentHint}` : "Type answer..."}
+                placeholder="Type answer..."
                 className={`illum-input ${isError ? 'illum-error' : ''}`}
               />
             </form>
