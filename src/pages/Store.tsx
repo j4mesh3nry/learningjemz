@@ -83,7 +83,7 @@ export default function Store() {
           Store Opening Soon!
         </h3>
         <p style={{ fontSize: '0.85rem', color: '#4e7361', marginTop: 8, lineHeight: 1.4, fontWeight: 500 }}>
-          Spend your earned Jemz on streak protection shields, double XP boosters, and exclusive profile avatars!
+          We're working on exciting new items and features for the Jemz Store! Check back soon for updates.
         </p>
         <button
           onClick={() => window.history.back()}
