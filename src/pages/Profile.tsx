@@ -102,298 +102,332 @@ export default function Profile() {
         />
       </div>
 
-      {/* Profile Card */}
-      <div
-        style={{
-          background: '#ffffff',
-          borderRadius: 24,
-          padding: 24,
-          color: '#0f3825',
-          textAlign: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-          border: '2.5px solid #b0cbaf',
-          boxShadow: '0 5px 0 #b0cbaf',
-          marginBottom: 24
-        }}
-      >
-        {/* Avatar Container */}
-        <div
-          onClick={() => setIsEditingAvatar(true)}
-          style={{
-            width: 92,
-            height: 92,
-            borderRadius: '50%',
-            margin: '0 auto',
-            background: '#e1f0e2',
-            border: '3px solid #16653e',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '2.6rem',
-            boxShadow: '0 4px 0 #0e4329',
-            cursor: 'pointer',
-            position: 'relative'
-          }}
-        >
-          {avatar}
+      {/* Responsive Dashboard Grid for Mobile, Tablet & Desktop */}
+      <div className="dashboard-grid">
+        {/* Left Column: Profile Card, Stats & Calendar */}
+        <div>
+          {/* Profile Card */}
           <div
             style={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              background: '#16653e',
-              borderRadius: '50%',
-              width: 28,
-              height: 28,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '2px solid #ffffff',
-              boxShadow: '0 2px 0 #0e4329',
-              color: '#ffffff'
+              background: '#ffffff',
+              borderRadius: 24,
+              padding: 24,
+              color: '#0f3825',
+              textAlign: 'center',
+              position: 'relative',
+              overflow: 'hidden',
+              border: '2.5px solid #b0cbaf',
+              boxShadow: '0 4px 0 #b0cbaf',
+              marginBottom: 20
             }}
           >
-            <Pencil size={13} strokeWidth={2.5} />
-          </div>
-        </div>
+            {/* Background pattern */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 70,
+                background: 'linear-gradient(135deg, #16653e 0%, #0e4329 100%)',
+                opacity: 0.95
+              }}
+            />
 
-        {/* User Name & Edit Button */}
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          gap: 8, 
-          marginTop: 16, 
-          marginBottom: 2,
-          maxWidth: '100%',
-          padding: '0 16px',
-          boxSizing: 'border-box'
-        }}>
-          <h2 style={{ 
-            fontFamily: 'var(--font-heading)', 
-            margin: 0, 
-            fontSize: '1.6rem',
-            fontWeight: 800,
-            color: '#0f3825',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            maxWidth: 'calc(100% - 36px)'
-          }}>
-            {name}
-          </h2>
-          <div
-            onClick={() => {
-              setTempName(name);
-              setIsEditingName(true);
-            }}
-            style={{
-              background: '#e1f0e2',
-              borderRadius: '50%',
-              width: 28,
-              height: 28,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              border: '1.5px solid #b0cbaf',
-              flexShrink: 0,
-              color: '#16653e'
-            }}
-          >
-            <Pencil size={13} strokeWidth={2.5} />
-          </div>
-        </div>
-
-        {/* Email */}
-        <p style={{ color: '#4e7361', fontSize: '0.85rem', marginBottom: 16, fontWeight: 600 }}>
-          {user?.email}
-        </p>
-        
-        {/* Level & Title Pill */}
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            background: '#e1f0e2',
-            padding: '6px 16px',
-            borderRadius: 20,
-            fontWeight: 800,
-            fontSize: '0.88rem',
-            color: '#0f3825',
-            border: '2px solid #16653e',
-            boxShadow: '0 2px 0 #b0cbaf'
-          }}
-        >
-          <span>Level {level}</span>
-          <span style={{ color: '#b0cbaf' }}>•</span>
-          <span>{level >= 10 ? '👑 Master' : level >= 5 ? '🎓 Scholar' : '🌱 Beginner'}</span>
-        </div>
-      </div>
-
-      {/* Stats Row (Streak & XP) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 24 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#fff', padding: 20, borderRadius: 20, border: '1px solid #ffebee', boxShadow: '0 4px 14px rgba(0,0,0,0.03)' }}>
-          <Flame size={36} color={hasPlayedToday ? '#ff4d4d' : '#888888'} fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} />
-          <strong style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)', color: hasPlayedToday ? '#e53935' : '#444444' }}>{streak}</strong>
-          <span style={{ color: '#666', fontSize: '0.9rem', fontWeight: 600 }}>Day Streak</span>
-        </div>
-
-        <div
-          style={{
-            padding: 20,
-            borderRadius: 20,
-            border: '2px solid #fff8e1',
-            background: '#fffdf5',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            boxShadow: '0 4px 14px rgba(255,180,0,0.06)'
-          }}
-        >
-          <Trophy size={36} color="#ffb400" style={{ fill: '#ffb400' }} />
-          <strong style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)', color: '#b78103' }}>{xp}</strong>
-          <span style={{ fontSize: '0.85rem', color: 'var(--color-muted)', fontWeight: 600 }}>Total XP</span>
-        </div>
-      </div>
-
-      {/* Dedicated Streak Calendar Section */}
-      <div style={{
-        background: '#ffffff',
-        border: '1px solid #eaeaea',
-        borderRadius: 24,
-        padding: 24,
-        boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
-        marginBottom: 32
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ background: '#e8f5e9', borderRadius: 12, padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <CalendarIcon size={22} color="var(--color-primary)" />
-            </div>
-            <div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.2rem', color: '#222' }}>Streak Calendar</h3>
-              <span style={{ fontSize: '0.8rem', color: '#777', fontWeight: 500 }}>{monthName} {year}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Monthly Calendar Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: 6,
-          textAlign: 'center'
-        }}>
-          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((dayHeader, i) => (
-            <div key={i} style={{ fontSize: '0.8rem', fontWeight: 800, color: '#999', paddingBottom: 6 }}>
-              {dayHeader}
-            </div>
-          ))}
-
-          {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-            <div key={`empty-${i}`} style={{ height: 36 }} />
-          ))}
-
-          {Array.from({ length: daysInMonth }).map((_, i) => {
-            const dayNum = i + 1;
-            const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
-            const isPlayed = playedDates.includes(dateString) || (dateString === todayDateStr && hasPlayedToday);
-
-            return (
+            {/* Avatar with edit icon */}
+            <div
+              onClick={() => setIsEditingAvatar(true)}
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+                marginTop: 20,
+                marginBottom: 12,
+                cursor: 'pointer'
+              }}
+            >
               <div
-                key={dayNum}
                 style={{
-                  height: 38,
-                  borderRadius: 12,
-                  background: isPlayed ? 'linear-gradient(135deg, #10b981 0%, #047857 100%)' : '#f8f9fa',
-                  border: isPlayed ? 'none' : '1px solid #eee',
-                  color: isPlayed ? '#ffffff' : '#666666',
+                  width: 96,
+                  height: 96,
+                  borderRadius: '50%',
+                  background: '#ffffff',
                   display: 'flex',
-                  flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '0.8rem',
-                  fontWeight: isPlayed ? 800 : 600,
+                  fontSize: '3rem',
+                  border: '4px solid #ffffff',
+                  boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
                   position: 'relative',
-                  boxShadow: isPlayed ? '0 3px 8px rgba(16,185,129,0.3)' : 'none'
+                  zIndex: 2
                 }}
               >
-                <span>{dayNum}</span>
-                {isPlayed && (
-                  <Flame size={10} color="#ffd600" fill="#ffd600" style={{ marginTop: 1 }} />
-                )}
+                {avatar}
               </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Achievements */}
-      <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', marginBottom: 16, paddingLeft: 8 }}>Achievements</h3>
-      <div style={{ 
-        padding: 24, borderRadius: 20, background: '#ffffff',
-        border: '1px solid #eaeaea', boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
-        marginBottom: 32,
-        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 
-      }}>
-        {ACHIEVEMENTS.map(a => {
-          const unlockedData = achievements?.find(ach => ach.id === a.id);
-          const unlocked = !!unlockedData;
-          return (
-            <div key={a.id} style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
-              opacity: unlocked ? 1 : 0.4,
-              filter: unlocked ? 'none' : 'grayscale(100%)'
-            }}>
-              <div style={{ 
-                width: 60, height: 60, borderRadius: '50%', 
-                background: unlocked ? '#fff8e1' : '#f5f5f5',
-                border: unlocked ? '2px solid #ffb400' : '2px dashed #ddd',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '2rem', marginBottom: 8,
-                position: 'relative',
-                boxShadow: unlocked ? '0 4px 12px rgba(255,180,0,0.3)' : 'none'
-              }}>
-                {unlocked ? a.icon : <Lock size={20} color="#999" />}
-              </div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', lineHeight: 1.2 }}>{a.name}</div>
-              {unlocked && (
-                <div style={{ fontSize: '0.65rem', color: 'var(--color-primary)', fontWeight: 600, marginTop: 4 }}>
-                  {new Date(unlockedData.unlockedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                </div>
-              )}
+              <button
+                onClick={() => setIsEditingAvatar(true)}
+                style={{
+                  position: 'absolute',
+                  bottom: 2,
+                  right: 2,
+                  background: '#16653e',
+                  color: '#ffffff',
+                  border: '2px solid #ffffff',
+                  borderRadius: '50%',
+                  width: 32,
+                  height: 32,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  zIndex: 3,
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+                }}
+                aria-label="Edit Avatar"
+              >
+                <Pencil size={14} />
+              </button>
             </div>
-          );
-        })}
-      </div>
 
-      {/* Logout Action Button */}
-      <div style={{ paddingBottom: 24 }}>
-        <button
-          onClick={logout}
-          style={{
-            width: '100%',
-            padding: 16,
-            borderRadius: 16,
-            background: '#f8f9fa',
-            border: '2px solid #eaeaea',
-            color: '#555',
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1rem',
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-            cursor: 'pointer'
-          }}
-        >
-          <LogOut size={18} />
-          Sign Out
-        </button>
+            {/* Name */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: 8, 
+              marginBottom: 4,
+              padding: '0 16px',
+              boxSizing: 'border-box'
+            }}>
+              <h2 style={{ 
+                fontFamily: 'var(--font-heading)', 
+                margin: 0, 
+                fontSize: '1.6rem',
+                fontWeight: 800,
+                color: '#0f3825',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: 'calc(100% - 36px)'
+              }}>
+                {name}
+              </h2>
+              <div
+                onClick={() => {
+                  setTempName(name);
+                  setIsEditingName(true);
+                }}
+                style={{
+                  background: '#e1f0e2',
+                  borderRadius: '50%',
+                  width: 28,
+                  height: 28,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  border: '1.5px solid #b0cbaf',
+                  flexShrink: 0,
+                  color: '#16653e'
+                }}
+              >
+                <Pencil size={13} strokeWidth={2.5} />
+              </div>
+            </div>
+
+            {/* Email */}
+            <p style={{ color: '#4e7361', fontSize: '0.85rem', marginBottom: 16, fontWeight: 600 }}>
+              {user?.email}
+            </p>
+            
+            {/* Level & Title Pill */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                background: '#e1f0e2',
+                padding: '6px 16px',
+                borderRadius: 20,
+                fontWeight: 800,
+                fontSize: '0.88rem',
+                color: '#0f3825',
+                border: '2px solid #16653e',
+                boxShadow: '0 2px 0 #b0cbaf'
+              }}
+            >
+              <span>Level {level}</span>
+              <span style={{ color: '#b0cbaf' }}>•</span>
+              <span>{level >= 10 ? '👑 Master' : level >= 5 ? '🎓 Scholar' : '🌱 Beginner'}</span>
+            </div>
+          </div>
+
+          {/* Stats Row (Streak & XP) */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 20 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#fff', padding: 20, borderRadius: 20, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf' }}>
+              <Flame size={36} color={hasPlayedToday ? '#ff4d4d' : '#888888'} fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} />
+              <strong style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)', color: hasPlayedToday ? '#e53935' : '#444444' }}>{streak}</strong>
+              <span style={{ color: '#666', fontSize: '0.9rem', fontWeight: 600 }}>Day Streak</span>
+            </div>
+
+            <div
+              style={{
+                padding: 20,
+                borderRadius: 20,
+                border: '2px solid #f57f17',
+                background: '#fffdf5',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                boxShadow: '0 4px 0 #f57f17'
+              }}
+            >
+              <Trophy size={36} color="#ffb400" style={{ fill: '#ffb400' }} />
+              <strong style={{ fontSize: '1.4rem', marginTop: 12, fontFamily: 'var(--font-heading)', color: '#b78103' }}>{xp}</strong>
+              <span style={{ fontSize: '0.85rem', color: 'var(--color-muted)', fontWeight: 600 }}>Total XP</span>
+            </div>
+          </div>
+
+          {/* Dedicated Streak Calendar Section */}
+          <div style={{
+            background: '#ffffff',
+            border: '2px solid #b0cbaf',
+            borderRadius: 24,
+            padding: 24,
+            boxShadow: '0 4px 0 #b0cbaf',
+            marginBottom: 20
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ background: '#e8f5e9', borderRadius: 12, padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <CalendarIcon size={22} color="var(--color-primary)" />
+                </div>
+                <div>
+                  <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.2rem', color: '#222' }}>Streak Calendar</h3>
+                  <span style={{ fontSize: '0.8rem', color: '#777', fontWeight: 500 }}>{monthName} {year}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Monthly Calendar Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(7, 1fr)',
+              gap: 6,
+              textAlign: 'center'
+            }}>
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((dayHeader, i) => (
+                <div key={i} style={{ fontSize: '0.8rem', fontWeight: 800, color: '#999', paddingBottom: 6 }}>
+                  {dayHeader}
+                </div>
+              ))}
+
+              {Array.from({ length: firstDayOfMonth }).map((_, i) => (
+                <div key={`empty-${i}`} style={{ height: 36 }} />
+              ))}
+
+              {Array.from({ length: daysInMonth }).map((_, i) => {
+                const dayNum = i + 1;
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+                const isPlayed = playedDates.includes(dateString) || (dateString === todayDateStr && hasPlayedToday);
+
+                return (
+                  <div
+                    key={dayNum}
+                    style={{
+                      height: 38,
+                      borderRadius: 12,
+                      background: isPlayed ? 'linear-gradient(135deg, #10b981 0%, #047857 100%)' : '#f8f9fa',
+                      border: isPlayed ? 'none' : '1px solid #eee',
+                      color: isPlayed ? '#ffffff' : '#666666',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.8rem',
+                      fontWeight: isPlayed ? 800 : 600,
+                      position: 'relative',
+                      boxShadow: isPlayed ? '0 3px 8px rgba(16,185,129,0.3)' : 'none'
+                    }}
+                  >
+                    <span>{dayNum}</span>
+                    {isPlayed && (
+                      <Flame size={10} color="#ffd600" fill="#ffd600" style={{ marginTop: 1 }} />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Achievements & Logout */}
+        <div>
+          {/* Achievements */}
+          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', marginBottom: 16, paddingLeft: 4 }}>Achievements</h3>
+          <div style={{ 
+            padding: 24, borderRadius: 20, background: '#ffffff',
+            border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+            marginBottom: 24,
+            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 
+          }}>
+            {ACHIEVEMENTS.map(a => {
+              const unlockedData = achievements?.find(ach => ach.id === a.id);
+              const unlocked = !!unlockedData;
+              return (
+                <div key={a.id} style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+                  opacity: unlocked ? 1 : 0.4,
+                  filter: unlocked ? 'none' : 'grayscale(100%)'
+                }}>
+                  <div style={{ 
+                    width: 60, height: 60, borderRadius: '50%', 
+                    background: unlocked ? '#fff8e1' : '#f5f5f5',
+                    border: unlocked ? '2px solid #ffb400' : '2px dashed #ddd',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '2rem', marginBottom: 8,
+                    position: 'relative',
+                    boxShadow: unlocked ? '0 4px 12px rgba(255,180,0,0.3)' : 'none'
+                  }}>
+                    {unlocked ? a.icon : <Lock size={20} color="#999" />}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', lineHeight: 1.2 }}>{a.name}</div>
+                  {unlocked && (
+                    <div style={{ fontSize: '0.65rem', color: 'var(--color-primary)', fontWeight: 600, marginTop: 4 }}>
+                      {new Date(unlockedData.unlockedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Logout Action Button */}
+          <div style={{ paddingBottom: 24 }}>
+            <button
+              onClick={logout}
+              style={{
+                width: '100%',
+                padding: 16,
+                borderRadius: 16,
+                background: '#ffffff',
+                border: '2px solid #b0cbaf',
+                boxShadow: '0 4px 0 #b0cbaf',
+                color: '#16653e',
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1rem',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                cursor: 'pointer'
+              }}
+            >
+              <LogOut size={18} />
+              Sign Out
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Avatar Selection Modal */}

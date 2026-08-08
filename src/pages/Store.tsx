@@ -49,9 +49,9 @@ export default function Store() {
   const [jemz] = useState<number>(() => Math.max(100, Math.floor(xp / 2) + 50));
 
   return (
-    <div style={{
+    <div className="container" style={{
       minHeight: '100vh', background: 'var(--color-bg-page)',
-      padding: '24px 16px 90px', maxWidth: 420, margin: '0 auto',
+      paddingBottom: 90,
       position: 'relative'
     }}>
       <Header />
@@ -63,7 +63,7 @@ export default function Store() {
         left: '50%',
         transform: 'translateX(-50%)',
         width: 'calc(100% - 32px)',
-        maxWidth: 380,
+        maxWidth: 460,
         zIndex: 50,
         background: '#ffffff',
         border: '3px solid #1c7c54',
@@ -74,56 +74,56 @@ export default function Store() {
         color: '#0e3d26'
       }}>
         <div style={{
-          width: 60, height: 60, borderRadius: '50%',
-          background: '#e8f3ed',
-          border: '2px solid #1c7c54',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          margin: '0 auto 16px'
+          width: 56, height: 56, background: '#e1f0e2', borderRadius: '50%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto'
         }}>
-          <Lock size={28} color="#1c7c54" />
+          <ShoppingBag size={28} color="#16653e" />
         </div>
-        <h2 style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '1.4rem',
-          margin: '0 0 8px 0',
-          fontWeight: 800,
-          color: '#0e3d26'
-        }}>
-          Jemz Store — Coming Soon!
-        </h2>
-        <p style={{
-          margin: 0,
-          fontSize: '0.88rem',
-          color: '#496c5b',
-          lineHeight: 1.5,
-          fontWeight: 600
-        }}>
-          Store items and features will be available soon. Stay tuned!
+        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', margin: 0, fontWeight: 800 }}>
+          Store Opening Soon!
+        </h3>
+        <p style={{ fontSize: '0.85rem', color: '#4e7361', marginTop: 8, lineHeight: 1.4, fontWeight: 500 }}>
+          Spend your earned Jemz on streak protection shields, double XP boosters, and exclusive profile avatars!
         </p>
+        <button
+          onClick={() => window.history.back()}
+          style={{
+            marginTop: 16,
+            background: '#16653e',
+            color: '#ffffff',
+            fontWeight: 800,
+            fontSize: '0.9rem',
+            padding: '10px 24px',
+            borderRadius: 16,
+            border: 'none',
+            boxShadow: '0 3px 0 #0e4329',
+            cursor: 'pointer'
+          }}
+        >
+          Back to Exploring
+        </button>
       </div>
 
-      {/* Blurred Store Content Backdrop */}
-      <div style={{
-        filter: 'blur(6px)',
-        opacity: 0.55,
-        pointerEvents: 'none',
-        userSelect: 'none'
-      }}>
-        {/* Title & Currency Balance Banner */}
+      {/* Background Dimmed Store Preview */}
+      <div style={{ filter: 'blur(5px) opacity(0.4)', pointerEvents: 'none', userSelect: 'none' }}>
+        {/* Banner */}
         <div style={{
-          background: 'linear-gradient(135deg, #0e3d26 0%, #16603b 100%)',
-          borderRadius: 20, padding: '16px 18px', marginBottom: 20,
-          boxShadow: '0 6px 0 #072415', color: '#ffffff',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          border: '1px solid rgba(255,255,255,0.15)'
+          background: 'linear-gradient(135deg, #16653e 0%, #0e4329 100%)',
+          borderRadius: 22,
+          padding: '20px',
+          color: '#ffffff',
+          marginBottom: 16,
+          boxShadow: '0 6px 0 #0b3420',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{
-              background: 'linear-gradient(135deg, #1c7c54, #38d989)',
-              borderRadius: 14, padding: '8px', display: 'flex',
-              alignItems: 'center', justifyContent: 'center'
+              width: 44, height: 44, borderRadius: 14, background: 'rgba(255,255,255,0.15)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem'
             }}>
-              <ShoppingBag size={22} color="#ffffff" />
+              🛍️
             </div>
             <div>
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', margin: 0, fontWeight: 800 }}>
@@ -145,7 +145,7 @@ export default function Store() {
         </div>
 
         {/* Shop Item List */}
-        <div style={{ display: 'grid', gap: 14 }}>
+        <div className="responsive-grid-locked">
           {STORE_ITEMS.map((item) => (
             <div
               key={item.id}

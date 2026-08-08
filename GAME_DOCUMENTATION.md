@@ -37,10 +37,10 @@
 - **Typography**:
   - **Headings**: `Outfit` (Bold, rounded geometric sans-serif, `800 - 900`).
   - **Body**: `Inter` (Clean, legible sans-serif).
-- **Layout & Container Boundaries**:
-  - **Max Width**: `640px` centered container across desktop and tablet views.
-  - **Bottom Navigation**: Floating 3D pill navigation bar (`border-radius: 24px`) on screen widths `>= 640px`.
-  - **Cards**: Responsive 2-column active card grid (`repeat(auto-fit, minmax(260px, 1fr))`).
+- **Layout & Multi-Device Responsive System**:
+  - **Mobile (< 640px)**: 100% fluid container (`padding: 16px`), 1-column card grids, and fixed bottom floating navigation pill bar.
+  - **Tablet (640px - 1024px)**: Expanded max-width container (`860px`), 2 to 3 column active & coming-soon module card grids, 2-column profile dashboard, and centered floating navigation dock (`max-width: 580px`).
+  - **Desktop / PC (> 1024px)**: Wide max-width canvas (`1200px`), 4-column module grid, side-by-side dashboard panels, and spacious navigation dock (`max-width: 680px`).
 
 ---
 

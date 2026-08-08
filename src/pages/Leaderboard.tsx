@@ -84,9 +84,9 @@ export default function Leaderboard() {
   const restLeaders = leaders.slice(3);
 
   return (
-    <div style={{
+    <div className="container" style={{
       minHeight: '100vh', background: 'var(--color-bg-page)',
-      padding: '24px 16px 100px', maxWidth: 420, margin: '0 auto',
+      paddingBottom: '100px',
     }}>
       <Header />
 

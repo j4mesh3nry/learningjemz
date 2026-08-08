@@ -11,14 +11,7 @@ export function Header() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ 
-      position: 'sticky', top: 0, zIndex: 100,
-      background: '#d4e8d5',
-      paddingTop: 12, paddingBottom: 10,
-      margin: '-24px -16px 14px -16px',
-      paddingLeft: 16, paddingRight: 16,
-      borderBottom: '2px solid #b0cbaf',
-    }}>
+    <div className="app-header">
       {/* Compact Header Row */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         {/* Logo Area */}

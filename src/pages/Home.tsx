@@ -61,12 +61,10 @@ export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <div style={{
+    <div className="container" style={{
       minHeight: '100vh', 
       background: 'var(--color-bg-page)',
-      padding: '24px 16px 90px', 
-      maxWidth: 640, 
-      margin: '0 auto',
+      paddingBottom: 90, 
     }}>
       <Header />
 
@@ -80,7 +78,7 @@ export default function Home() {
       </h2>
 
       {/* Clean & Compact Responsive Module Cards Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
+      <div className="responsive-grid-active">
         {modules.map((m) => (
           <Card 
             key={m.to} 
@@ -91,7 +89,7 @@ export default function Home() {
               display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 14,
               textDecoration: 'none', color: '#fff',
               background: m.bg, borderRadius: 16,
-              padding: '12px 16px', position: 'relative', overflow: 'hidden',
+              padding: '14px 16px', position: 'relative', overflow: 'hidden',
               boxShadow: m.shadow,
               border: '2px solid rgba(255,255,255,0.2)',
               transition: 'transform 0.1s ease, boxShadow 0.1s ease',
@@ -143,7 +141,7 @@ export default function Home() {
         <span>🚀</span> Coming Soon
       </h2>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+      <div className="responsive-grid-locked">
         {lockedModules.map((m, idx) => (
           <div key={idx} style={{
             display: 'flex', flexDirection: 'column', gap: 8,

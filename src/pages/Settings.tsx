@@ -32,7 +32,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="container" style={{ paddingTop: '1.5rem', paddingBottom: '100px', maxWidth: 420, margin: '0 auto' }}>
+    <div className="container" style={{ paddingTop: '1.5rem', paddingBottom: '100px', maxWidth: 640, margin: '0 auto' }}>
       {/* Header with Back Button */}
       <div style={{
         display: 'flex',
