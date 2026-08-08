@@ -180,59 +180,37 @@ export default function IlluminateSystem() {
     setShowHintBubble(prev => !prev);
   };
 
-  const getNextLetterInfo = () => {
-    const currentObj = gameData[currentIndex];
-    if (!currentObj) return { nextChar: 'A', newInputValue: '', label: 'Next Letter' };
-    const target = currentObj.name.split(' ')[0].toUpperCase();
-    const input = inputValue.toUpperCase();
-
-    let matchLen = 0;
-    while (matchLen < input.length && matchLen < target.length && input[matchLen] === target[matchLen]) {
-      matchLen++;
-    }
-
-    if (matchLen < target.length) {
-      const nextChar = target[matchLen];
-      const newInputValue = target.substring(0, matchLen + 1);
-      return {
-        nextChar,
-        newInputValue,
-        label: 'Reveal Letter'
-      };
-    }
-
-    return {
-      nextChar: target[target.length - 1],
-      newInputValue: target,
-      label: 'Full Word'
-    };
-  };
-
   const handleApplyNextLetter = () => {
     if (isComplete || isGameOver || hintsLeft <= 0) return;
-    const info = getNextLetterInfo();
-    setInputValue(info.newInputValue);
+    const currentObj = gameData[currentIndex];
+    if (!currentObj) return;
+    const targetName = currentObj.name.split(' ')[0].toUpperCase();
+
+    const currentRevealed = currentObjectHint?.revealedLetters || '';
+    if (currentRevealed.length >= targetName.length) return;
+
+    const nextLetters = targetName.substring(0, currentRevealed.length + 1);
 
     setHintsLeft(prev => prev - 1);
     setUserUsedHint(true);
     setScoreData(prev => ({ ...prev, hintsUsed: prev.hintsUsed + 1 }));
-    setCurrentObjectHint({
-      type: 'letter',
-      text: `Letter: Added "${info.nextChar}"`
-    });
+    setCurrentObjectHint(prev => ({
+      ...prev,
+      revealedLetters: nextLetters
+    }));
   };
 
   const handleApplyMnemonic = () => {
-    if (isComplete || isGameOver || hintsLeft <= 0) return;
+    if (isComplete || isGameOver || hintsLeft <= 0 || currentObjectHint?.mnemonicText) return;
     const lineProgress = getMnemonicUpToIndex(currentIndex);
 
     setHintsLeft(prev => prev - 1);
     setUserUsedHint(true);
     setScoreData(prev => ({ ...prev, hintsUsed: prev.hintsUsed + 1 }));
-    setCurrentObjectHint({
-      type: 'mnemonic',
-      text: `Mnemonic: "${lineProgress}"`
-    });
+    setCurrentObjectHint(prev => ({
+      ...prev,
+      mnemonicText: lineProgress
+    }));
   };
 
   useEffect(() => {
@@ -525,7 +503,7 @@ export default function IlluminateSystem() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.8rem', fontWeight: 900, color: '#ffb74d' }}>
                   <Lightbulb size={14} color="#ffb74d" />
-                  <span>{currentObjectHint ? 'Active Clue' : `Choose Clue (${hintsLeft} left)`}</span>
+                  <span>Choose Clue ({hintsLeft} left)</span>
                 </div>
                 <button
                   type="button"
@@ -547,29 +525,74 @@ export default function IlluminateSystem() {
                 </button>
               </div>
 
-              {/* IF NO HINT USED ON CURRENT OBJECT YET */}
-              {!currentObjectHint ? (
-                hintsLeft > 0 ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    <button
-                      type="button"
-                      onClick={handleApplyNextLetter}
-                      style={{
-                        background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-                        border: '1.5px solid #38bdf8',
-                        boxShadow: '0 2px 0 #0369a1',
-                        borderRadius: 12,
-                        padding: '10px 14px',
-                        color: '#ffffff',
-                        fontWeight: 800,
-                        fontSize: '0.85rem',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      Reveal Letter
-                    </button>
+              {/* Active Clues List (if any unlocked for current object) */}
+              {currentObjectHint && (currentObjectHint.revealedLetters || currentObjectHint.mnemonicText) && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: hintsLeft > 0 ? 10 : 0 }}>
+                  {currentObjectHint.revealedLetters && (
+                    <div style={{
+                      background: 'rgba(255,255,255,0.07)',
+                      borderRadius: 10,
+                      padding: '8px 10px',
+                      fontSize: '0.78rem',
+                      color: '#e2e8f0',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      lineHeight: 1.35
+                    }}>
+                      Letter: "{currentObjectHint.revealedLetters}"
+                    </div>
+                  )}
 
+                  {currentObjectHint.mnemonicText && (
+                    <div style={{
+                      background: 'rgba(255,255,255,0.07)',
+                      borderRadius: 10,
+                      padding: '8px 10px',
+                      fontSize: '0.78rem',
+                      color: '#e2e8f0',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      lineHeight: 1.35
+                    }}>
+                      Mnemonic: "{currentObjectHint.mnemonicText}"
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Available Action Buttons (if hints remaining) */}
+              {hintsLeft > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {/* Reveal Letter / Next Letter Button */}
+                  {(() => {
+                    const currentObj = gameData[currentIndex];
+                    const targetName = currentObj ? currentObj.name.split(' ')[0] : '';
+                    const revealedCount = currentObjectHint?.revealedLetters?.length || 0;
+                    if (revealedCount < targetName.length) {
+                      return (
+                        <button
+                          type="button"
+                          onClick={handleApplyNextLetter}
+                          style={{
+                            background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                            border: '1.5px solid #38bdf8',
+                            boxShadow: '0 2px 0 #0369a1',
+                            borderRadius: 12,
+                            padding: '9px 12px',
+                            color: '#ffffff',
+                            fontWeight: 800,
+                            fontSize: '0.82rem',
+                            cursor: 'pointer',
+                            textAlign: 'center'
+                          }}
+                        >
+                          {revealedCount > 0 ? 'Reveal Next Letter' : 'Reveal Letter'}
+                        </button>
+                      );
+                    }
+                    return null;
+                  })()}
+
+                  {/* Mnemonic Button (if not yet unlocked for this object) */}
+                  {!currentObjectHint?.mnemonicText && (
                     <button
                       type="button"
                       onClick={handleApplyMnemonic}
@@ -578,70 +601,35 @@ export default function IlluminateSystem() {
                         border: '1.5px solid #fbbf24',
                         boxShadow: '0 2px 0 #78350f',
                         borderRadius: 12,
-                        padding: '10px 14px',
+                        padding: '9px 12px',
                         color: '#ffffff',
                         fontWeight: 800,
-                        fontSize: '0.85rem',
+                        fontSize: '0.82rem',
                         cursor: 'pointer',
                         textAlign: 'center'
                       }}
                     >
                       Mnemonic
                     </button>
-                  </div>
-                ) : (
+                  )}
+                </div>
+              ) : (
+                !currentObjectHint?.revealedLetters && !currentObjectHint?.mnemonicText && (
                   <div style={{ fontSize: '0.78rem', color: '#888', fontStyle: 'italic', textAlign: 'center', marginTop: 4 }}>
                     No hints remaining for this game.
                   </div>
                 )
-              ) : (
-                /* IF HINT WAS ALREADY CHOSEN FOR THIS OBJECT */
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <div style={{
-                    background: 'rgba(255,255,255,0.07)',
-                    borderRadius: 10,
-                    padding: '8px 10px',
-                    fontSize: '0.78rem',
-                    color: '#e2e8f0',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    lineHeight: 1.35
-                  }}>
-                    {currentObjectHint.text}
-                  </div>
-
-                  {/* If chosen hint was letter and user has more hints left, allow Reveal Next Letter */}
-                  {currentObjectHint.type === 'letter' && hintsLeft > 0 && (
-                    <button
-                      type="button"
-                      onClick={handleApplyNextLetter}
-                      style={{
-                        background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-                        border: '1.5px solid #38bdf8',
-                        boxShadow: '0 2px 0 #0369a1',
-                        borderRadius: 12,
-                        padding: '8px 12px',
-                        color: '#ffffff',
-                        fontWeight: 800,
-                        fontSize: '0.8rem',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      Reveal Next Letter
-                    </button>
-                  )}
-                </div>
               )}
             </div>
           )}
 
           <button 
-            className={`illum-hint-btn ${hintsLeft <= 0 && !currentObjectHint ? 'used' : ''}`}
+            className={`illum-hint-btn ${hintsLeft <= 0 ? 'used' : ''}`}
             onClick={handleUseHint}
             disabled={isComplete || isGameOver}
           >
-            <Lightbulb size={14} color={showHintBubble ? '#ffb74d' : currentObjectHint ? '#00e5ff' : hintsLeft > 0 ? '#ffb74d' : '#888'} />
-            <span>{showHintBubble ? 'Close Hint' : currentObjectHint ? 'View Clue' : `Hint (${hintsLeft})`}</span>
+            <Lightbulb size={14} color={hintsLeft > 0 ? '#ffb74d' : '#888'} />
+            <span>Hint ({hintsLeft})</span>
           </button>
         </div>
       </div>
