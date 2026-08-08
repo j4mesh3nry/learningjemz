@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
@@ -15,6 +15,7 @@ const DIFFICULTIES = {
 
 export default function IlluminateSystem() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { level: userLevel, streak, hasPlayedToday, addXp, illuminateStats, recordIlluminateTime } = useGame();
   const { user } = useAuth();
 
@@ -35,6 +36,17 @@ export default function IlluminateSystem() {
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const inputRef = useRef(null);
+
+  // Auto-start level if URL param or location state is provided
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const paramLevel = location.state?.level || searchParams.get('level');
+    if (paramLevel && DIFFICULTIES[paramLevel] && !level) {
+      startGame(paramLevel);
+    } else if (!paramLevel && !level) {
+      navigate('/space/objects-by-size', { replace: true });
+    }
+  }, [location, level, navigate]);
 
   // Live Timer Effect
   useEffect(() => {
@@ -340,7 +352,7 @@ export default function IlluminateSystem() {
     <div className="space-module-page ss-dark-theme illum-game-container">
       {/* Header Bar */}
       <div className="space-nav-header ss-header" style={{ flexShrink: 0 }}>
-        <button className="space-back-btn" onClick={() => setLevel(null)}>←</button>
+        <button className="space-back-btn" onClick={() => navigate('/space/objects-by-size')}>←</button>
         <h1 className="space-page-title">Illuminate the System</h1>
       </div>
 
