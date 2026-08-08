@@ -1,97 +1,263 @@
-/* src/components/victory.css */
+/* src/components/victory.css - Tactile 3D Solid Module Theme System */
+
+/* Overlay backdrop: Solid clean dimming (NO backdrop-filter blur) */
 .victory-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.25s ease-out;
+  animation: fadeIn 0.2s ease-out;
   padding: 16px;
   box-sizing: border-box;
   overflow: hidden;
 }
 
-.victory-overlay.theme-space {
-  background: rgba(5, 10, 25, 0.85);
-}
-
+/* Base Modal Container (Tactile 3D Flat Card) */
 .victory-modal-clean {
   background: #ffffff;
-  border-radius: 28px;
-  padding: 32px 24px 28px;
+  border-radius: 24px;
+  padding: 28px 24px 24px;
   width: 100%;
   max-width: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05);
-  animation: slideUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  border: 3px solid #b0cbaf;
+  box-shadow: 0 8px 0 #b0cbaf;
+  animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.15);
   box-sizing: border-box;
   text-align: center;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
-/* Space Cosmic Dark Theme */
-.victory-modal-clean.theme-space,
-.victory-modal-clean.theme-dark {
-  background: linear-gradient(145deg, #0b1329 0%, #172448 100%);
-  border: 2px solid rgba(56, 189, 248, 0.4);
-  box-shadow: 0 0 35px rgba(56, 189, 248, 0.25), 0 25px 50px rgba(0, 0, 0, 0.6);
-  color: #f8fafc;
+/* ==========================================================================
+   MODULE THEME VARIANTS (Clean, Solid 3D Aesthetics - NO Glows / NO Blur)
+   ========================================================================== */
+
+/* --- 🚀 SPACE THEME (`theme-space`) --- */
+.victory-modal-clean.theme-space {
+  background: #161936;
+  border: 3px solid #0284c7;
+  box-shadow: 0 8px 0 #0369a1;
+  color: #ffffff;
 }
+
+.theme-space .victory-logo-bg {
+  background: #0284c7;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 4px 0 #0369a1;
+}
+
+.theme-space .victory-clean-title {
+  color: #ffffff;
+}
+
+.theme-space .victory-clean-subtitle {
+  color: #94a3b8;
+}
+
+.theme-space .victory-clean-children {
+  color: #cbd5e1;
+}
+
+.theme-space .streak-box {
+  background: #251c2e;
+  border: 2px solid #ef4444;
+  box-shadow: 0 3px 0 #b91c1c;
+}
+
+.theme-space .streak-box.active-streak .reward-val {
+  color: #f87171;
+}
+
+.theme-space .xp-box {
+  background: #2b2214;
+  border: 2px solid #f59e0b;
+  box-shadow: 0 3px 0 #b45309;
+}
+
+.theme-space .xp-box .reward-val {
+  color: #fbbf24;
+}
+
+.theme-space .reward-lbl {
+  color: #94a3b8;
+}
+
+.theme-space .victory-btn-primary {
+  background: #0284c7;
+  color: #ffffff;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 4px 0 #0369a1;
+}
+
+.theme-space .victory-btn-primary:hover {
+  background: #0369a1;
+}
+
+.theme-space .victory-btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #0369a1;
+}
+
+.theme-space .victory-btn-secondary {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 2px solid #475569;
+  box-shadow: 0 3px 0 #334155;
+}
+
+.theme-space .victory-btn-secondary:hover {
+  background: #334155;
+}
+
+.theme-space .victory-btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #334155;
+}
+
+
+/* --- ♟️ CHESS THEME (`theme-chess`) --- */
+.victory-modal-clean.theme-chess {
+  background: #1c1917;
+  border: 3px solid #d97706;
+  box-shadow: 0 8px 0 #92400e;
+  color: #f5f5f4;
+}
+
+.theme-chess .victory-logo-bg {
+  background: #d97706;
+  border: 3px solid #f59e0b;
+  box-shadow: 0 4px 0 #92400e;
+}
+
+.theme-chess .victory-clean-title {
+  color: #ffffff;
+}
+
+.theme-chess .victory-clean-subtitle {
+  color: #a8a29e;
+}
+
+.theme-chess .streak-box {
+  background: #291a1a;
+  border: 2px solid #dc2626;
+  box-shadow: 0 3px 0 #991b1b;
+}
+
+.theme-chess .streak-box.active-streak .reward-val {
+  color: #f87171;
+}
+
+.theme-chess .xp-box {
+  background: #2e2111;
+  border: 2px solid #d97706;
+  box-shadow: 0 3px 0 #92400e;
+}
+
+.theme-chess .xp-box .reward-val {
+  color: #fbbf24;
+}
+
+.theme-chess .reward-lbl {
+  color: #a8a29e;
+}
+
+.theme-chess .victory-btn-primary {
+  background: #d97706;
+  color: #ffffff;
+  border: 2px solid #f59e0b;
+  box-shadow: 0 4px 0 #92400e;
+}
+
+.theme-chess .victory-btn-primary:hover {
+  background: #b45309;
+}
+
+.theme-chess .victory-btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #92400e;
+}
+
+.theme-chess .victory-btn-secondary {
+  background: #292524;
+  color: #e7e5e4;
+  border: 2px solid #57534e;
+  box-shadow: 0 3px 0 #44403c;
+}
+
+.theme-chess .victory-btn-secondary:hover {
+  background: #44403c;
+}
+
+
+/* --- 🗺️ GEO THEME (`theme-geo`) --- */
+.victory-modal-clean.theme-geo {
+  background: #f0fdf4;
+  border: 3px solid #16653e;
+  box-shadow: 0 8px 0 #14532d;
+  color: #0f3825;
+}
+
+.theme-geo .victory-logo-bg {
+  background: #15803d;
+  border: 3px solid #22c55e;
+  box-shadow: 0 4px 0 #14532d;
+}
+
+.theme-geo .victory-clean-title {
+  color: #0f3825;
+}
+
+.theme-geo .victory-btn-primary {
+  background: #15803d;
+  color: #ffffff;
+  border: 2px solid #22c55e;
+  box-shadow: 0 4px 0 #14532d;
+}
+
+.theme-geo .victory-btn-primary:hover {
+  background: #16653e;
+}
+
+.theme-geo .victory-btn-secondary {
+  background: #ffffff;
+  color: #15803d;
+  border: 2px solid #b0cbaf;
+  box-shadow: 0 3px 0 #b0cbaf;
+}
+
+
+/* ==========================================================================
+   SHARED UI ELEMENTS (Clean Solid Icons, Badges & Tactile Typography)
+   ========================================================================== */
 
 .victory-icon-container {
   position: relative;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.victory-aura-glow {
-  position: absolute;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(76, 175, 80, 0.4) 0%, rgba(76, 175, 80, 0) 70%);
-  animation: auraPulse 2s infinite ease-in-out;
-}
-
-.theme-space .victory-aura-glow,
-.theme-dark .victory-aura-glow {
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, rgba(56, 189, 248, 0) 70%);
-}
-
-@keyframes auraPulse {
-  0% { transform: scale(0.9); opacity: 0.5; }
-  50% { transform: scale(1.25); opacity: 0.9; }
-  100% { transform: scale(0.9); opacity: 0.5; }
 }
 
 .victory-logo-bg {
-  width: 68px;
-  height: 68px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #1c7c54 0%, #4caf50 100%);
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: #16653e;
+  border: 3px solid #22c55e;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.35);
+  box-shadow: 0 4px 0 #0e4329;
   position: relative;
   z-index: 2;
-}
-
-.theme-space .victory-logo-bg,
-.theme-dark .victory-logo-bg {
-  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
-  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4);
 }
 
 .sparkles-badge {
@@ -99,118 +265,69 @@
   top: -4px;
   right: -6px;
   z-index: 3;
-  animation: pulse 1.5s infinite alternate;
 }
 
 .victory-clean-title {
   font-family: var(--font-heading);
   font-size: 1.6rem;
   font-weight: 900;
-  color: #1a202c;
+  color: #0f3825;
   margin: 0 0 6px 0;
   letter-spacing: -0.3px;
 }
 
-.theme-space .victory-clean-title,
-.theme-dark .victory-clean-title {
-  color: #ffffff;
-  text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
-}
-
 .victory-clean-subtitle {
   font-size: 0.92rem;
-  color: #4a5568;
+  color: #4e7361;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   line-height: 1.4;
-}
-
-.theme-space .victory-clean-subtitle,
-.theme-dark .victory-clean-subtitle {
-  color: #94a3b8;
 }
 
 .victory-clean-children {
   width: 100%;
   margin-bottom: 16px;
-  color: #4a5568;
   font-size: 0.9rem;
 }
 
-.theme-space .victory-clean-children,
-.theme-dark .victory-clean-children {
-  color: #cbd5e1;
-}
-
-/* Rewards Grid */
+/* Rewards Row Grid */
 .victory-clean-rewards {
   display: flex;
   gap: 12px;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .reward-box {
   flex: 1;
-  border-radius: 20px;
-  padding: 14px 10px;
+  border-radius: 16px;
+  padding: 12px 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  border: 1px solid #e9ecef;
-  background: #f8f9fa;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  transition: transform 0.2s ease;
-}
-
-.reward-box:hover {
-  transform: translateY(-2px);
+  gap: 4px;
+  border: 2px solid #b0cbaf;
+  background: #f8fafc;
+  box-shadow: 0 3px 0 #b0cbaf;
+  box-sizing: border-box;
 }
 
 .streak-box.active-streak {
-  background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
-  border-color: #ffcdd2;
-  box-shadow: 0 4px 14px rgba(255, 61, 0, 0.1);
-}
-
-.theme-space .streak-box.active-streak,
-.theme-dark .streak-box.active-streak {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
-  border: 1.5px solid rgba(239, 68, 68, 0.4);
-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
+  background: #fff5f5;
+  border: 2px solid #ffcdd2;
+  box-shadow: 0 3px 0 #ffcdd2;
 }
 
 .xp-box {
-  background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
-  border-color: #ffe082;
-  box-shadow: 0 4px 14px rgba(255, 179, 0, 0.15);
-}
-
-.theme-space .xp-box,
-.theme-dark .xp-box {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%);
-  border: 1.5px solid rgba(245, 158, 11, 0.4);
-  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+  background: #fff8e1;
+  border: 2px solid #ffe082;
+  box-shadow: 0 3px 0 #ffe082;
 }
 
 .reward-icon-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.flame-bounce {
-  animation: bounce 2s infinite ease-in-out;
-}
-
-.trophy-bounce {
-  animation: bounce 2.2s infinite ease-in-out 0.3s;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
 }
 
 .reward-text-wrap {
@@ -223,31 +340,16 @@
   font-family: var(--font-heading);
   font-size: 1.4rem;
   font-weight: 900;
-  color: #1a202c;
+  color: #0f3825;
   line-height: 1.2;
-}
-
-.theme-space .reward-val,
-.theme-dark .reward-val {
-  color: #ffffff;
 }
 
 .streak-box.active-streak .reward-val {
   color: #e53935;
 }
 
-.theme-space .streak-box.active-streak .reward-val,
-.theme-dark .streak-box.active-streak .reward-val {
-  color: #f87171;
-}
-
 .xp-box .reward-val {
-  color: #f57f17;
-}
-
-.theme-space .xp-box .reward-val,
-.theme-dark .xp-box .reward-val {
-  color: #fbbf24;
+  color: #d97706;
 }
 
 .reward-lbl {
@@ -255,15 +357,10 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #718096;
+  color: #64748b;
 }
 
-.theme-space .reward-lbl,
-.theme-dark .reward-lbl {
-  color: #94a3b8;
-}
-
-/* Action Buttons */
+/* Action Buttons (Tactile 3D Flat Style) */
 .victory-clean-actions {
   display: flex;
   flex-direction: column;
@@ -273,67 +370,56 @@
 
 .victory-btn-primary {
   width: 100%;
-  background: linear-gradient(135deg, #1c7c54 0%, #2e7d32 100%);
+  background: #16653e;
   color: #ffffff;
-  border: none;
+  border: 2px solid #22c55e;
   padding: 14px;
   border-radius: 16px;
   font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(28, 124, 84, 0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.theme-space .victory-btn-primary,
-.theme-dark .victory-btn-primary {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 4px 0 #0e4329;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+  box-sizing: border-box;
 }
 
 .victory-btn-primary:hover {
+  background: #0f3825;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(28, 124, 84, 0.45);
-}
-
-.theme-space .victory-btn-primary:hover,
-.theme-dark .victory-btn-primary:hover {
-  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
+  box-shadow: 0 6px 0 #0e4329;
 }
 
 .victory-btn-primary:active {
-  transform: translateY(0);
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #0e4329;
 }
 
 .victory-btn-secondary {
   width: 100%;
-  background: #f8f9fa;
-  color: #4a5568;
-  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #0f3825;
+  border: 2px solid #b0cbaf;
   padding: 12px;
   border-radius: 16px;
   font-family: var(--font-heading);
   font-size: 0.92rem;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.theme-space .victory-btn-secondary,
-.theme-dark .victory-btn-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 3px 0 #b0cbaf;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+  box-sizing: border-box;
 }
 
 .victory-btn-secondary:hover {
-  background: #edf2f7;
+  background: #f1f5f9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #b0cbaf;
 }
 
-.theme-space .victory-btn-secondary:hover,
-.theme-dark .victory-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.16);
+.victory-btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #b0cbaf;
 }
 
 @keyframes fadeIn {
@@ -342,11 +428,6 @@
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes pulse {
-  from { transform: scale(1); }
-  to { transform: scale(1.2); }
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }

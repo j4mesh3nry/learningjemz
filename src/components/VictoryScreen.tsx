@@ -12,7 +12,7 @@ export interface VictoryScreenProps {
   xpGained?: number;
   streak?: number;
   hasPlayedToday?: boolean;
-  theme?: 'default' | 'space' | 'dark';
+  theme?: 'default' | 'space' | 'chess' | 'geo' | 'reading' | 'dark';
   onContinue: () => void;
   onPlayAgain?: () => void;
   continueText?: string;
@@ -66,14 +66,13 @@ export default function VictoryScreen({
     );
   }
 
-  const themeClass = theme === 'space' ? 'theme-space' : theme === 'dark' ? 'theme-dark' : 'theme-default';
+  const themeClass = `theme-${theme}`;
 
   return (
     <div className={`victory-overlay ${themeClass}`} role="dialog" aria-modal="true" aria-label={title}>
       <div className={`victory-modal-clean ${themeClass}`}>
         {/* Top LearningJemz Logo Icon Container */}
         <div className="victory-icon-container">
-          <div className="victory-aura-glow" />
           <div className="victory-logo-bg">
             <Gem size={34} color="#ffffff" strokeWidth={2.5} />
           </div>

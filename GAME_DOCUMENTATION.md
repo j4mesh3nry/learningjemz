@@ -29,11 +29,12 @@
 ---
 
 ## 3. Design System & Visual Aesthetics
-- **Theme Palette**:
+- **Theme Palette & Tactile 3D Flat Principles**:
   - **Canvas Background**: Medium-Light Sage Green (`#d4e8d5`).
   - **Primary Headers & Text**: Forest Green (`#0f3825` & `#16653e`).
   - **Card Surface**: Crisp White (`#ffffff`) with Muted Sage Borders (`#b0cbaf`).
   - **Tactile 3D Shadows**: `box-shadow: 0 4px 0 #b0cbaf` (elements) and `0 3px 0 #0e4329` (buttons). Active press translates `2px` downward.
+  - **Anti-Glassmorphism & Anti-Glow Rule**: Strictly avoid glassmorphism (`backdrop-filter`), translucent fuzzy overlays, and neon glow effects (`box-shadow: 0 0 ... glow`, radial-gradient auras). All modals, cards, and UI surfaces use clean, solid background colors with solid contrast 3D borders and tactile offset shadows.
 - **Typography**:
   - **Headings**: `Outfit` (Bold, rounded geometric sans-serif, `800 - 900`).
   - **Body**: `Inter` (Clean, legible sans-serif).
@@ -60,8 +61,9 @@
 - **XP Progress Bar**: Displays `(Total XP % 100) / 100` progress to next level.
 - **Level Badge**: Gold Star pill (`#f57f17`).
 
-### Victory Screen & Theme System
-- **Module Theme Modes**: Supports `theme="space"` (dark slate glassmorphic card, cyan/purple glowing borders, metallic cyan action buttons, dark glowing streak/XP pills) and `theme="default"` (emerald green card).
+### Victory Screen & Module Theme System
+- **Module Theme Modes**: Supports `theme="space"` (deep cosmic solid card `#161936`, 3D cyan border `#0284c7`, tactile 3D cyan action buttons), `theme="chess"` (dark warm solid card `#1c1917`, 3D amber border `#d97706`), `theme="geo"` (emerald card `#f0fdf4`, green border `#16653e`), and `theme="default"` (playful white/emerald card).
+- **Design Enforcement**: Strictly NO glassmorphism (`backdrop-filter`), NO translucent blurry cards, and NO neon glow effects. All modals use solid 3D cards with tactile offset borders and solid pushable buttons.
 - **Iconography Standard**: Strictly NO emojis in UI or data. All graphics render high-quality Lucide React icons (`Gem`, `Sparkles`, `Flame`, `Trophy`, `Zap`).
 
 ---
