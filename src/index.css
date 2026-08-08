@@ -316,6 +316,41 @@ button:active { transform: scale(0.97); }
   box-shadow: 0 2px 0 #b0cbaf;
 }
 
+/* Pinned Leaderboard User Rank Bar - Floating above bottom nav across all screen sizes */
+.leaderboard-user-rank-bar {
+  position: fixed;
+  bottom: calc(92px + env(safe-area-inset-bottom, 10px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 480px;
+  background: #16653e;
+  border: 2px solid #0e4329;
+  box-shadow: 0 5px 0 #0e4329;
+  border-radius: 18px;
+  padding: 12px 18px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 95;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .leaderboard-user-rank-bar {
+    bottom: 104px;
+    max-width: 580px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .leaderboard-user-rank-bar {
+    bottom: 110px;
+    max-width: 680px;
+  }
+}
+
 /* Auth Styles */
 .auth-container {
   display: flex;

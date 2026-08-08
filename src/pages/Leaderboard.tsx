@@ -248,15 +248,7 @@ export default function Leaderboard() {
 
       {/* Pinned Bottom User Rank Bar */}
       {user && (
-        <div style={{
-          position: 'fixed', bottom: 82, left: '50%', transform: 'translateX(-50%)',
-          width: 'calc(100% - 32px)', maxWidth: 388,
-          background: '#16653e',
-          border: '2px solid #0e4329', boxShadow: '0 5px 0 #0e4329',
-          borderRadius: 16, padding: '10px 16px', color: '#ffffff',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          zIndex: 90
-        }}>
+        <div className="leaderboard-user-rank-bar">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
               background: '#ffffff', color: '#16653e', fontWeight: 900,
