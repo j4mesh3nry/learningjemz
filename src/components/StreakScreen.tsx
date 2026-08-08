@@ -1,7 +1,7 @@
 // src/components/StreakScreen.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import { Flame, Gem, Sparkles, Calendar as CalendarIcon, X } from 'lucide-react';
-import { getLocalDateString, getCurrentWeekDates } from '../utils/dateUtils';
+import { getLocalDateString, getCurrentWeekDates, backfillPlayedDates } from '../utils/dateUtils';
 import { useGame } from '../contexts/GameContext';
 import './streak.css';
 
@@ -107,7 +107,8 @@ export default function StreakScreen({
       recordPlayedDateToday(userId);
       const localDates = getPlayedDates(userId);
       const combined = Array.from(new Set([...contextPlayedDates, ...localDates]));
-      setPlayedDates(combined);
+      const filled = backfillPlayedDates(targetStreak, new Date(), combined);
+      setPlayedDates(filled);
 
       // Reset animation state
       setCurrentDisplayStreak(initialStreak);

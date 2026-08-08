@@ -4,7 +4,7 @@ import { supabase } from '../utils/supabase';
 import { useAuth } from './AuthContext';
 import { ACHIEVEMENTS } from '../utils/achievements';
 import { resetStreakShownForUser } from '../components/StreakScreen';
-import { getLocalDateString } from '../utils/dateUtils';
+import { getLocalDateString, backfillPlayedDates } from '../utils/dateUtils';
 
 const GameContext = createContext();
 
@@ -43,7 +43,10 @@ export function getLocalState(userId) {
   try {
     const key = getStorageKey(userId);
     const raw = localStorage.getItem(key);
-    return raw ? { ...defaultState, ...JSON.parse(raw) } : defaultState;
+    if (!raw) return defaultState;
+    const parsed = { ...defaultState, ...JSON.parse(raw) };
+    parsed.playedDates = backfillPlayedDates(parsed.streak, parsed.lastVisit, parsed.playedDates);
+    return parsed;
   } catch {
     return defaultState;
   }
@@ -82,18 +85,24 @@ export function GameProvider({ children }) {
       if (!isMounted) return;
 
       if (data) {
+        const rawDates = Array.isArray(data.played_dates) 
+          ? data.played_dates 
+          : Array.isArray(data.bot_stats?.playedDates) 
+            ? data.bot_stats.playedDates 
+            : getLocalState(user.id).playedDates || [];
+
+        const streakCount = data.streak || 0;
+        const lastVisitDate = data.last_visit || null;
+        const filledPlayedDates = backfillPlayedDates(streakCount, lastVisitDate, rawDates);
+
         // Remote data exists -> camelCase DB snake_case fields
         const remoteState = {
           xp: data.xp || 0,
           level: data.level || 1,
-          streak: data.streak || 0,
+          streak: streakCount,
           maxStreak: data.max_streak || 0,
-          lastVisit: data.last_visit || null,
-          playedDates: Array.isArray(data.played_dates) 
-            ? data.played_dates 
-            : Array.isArray(data.bot_stats?.playedDates) 
-              ? data.bot_stats.playedDates 
-              : getLocalState(user.id).playedDates || [],
+          lastVisit: lastVisitDate,
+          playedDates: filledPlayedDates,
           chessWins: data.chess_wins || 0,
           puzzlesSolved: data.puzzles_solved || 0,
           provincesCorrect: data.provinces_correct || 0,
@@ -151,31 +160,9 @@ export function GameProvider({ children }) {
 
     setState(prev => {
       const currentPlayed = Array.isArray(prev.playedDates) ? prev.playedDates : [];
-      const updatedPlayedDates = currentPlayed.includes(todayStr) 
-        ? currentPlayed 
-        : [...currentPlayed, todayStr];
-
-      // Dual-sync to local storage fallback key for external direct readers
-      try {
-        const legacyKey = user?.id ? `learningjemz_played_dates_${user.id}` : 'learningjemz_played_dates_guest';
-        localStorage.setItem(legacyKey, JSON.stringify(updatedPlayedDates));
-      } catch {}
-
       let lastVisitStr = null;
       if (prev.lastVisit) {
         lastVisitStr = getLocalDateString(new Date(prev.lastVisit));
-      }
-
-      if (lastVisitStr === todayStr) {
-        streakResult = {
-          previousStreak: prev.streak || 1,
-          currentStreak: prev.streak || 1,
-          isNewDay: false
-        };
-        return {
-          ...prev,
-          playedDates: updatedPlayedDates
-        };
       }
 
       const yesterday = new Date();
@@ -185,16 +172,30 @@ export function GameProvider({ children }) {
       let newStreak = 1;
       const prevStreakCount = prev.streak || 0;
 
-      if (lastVisitStr === yesterdayStr) {
+      if (lastVisitStr === todayStr) {
+        newStreak = prevStreakCount > 0 ? prevStreakCount : 1;
+      } else if (lastVisitStr === yesterdayStr) {
         newStreak = prevStreakCount + 1;
       } else if (!lastVisitStr && prevStreakCount > 0) {
         newStreak = prevStreakCount + 1;
       }
 
+      const updatedPlayedDates = backfillPlayedDates(
+        newStreak,
+        todayStr,
+        currentPlayed.includes(todayStr) ? currentPlayed : [...currentPlayed, todayStr]
+      );
+
+      // Dual-sync to local storage fallback key for external direct readers
+      try {
+        const legacyKey = user?.id ? `learningjemz_played_dates_${user.id}` : 'learningjemz_played_dates_guest';
+        localStorage.setItem(legacyKey, JSON.stringify(updatedPlayedDates));
+      } catch {}
+
       streakResult = {
         previousStreak: prevStreakCount,
         currentStreak: newStreak,
-        isNewDay: true
+        isNewDay: lastVisitStr !== todayStr
       };
 
       return {
@@ -365,7 +366,7 @@ export function GameProvider({ children }) {
       recordActivity,
       unlockAchievement,
       addXP,
-      addXp: addXP, // Alias for backwards compatibility casing
+      addXp: addXP,
       winChessGame,
       recordChessGame,
       recordIlluminateTime,
