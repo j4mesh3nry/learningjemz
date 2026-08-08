@@ -33,8 +33,8 @@ export default function IlluminateSystem() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [userUsedHint, setUserUsedHint] = useState(false);
   const [hintsLeft, setHintsLeft] = useState(3);
-  const [showHintModal, setShowHintModal] = useState(false);
-  const [activeHintBubble, setActiveHintBubble] = useState(null);
+  const [showHintBubble, setShowHintBubble] = useState(false);
+  const [activeClueText, setActiveClueText] = useState(null);
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const inputRef = useRef(null);
@@ -94,8 +94,8 @@ export default function IlluminateSystem() {
     setElapsedTime(0);
     setUserUsedHint(false);
     setHintsLeft(3);
-    setShowHintModal(false);
-    setActiveHintBubble(null);
+    setShowHintBubble(false);
+    setActiveClueText(null);
     setIsNewRecord(false);
     setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
     setTimeout(() => {
@@ -120,8 +120,8 @@ export default function IlluminateSystem() {
       setWrongAttempts(0);
       setIsError(false);
       setUserUsedHint(false);
-      setActiveHintBubble(null);
-      setShowHintModal(false);
+      setShowHintBubble(false);
+      setActiveClueText(null);
 
       if (nextIndex >= gameData.length) {
         // Game complete
@@ -177,42 +177,61 @@ export default function IlluminateSystem() {
 
   const handleUseHint = () => {
     if (isComplete || isGameOver) return;
-    if (activeHintBubble) {
-      setShowHintModal(true);
-      return;
-    }
-    if (hintsLeft <= 0) return;
-    setShowHintModal(true);
+    setShowHintBubble(prev => !prev);
   };
 
-  const handleSelectHintType = (type) => {
-    if (isComplete || isGameOver) return;
-    const obj = gameData[currentIndex];
-    if (!obj) return;
+  const getNextLetterInfo = () => {
+    const currentObj = gameData[currentIndex];
+    if (!currentObj) return { nextChar: 'A', newInputValue: '', label: 'Next Letter' };
+    const target = currentObj.name.split(' ')[0].toUpperCase();
+    const input = inputValue.toUpperCase();
 
-    if (!activeHintBubble && hintsLeft > 0) {
+    let matchLen = 0;
+    while (matchLen < input.length && matchLen < target.length && input[matchLen] === target[matchLen]) {
+      matchLen++;
+    }
+
+    if (matchLen < target.length) {
+      const nextChar = target[matchLen];
+      const newInputValue = target.substring(0, matchLen + 1);
+      const isFirst = matchLen === 0;
+      return {
+        nextChar,
+        newInputValue,
+        label: isFirst ? `Reveal 1st Letter ("${nextChar}")` : `Reveal Next Letter ("${nextChar}")`
+      };
+    }
+
+    return {
+      nextChar: target[target.length - 1],
+      newInputValue: target,
+      label: `Full Word ("${target}")`
+    };
+  };
+
+  const handleApplyNextLetter = () => {
+    if (isComplete || isGameOver || hintsLeft <= 0) return;
+    const info = getNextLetterInfo();
+    setInputValue(info.newInputValue);
+
+    if (!userUsedHint) {
       setHintsLeft(prev => prev - 1);
       setUserUsedHint(true);
       setScoreData(prev => ({ ...prev, hintsUsed: prev.hintsUsed + 1 }));
     }
+    setActiveClueText(`Letter: Added "${info.nextChar}"`);
+  };
 
-    const mainName = obj.name.split(' ')[0];
-    const firstLetter = mainName[0].toUpperCase();
+  const handleApplyMnemonic = () => {
+    if (isComplete || isGameOver || hintsLeft <= 0) return;
+    const lineProgress = getMnemonicUpToIndex(currentIndex);
 
-    if (type === 'letter') {
-      setInputValue(firstLetter);
-      setActiveHintBubble({
-        type: 'letter',
-        text: `Starts with "${firstLetter}" (${mainName.length} letters)`
-      });
-    } else if (type === 'mnemonic') {
-      const lineProgress = getMnemonicUpToIndex(currentIndex);
-      setActiveHintBubble({
-        type: 'mnemonic',
-        text: lineProgress
-      });
+    if (!userUsedHint) {
+      setHintsLeft(prev => prev - 1);
+      setUserUsedHint(true);
+      setScoreData(prev => ({ ...prev, hintsUsed: prev.hintsUsed + 1 }));
     }
-    setShowHintModal(false);
+    setActiveClueText(`Mnemonic: "${lineProgress}"`);
   };
 
   useEffect(() => {
@@ -457,87 +476,147 @@ export default function IlluminateSystem() {
           ))}
         </div>
 
-        {/* Hint Button & Speech Bubble Wrapper */}
+        {/* Hint Button & Interactive Speech Bubble Container */}
         <div style={{ position: 'relative' }}>
-          {/* Speech Bubble Clue attached directly above Hint button */}
-          {activeHintBubble && (
+          {/* Interactive Speech Bubble attached directly above Hint button */}
+          {showHintBubble && (
             <div style={{
               position: 'absolute',
-              bottom: 'calc(100% + 10px)',
+              bottom: 'calc(100% + 12px)',
               right: 0,
               background: '#161936',
               border: '2px solid #2e7d32',
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.45)',
-              borderRadius: 14,
-              padding: '8px 12px',
+              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6)',
+              borderRadius: 18,
+              padding: '14px 16px',
               color: '#ffffff',
               zIndex: 100,
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              minWidth: 170,
-              maxWidth: 260
+              width: 270,
+              animation: 'slideUp 0.15s ease-out'
             }}>
               {/* Pointer Arrow pointing down to Hint button */}
               <div style={{
                 position: 'absolute',
-                bottom: -6,
-                right: 22,
-                width: 10,
-                height: 10,
+                bottom: -7,
+                right: 24,
+                width: 12,
+                height: 12,
                 background: '#161936',
                 borderRight: '2px solid #2e7d32',
                 borderBottom: '2px solid #2e7d32',
                 transform: 'rotate(45deg)'
               }} />
 
-              <div style={{ flex: 1 }}>
-                {activeHintBubble.type === 'letter' ? (
-                  <div>
-                    <span style={{ color: '#38bdf8', fontWeight: 800 }}>Letter Clue: </span>
-                    <span>{activeHintBubble.text}</span>
-                  </div>
-                ) : (
-                  <div>
-                    <span style={{ color: '#fbbf24', fontWeight: 800 }}>Mnemonic Line: </span>
-                    <div style={{ fontSize: '0.76rem', color: '#e2e8f0', marginTop: 2, lineHeight: 1.35 }}>
-                      "{activeHintBubble.text}"
-                    </div>
-                  </div>
-                )}
+              {/* Bubble Header */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.85rem', fontWeight: 900, color: '#ffb74d' }}>
+                  <Lightbulb size={15} color="#ffb74d" />
+                  <span>Choose Clue ({hintsLeft} left)</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowHintBubble(false)}
+                  style={{
+                    background: 'rgba(255,255,255,0.1)',
+                    border: 'none',
+                    borderRadius: 6,
+                    color: '#ffffff',
+                    width: 22,
+                    height: 22,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ✕
+                </button>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setActiveHintBubble(null)}
-                style={{
-                  background: 'rgba(255,255,255,0.1)',
-                  border: 'none',
-                  borderRadius: 6,
-                  color: '#ffffff',
-                  width: 20,
-                  height: 20,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  flexShrink: 0
-                }}
-              >
-                ✕
-              </button>
+              {/* Active Clue Text if already used */}
+              {activeClueText && (
+                <div style={{
+                  background: 'rgba(255,255,255,0.07)',
+                  borderRadius: 10,
+                  padding: '8px 10px',
+                  marginBottom: 10,
+                  fontSize: '0.78rem',
+                  color: '#e2e8f0',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  lineHeight: 1.35
+                }}>
+                  {activeClueText}
+                </div>
+              )}
+
+              {/* Option Action Buttons inside Speech Bubble */}
+              {hintsLeft > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <button
+                    type="button"
+                    onClick={handleApplyNextLetter}
+                    style={{
+                      background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                      border: '1.5px solid #38bdf8',
+                      boxShadow: '0 2px 0 #0369a1',
+                      borderRadius: 12,
+                      padding: '9px 12px',
+                      color: '#ffffff',
+                      fontWeight: 800,
+                      fontSize: '0.8rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      textAlign: 'left'
+                    }}
+                  >
+                    <span style={{ fontSize: '1.1rem' }}>🔤</span>
+                    <div style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {getNextLetterInfo().label}
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleApplyMnemonic}
+                    style={{
+                      background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
+                      border: '1.5px solid #fbbf24',
+                      boxShadow: '0 2px 0 #78350f',
+                      borderRadius: 12,
+                      padding: '9px 12px',
+                      color: '#ffffff',
+                      fontWeight: 800,
+                      fontSize: '0.8rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      textAlign: 'left'
+                    }}
+                  >
+                    <span style={{ fontSize: '1.1rem' }}>🧠</span>
+                    <div style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      Mnemonic Sentence Line
+                    </div>
+                  </button>
+                </div>
+              ) : (
+                <div style={{ fontSize: '0.78rem', color: '#888', fontStyle: 'italic', textAlign: 'center', marginTop: 4 }}>
+                  No hints remaining for this game.
+                </div>
+              )}
             </div>
           )}
 
           <button 
-            className={`illum-hint-btn ${hintsLeft <= 0 && !activeHintBubble ? 'used' : ''}`}
+            className={`illum-hint-btn ${hintsLeft <= 0 && !showHintBubble ? 'used' : ''}`}
             onClick={handleUseHint}
-            disabled={(hintsLeft <= 0 && !activeHintBubble) || isComplete || isGameOver}
+            disabled={isComplete || isGameOver}
           >
-            <Lightbulb size={14} color={activeHintBubble ? '#fbbf24' : hintsLeft > 0 ? '#ffb74d' : '#888'} />
-            <span>{activeHintBubble ? 'View Hint' : `Hint (${hintsLeft})`}</span>
+            <Lightbulb size={14} color={showHintBubble ? '#ffb74d' : hintsLeft > 0 ? '#ffb74d' : '#888'} />
+            <span>{showHintBubble ? 'Close Hint' : `Hint (${hintsLeft})`}</span>
           </button>
         </div>
       </div>
@@ -617,105 +696,6 @@ export default function IlluminateSystem() {
             </div>
           </div>
         </>
-      )}
-
-      {/* Choose Hint Type Modal Popup */}
-      {showHintModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 999,
-          background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
-        }}>
-          <div style={{
-            background: '#161936',
-            border: '2px solid #2e7d32',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
-            borderRadius: 24,
-            padding: '24px 20px',
-            maxWidth: 340,
-            width: '100%',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '2.2rem', marginBottom: 6 }}>💡</div>
-            <h3 style={{ margin: 0, color: '#ffffff', fontSize: '1.25rem', fontWeight: 900 }}>
-              Choose Hint Type
-            </h3>
-            <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.75)', marginTop: 4, marginBottom: 18 }}>
-              Select a hint clue for this object ({hintsLeft} left):
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <button
-                type="button"
-                onClick={() => handleSelectHintType('letter')}
-                style={{
-                  background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-                  border: '2px solid #38bdf8',
-                  boxShadow: '0 3px 0 #0369a1',
-                  borderRadius: 16,
-                  padding: '14px 16px',
-                  color: '#ffffff',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12
-                }}
-              >
-                <div style={{
-                  fontSize: '0.8rem', fontWeight: 900, background: 'rgba(255,255,255,0.2)',
-                  padding: '4px 6px', borderRadius: 6, flexShrink: 0
-                }}>abc</div>
-                <div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 900 }}>Letter Clue</div>
-                  <div style={{ fontSize: '0.75rem', opacity: 0.9, fontWeight: 500 }}>Fills starting letter & length</div>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleSelectHintType('mnemonic')}
-                style={{
-                  background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
-                  border: '2px solid #fbbf24',
-                  boxShadow: '0 3px 0 #78350f',
-                  borderRadius: 16,
-                  padding: '14px 16px',
-                  color: '#ffffff',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12
-                }}
-              >
-                <span style={{ fontSize: '1.4rem' }}>🧠</span>
-                <div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 900 }}>Mnemonic Word Clue</div>
-                  <div style={{ fontSize: '0.75rem', opacity: 0.9, fontWeight: 500 }}>Reveals sentence progress up to this object</div>
-                </div>
-              </button>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setShowHintModal(false)}
-              style={{
-                marginTop: 18,
-                background: 'transparent',
-                border: 'none',
-                color: 'rgba(255,255,255,0.7)',
-                fontSize: '0.88rem',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
       )}
 
       {/* Reusable Victory Screen */}
