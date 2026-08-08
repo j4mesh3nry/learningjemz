@@ -343,7 +343,11 @@ export default function Leaderboard() {
 
       {/* Pinned Bottom User Rank & Target Goal Bar */}
       {user && (
-        <div className="leaderboard-user-rank-bar" style={{ flexDirection: 'column', gap: 6, padding: '10px 14px' }}>
+        <div className="leaderboard-user-rank-bar" style={{
+          flexDirection: 'column',
+          gap: !isUserInTop20 ? 6 : 0,
+          padding: !isUserInTop20 ? '10px 14px' : '10px 16px'
+        }}>
           {/* Header Row: Rank Badge + Your Current Score */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -363,38 +367,40 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          {/* Motivational Target Message Row */}
-          <div style={{
-            background: 'rgba(0,0,0,0.18)',
-            borderRadius: 12,
-            padding: '6px 10px',
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 8,
-            fontSize: '0.74rem',
-            fontWeight: 700,
-            color: '#e1f0e2'
-          }}>
-            <span style={{ flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {getTargetMessage()}
-            </span>
-            {!isUserQualified && (
-              <button
-                onClick={() => navigate('/')}
-                style={{
-                  background: '#ffffff', color: '#16653e',
-                  fontWeight: 900, fontSize: '0.72rem',
-                  padding: '4px 10px', borderRadius: 10,
-                  border: 'none', cursor: 'pointer', flexShrink: 0,
-                  display: 'flex', alignItems: 'center', gap: 3
-                }}
-              >
-                Play <ArrowRight size={11} />
-              </button>
-            )}
-          </div>
+          {/* Motivational Target Message Row (Only visible for unranked / non-Top20 players) */}
+          {!isUserInTop20 && (
+            <div style={{
+              background: 'rgba(0,0,0,0.18)',
+              borderRadius: 12,
+              padding: '6px 10px',
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 8,
+              fontSize: '0.74rem',
+              fontWeight: 700,
+              color: '#e1f0e2'
+            }}>
+              <span style={{ flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {getTargetMessage()}
+              </span>
+              {!isUserQualified && (
+                <button
+                  onClick={() => navigate('/')}
+                  style={{
+                    background: '#ffffff', color: '#16653e',
+                    fontWeight: 900, fontSize: '0.72rem',
+                    padding: '4px 10px', borderRadius: 10,
+                    border: 'none', cursor: 'pointer', flexShrink: 0,
+                    display: 'flex', alignItems: 'center', gap: 3
+                  }}
+                >
+                  Play <ArrowRight size={11} />
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
