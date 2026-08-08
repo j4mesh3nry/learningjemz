@@ -333,10 +333,15 @@ function InfoPanel({ planet, onClose }) {
 function SolarLoadingOverlay() {
   const { active, progress } = useProgress();
   const [loading, setLoading] = useState(true);
+  const startTimeRef = useRef(Date.now());
 
   useEffect(() => {
     if (!active || progress >= 100) {
-      const timer = setTimeout(() => setLoading(false), 400);
+      const elapsed = Date.now() - startTimeRef.current;
+      const minDisplayTime = 650;
+      const remaining = Math.max(0, minDisplayTime - elapsed);
+
+      const timer = setTimeout(() => setLoading(false), remaining);
       return () => clearTimeout(timer);
     } else {
       setLoading(true);

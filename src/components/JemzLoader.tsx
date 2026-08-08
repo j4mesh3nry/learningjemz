@@ -33,7 +33,8 @@ export function JemzLoader({
       gap: 16,
       padding: 24,
       boxSizing: 'border-box',
-      textAlign: 'center'
+      textAlign: 'center',
+      animation: 'jemzFadeIn 0.25s ease-out'
     }}>
       {/* Animated Gem Logo Badge */}
       <div style={{
@@ -111,6 +112,10 @@ export function JemzLoader({
 
       {/* Keyframe Animations */}
       <style>{`
+        @keyframes jemzFadeIn {
+          from { opacity: 0; transform: scale(0.97); }
+          to { opacity: 1; transform: scale(1); }
+        }
         @keyframes jemzPulseGlow {
           0%, 100% { transform: scale(0.9); opacity: 0.5; }
           50% { transform: scale(1.25); opacity: 1; }
