@@ -127,7 +127,7 @@ export default function ObjectsBySizeMenu() {
                 Illuminate the System
               </h3>
               <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 600, lineHeight: 1.2 }}>
-                Type names in order — <span style={{ fontStyle: 'italic', color: '#16653e' }}>guess then tap for details</span>
+                Type the names in order
               </p>
             </div>
             <div style={{

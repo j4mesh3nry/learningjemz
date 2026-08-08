@@ -350,26 +350,10 @@ export default function IlluminateSystem() {
 
         {/* Section Heading & Subtitle */}
         <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', color: '#ffffff', fontWeight: 800, marginTop: 12, marginBottom: 4 }}>Select Difficulty</h2>
-        <p style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '0.88rem', lineHeight: '1.4', margin: '0 0 8px', fontWeight: 500 }}>
+        <p style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '0.88rem', lineHeight: '1.4', margin: '0 0 16px', fontWeight: 500 }}>
           Type the names of the objects in order from <strong style={{ color: '#00e5ff' }}>LARGEST</strong> to <strong style={{ color: '#ffb74d' }}>SMALLEST</strong>.
         </p>
-        <div style={{ marginBottom: 16 }}>
-          <span style={{
-            fontSize: '0.75rem',
-            fontStyle: 'italic',
-            color: '#00e5ff',
-            background: 'rgba(0, 229, 255, 0.08)',
-            padding: '3px 10px',
-            borderRadius: '12px',
-            border: '1px solid rgba(0, 229, 255, 0.2)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '4px'
-          }}>
-            <Sparkles size={11} color="#00e5ff" /> guess then tap for details
-          </span>
-        </div>
-        
+
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {Object.entries(DIFFICULTIES).map(([key, diff]) => (
             <div 
@@ -489,33 +473,16 @@ export default function IlluminateSystem() {
           borderRadius: 16,
           border: '2px solid rgba(255, 255, 255, 0.2)',
           boxShadow: '0 4px 0 #0b0d1e',
-          padding: '8px 16px',
+          padding: '10px 18px',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 6
+          alignItems: 'center'
         }}>
           <h1 style={{
-            margin: 0, color: '#ffffff', fontSize: '1.15rem',
+            margin: 0, color: '#ffffff', fontSize: '1.2rem',
             fontFamily: 'var(--font-heading)', fontWeight: 900
           }}>
             Illuminate the System
           </h1>
-          <span style={{
-            fontSize: '0.73rem',
-            fontStyle: 'italic',
-            color: '#00e5ff',
-            background: 'rgba(0, 229, 255, 0.08)',
-            padding: '3px 9px',
-            borderRadius: '10px',
-            border: '1px solid rgba(0, 229, 255, 0.2)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '4px'
-          }}>
-            <Sparkles size={11} color="#00e5ff" /> guess then tap for details
-          </span>
         </div>
       </div>
 
@@ -710,6 +677,23 @@ export default function IlluminateSystem() {
 
       {/* Grid Box Container */}
       <div className="illum-grid-container">
+        <div style={{ textAlign: 'center', marginBottom: 6, flexShrink: 0 }}>
+          <span style={{
+            fontSize: '0.73rem',
+            fontStyle: 'italic',
+            color: 'rgba(255, 255, 255, 0.65)',
+            background: 'rgba(255, 255, 255, 0.05)',
+            padding: '3px 10px',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <Sparkles size={11} color="#00e5ff" /> guess then tap for details
+          </span>
+        </div>
+
         <div className="illum-grid">
           {gameData.map((obj, i) => {
             const isRevealed = i < currentIndex;
