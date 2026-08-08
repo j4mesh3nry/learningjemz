@@ -1,7 +1,7 @@
 // src/pages/reading/ReadingHome.tsx
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Plus, BookOpen, Trash2, Flame, Star, Gamepad2, ArrowLeft, Lock } from 'lucide-react';
+import { Plus, BookOpen, Trash2, Flame, Star, Gamepad2, ArrowLeft, Lock, ArrowRight } from 'lucide-react';
 import { getLibrary, getReadingProgress, getCoverUrl, removeFromLibrary } from '../../utils/bookService';
 import { useGame } from '../../contexts/GameContext';
 import BookSearch from './BookSearch';
@@ -304,7 +304,19 @@ const ReadingDashboard = () => {
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>My Library</h3>
                 <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Books in progress</p>
               </div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>→</div>
+              {/* Sleek Right Arrow Badge */}
+              <div style={{
+                position: 'relative', zIndex: 1,
+                width: 32, height: 32,
+                borderRadius: 10,
+                background: 'rgba(255, 255, 255, 0.16)',
+                border: '1.5px solid rgba(255, 255, 255, 0.25)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+              }}>
+                <ArrowRight size={16} strokeWidth={2.5} color="#ffffff" />
+              </div>
             </Card>
 
             <Card 
@@ -333,7 +345,19 @@ const ReadingDashboard = () => {
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>Book Search</h3>
                 <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Find classic novels</p>
               </div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>→</div>
+              {/* Sleek Right Arrow Badge */}
+              <div style={{
+                position: 'relative', zIndex: 1,
+                width: 32, height: 32,
+                borderRadius: 10,
+                background: 'rgba(255, 255, 255, 0.16)',
+                border: '1.5px solid rgba(255, 255, 255, 0.25)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+              }}>
+                <ArrowRight size={16} strokeWidth={2.5} color="#ffffff" />
+              </div>
             </Card>
           </div>
         </>
