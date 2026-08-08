@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Lock, Target, Trophy, Zap, Heart, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Lock, Target, Trophy, Zap, Heart, ChevronDown, ChevronUp, Lightbulb, Sparkles } from 'lucide-react';
 import { useGame } from '../../contexts/GameContext';
 import './space.css';
 
@@ -120,14 +120,14 @@ export default function ObjectsBySizeMenu() {
               background: '#e1f0e2', borderRadius: 12,
               flexShrink: 0
             }}>
-              💡
+              <Lightbulb size={22} color="#16653e" />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>
                 Illuminate the System
               </h3>
               <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 600, lineHeight: 1.2 }}>
-                Type the names in order
+                Type names in order — <span style={{ fontStyle: 'italic', color: '#16653e' }}>guess then tap for details</span>
               </p>
             </div>
             <div style={{
