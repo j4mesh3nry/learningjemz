@@ -452,15 +452,46 @@ export const SPACE_OBJECTS_BY_SIZE = [
 ];
 
 export const MNEMONIC_WORDS_LIST = [
-  'Silly', 'Jumpy', 'Students', 'Usually', 'Never', 'Ever', 'Visit', 'My',
-  "Grandma's", 'Tiny', 'Mountain', 'Cabin', 'Inside', 'LET', 'PET', 'Hippos',
-  'Roam,', 'Old', 'Informants', 'Muttered', 'Grimly,', 'Confessing', 'Under', 'Aliases.',
-  'Detectives', 'Questioned', 'Thugs.', 'Cold', 'Outside.', 'Someone', 'Slipped.',
-  'Can', 'Owls', 'See', 'Stars.'
+  'Silly',       // 0: Sun (S)
+  'Jumpy',       // 1: Jupiter (J)
+  'Students',    // 2: Saturn (S)
+  'Usually',     // 3: Uranus (U)
+  'Never',       // 4: Neptune (N)
+  'Ever',        // 5: Earth (E)
+  'Visit',       // 6: Venus (V)
+  'My',          // 7: Mars (M)
+  "Grandma's",   // 8: Ganymede (G)
+  'Tiny',        // 9: Titan (T)
+  'Mountain',    // 10: Mercury (M)
+  'Cabin',       // 11: Callisto (C)
+  'Inside.',     // 12: Io (I)
+  'Little',      // 13: Luna (L)
+  'Elephants',   // 14: Europa (E)
+  'Tumble',      // 15: Triton (T)
+  'Past',        // 16: Pluto (P)
+  'Every',       // 17: Eris (E)
+  'Tall',        // 18: Titania (T)
+  'Hill.',       // 19: Haumea (H)
+  'Red',         // 20: Rhea (R)
+  'Owls',        // 21: Oberon (O)
+  'Inspect',     // 22: Iapetus (I)
+  'Many',        // 23: Makemake (M)
+  'Giant',       // 24: Gonggong (G)
+  'Craters',     // 25: Charon (C)
+  'Under',       // 26: Umbriel (U)
+  'Ancient',     // 27: Ariel (A)
+  'Dust.',       // 28: Dione (D)
+  'Quiet',       // 29: Quaoar (Q)
+  'Travelers',   // 30: Tethys (T)
+  'Cross',       // 31: Ceres (C)
+  'Outer',       // 32: Orcus (O)
+  'Space',       // 33: Sedna (S)
+  'Safely.'      // 34: Salacia (S)
 ];
 
 export function getMnemonicUpToIndex(index) {
   if (index < 0) return '';
-  const slice = MNEMONIC_WORDS_LIST.slice(0, index + 1);
+  const maxIdx = Math.min(index, MNEMONIC_WORDS_LIST.length - 1);
+  const slice = MNEMONIC_WORDS_LIST.slice(0, maxIdx + 1);
   return slice.join(' ') + '...';
 }

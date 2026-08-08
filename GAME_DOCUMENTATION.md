@@ -94,7 +94,7 @@
     - **Dynamic Interactive Speech Bubble Hint Engine**:
       - Positioned directly below the top `Hint (N)` button with an upward pointer tile (`#161936` cosmic dark card, `#2d3264` border).
       - **Reveal Letter Clue**: Displays the starting or next letter inside the bubble (e.g. `Letter: "S"`, `Letters: "SU"`) without force-filling the input field, encouraging active typing.
-      - **Mnemonic Sentence Line**: Displays progressive mnemonic sentence line mapped across all 35 objects without spoiling future unrevealed objects.
+      - **Mnemonic Sentence Line**: Displays a strict 1-to-1 progressive mnemonic sentence mapped exactly across all 35 celestial objects (e.g. index 15 Triton displays up to word 15 "Tumble", strictly masking words 16-34 for Pluto, Eris, Titania, etc.).
       - **Per-Object Clue Locking & Anti-Abuse**: Clues unlocked on an object can be re-viewed for free; learners can spend additional hints from their 3-hint pool to unlock both letter and mnemonic clues on a single object.
     - **Interactive Mini Fact Cards (Revealed Objects)**: Tapping any illuminated object circle opens an interactive reference card showing its texture preview, astronomical classification, physical diameter (km), orbital position / host body, and 1-sentence fun fact.
     - **Iconography Standard**: Strictly NO using emojis in UI or data. All icons are cleanly rendered via Lucide React components (`Sun`, `Globe`, `Moon`, `Sparkles`, `Ruler`, `Compass`, `Lightbulb`).
