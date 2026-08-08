@@ -734,9 +734,9 @@ export default function ChessPlay() {
             )}
 
             <div className="chess-board">
-              {(isFlipped ? [7,6,5,4,3,2,1,0] : [0,1,2,3,4,5,6,7]).map(r => (
+              {(isFlipped ? [7,6,5,4,3,2,1,0] : [0,1,2,3,4,5,6,7]).map((r, rowIndex) => (
                 <div key={r} className="board-row">
-                  {(isFlipped ? [7,6,5,4,3,2,1,0] : [0,1,2,3,4,5,6,7]).map(c => {
+                  {(isFlipped ? [7,6,5,4,3,2,1,0] : [0,1,2,3,4,5,6,7]).map((c, colIndex) => {
                     const squareLabel = getSquareLabel(r, c);
                     const isDark = (r + c) % 2 === 1;
                     const piece = game ? game.get(squareLabel) : null;
@@ -750,8 +750,8 @@ export default function ChessPlay() {
                         className={`square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isLastMoveSquare ? 'last-move' : ''}`}
                         onClick={() => handleSquareClick(squareLabel)}
                       >
-                        {c === 0 && <span className="rank-label">{8 - r}</span>}
-                        {r === 7 && <span className="file-label">{String.fromCharCode(97 + c)}</span>}
+                        {colIndex === 0 && <span className="rank-label">{8 - r}</span>}
+                        {rowIndex === 7 && <span className="file-label">{String.fromCharCode(97 + c)}</span>}
                         
                         {piece && (
                           <img
