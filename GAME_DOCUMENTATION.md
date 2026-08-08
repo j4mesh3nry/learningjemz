@@ -2,8 +2,16 @@
 
 ## 1. Executive Overview
 - **Game Name**: `LearningJemz`
-- **Description**: A gamified interactive learning platform featuring Chess, Geography, Reading, and Space exploration modules. Built with React, Vite, and CSS 3D Tactile design systems.
-- **Target Audience**: Students and lifelong learners seeking high-engagement educational mini-games.
+- **Vision & Platform Mission**: An expanding, all-in-one gamified learning universe built to ignite curiosity across a wide spectrum of subjects. LearningJemz transforms complex, diverse educational topics into highly engaging, tactile, and rewarding mini-game experiences.
+- **Detailed Platform Description**:
+  LearningJemz is a modern multi-subject learning ecosystem designed to turn daily practice into an addictive adventure. Rather than focusing on a single subject, the platform is engineered to continuously introduce new educational frontiers. 
+  - **Active Learning Realms**:
+    - ♟️ **Chess Tactics & AI Strategy**: Master opening patterns, solve tactical puzzles, and test skills against adaptive Stockfish AI bot levels.
+    - 🚀 **Space Exploration & Astronomy**: Discover planetary science, scale of the solar system, interactive 3D planet visualizers, and astronomical trivia.
+    - 🗺️ **Geography & Cultural Maps**: Explore interactive regional SVG maps (Philippine provinces & World regions), landmark trivia, and spatial quizzes.
+    - 📚 **Reading & Literature Hub**: Digital bookshelf connected to OpenLibrary APIs, story comprehension challenges, and reading milestone tracking.
+  - **Future Horizon**: Architected to seamlessly integrate upcoming modules such as **Math & Logic Puzzles**, **Science Experiments**, **History Timelines**, **Coding Fundamentals**, **Financial Literacy**, and **Languages**.
+- **Target Audience**: Students, children, and lifelong learners seeking an intuitive, fun, and visually stunning hub to explore diverse topics at their own pace.
 
 ---
 
