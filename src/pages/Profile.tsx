@@ -7,11 +7,12 @@ import { ACHIEVEMENTS } from '../utils/achievements.js';
 import { Settings, LogOut, Trophy, Lock, Pencil, Flame, Calendar as CalendarIcon } from 'lucide-react';
 import { updateAvatar, updateName } from '../api/supabase.js';
 import { getPlayedDates } from '../components/StreakScreen';
+import { getLocalDateString } from '../utils/dateUtils';
 import '../index.css';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { xp, level, streak, hasPlayedToday, achievements } = useGame();
+  const { xp, level, streak, hasPlayedToday, achievements, playedDates: contextPlayedDates } = useGame();
   const { user, logout } = useAuth();
 
   const [avatar, setAvatar] = useState(() => user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar') || '👤');
@@ -25,8 +26,10 @@ export default function Profile() {
   const [playedDates, setPlayedDates] = useState<string[]>([]);
 
   useEffect(() => {
-    setPlayedDates(getPlayedDates(user?.id));
-  }, [user?.id]);
+    const local = getPlayedDates(user?.id);
+    const combined = Array.from(new Set([...(contextPlayedDates || []), ...local]));
+    setPlayedDates(combined);
+  }, [user?.id, contextPlayedDates]);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -327,8 +330,9 @@ export default function Profile() {
 
               {Array.from({ length: daysInMonth }).map((_, i) => {
                 const dayNum = i + 1;
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
-                const isPlayed = playedDates.includes(dateString) || (dateString === todayDateStr && hasPlayedToday);
+                const dateObj = new Date(year, month, dayNum);
+                const dateString = getLocalDateString(dateObj);
+                const isPlayed = playedDates.includes(dateString);
 
                 return (
                   <div

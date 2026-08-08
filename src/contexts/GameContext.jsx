@@ -4,6 +4,7 @@ import { supabase } from '../utils/supabase';
 import { useAuth } from './AuthContext';
 import { ACHIEVEMENTS } from '../utils/achievements';
 import { resetStreakShownForUser } from '../components/StreakScreen';
+import { getLocalDateString } from '../utils/dateUtils';
 
 const GameContext = createContext();
 
@@ -13,6 +14,7 @@ const defaultState = {
   streak: 0,
   maxStreak: 0,
   lastVisit: null,
+  playedDates: [],
   chessWins: 0,
   puzzlesSolved: 0,
   provincesCorrect: 0,
@@ -59,14 +61,14 @@ export function GameProvider({ children }) {
 
     if (!user) {
       if (isMounted) {
-        setState(getLocalState(null));
+        const local = getLocalState(null);
+        setState(local);
         isInitialized.current = true;
       }
       return;
     }
 
     // Reset to defaultState while fetching new user's progress from cloud
-    // to prevent previous user's in-memory state from leaking!
     setState(defaultState);
 
     const initializeState = async () => {
@@ -87,6 +89,11 @@ export function GameProvider({ children }) {
           streak: data.streak || 0,
           maxStreak: data.max_streak || 0,
           lastVisit: data.last_visit || null,
+          playedDates: Array.isArray(data.played_dates) 
+            ? data.played_dates 
+            : Array.isArray(data.bot_stats?.playedDates) 
+              ? data.bot_stats.playedDates 
+              : getLocalState(user.id).playedDates || [],
           chessWins: data.chess_wins || 0,
           puzzlesSolved: data.puzzles_solved || 0,
           provincesCorrect: data.provinces_correct || 0,
@@ -110,6 +117,7 @@ export function GameProvider({ children }) {
           streak: cleanState.streak,
           max_streak: cleanState.maxStreak,
           last_visit: cleanState.lastVisit,
+          played_dates: cleanState.playedDates,
           chess_wins: cleanState.chessWins,
           puzzles_solved: cleanState.puzzlesSolved,
           provinces_correct: cleanState.provincesCorrect,
@@ -117,7 +125,7 @@ export function GameProvider({ children }) {
           flashcards_mastered: cleanState.flashcardsMastered,
           books_reading: cleanState.booksReading,
           quiz_high_score: cleanState.quizHighScore,
-          bot_stats: { ...cleanState.botStats, illuminate: cleanState.illuminateStats },
+          bot_stats: { ...cleanState.botStats, illuminate: cleanState.illuminateStats, playedDates: cleanState.playedDates },
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
           avatar: user.user_metadata?.avatar || '👤'
         };
@@ -134,38 +142,72 @@ export function GameProvider({ children }) {
     return () => { isMounted = false; };
   }, [user]);
 
-  // Streak activity recording
-  const recordActivity = () => {
-    const todayStr = new Date().toDateString();
+  // Streak activity recording with local date precision & played dates tracking
+  const recordActivity = useCallback(() => {
+    const today = new Date();
+    const todayStr = getLocalDateString(today);
+
+    let streakResult = { previousStreak: 0, currentStreak: 0, isNewDay: false };
 
     setState(prev => {
-      const lastVisitDate = prev.lastVisit ? new Date(prev.lastVisit) : null;
-      const lastVisitStr = (lastVisitDate && !isNaN(lastVisitDate.getTime())) ? lastVisitDate.toDateString() : null;
+      const currentPlayed = Array.isArray(prev.playedDates) ? prev.playedDates : [];
+      const updatedPlayedDates = currentPlayed.includes(todayStr) 
+        ? currentPlayed 
+        : [...currentPlayed, todayStr];
+
+      // Dual-sync to local storage fallback key for external direct readers
+      try {
+        const legacyKey = user?.id ? `learningjemz_played_dates_${user.id}` : 'learningjemz_played_dates_guest';
+        localStorage.setItem(legacyKey, JSON.stringify(updatedPlayedDates));
+      } catch {}
+
+      let lastVisitStr = null;
+      if (prev.lastVisit) {
+        lastVisitStr = getLocalDateString(new Date(prev.lastVisit));
+      }
 
       if (lastVisitStr === todayStr) {
-        return prev;
+        streakResult = {
+          previousStreak: prev.streak || 1,
+          currentStreak: prev.streak || 1,
+          isNewDay: false
+        };
+        return {
+          ...prev,
+          playedDates: updatedPlayedDates
+        };
       }
 
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toDateString();
+      const yesterdayStr = getLocalDateString(yesterday);
 
       let newStreak = 1;
+      const prevStreakCount = prev.streak || 0;
+
       if (lastVisitStr === yesterdayStr) {
-        newStreak = (prev.streak || 0) + 1;
-      } else if (!lastVisitStr && prev.streak > 0) {
-        newStreak = prev.streak;
+        newStreak = prevStreakCount + 1;
+      } else if (!lastVisitStr && prevStreakCount > 0) {
+        newStreak = prevStreakCount + 1;
       }
+
+      streakResult = {
+        previousStreak: prevStreakCount,
+        currentStreak: newStreak,
+        isNewDay: true
+      };
 
       return {
         ...prev,
         streak: newStreak,
         maxStreak: Math.max(prev.maxStreak || 0, newStreak),
-        lastVisit: todayStr
+        lastVisit: todayStr,
+        playedDates: updatedPlayedDates
       };
     });
-    return true;
-  };
+
+    return streakResult;
+  }, [user?.id]);
 
   // Save to DB and LocalStorage whenever state changes for current user
   useEffect(() => {
@@ -182,6 +224,7 @@ export function GameProvider({ children }) {
         streak: state.streak,
         max_streak: state.maxStreak,
         last_visit: state.lastVisit,
+        played_dates: state.playedDates,
         chess_wins: state.chessWins,
         puzzles_solved: state.puzzlesSolved,
         provinces_correct: state.provincesCorrect,
@@ -189,7 +232,7 @@ export function GameProvider({ children }) {
         flashcards_mastered: state.flashcardsMastered,
         books_reading: state.booksReading,
         quiz_high_score: state.quizHighScore,
-        bot_stats: { ...state.botStats, illuminate: state.illuminateStats },
+        bot_stats: { ...state.botStats, illuminate: state.illuminateStats, playedDates: state.playedDates },
         name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
         avatar: user.user_metadata?.avatar || '👤'
       };
@@ -212,6 +255,7 @@ export function GameProvider({ children }) {
         streak: 0,
         max_streak: 0,
         last_visit: null,
+        played_dates: [],
         chess_wins: 0,
         puzzles_solved: 0,
         provinces_correct: 0,
@@ -289,10 +333,11 @@ export function GameProvider({ children }) {
   }, []);
 
   const recordIlluminateTime = useCallback((difficulty, timeInSeconds) => {
+    let isNewBest = false;
     setState(prev => {
       const currentStats = prev.illuminateStats || { easy: null, medium: null, hard: null };
       const currentBest = currentStats[difficulty];
-      const isNewBest = currentBest === null || timeInSeconds < currentBest;
+      isNewBest = currentBest === null || timeInSeconds < currentBest;
       if (isNewBest) {
         return {
           ...prev,
@@ -304,22 +349,23 @@ export function GameProvider({ children }) {
       }
       return prev;
     });
+    return isNewBest;
   }, []);
 
   const hasPlayedToday = (() => {
     if (!state.lastVisit) return false;
-    const lastVisitDate = new Date(state.lastVisit);
-    if (isNaN(lastVisitDate.getTime())) return false;
-    return lastVisitDate.toDateString() === new Date().toDateString();
+    return getLocalDateString(new Date(state.lastVisit)) === getLocalDateString(new Date());
   })();
 
   return (
     <GameContext.Provider value={{
       ...state,
+      playedDates: state.playedDates || [],
       hasPlayedToday,
       recordActivity,
       unlockAchievement,
       addXP,
+      addXp: addXP, // Alias for backwards compatibility casing
       winChessGame,
       recordChessGame,
       recordIlluminateTime,

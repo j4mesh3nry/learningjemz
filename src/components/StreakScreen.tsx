@@ -1,6 +1,8 @@
 // src/components/StreakScreen.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import { Flame, Gem, Sparkles, Calendar as CalendarIcon, X } from 'lucide-react';
+import { getLocalDateString, getCurrentWeekDates } from '../utils/dateUtils';
+import { useGame } from '../contexts/GameContext';
 import './streak.css';
 
 export function getStreakStorageKey(userId?: string): string {
@@ -13,7 +15,7 @@ export function getPlayedDatesStorageKey(userId?: string): string {
 
 export function hasShownStreakToday(userId?: string): boolean {
   try {
-    const today = new Date().toDateString();
+    const today = getLocalDateString(new Date());
     const key = getStreakStorageKey(userId);
     return localStorage.getItem(key) === today;
   } catch {
@@ -23,7 +25,7 @@ export function hasShownStreakToday(userId?: string): boolean {
 
 export function markStreakShownToday(userId?: string): void {
   try {
-    const today = new Date().toDateString();
+    const today = getLocalDateString(new Date());
     const key = getStreakStorageKey(userId);
     localStorage.setItem(key, today);
     recordPlayedDateToday(userId);
@@ -49,7 +51,7 @@ export function getPlayedDates(userId?: string): string[] {
 
 export function recordPlayedDateToday(userId?: string): void {
   try {
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const today = getLocalDateString(new Date());
     const dates = getPlayedDates(userId);
     if (!dates.includes(today)) {
       dates.push(today);
@@ -62,6 +64,7 @@ export function recordPlayedDateToday(userId?: string): void {
 export interface StreakScreenProps {
   isOpen: boolean;
   streak: number;
+  previousStreak?: number;
   onContinue: () => void;
   forceShow?: boolean;
   userId?: string;
@@ -72,12 +75,18 @@ const DAYS_HEADER = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 export default function StreakScreen({
   isOpen,
   streak = 1,
+  previousStreak,
   onContinue,
   forceShow = false,
   userId,
 }: StreakScreenProps) {
+  const gameContext = useGame();
+  const contextPlayedDates = gameContext?.playedDates || [];
+
   const targetStreak = Math.max(1, streak);
-  const initialStreak = Math.max(0, targetStreak - 1);
+  const initialStreak = previousStreak !== undefined 
+    ? Math.max(0, previousStreak) 
+    : Math.max(0, targetStreak - 1);
 
   const [currentDisplayStreak, setCurrentDisplayStreak] = useState(initialStreak);
   const [plusOneState, setPlusOneState] = useState<'hidden' | 'fade-in' | 'fade-out'>('hidden');
@@ -96,7 +105,9 @@ export default function StreakScreen({
         return;
       }
       recordPlayedDateToday(userId);
-      setPlayedDates(getPlayedDates(userId));
+      const localDates = getPlayedDates(userId);
+      const combined = Array.from(new Set([...contextPlayedDates, ...localDates]));
+      setPlayedDates(combined);
 
       // Reset animation state
       setCurrentDisplayStreak(initialStreak);
@@ -125,7 +136,7 @@ export default function StreakScreen({
       setIsIgnited(false);
       setShowCalendar(false);
     }
-  }, [isOpen, isAlreadyShown, userId, onContinue, initialStreak, targetStreak]);
+  }, [isOpen, isAlreadyShown, userId, onContinue, initialStreak, targetStreak, contextPlayedDates]);
 
   if (!isOpen || isAlreadyShown) return null;
 
@@ -137,14 +148,10 @@ export default function StreakScreen({
 
   const todayDate = new Date();
   const todayIndex = todayDate.getDay(); // 0 = Sun, 1 = Mon...
-  const todayDateStr = todayDate.toISOString().split('T')[0];
+  const todayDateStr = getLocalDateString(todayDate);
 
-  // Compute dates for current week (Sun-Sat)
-  const currentWeekDates = DAYS_HEADER.map((_, idx) => {
-    const d = new Date(todayDate);
-    d.setDate(d.getDate() - (todayIndex - idx));
-    return d.toISOString().split('T')[0];
-  });
+  // Compute dates for current week (Sun-Sat) using local date formatting
+  const currentWeekDates = getCurrentWeekDates(todayDate);
 
   // Calendar view month computation
   const year = todayDate.getFullYear();
@@ -267,8 +274,9 @@ export default function StreakScreen({
               ))}
               {Array.from({ length: daysInMonth }).map((_, i) => {
                 const dayNum = i + 1;
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
-                const isPlayed = playedDates.includes(dateString) || dateString === todayDateStr;
+                const dateObj = new Date(year, month, dayNum);
+                const dateString = getLocalDateString(dateObj);
+                const isPlayed = playedDates.includes(dateString);
 
                 return (
                   <div

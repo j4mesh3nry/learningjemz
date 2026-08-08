@@ -46,28 +46,23 @@
 
 ## 4. Core Gamification Mechanics
 
-### Streak System
-- **Logic**: Tracks consecutive daily activity completion.
-- **Indicator**: Active Flame (`#e53935` / `#ff4d4d`), Inactive Flame (`#888888`).
-- **Reset Trigger**: Absence of recorded activity within a 24-hour rolling window.
+### Streak System & Calendar
+- **Logic**: Tracks consecutive daily activity completion in real-time.
+- **Local Date Handling**: Standardized `YYYY-MM-DD` formatting based on local timezone to eliminate UTC midnight date shifts.
+- **Played History Persistence (`playedDates`)**: Persists array of active played dates (`YYYY-MM-DD`) in global `GameContext` state, browser `localStorage`, and Supabase `game_progress` cloud database (`played_dates` / `bot_stats.playedDates`).
+- **Duolingo Streak Calendar**: Rendered in Profile and Streak Screen drawer modal. Days where the learner played display lit fire badges (`Flame`); past days with no activity remain open/unlit.
+- **Streak Transition Animations**: Counter transitions smoothly from `previousStreak` to `currentStreak` (e.g., `3 -> 4`) with animated `+1` badge effects upon completing daily learning activities.
+- **Indicator**: Active Flame (`#ff3d00` / `#ff6d00`), Inactive Flame (`#888888`).
+- **Reset Trigger**: Absence of recorded activity on the previous calendar day.
 
 ### XP & Level Progression
 - **Level Formula**: `Level = floor(Total XP / 100) + 1`
 - **XP Progress Bar**: Displays `(Total XP % 100) / 100` progress to next level.
 - **Level Badge**: Gold Star pill (`#f57f17`).
 
-### Leaderboard & Ranking System
-- **Qualification Rules**:
-  - **Streak Tab**: Only learners with active daily streaks (`effectiveStreak > 0`) qualify to appear on the Streak Leaderboard. Zero-streak and inactive learners are filtered out.
-  - **XP Tab**: Only learners with `XP > 0` qualify to compete.
-- **Top 20 Hall of Fame**: Main leaderboard is strictly capped at the **Top 20** learners (Top 3 on Gold/Silver/Bronze podium + Ranks 4–20 in list).
-- **Target Progression Engine**:
-  - Pinned rank status bar dynamically calculates progress needed to break into the Top 20 or overtake the player directly ahead.
-  - Displays actionable call-to-action shortcuts (*"Play Now →"*) for unranked/unqualified players.
-  - Renders open spots invitation card when fewer than 20 learners qualify.
-
-### Title Badges
-- **Badge Hierarchy**: Dynamic title pills awarded based on level thresholds and module completions (e.g., Novice Explorer, Grandmaster Learner).
+### Victory Screen & Theme System
+- **Module Theme Modes**: Supports `theme="space"` (dark slate glassmorphic card, cyan/purple glowing borders, metallic cyan action buttons, dark glowing streak/XP pills) and `theme="default"` (emerald green card).
+- **Iconography Standard**: Strictly NO emojis in UI or data. All graphics render high-quality Lucide React icons (`Gem`, `Sparkles`, `Flame`, `Trophy`, `Zap`).
 
 ---
 
@@ -87,10 +82,10 @@
 - **Game Modes**:
   - **3D Solar System Visualizer**: Interactive Three.js model of planets and orbits.
   - **Illuminate the System Challenge**: Size-ordering spelling puzzle covering up to 35 solar objects (Sun → Salacia).
-    - **Difficulty Tiers**:
-      - **Easy**: Top 8 largest objects (Sun → Mars), 3 Lives, 5 XP reward.
-      - **Medium**: Top 15 largest objects (Sun → Europa), 4 Lives, 10 XP reward.
-      - **Hard**: All 35 objects (Sun → Salacia), 5 Lives, 20 XP reward (+10 XP bonus for perfect zero-hint completion).
+    - **Difficulty Tiers & XP Rewards**:
+      - **Easy**: Top 8 largest objects (Sun → Mars), 3 Lives, **+10 XP reward**.
+      - **Medium**: Top 15 largest objects (Sun → Europa), 4 Lives, **+20 XP reward**.
+      - **Hard**: All 35 objects (Sun → Salacia), 5 Lives, **+30 XP reward** (+10 XP bonus for perfect zero-hint completion).
     - **Dynamic Interactive Speech Bubble Hint Engine**:
       - Positioned directly below the top `Hint (N)` button with an upward pointer tile (`#161936` cosmic dark card, `#2d3264` border).
       - **Reveal Letter Clue**: Displays the starting or next letter inside the bubble (e.g. `Letter: "S"`, `Letters: "SU"`) without force-filling the input field, encouraging active typing.

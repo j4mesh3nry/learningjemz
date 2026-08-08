@@ -8,9 +8,9 @@ import VictoryScreen from '../../components/VictoryScreen';
 import './space.css';
 
 const DIFFICULTIES = {
-  easy: { name: 'Easy', count: 8, label: 'Top 8 (Sun → Mars)', xp: 5, maxLives: 3 },
-  medium: { name: 'Medium', count: 15, label: 'Top 15 (Sun → Europa)', xp: 10, maxLives: 4 },
-  hard: { name: 'Hard', count: 35, label: 'All 35 (Sun → Salacia)', xp: 20, maxLives: 5 }
+  easy: { name: 'Easy', count: 8, label: 'Top 8 (Sun → Mars)', xp: 10, maxLives: 3 },
+  medium: { name: 'Medium', count: 15, label: 'Top 15 (Sun → Europa)', xp: 20, maxLives: 4 },
+  hard: { name: 'Hard', count: 35, label: 'All 35 (Sun → Salacia)', xp: 30, maxLives: 5 }
 };
 
 function getTypeIcon(iconType, size = 16) {
@@ -55,7 +55,7 @@ function SafeObjectImage({ src, alt, iconType, className, size = 26 }) {
 export default function IlluminateSystem() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { level: userLevel, streak, hasPlayedToday, addXp, illuminateStats, recordIlluminateTime } = useGame();
+  const { level: userLevel, streak, hasPlayedToday, addXP, addXp, recordActivity, illuminateStats, recordIlluminateTime } = useGame();
   const { user } = useAuth();
 
   const personalBests = illuminateStats || {};
@@ -169,17 +169,26 @@ export default function IlluminateSystem() {
         setIsComplete(true);
         setScoreData(prev => ({ ...prev, endTime: Date.now() }));
         
+        // Record streak activity & daily played date
+        if (recordActivity) {
+          recordActivity();
+        }
+
         // Personal Best Record Check & Supabase Sync
         const isNew = recordIlluminateTime(level, elapsedTime);
         if (isNew) {
           setIsNewRecord(true);
         }
 
-        let xpReward = DIFFICULTIES[level].xp;
+        let xpReward = DIFFICULTIES[level]?.xp || 10;
         if (level === 'hard' && scoreData.hintsUsed === 0) {
           xpReward += 10; // Bonus for perfect hard
         }
-        addXp(xpReward);
+        if (addXP) {
+          addXP(xpReward);
+        } else if (addXp) {
+          addXp(xpReward);
+        }
       }
     } else {
       setIsError(true);
@@ -828,6 +837,7 @@ export default function IlluminateSystem() {
       {/* Reusable Victory Screen */}
       <VictoryScreen
         isOpen={isComplete}
+        theme="space"
         title="System Illuminated!"
         subtitle={
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', margin: '8px 0' }}>
@@ -849,7 +859,7 @@ export default function IlluminateSystem() {
             </div>
           </div>
         }
-        xpGained={DIFFICULTIES[level]?.xp || 10}
+        xpGained={(DIFFICULTIES[level]?.xp || 10) + (level === 'hard' && scoreData.hintsUsed === 0 ? 10 : 0)}
         streak={streak}
         hasPlayedToday={hasPlayedToday}
         onContinue={() => setLevel(null)}

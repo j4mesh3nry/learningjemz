@@ -1,11 +1,12 @@
+/* src/components/victory.css */
 .victory-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,30 +17,8 @@
   overflow: hidden;
 }
 
-/* Background Confetti Effects */
-.victory-confetti {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.confetti {
-  position: absolute;
-  font-size: 1.4rem;
-  animation: floatConfetti 3.5s infinite ease-in-out;
-}
-
-.confetti.c1 { left: 10%; top: 20%; animation-delay: 0s; }
-.confetti.c2 { right: 15%; top: 15%; animation-delay: 0.8s; }
-.confetti.c3 { left: 20%; bottom: 25%; animation-delay: 1.4s; }
-.confetti.c4 { right: 25%; bottom: 20%; animation-delay: 0.4s; }
-.confetti.c5 { left: 50%; top: 12%; animation-delay: 1.9s; }
-
-@keyframes floatConfetti {
-  0% { transform: translateY(0) rotate(0deg) scale(0.9); opacity: 0; }
-  50% { opacity: 1; transform: translateY(-30px) rotate(180deg) scale(1.1); }
-  100% { opacity: 0; transform: translateY(-60px) rotate(360deg) scale(0.9); }
+.victory-overlay.theme-space {
+  background: rgba(5, 10, 25, 0.85);
 }
 
 .victory-modal-clean {
@@ -59,6 +38,15 @@
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
+/* Space Cosmic Dark Theme */
+.victory-modal-clean.theme-space,
+.victory-modal-clean.theme-dark {
+  background: linear-gradient(145deg, #0b1329 0%, #172448 100%);
+  border: 2px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.25), 0 25px 50px rgba(0, 0, 0, 0.6);
+  color: #f8fafc;
+}
+
 .victory-icon-container {
   position: relative;
   margin-bottom: 16px;
@@ -74,6 +62,11 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(76, 175, 80, 0.4) 0%, rgba(76, 175, 80, 0) 70%);
   animation: auraPulse 2s infinite ease-in-out;
+}
+
+.theme-space .victory-aura-glow,
+.theme-dark .victory-aura-glow {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, rgba(56, 189, 248, 0) 70%);
 }
 
 @keyframes auraPulse {
@@ -95,20 +88,18 @@
   z-index: 2;
 }
 
+.theme-space .victory-logo-bg,
+.theme-dark .victory-logo-bg {
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4);
+}
+
 .sparkles-badge {
   position: absolute;
   top: -4px;
   right: -6px;
   z-index: 3;
   animation: pulse 1.5s infinite alternate;
-}
-
-.star-badge-left {
-  position: absolute;
-  bottom: -2px;
-  left: -6px;
-  z-index: 3;
-  animation: pulse 1.8s infinite alternate-reverse;
 }
 
 .victory-clean-title {
@@ -120,6 +111,12 @@
   letter-spacing: -0.3px;
 }
 
+.theme-space .victory-clean-title,
+.theme-dark .victory-clean-title {
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
+}
+
 .victory-clean-subtitle {
   font-size: 0.92rem;
   color: #4a5568;
@@ -128,11 +125,21 @@
   line-height: 1.4;
 }
 
+.theme-space .victory-clean-subtitle,
+.theme-dark .victory-clean-subtitle {
+  color: #94a3b8;
+}
+
 .victory-clean-children {
   width: 100%;
   margin-bottom: 16px;
   color: #4a5568;
   font-size: 0.9rem;
+}
+
+.theme-space .victory-clean-children,
+.theme-dark .victory-clean-children {
+  color: #cbd5e1;
 }
 
 /* Rewards Grid */
@@ -167,10 +174,24 @@
   box-shadow: 0 4px 14px rgba(255, 61, 0, 0.1);
 }
 
+.theme-space .streak-box.active-streak,
+.theme-dark .streak-box.active-streak {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
+  border: 1.5px solid rgba(239, 68, 68, 0.4);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
+}
+
 .xp-box {
   background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
   border-color: #ffe082;
   box-shadow: 0 4px 14px rgba(255, 179, 0, 0.15);
+}
+
+.theme-space .xp-box,
+.theme-dark .xp-box {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
 }
 
 .reward-icon-wrap {
@@ -206,12 +227,27 @@
   line-height: 1.2;
 }
 
+.theme-space .reward-val,
+.theme-dark .reward-val {
+  color: #ffffff;
+}
+
 .streak-box.active-streak .reward-val {
   color: #e53935;
 }
 
+.theme-space .streak-box.active-streak .reward-val,
+.theme-dark .streak-box.active-streak .reward-val {
+  color: #f87171;
+}
+
 .xp-box .reward-val {
   color: #f57f17;
+}
+
+.theme-space .xp-box .reward-val,
+.theme-dark .xp-box .reward-val {
+  color: #fbbf24;
 }
 
 .reward-lbl {
@@ -220,6 +256,11 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #718096;
+}
+
+.theme-space .reward-lbl,
+.theme-dark .reward-lbl {
+  color: #94a3b8;
 }
 
 /* Action Buttons */
@@ -245,9 +286,20 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+.theme-space .victory-btn-primary,
+.theme-dark .victory-btn-primary {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.4);
+}
+
 .victory-btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(28, 124, 84, 0.45);
+}
+
+.theme-space .victory-btn-primary:hover,
+.theme-dark .victory-btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
 }
 
 .victory-btn-primary:active {
@@ -268,8 +320,20 @@
   transition: background 0.15s ease;
 }
 
+.theme-space .victory-btn-secondary,
+.theme-dark .victory-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .victory-btn-secondary:hover {
   background: #edf2f7;
+}
+
+.theme-space .victory-btn-secondary:hover,
+.theme-dark .victory-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 @keyframes fadeIn {

@@ -67,15 +67,8 @@ describe('VictoryScreen', () => {
     expect(screen.getByTestId('custom-child')).toBeInTheDocument();
   });
 
-  it('renders StreakScreen on first game of day for user account, then transitions to VictoryScreen', () => {
-    render(
-      <VictoryScreen
-        {...defaultProps}
-        disableDailyStreakModal={false}
-        streak={5}
-        hasPlayedToday={false}
-      />
-    );
-    expect(screen.getByRole('dialog', { name: /5 day streak/i })).toBeInTheDocument();
+  it('applies theme-space class when theme="space"', () => {
+    const { container } = render(<VictoryScreen {...defaultProps} theme="space" />);
+    expect(container.querySelector('.theme-space')).toBeInTheDocument();
   });
 });

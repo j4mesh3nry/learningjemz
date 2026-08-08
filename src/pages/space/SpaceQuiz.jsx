@@ -115,6 +115,7 @@ export default function SpaceQuiz() {
       <div className="space-module quiz-mode">
         <VictoryScreen
           isOpen={true}
+          theme="space"
           title="Quiz Complete!"
           subtitle={`You scored ${score} out of ${questions.length} (${accuracy}% accuracy)`}
           xpGained={sessionXp}

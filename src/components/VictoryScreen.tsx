@@ -12,8 +12,7 @@ export interface VictoryScreenProps {
   xpGained?: number;
   streak?: number;
   hasPlayedToday?: boolean;
-  igniting?: boolean;
-  streakIncreased?: boolean;
+  theme?: 'default' | 'space' | 'dark';
   onContinue: () => void;
   onPlayAgain?: () => void;
   continueText?: string;
@@ -28,6 +27,7 @@ export default function VictoryScreen({
   xpGained = 0,
   streak = 0,
   hasPlayedToday = true,
+  theme = 'default',
   onContinue,
   onPlayAgain,
   continueText = "Continue",
@@ -66,11 +66,14 @@ export default function VictoryScreen({
     );
   }
 
+  const themeClass = theme === 'space' ? 'theme-space' : theme === 'dark' ? 'theme-dark' : 'theme-default';
+
   return (
-    <div className="victory-overlay" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="victory-modal-clean">
+    <div className={`victory-overlay ${themeClass}`} role="dialog" aria-modal="true" aria-label={title}>
+      <div className={`victory-modal-clean ${themeClass}`}>
         {/* Top LearningJemz Logo Icon Container */}
         <div className="victory-icon-container">
+          <div className="victory-aura-glow" />
           <div className="victory-logo-bg">
             <Gem size={34} color="#ffffff" strokeWidth={2.5} />
           </div>
@@ -86,7 +89,7 @@ export default function VictoryScreen({
         <div className="victory-clean-rewards">
           {/* Day Streak Box */}
           <div className={`reward-box streak-box ${hasPlayedToday ? 'active-streak' : 'unlit-streak'}`}>
-            <div className="reward-icon-wrap">
+            <div className="reward-icon-wrap flame-bounce">
               <Flame
                 size={24}
                 color={hasPlayedToday ? '#ff4d4d' : '#888888'}
@@ -101,7 +104,7 @@ export default function VictoryScreen({
 
           {/* XP Box */}
           <div className="reward-box xp-box">
-            <div className="reward-icon-wrap xp-icon-wrap">
+            <div className="reward-icon-wrap xp-icon-wrap trophy-bounce">
               <Trophy size={24} color="#f57f17" fill="#ffb300" />
             </div>
             <div className="reward-text-wrap">
