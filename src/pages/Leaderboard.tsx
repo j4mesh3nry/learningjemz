@@ -1,9 +1,10 @@
 // src/pages/Leaderboard.tsx
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
-import { Trophy, Flame, Zap, Crown } from 'lucide-react';
+import { Trophy, Flame, Zap, Crown, ArrowRight, Target } from 'lucide-react';
 import { Header } from '../components/Header';
 import '../index.css';
 
@@ -22,11 +23,28 @@ const getEffectiveStreak = (item: any) => {
 };
 
 export default function Leaderboard() {
+  const navigate = useNavigate();
   const { user } = useAuth();
-  const { xp, level, streak } = useGame();
+  const { xp, streak } = useGame();
   const [leaders, setLeaders] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [sortBy, setSortBy] = useState<'xp' | 'streak'>('xp');
+
+  const processLeaders = useCallback((data: any[], type: 'xp' | 'streak') => {
+    const qualified = data.filter(item => {
+      if (type === 'streak') {
+        return getEffectiveStreak(item) > 0;
+      }
+      return (Number(item.xp) || 0) > 0;
+    });
+
+    return qualified.sort((a, b) => {
+      const valA = type === 'streak' ? getEffectiveStreak(a) : (Number(a.xp) || 0);
+      const valB = type === 'streak' ? getEffectiveStreak(b) : (Number(b.xp) || 0);
+      if (valB !== valA) return valB - valA;
+      return (Number(b.xp) || 0) - (Number(a.xp) || 0);
+    });
+  }, []);
 
   const fetchLeaders = useCallback(async (isInitial = false) => {
     if (isInitial) setLoading(true);
@@ -35,19 +53,13 @@ export default function Leaderboard() {
       .select('id, xp, level, streak, last_visit, name, avatar')
       .order(sortBy, { ascending: false })
       .order('xp', { ascending: false })
-      .limit(50);
+      .limit(100);
 
     if (!error && data) {
-      const sortedData = [...data].sort((a, b) => {
-        const valA = sortBy === 'streak' ? getEffectiveStreak(a) : (Number(a.xp) || 0);
-        const valB = sortBy === 'streak' ? getEffectiveStreak(b) : (Number(b.xp) || 0);
-        if (valB !== valA) return valB - valA;
-        return (Number(b.xp) || 0) - (Number(a.xp) || 0);
-      });
-      setLeaders(sortedData);
+      setLeaders(processLeaders(data, sortBy));
     }
     setLoading(false);
-  }, [sortBy]);
+  }, [sortBy, processLeaders]);
 
   useEffect(() => {
     fetchLeaders(leaders.length === 0);
@@ -67,26 +79,66 @@ export default function Leaderboard() {
   const handleTabChange = (newSortBy: 'xp' | 'streak') => {
     if (newSortBy === sortBy) return;
     setSortBy(newSortBy);
-    setLeaders(prev => [...prev].sort((a, b) => {
-      const valA = newSortBy === 'streak' ? getEffectiveStreak(a) : (Number(a.xp) || 0);
-      const valB = newSortBy === 'streak' ? getEffectiveStreak(b) : (Number(b.xp) || 0);
-      if (valB !== valA) return valB - valA;
-      return (Number(b.xp) || 0) - (Number(a.xp) || 0);
-    }));
+    setLeaders(prev => processLeaders(prev, newSortBy));
   };
 
-  const currentUserRankIndex = leaders.findIndex(l => l.id === user?.id);
-  const currentUserRank = currentUserRankIndex !== -1 ? currentUserRankIndex + 1 : '> 50';
+  // Strictly cap visible ranks to Top 20
+  const top20Leaders = leaders.slice(0, 20);
+  const top1 = top20Leaders[0];
+  const top2 = top20Leaders[1];
+  const top3 = top20Leaders[2];
+  const restLeaders = top20Leaders.slice(3);
 
-  const top1 = leaders[0];
-  const top2 = leaders[1];
-  const top3 = leaders[2];
-  const restLeaders = leaders.slice(3);
+  // User rank calculation
+  const fullUserRankIndex = leaders.findIndex(l => l.id === user?.id);
+  const isUserQualified = sortBy === 'streak' ? streak > 0 : xp > 0;
+  const isUserInTop20 = isUserQualified && fullUserRankIndex !== -1 && fullUserRankIndex < 20;
+  const currentUserRankDisplay = isUserInTop20 ? `#${fullUserRankIndex + 1}` : 'Unranked';
+
+  // Target motivation message
+  const getTargetMessage = () => {
+    if (!isUserQualified) {
+      return sortBy === 'streak'
+        ? '🔥 No active streak! Play today to ignite your flame & enter Top 20!'
+        : '⚡ Complete a lesson to earn your first XP & enter Top 20!';
+    }
+
+    if (!isUserInTop20) {
+      const rank20Item = top20Leaders[19];
+      if (rank20Item) {
+        const targetVal = sortBy === 'streak' ? getEffectiveStreak(rank20Item) : Number(rank20Item.xp);
+        const myVal = sortBy === 'streak' ? streak : xp;
+        const needed = Math.max(1, targetVal - myVal + 1);
+
+        return sortBy === 'streak'
+          ? `🔥 Keep streak ${needed} more ${needed === 1 ? 'day' : 'days'} to reach Top 20! (#20 is ${rank20Item.name || 'Learner'})`
+          : `🎯 Earn ${needed} XP more to break into Top 20! (#20 is ${rank20Item.name || 'Learner'})`;
+      }
+      return '🚀 You qualify! Complete daily challenges to climb higher!';
+    }
+
+    if (fullUserRankIndex === 0) {
+      return '🏆 Leaderboard Champion! You hold #1 Rank!';
+    }
+
+    const playerAhead = top20Leaders[fullUserRankIndex - 1];
+    if (playerAhead) {
+      const aheadVal = sortBy === 'streak' ? getEffectiveStreak(playerAhead) : Number(playerAhead.xp);
+      const myVal = sortBy === 'streak' ? streak : xp;
+      const needed = Math.max(1, aheadVal - myVal + 1);
+
+      return sortBy === 'streak'
+        ? `🔥 Streak ${needed} more ${needed === 1 ? 'day' : 'days'} to overtake #${fullUserRankIndex} ${playerAhead.name || 'Learner'}!`
+        : `🚀 Rank #${fullUserRankIndex + 1}! Earn ${needed} XP more to overtake #${fullUserRankIndex} ${playerAhead.name || 'Learner'}!`;
+    }
+
+    return `✨ Great job! You are Rank #${fullUserRankIndex + 1}!`;
+  };
 
   return (
     <div className="container" style={{
       minHeight: '100vh', background: 'var(--color-bg-page)',
-      paddingBottom: '100px',
+      paddingBottom: '130px',
     }}>
       <Header />
 
@@ -95,13 +147,18 @@ export default function Leaderboard() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         marginBottom: 16
       }}>
-        <h2 style={{
-          fontFamily: 'var(--font-heading)', fontSize: '1.25rem',
-          margin: 0, color: '#0f3825', fontWeight: 800,
-          display: 'flex', alignItems: 'center', gap: '8px'
-        }}>
-          <Trophy size={22} color="#d97706" /> Leaderboard
-        </h2>
+        <div>
+          <h2 style={{
+            fontFamily: 'var(--font-heading)', fontSize: '1.25rem',
+            margin: 0, color: '#0f3825', fontWeight: 800,
+            display: 'flex', alignItems: 'center', gap: '8px'
+          }}>
+            <Trophy size={22} color="#d97706" /> Leaderboard
+          </h2>
+          <span style={{ fontSize: '0.78rem', color: '#4e7361', fontWeight: 600 }}>
+            Top 20 Qualified Learners
+          </span>
+        </div>
 
         {/* Tab Switcher */}
         <div style={{
@@ -136,7 +193,7 @@ export default function Leaderboard() {
       </div>
 
       {/* Gamified Top 3 Podium */}
-      {leaders.length >= 3 && (
+      {top20Leaders.length >= 3 && (
         <div style={{
           display: 'grid', gridTemplateColumns: '1fr 1.1fr 1fr', gap: 8,
           alignItems: 'flex-end', marginBottom: 20, paddingTop: 12
@@ -199,9 +256,35 @@ export default function Leaderboard() {
           <div style={{ textAlign: 'center', padding: '30px', color: '#16653e', fontWeight: 700 }}>
             Loading rankings...
           </div>
+        ) : top20Leaders.length === 0 ? (
+          <div style={{
+            background: '#ffffff', borderRadius: 20, border: '2px solid #b0cbaf',
+            padding: '24px 16px', textAlign: 'center', color: '#0f3825'
+          }}>
+            <Target size={32} color="#16653e" style={{ margin: '0 auto 8px' }} />
+            <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
+              {sortBy === 'streak' ? 'No Active Streaks Yet Today!' : 'No XP Scores Earned Yet!'}
+            </h3>
+            <p style={{ fontSize: '0.82rem', color: '#4e7361', marginTop: 4, fontWeight: 500 }}>
+              {sortBy === 'streak'
+                ? 'Play any game today to ignite your streak and claim the #1 spot!'
+                : 'Complete a challenge to earn your first XP and take the Lead!'}
+            </p>
+            <button
+              onClick={() => navigate('/')}
+              style={{
+                marginTop: 12, background: '#16653e', color: '#ffffff',
+                fontWeight: 800, fontSize: '0.85rem', padding: '8px 20px',
+                borderRadius: 14, border: 'none', boxShadow: '0 3px 0 #0e4329',
+                cursor: 'pointer'
+              }}
+            >
+              Start Playing →
+            </button>
+          </div>
         ) : (
-          (leaders.length > 3 ? restLeaders : leaders).map((item, idx) => {
-            const actualRank = leaders.length > 3 ? idx + 4 : idx + 1;
+          (top20Leaders.length >= 3 ? restLeaders : top20Leaders).map((item, idx) => {
+            const actualRank = top20Leaders.length >= 3 ? idx + 4 : idx + 1;
             const isMe = item.id === user?.id;
 
             return (
@@ -244,22 +327,73 @@ export default function Leaderboard() {
             );
           })
         )}
+
+        {/* Open Spots Invitation Tile if Top 20 is not full */}
+        {top20Leaders.length > 0 && top20Leaders.length < 20 && (
+          <div style={{
+            background: 'rgba(225, 240, 226, 0.6)',
+            borderRadius: 16, border: '2px dashed #b0cbaf',
+            padding: '12px 16px', textAlign: 'center',
+            fontSize: '0.82rem', color: '#0f3825', fontWeight: 700
+          }}>
+            ⚡ Open spots in Top 20! Only {top20Leaders.length} {top20Leaders.length === 1 ? 'player has' : 'players have'} qualified today — complete a lesson to claim a spot!
+          </div>
+        )}
       </div>
 
-      {/* Pinned Bottom User Rank Bar */}
+      {/* Pinned Bottom User Rank & Target Goal Bar */}
       {user && (
-        <div className="leaderboard-user-rank-bar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{
-              background: '#ffffff', color: '#16653e', fontWeight: 900,
-              padding: '3px 8px', borderRadius: 8, fontSize: '0.8rem'
-            }}>
-              #{currentUserRank}
+        <div className="leaderboard-user-rank-bar" style={{ flexDirection: 'column', gap: 6, padding: '10px 14px' }}>
+          {/* Header Row: Rank Badge + Your Current Score */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{
+                background: isUserInTop20 ? '#ffffff' : '#f57f17',
+                color: isUserInTop20 ? '#16653e' : '#ffffff',
+                fontWeight: 900,
+                padding: '3px 10px', borderRadius: 8, fontSize: '0.8rem'
+              }}>
+                {currentUserRankDisplay}
+              </div>
+              <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>Your Rank</div>
             </div>
-            <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>Your Rank</div>
+
+            <div style={{ fontWeight: 900, fontSize: '0.88rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: 4 }}>
+              {sortBy === 'xp' ? `${xp} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {streak}</>}
+            </div>
           </div>
-          <div style={{ fontWeight: 900, fontSize: '0.9rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: 4 }}>
-            {sortBy === 'xp' ? `${xp} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {streak}</>}
+
+          {/* Motivational Target Message Row */}
+          <div style={{
+            background: 'rgba(0,0,0,0.18)',
+            borderRadius: 12,
+            padding: '6px 10px',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 8,
+            fontSize: '0.74rem',
+            fontWeight: 700,
+            color: '#e1f0e2'
+          }}>
+            <span style={{ flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {getTargetMessage()}
+            </span>
+            {!isUserQualified && (
+              <button
+                onClick={() => navigate('/')}
+                style={{
+                  background: '#ffffff', color: '#16653e',
+                  fontWeight: 900, fontSize: '0.72rem',
+                  padding: '4px 10px', borderRadius: 10,
+                  border: 'none', cursor: 'pointer', flexShrink: 0,
+                  display: 'flex', alignItems: 'center', gap: 3
+                }}
+              >
+                Play <ArrowRight size={11} />
+              </button>
+            )}
           </div>
         </div>
       )}

@@ -56,6 +56,16 @@
 - **XP Progress Bar**: Displays `(Total XP % 100) / 100` progress to next level.
 - **Level Badge**: Gold Star pill (`#f57f17`).
 
+### Leaderboard & Ranking System
+- **Qualification Rules**:
+  - **Streak Tab**: Only learners with active daily streaks (`effectiveStreak > 0`) qualify to appear on the Streak Leaderboard. Zero-streak and inactive learners are filtered out.
+  - **XP Tab**: Only learners with `XP > 0` qualify to compete.
+- **Top 20 Hall of Fame**: Main leaderboard is strictly capped at the **Top 20** learners (Top 3 on Gold/Silver/Bronze podium + Ranks 4–20 in list).
+- **Target Progression Engine**:
+  - Pinned rank status bar dynamically calculates progress needed to break into the Top 20 or overtake the player directly ahead.
+  - Displays actionable call-to-action shortcuts (*"Play Now →"*) for unranked/unqualified players.
+  - Renders open spots invitation card when fewer than 20 learners qualify.
+
 ### Title Badges
 - **Badge Hierarchy**: Dynamic title pills awarded based on level thresholds and module completions (e.g., Novice Explorer, Grandmaster Learner).
 
