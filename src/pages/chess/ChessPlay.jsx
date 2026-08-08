@@ -579,31 +579,16 @@ export default function ChessPlay() {
           borderRadius: 16,
           border: '2px solid #0f3825',
           boxShadow: '0 4px 0 #092c1d',
-          padding: '10px 16px',
+          padding: '10px 18px',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          position: 'relative',
-          overflow: 'hidden'
+          alignItems: 'center'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, zIndex: 1 }}>
-            <Bot size={22} color="#ffd54f" />
-            <h1 style={{
-              margin: 0, color: '#ffffff', fontSize: '1.25rem',
-              fontFamily: 'var(--font-heading)', fontWeight: 900
-            }}>
-              Play vs AI
-            </h1>
-          </div>
-
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.15)',
-            padding: '4px 10px', borderRadius: 10,
-            color: '#ffffff', fontWeight: 800, fontSize: '0.75rem',
-            display: 'flex', alignItems: 'center', gap: 5, zIndex: 1
+          <h1 style={{
+            margin: 0, color: '#ffffff', fontSize: '1.25rem',
+            fontFamily: 'var(--font-heading)', fontWeight: 900
           }}>
-            <Sparkles size={13} color="#ffd54f" /> AI Mode
-          </div>
+            Play vs AI
+          </h1>
         </div>
       </div>
 
