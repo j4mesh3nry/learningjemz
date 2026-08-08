@@ -573,21 +573,15 @@ export default function IlluminateSystem() {
                       border: '1.5px solid #38bdf8',
                       boxShadow: '0 2px 0 #0369a1',
                       borderRadius: 12,
-                      padding: '9px 12px',
+                      padding: '10px 14px',
                       color: '#ffffff',
                       fontWeight: 800,
-                      fontSize: '0.8rem',
+                      fontSize: '0.85rem',
                       cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      textAlign: 'left'
+                      textAlign: 'center'
                     }}
                   >
-                    <span style={{ fontSize: '1.1rem' }}>🔤</span>
-                    <div style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {getNextLetterInfo().label}
-                    </div>
+                    Reveal Letter
                   </button>
 
                   <button
@@ -598,21 +592,15 @@ export default function IlluminateSystem() {
                       border: '1.5px solid #fbbf24',
                       boxShadow: '0 2px 0 #78350f',
                       borderRadius: 12,
-                      padding: '9px 12px',
+                      padding: '10px 14px',
                       color: '#ffffff',
                       fontWeight: 800,
-                      fontSize: '0.8rem',
+                      fontSize: '0.85rem',
                       cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      textAlign: 'left'
+                      textAlign: 'center'
                     }}
                   >
-                    <span style={{ fontSize: '1.1rem' }}>🧠</span>
-                    <div style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      Mnemonic Sentence Line
-                    </div>
+                    Mnemonic
                   </button>
                 </div>
               ) : (
