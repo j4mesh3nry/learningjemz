@@ -83,8 +83,21 @@
 - **AI Engine**: Web Worker `Stockfish 10` with automatic local JavaScript fallback on worker restrictions.
 
 ### 🚀 Space Module (`/space`)
-- **Components**: `SpaceHome.tsx`, `IlluminateSystem.jsx`, `space.css`.
-- **Game Modes**: 3D Planet Explorer (Three.js), Solar System Illuminate size-ordering challenge.
+- **Components**: `SpaceHome.tsx`, `IlluminateSystem.jsx`, `SolarSystem3D.jsx`, `space-objects.js`, `space.css`.
+- **Game Modes**:
+  - **3D Solar System Visualizer**: Interactive Three.js model of planets and orbits.
+  - **Illuminate the System Challenge**: Size-ordering spelling puzzle covering up to 35 solar objects (Sun → Salacia).
+    - **Difficulty Tiers**:
+      - **Easy**: Top 8 largest objects (Sun → Mars), 3 Lives, 5 XP reward.
+      - **Medium**: Top 15 largest objects (Sun → Europa), 4 Lives, 10 XP reward.
+      - **Hard**: All 35 objects (Sun → Salacia), 5 Lives, 20 XP reward (+10 XP bonus for perfect zero-hint completion).
+    - **Dynamic Interactive Speech Bubble Hint Engine**:
+      - Positioned directly below the top `Hint (N)` button with an upward pointer tile (`#161936` cosmic dark card, `#2d3264` border).
+      - **Reveal Letter Clue**: Displays the starting or next letter inside the bubble (e.g. `Letter: "S"`, `Letters: "SU"`) without force-filling the input field, encouraging active typing.
+      - **Mnemonic Sentence Line**: Displays progressive mnemonic sentence line mapped across all 35 objects without spoiling future unrevealed objects.
+      - **Per-Object Clue Locking & Anti-Abuse**: Clues unlocked on an object can be re-viewed for free; learners can spend additional hints from their 3-hint pool to unlock both letter and mnemonic clues on a single object.
+    - **Custom Touch Keyboard System**: Compact 4-row virtual keyboard (`48px` key height, space theme styling) tailored for touch interaction without soft-keyboard overlap.
+    - **Personal Best Records**: Tracks and persists top completion times per difficulty tier in Supabase (`illuminate_stats`) and local storage.
 
 ### 🗺️ Geography Module (`/geo`)
 - **Components**: `GeoHome.tsx`, `MapExplorer.jsx`, `ProvinceQuiz.jsx`, `geo.css`.
