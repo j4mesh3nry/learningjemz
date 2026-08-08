@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy } from 'lucide-react';
+import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy, ArrowRight } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE, getMnemonicUpToIndex } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -287,7 +287,7 @@ export default function IlluminateSystem() {
 
   if (!level) {
     return (
-      <div className="space-module-page">
+      <div className="space-module-page ss-dark-theme">
         {/* Navigation Header */}
         <div className="space-nav-header" style={{ marginBottom: 16 }}>
           <div className="space-header-left">
@@ -296,16 +296,16 @@ export default function IlluminateSystem() {
               title="Back"
               aria-label="Back"
               style={{
-                background: '#ffffff',
-                border: '2px solid #b0cbaf',
-                boxShadow: '0 3px 0 #b0cbaf',
+                background: '#161936',
+                border: '2px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 3px 0 #0b0d1e',
                 borderRadius: 14,
                 width: 40,
                 height: 40,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#16653e',
+                color: '#ffffff',
                 cursor: 'pointer',
                 flexShrink: 0
               }}
@@ -321,7 +321,7 @@ export default function IlluminateSystem() {
               }}>
                 💡
               </div>
-              <h1 className="space-page-title" style={{ margin: 0, color: '#0f3825', fontSize: '1.35rem', fontWeight: 900 }}>
+              <h1 className="space-page-title" style={{ margin: 0, color: '#ffffff', fontSize: '1.35rem', fontWeight: 900 }}>
                 Illuminate the System
               </h1>
             </div>
@@ -329,9 +329,9 @@ export default function IlluminateSystem() {
         </div>
 
         {/* Section Heading & Subtitle */}
-        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', color: '#0f3825', fontWeight: 800, marginTop: 12, marginBottom: 4 }}>Select Difficulty</h2>
-        <p style={{ color: '#4e7361', fontSize: '0.88rem', lineHeight: '1.4', margin: '0 0 16px', fontWeight: 600 }}>
-          Type the names of the objects in order from <strong>LARGEST</strong> to <strong>SMALLEST</strong>.
+        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', color: '#ffffff', fontWeight: 800, marginTop: 12, marginBottom: 4 }}>Select Difficulty</h2>
+        <p style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '0.88rem', lineHeight: '1.4', margin: '0 0 16px', fontWeight: 500 }}>
+          Type the names of the objects in order from <strong style={{ color: '#00e5ff' }}>LARGEST</strong> to <strong style={{ color: '#ffb74d' }}>SMALLEST</strong>.
         </p>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -342,9 +342,9 @@ export default function IlluminateSystem() {
               onClick={() => startGame(key)}
               style={{
                 display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                color: '#fff', background: '#16653e', borderRadius: 16,
+                color: '#fff', background: '#161936', borderRadius: 16,
                 padding: '12px 16px', position: 'relative', overflow: 'hidden',
-                boxShadow: '0 4px 0 #0e4329',
+                boxShadow: '0 4px 0 #0b0d1e',
                 border: '2px solid rgba(255,255,255,0.2)',
                 cursor: 'pointer'
               }}
@@ -360,14 +360,27 @@ export default function IlluminateSystem() {
                 </div>
                 <p style={{ margin: '2px 0 0', fontSize: '0.82rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2 }}>{diff.label}</p>
               </div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>→</div>
+
+              {/* Sleek Right Arrow Badge */}
+              <div style={{
+                position: 'relative', zIndex: 1,
+                width: 32, height: 32,
+                borderRadius: 10,
+                background: 'rgba(255, 255, 255, 0.16)',
+                border: '1.5px solid rgba(255, 255, 255, 0.25)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+              }}>
+                <ArrowRight size={16} strokeWidth={2.5} color="#ffffff" />
+              </div>
             </div>
           ))}
         </div>
 
         {/* System Records & Personal Bests Box */}
-        <div style={{ marginTop: 24, padding: 16, background: '#ffffff', borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: '1rem', color: '#0f3825', marginBottom: 12 }}>
+        <div style={{ marginTop: 24, padding: 16, background: '#161936', borderRadius: 18, border: '2px solid rgba(255, 255, 255, 0.2)', boxShadow: '0 4px 0 #0b0d1e' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: '1rem', color: '#ffffff', marginBottom: 12 }}>
             <Trophy size={20} color="#d97706" /> Best Time Records
           </div>
 
@@ -378,11 +391,11 @@ export default function IlluminateSystem() {
                 <div 
                   key={key} 
                   style={{
-                    background: '#e1f0e2',
+                    background: 'rgba(255, 255, 255, 0.08)',
                     borderRadius: 12,
                     padding: '10px 8px',
                     textAlign: 'center',
-                    border: '1.5px solid #b0cbaf',
+                    border: '1.5px solid rgba(255, 255, 255, 0.15)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -390,11 +403,11 @@ export default function IlluminateSystem() {
                     gap: 4
                   }}
                 >
-                  <div style={{ fontSize: '0.8rem', color: '#0f3825', fontWeight: 800 }}>
+                  <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.8)', fontWeight: 800 }}>
                     {diff.name}
                   </div>
-                  <div style={{ fontSize: '1.05rem', color: pbTime !== undefined ? '#16653e' : '#4e7361', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 3 }}>
-                    <Zap size={14} color={pbTime !== undefined ? '#ffb300' : '#adb5bd'} />
+                  <div style={{ fontSize: '1.05rem', color: pbTime !== undefined ? '#00e5ff' : 'rgba(255, 255, 255, 0.4)', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 3 }}>
+                    <Zap size={14} color={pbTime !== undefined ? '#ffb300' : '#888'} />
                     {pbTime !== undefined ? formatTime(pbTime) : '--:--'}
                   </div>
                 </div>
@@ -408,7 +421,7 @@ export default function IlluminateSystem() {
 
   return (
     <div className="space-module-page ss-dark-theme illum-game-container">
-      {/* Header Container with Separated Back Button & Long Green Banner */}
+      {/* Header Container with Separated Back Button & Space Title Banner */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, flexShrink: 0 }}>
         {/* Separated Back Button */}
         <button 
@@ -416,16 +429,16 @@ export default function IlluminateSystem() {
           title="Back to Objects by Size"
           aria-label="Back to Objects by Size"
           style={{
-            background: '#ffffff',
-            border: '2px solid #b0cbaf',
-            boxShadow: '0 3px 0 #b0cbaf',
+            background: '#161936',
+            border: '2px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 3px 0 #0b0d1e',
             borderRadius: 14,
             width: 44,
             height: 44,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#16653e',
+            color: '#ffffff',
             cursor: 'pointer',
             flexShrink: 0
           }}
@@ -433,13 +446,13 @@ export default function IlluminateSystem() {
           <ArrowLeft size={22} strokeWidth={2.5} />
         </button>
 
-        {/* Long Green Banner Rectangle */}
+        {/* Space Title Banner Rectangle */}
         <div style={{
           flex: 1,
-          background: 'linear-gradient(135deg, #16653e 0%, #0d462b 100%)',
+          background: 'linear-gradient(135deg, #161936 0%, #0b0d1e 100%)',
           borderRadius: 16,
-          border: '2px solid #0f3825',
-          boxShadow: '0 4px 0 #092c1d',
+          border: '2px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 4px 0 #0b0d1e',
           padding: '10px 18px',
           display: 'flex',
           alignItems: 'center'
@@ -478,39 +491,39 @@ export default function IlluminateSystem() {
 
         {/* Hint Button & Interactive Speech Bubble Container */}
         <div style={{ position: 'relative' }}>
-          {/* Interactive Speech Bubble attached directly above Hint button */}
+          {/* Interactive Speech Bubble attached directly BELOW Hint button */}
           {showHintBubble && (
             <div style={{
               position: 'absolute',
-              bottom: 'calc(100% + 12px)',
+              top: 'calc(100% + 10px)',
               right: 0,
               background: '#161936',
-              border: '2px solid #2e7d32',
-              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6)',
-              borderRadius: 18,
-              padding: '14px 16px',
+              border: '2px solid #2d3264',
+              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.65)',
+              borderRadius: 16,
+              padding: '12px 14px',
               color: '#ffffff',
               zIndex: 100,
-              width: 270,
-              animation: 'slideUp 0.15s ease-out'
+              width: 230,
+              animation: 'fadeIn 0.15s ease-out'
             }}>
-              {/* Pointer Arrow pointing down to Hint button */}
+              {/* Pointer Arrow pointing UP to Hint button */}
               <div style={{
                 position: 'absolute',
-                bottom: -7,
-                right: 24,
-                width: 12,
-                height: 12,
+                top: -6,
+                right: 22,
+                width: 10,
+                height: 10,
                 background: '#161936',
-                borderRight: '2px solid #2e7d32',
-                borderBottom: '2px solid #2e7d32',
+                borderTop: '2px solid #2d3264',
+                borderLeft: '2px solid #2d3264',
                 transform: 'rotate(45deg)'
               }} />
 
               {/* Bubble Header */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.85rem', fontWeight: 900, color: '#ffb74d' }}>
-                  <Lightbulb size={15} color="#ffb74d" />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.8rem', fontWeight: 900, color: '#ffb74d' }}>
+                  <Lightbulb size={14} color="#ffb74d" />
                   <span>Choose Clue ({hintsLeft} left)</span>
                 </div>
                 <button
@@ -521,8 +534,8 @@ export default function IlluminateSystem() {
                     border: 'none',
                     borderRadius: 6,
                     color: '#ffffff',
-                    width: 22,
-                    height: 22,
+                    width: 20,
+                    height: 20,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
