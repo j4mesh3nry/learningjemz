@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy, ArrowRight, X, HelpCircle, Info } from 'lucide-react';
+import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy, ArrowRight, X, HelpCircle, Info, Sun, Globe, Moon, Sparkles, Ruler, Compass, Delete } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE, getMnemonicUpToIndex } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -13,7 +13,25 @@ const DIFFICULTIES = {
   hard: { name: 'Hard', count: 35, label: 'All 35 (Sun → Salacia)', xp: 20, maxLives: 5 }
 };
 
-function SafeObjectImage({ src, alt, fallbackEmoji, className }) {
+function getTypeIcon(iconType, size = 16) {
+  switch (iconType) {
+    case 'star':
+      return <Sun size={size} color="#ffb74d" />;
+    case 'gas-giant':
+    case 'ice-giant':
+      return <Globe size={size} color="#38bdf8" />;
+    case 'terrestrial':
+      return <Globe size={size} color="#4ade80" />;
+    case 'moon':
+      return <Moon size={size} color="#e2e8f0" />;
+    case 'dwarf':
+      return <Sparkles size={size} color="#f43f5e" />;
+    default:
+      return <Globe size={size} color="#38bdf8" />;
+  }
+}
+
+function SafeObjectImage({ src, alt, iconType, className, size = 26 }) {
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
@@ -21,7 +39,7 @@ function SafeObjectImage({ src, alt, fallbackEmoji, className }) {
   }, [src]);
 
   if (!src || imgError) {
-    return <span className="illum-fallback">{fallbackEmoji || '🪐'}</span>;
+    return <span className="illum-fallback-icon">{getTypeIcon(iconType, size)}</span>;
   }
 
   return (
@@ -321,7 +339,7 @@ export default function IlluminateSystem() {
                 background: '#161936', borderRadius: 10,
                 boxShadow: '0 2px 0 #0b0d1e'
               }}>
-                💡
+                <Lightbulb size={20} color="#ffb74d" />
               </div>
               <h1 className="space-page-title" style={{ margin: 0, color: '#ffffff', fontSize: '1.35rem', fontWeight: 900 }}>
                 Illuminate the System
@@ -671,8 +689,13 @@ export default function IlluminateSystem() {
                 key={obj.id} 
                 id={`planet-${i}`}
                 className={`illum-circle-wrapper ${isCurrent ? 'illum-current' : ''} ${isRevealed ? 'revealed-item' : 'unrevealed-item'}`}
-                onClick={() => setSelectedCard({ obj, isRevealed, index: i })}
-                title={isRevealed ? `Tap for mini facts about ${obj.name}` : `Tap for astronomical classification clue`}
+                onClick={() => {
+                  if (isRevealed) {
+                    setSelectedCard({ obj, index: i });
+                  }
+                }}
+                style={{ cursor: isRevealed ? 'pointer' : 'default' }}
+                title={isRevealed ? `Tap for mini facts about ${obj.name}` : ''}
               >
                 <div 
                   className={`illum-circle ${isRevealed ? glowClass : 'illum-shadow'} ${isRevealed ? 'revealed' : ''}`}
@@ -682,18 +705,16 @@ export default function IlluminateSystem() {
                     <SafeObjectImage 
                       src={obj.img} 
                       alt={obj.name} 
-                      fallbackEmoji={obj.fallback} 
+                      iconType={obj.iconType} 
                       className="illum-img" 
                     />
-                  ) : (
-                    <span className="illum-clue-icon-overlay">🔍</span>
-                  )}
+                  ) : null}
                 </div>
                 {isRevealed ? (
                   <div className="illum-name">{obj.name.split(' ')[0]}</div>
                 ) : (
                   <div className="illum-unrevealed-label">
-                    {isCurrent ? 'Tap Clue' : `#${i + 1}`}
+                    {`#${i + 1}`}
                   </div>
                 )}
               </div>
@@ -735,7 +756,9 @@ export default function IlluminateSystem() {
               {['Z','X','C','V','B','N','M'].map(k => (
                 <button key={k} type="button" className="illum-key" onClick={() => handleVirtualKey(k)}>{k}</button>
               ))}
-              <button type="button" className="illum-key illum-key-backspace" onClick={handleVirtualBackspace}>⌫</button>
+              <button type="button" className="illum-key illum-key-backspace" onClick={handleVirtualBackspace}>
+                <Delete size={20} />
+              </button>
             </div>
             <div className="illum-keyboard-row">
               <button type="button" className="illum-key illum-key-space" onClick={() => handleVirtualKey(' ')}>SPACE</button>
@@ -745,7 +768,7 @@ export default function IlluminateSystem() {
         </>
       )}
 
-      {/* Interactive Popover Modal (Subtle Context Clue Card & Mini Fact Card) */}
+      {/* Interactive Mini Fact Card (Revealed Object Only) */}
       {selectedCard && (
         <div className="illum-popover-overlay" onClick={() => setSelectedCard(null)}>
           <div className="illum-popover-card" onClick={(e) => e.stopPropagation()}>
@@ -758,69 +781,46 @@ export default function IlluminateSystem() {
               <X size={18} />
             </button>
 
-            {!selectedCard.isRevealed ? (
-              /* Subtle Context Clue Card (Unrevealed Object) */
-              <div className="illum-clue-card-body">
-                <div className="illum-card-header-badge">
-                  <span className="illum-badge-label">Astronomical Type Clue</span>
-                  <span className="illum-rank-tag">Size Rank #{selectedCard.index + 1}</span>
+            <div className="illum-fact-card-body">
+              <div className="illum-fact-header">
+                <div className="illum-fact-avatar">
+                  <SafeObjectImage 
+                    src={selectedCard.obj.img} 
+                    alt={selectedCard.obj.name} 
+                    iconType={selectedCard.obj.iconType} 
+                    size={30}
+                  />
                 </div>
-
-                <div className="illum-type-hero">
-                  <span className="illum-type-title">
-                    {selectedCard.obj.astronomicalType || selectedCard.obj.type}
+                <div className="illum-fact-title-box">
+                  <h3 className="illum-fact-name">{selectedCard.obj.name}</h3>
+                  <span className="illum-type-tag">
+                    {getTypeIcon(selectedCard.obj.iconType, 13)}
+                    <span>{selectedCard.obj.astronomicalType || selectedCard.obj.type}</span>
                   </span>
                 </div>
+              </div>
 
-                <div className="illum-clue-description-box">
-                  <p className="illum-clue-text">
-                    {selectedCard.obj.typeDescription || 'A celestial body in our solar system.'}
-                  </p>
+              <div className="illum-fact-details-grid">
+                <div className="illum-fact-detail-item">
+                  <span className="illum-fact-detail-label">
+                    <Ruler size={14} color="#00e5ff" /> Diameter:
+                  </span>
+                  <span className="illum-fact-detail-val">{selectedCard.obj.diameter || 'Unknown'}</span>
                 </div>
-
-                <div className="illum-card-footer-note">
-                  <span>💡 Context clue to help identify this object without spoiling its name!</span>
+                <div className="illum-fact-detail-item">
+                  <span className="illum-fact-detail-label">
+                    <Compass size={14} color="#00e5ff" /> Position / Orbit:
+                  </span>
+                  <span className="illum-fact-detail-val">{selectedCard.obj.orbitalOrder || 'Solar System'}</span>
+                </div>
+                <div className="illum-fact-detail-item illum-fact-quote">
+                  <span className="illum-fact-detail-label">
+                    <Lightbulb size={14} color="#ffb74d" /> Fun Fact:
+                  </span>
+                  <p className="illum-fact-quote-text">{selectedCard.obj.funFact || 'An intriguing body in our solar system.'}</p>
                 </div>
               </div>
-            ) : (
-              /* Mini Fact Card (Revealed Object) */
-              <div className="illum-fact-card-body">
-                <div className="illum-fact-header">
-                  <div className="illum-fact-avatar">
-                    <SafeObjectImage 
-                      src={selectedCard.obj.img} 
-                      alt={selectedCard.obj.name} 
-                      fallbackEmoji={selectedCard.obj.fallback} 
-                    />
-                  </div>
-                  <div className="illum-fact-title-box">
-                    <h3 className="illum-fact-name">{selectedCard.obj.name}</h3>
-                    <span className="illum-type-tag">
-                      {selectedCard.obj.astronomicalType || selectedCard.obj.type}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="illum-fact-details-grid">
-                  <div className="illum-fact-detail-item">
-                    <span className="illum-fact-detail-label">📏 Diameter:</span>
-                    <span className="illum-fact-detail-val">{selectedCard.obj.diameter || 'Unknown'}</span>
-                  </div>
-                  <div className="illum-fact-detail-item">
-                    <span className="illum-fact-detail-label">🌌 Position / Orbit:</span>
-                    <span className="illum-fact-detail-val">{selectedCard.obj.orbitalOrder || 'Solar System'}</span>
-                  </div>
-                  <div className="illum-fact-detail-item illum-fact-quote">
-                    <span className="illum-fact-detail-label">💡 Fun Fact:</span>
-                    <p className="illum-fact-quote-text">{selectedCard.obj.funFact || 'An intriguing body in our solar system.'}</p>
-                  </div>
-                </div>
-
-                <div className="illum-card-footer-note">
-                  <span>✨ Interactive Solar System Reference Guide</span>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       )}

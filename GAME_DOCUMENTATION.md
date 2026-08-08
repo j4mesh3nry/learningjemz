@@ -96,8 +96,8 @@
       - **Reveal Letter Clue**: Displays the starting or next letter inside the bubble (e.g. `Letter: "S"`, `Letters: "SU"`) without force-filling the input field, encouraging active typing.
       - **Mnemonic Sentence Line**: Displays progressive mnemonic sentence line mapped across all 35 objects without spoiling future unrevealed objects.
       - **Per-Object Clue Locking & Anti-Abuse**: Clues unlocked on an object can be re-viewed for free; learners can spend additional hints from their 3-hint pool to unlock both letter and mnemonic clues on a single object.
-    - **Subtle Context Clue Cards (Unrevealed Objects)**: Tapping any unrevealed/target object circle opens a sleek glassmorphism popover card displaying its astronomical classification (⭐ Star, 🪐 Gas Giant, 🧊 Ice Giant, 🌑 Terrestrial Planet, 🌙 Moon, or ☄️ Dwarf Planet) and an educational category definition, providing subtle hints without spoiling the name.
-    - **Interactive Mini Fact Cards (Revealed Objects)**: Tapping any illuminated object circle opens an interactive reference card showing its texture preview, astronomical type, physical diameter (km), orbital order / system position, and 1-sentence fun fact.
+    - **Interactive Mini Fact Cards (Revealed Objects)**: Tapping any illuminated object circle opens an interactive reference card showing its texture preview, astronomical classification, physical diameter (km), orbital position / host body, and 1-sentence fun fact.
+    - **Iconography Standard**: Strictly NO using emojis in UI or data. All icons are cleanly rendered via Lucide React components (`Sun`, `Globe`, `Moon`, `Sparkles`, `Ruler`, `Compass`, `Lightbulb`).
     - **Custom Touch Keyboard System**: Compact 4-row virtual keyboard (`48px` key height, space theme styling) tailored for touch interaction without soft-keyboard overlap.
     - **Personal Best Records**: Tracks and persists top completion times per difficulty tier in Supabase (`illuminate_stats`) and local storage.
 
