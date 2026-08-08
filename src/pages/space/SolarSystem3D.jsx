@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Html, useTexture, Preload, useProgress } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
