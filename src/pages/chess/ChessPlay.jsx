@@ -547,78 +547,71 @@ export default function ChessPlay() {
 
   return (
     <div className="chess-module-page">
-      {/* Dynamic Long Green Header Banner */}
-      <div style={{
-        background: 'linear-gradient(135deg, #16653e 0%, #0d462b 100%)',
-        borderRadius: 20,
-        border: '2.5px solid #0f3825',
-        boxShadow: '0 5px 0 #092c1d',
-        padding: '16px 20px',
-        marginBottom: 20,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        {/* Subtle Background Glow Accent */}
-        <div style={{
-          position: 'absolute', right: -20, top: -20, width: 120, height: 120,
-          background: 'rgba(255, 255, 255, 0.08)', borderRadius: '50%', pointerEvents: 'none'
-        }} />
+      {/* Header Container with Separated Back Button & Long Green Banner */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+        {/* Separated Back Button */}
+        <button 
+          onClick={handleBackClick} 
+          title="Back"
+          aria-label="Back"
+          style={{
+            background: '#ffffff',
+            border: '2px solid #b0cbaf',
+            boxShadow: '0 3px 0 #b0cbaf',
+            borderRadius: 14,
+            width: 44,
+            height: 44,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#16653e',
+            cursor: 'pointer',
+            flexShrink: 0
+          }}
+        >
+          <ArrowLeft size={22} strokeWidth={2.5} />
+        </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, zIndex: 1 }}>
-          <button 
-            onClick={handleBackClick} 
-            title="Back"
-            aria-label="Back"
-            style={{
-              background: '#ffffff',
-              border: '2px solid #b0cbaf',
-              boxShadow: '0 3px 0 #b0cbaf',
-              borderRadius: 14,
-              width: 42,
-              height: 42,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#16653e',
-              cursor: 'pointer',
-              flexShrink: 0
-            }}
-          >
-            <ArrowLeft size={22} strokeWidth={2.5} />
-          </button>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Bot size={22} color="#ffd54f" />
-              <h1 style={{
-                margin: 0, color: '#ffffff', fontSize: '1.35rem',
-                fontFamily: 'var(--font-heading)', fontWeight: 900
-              }}>
-                Play with Bot
-              </h1>
-            </div>
-            {!difficulty && (
-              <div style={{ fontSize: '0.82rem', color: '#c8e6c9', fontWeight: 600, marginTop: 2 }}>
-                Choose an opponent difficulty below
-              </div>
-            )}
-          </div>
-        </div>
-
+        {/* Long Green Banner Rectangle */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.15)',
-          padding: '6px 12px', borderRadius: 12,
-          color: '#ffffff', fontWeight: 800, fontSize: '0.78rem',
-          display: 'flex', alignItems: 'center', gap: 6, zIndex: 1
+          flex: 1,
+          background: 'linear-gradient(135deg, #16653e 0%, #0d462b 100%)',
+          borderRadius: 16,
+          border: '2px solid #0f3825',
+          boxShadow: '0 4px 0 #092c1d',
+          padding: '10px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
-          <Sparkles size={14} color="#ffd54f" /> AI Mode
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, zIndex: 1 }}>
+            <Bot size={22} color="#ffd54f" />
+            <h1 style={{
+              margin: 0, color: '#ffffff', fontSize: '1.25rem',
+              fontFamily: 'var(--font-heading)', fontWeight: 900
+            }}>
+              Play vs AI
+            </h1>
+          </div>
+
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.15)',
+            padding: '4px 10px', borderRadius: 10,
+            color: '#ffffff', fontWeight: 800, fontSize: '0.75rem',
+            display: 'flex', alignItems: 'center', gap: 5, zIndex: 1
+          }}>
+            <Sparkles size={13} color="#ffd54f" /> AI Mode
+          </div>
         </div>
       </div>
 
       {!difficulty ? (
         <div className="opponent-selection-screen">
+          <p style={{ margin: '0 0 16px 4px', fontSize: '0.9rem', color: '#4e7361', fontWeight: 600 }}>
+            Choose an opponent difficulty below
+          </p>
           <div className="opponent-cards">
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-card-header">
