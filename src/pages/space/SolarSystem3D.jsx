@@ -1,10 +1,11 @@
 import React, { useState, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Stars, Html, useTexture, Preload } from '@react-three/drei';
+import { OrbitControls, Stars, Html, useTexture, Preload, useProgress } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, X, Info } from 'lucide-react';
 import * as THREE from 'three';
 import { planets, sunData } from '../../data/space-data.js';
+import JemzLoader from '../../components/JemzLoader';
 import './space.css';
 
 /* Texture paths (served from public/) */
@@ -328,6 +329,32 @@ function InfoPanel({ planet, onClose }) {
   );
 }
 
+/* ─── 3D Loading Overlay ─── */
+function SolarLoadingOverlay() {
+  const { active, progress } = useProgress();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!active || progress >= 100) {
+      const timer = setTimeout(() => setLoading(false), 400);
+      return () => clearTimeout(timer);
+    } else {
+      setLoading(true);
+    }
+  }, [active, progress]);
+
+  if (!loading) return null;
+
+  return (
+    <JemzLoader
+      message="Loading 3D Solar System..."
+      subtext={`Downloading 2K planet textures & orbits... ${Math.round(progress)}%`}
+      darkTheme={true}
+      fullScreen={true}
+    />
+  );
+}
+
 /* ─── Main Component ─── */
 export default function SolarSystem3D() {
   const [selected, setSelected] = useState(null);
@@ -341,6 +368,7 @@ export default function SolarSystem3D() {
       background: 'radial-gradient(ellipse at 50% 50%, #0a0a2e 0%, #050510 60%, #020208 100%)',
       overflow: 'hidden',
     }}>
+      <SolarLoadingOverlay />
       {/* Nav */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10,
