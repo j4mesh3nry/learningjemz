@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Header } from '../components/Header';
-import { Lock } from 'lucide-react';
+import { Lock, ArrowRight } from 'lucide-react';
 import '../index.css';
 
 const modules = [
@@ -123,11 +123,19 @@ export default function Home() {
               }}>{m.subtitle}</p>
             </div>
 
-            {/* Clean Right Arrow */}
+            {/* Sleek Right Arrow Badge */}
             <div style={{
-              fontSize: '1.1rem', opacity: 0.85,
-              position: 'relative', zIndex: 1, fontWeight: 'bold'
-            }}>→</div>
+              position: 'relative', zIndex: 1,
+              width: 32, height: 32,
+              borderRadius: 10,
+              background: 'rgba(255, 255, 255, 0.16)',
+              border: '1.5px solid rgba(255, 255, 255, 0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+            }}>
+              <ArrowRight size={16} strokeWidth={2.5} color="#ffffff" />
+            </div>
           </Card>
         ))}
       </div>
