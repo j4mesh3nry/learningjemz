@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
 import { Trophy, Flame, Zap, Crown, ArrowRight, Target } from 'lucide-react';
 import { Header } from '../components/Header';
+import { JemzLoader } from '../components/JemzLoader';
 import '../index.css';
 
 const getEffectiveStreak = (item: any) => {
@@ -192,157 +193,162 @@ export default function Leaderboard() {
         </div>
       </div>
 
-      {/* Gamified Top 3 Podium */}
-      {top20Leaders.length >= 3 && (
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1.1fr 1fr', gap: 8,
-          alignItems: 'flex-end', marginBottom: 20, paddingTop: 12
-        }}>
-          {/* 2nd Place */}
-          <div style={{
-            background: '#ffffff',
-            borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
-            padding: '12px 8px', textAlign: 'center', position: 'relative'
-          }}>
-            <div style={{ fontSize: '1.4rem', marginTop: '-18px' }}>🥈</div>
-            <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top2?.avatar || '👤'}</div>
-            <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#0f3825', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {top2?.name || 'Player'}
-            </div>
-            <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#16653e', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-              {sortBy === 'xp' ? `${top2?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top2)}</>}
-            </div>
-          </div>
-
-          {/* 1st Place (Gold Center Crown) */}
-          <div style={{
-            background: '#fffdf0',
-            borderRadius: 20, border: '2.5px solid #f59e0b', boxShadow: '0 5px 0 #d97706',
-            padding: '16px 8px', textAlign: 'center', position: 'relative', transform: 'scale(1.05)', zIndex: 2
-          }}>
-            <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)' }}>
-              <Crown size={24} color="#f59e0b" fill="#fbbf24" />
-            </div>
-            <div style={{ fontSize: '2.2rem', margin: '6px 0 2px' }}>{top1?.avatar || '👑'}</div>
-            <div style={{ fontWeight: 900, fontSize: '0.92rem', color: '#78350f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {top1?.name || 'Champion'}
-            </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#d97706', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-              {sortBy === 'xp' ? `${top1?.xp || 0} XP` : <><Flame size={14} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top1)}</>}
-            </div>
-          </div>
-
-          {/* 3rd Place */}
-          <div style={{
-            background: '#ffffff',
-            borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
-            padding: '12px 8px', textAlign: 'center', position: 'relative'
-          }}>
-            <div style={{ fontSize: '1.4rem', marginTop: '-18px' }}>🥉</div>
-            <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top3?.avatar || '👤'}</div>
-            <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#4a2c1d', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {top3?.name || 'Player'}
-            </div>
-            <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#b45309', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-              {sortBy === 'xp' ? `${top3?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top3)}</>}
-            </div>
-          </div>
+      {/* Loading State or Leaderboard Content */}
+      {loading ? (
+        <div style={{ padding: '20px 0' }}>
+          <JemzLoader message="Loading Rankings..." subtext="Fetching Top 20 Learners..." fullScreen={false} />
         </div>
-      )}
-
-      {/* Leaderboard List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '30px', color: '#16653e', fontWeight: 700 }}>
-            Loading rankings...
-          </div>
-        ) : top20Leaders.length === 0 ? (
-          <div style={{
-            background: '#ffffff', borderRadius: 20, border: '2px solid #b0cbaf',
-            padding: '24px 16px', textAlign: 'center', color: '#0f3825'
-          }}>
-            <Target size={32} color="#16653e" style={{ margin: '0 auto 8px' }} />
-            <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
-              {sortBy === 'streak' ? 'No Active Streaks Yet Today!' : 'No XP Scores Earned Yet!'}
-            </h3>
-            <p style={{ fontSize: '0.82rem', color: '#4e7361', marginTop: 4, fontWeight: 500 }}>
-              {sortBy === 'streak'
-                ? 'Play any game today to ignite your streak and claim the #1 spot!'
-                : 'Complete a challenge to earn your first XP and take the Lead!'}
-            </p>
-            <button
-              onClick={() => navigate('/')}
-              style={{
-                marginTop: 12, background: '#16653e', color: '#ffffff',
-                fontWeight: 800, fontSize: '0.85rem', padding: '8px 20px',
-                borderRadius: 14, border: 'none', boxShadow: '0 3px 0 #0e4329',
-                cursor: 'pointer'
-              }}
-            >
-              Start Playing →
-            </button>
-          </div>
-        ) : (
-          (top20Leaders.length >= 3 ? restLeaders : top20Leaders).map((item, idx) => {
-            const actualRank = top20Leaders.length >= 3 ? idx + 4 : idx + 1;
-            const isMe = item.id === user?.id;
-
-            return (
-              <div
-                key={item.id || idx}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  background: isMe ? '#e1f0e2' : '#ffffff',
-                  border: isMe ? '2px solid #16653e' : '2px solid #b0cbaf',
-                  boxShadow: isMe ? '0 3px 0 #0e4329' : '0 3px 0 #b0cbaf',
-                  borderRadius: 16, padding: '12px 14px',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{
-                    width: 28, height: 28, borderRadius: 10,
-                    background: isMe ? '#16653e' : '#e1f0e2',
-                    color: isMe ? '#ffffff' : '#0f3825',
-                    fontWeight: 900, fontSize: '0.85rem',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}>
-                    {actualRank}
-                  </div>
-                  <div style={{ fontSize: '1.4rem' }}>{item.avatar || '👤'}</div>
-                  <div>
-                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f3825' }}>
-                      {item.name || 'Learner'} {isMe && <span style={{ color: '#16653e', fontSize: '0.75rem' }}>(You)</span>}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#4e7361', fontWeight: 600 }}>
-                      Level {item.level || 1}
-                    </div>
-                  </div>
+      ) : (
+        <>
+          {/* Gamified Top 3 Podium */}
+          {top20Leaders.length >= 3 && (
+            <div style={{
+              display: 'grid', gridTemplateColumns: '1fr 1.1fr 1fr', gap: 8,
+              alignItems: 'flex-end', marginBottom: 20, paddingTop: 12
+            }}>
+              {/* 2nd Place */}
+              <div style={{
+                background: '#ffffff',
+                borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+                padding: '12px 8px', textAlign: 'center', position: 'relative'
+              }}>
+                <div style={{ fontSize: '1.4rem', marginTop: '-18px' }}>🥈</div>
+                <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top2?.avatar || '👤'}</div>
+                <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#0f3825', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {top2?.name || 'Player'}
                 </div>
-
-                <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: '#16653e', display: 'flex', alignItems: 'center', gap: 4 }}>
-                  {sortBy === 'xp' ? `${item.xp || 0} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(item)}</>}
+                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#16653e', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                  {sortBy === 'xp' ? `${top2?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top2)}</>}
                 </div>
               </div>
-            );
-          })
-        )}
 
-        {/* Open Spots Invitation Tile if Top 20 is not full and user is not in Top 20 yet */}
-        {!isUserInTop20 && top20Leaders.length > 0 && top20Leaders.length < 20 && (
-          <div style={{
-            background: 'rgba(225, 240, 226, 0.6)',
-            borderRadius: 16, border: '2px dashed #b0cbaf',
-            padding: '12px 16px', textAlign: 'center',
-            fontSize: '0.82rem', color: '#0f3825', fontWeight: 700
-          }}>
-            ⚡ Open spots in Top 20! Only {top20Leaders.length} {top20Leaders.length === 1 ? 'player has' : 'players have'} qualified today — complete a lesson to claim a spot!
+              {/* 1st Place (Gold Center Crown) */}
+              <div style={{
+                background: '#fffdf0',
+                borderRadius: 20, border: '2.5px solid #f59e0b', boxShadow: '0 5px 0 #d97706',
+                padding: '16px 8px', textAlign: 'center', position: 'relative', transform: 'scale(1.05)', zIndex: 2
+              }}>
+                <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)' }}>
+                  <Crown size={24} color="#f59e0b" fill="#fbbf24" />
+                </div>
+                <div style={{ fontSize: '2.2rem', margin: '6px 0 2px' }}>{top1?.avatar || '👑'}</div>
+                <div style={{ fontWeight: 900, fontSize: '0.92rem', color: '#78350f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {top1?.name || 'Champion'}
+                </div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#d97706', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                  {sortBy === 'xp' ? `${top1?.xp || 0} XP` : <><Flame size={14} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top1)}</>}
+                </div>
+              </div>
+
+              {/* 3rd Place */}
+              <div style={{
+                background: '#ffffff',
+                borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+                padding: '12px 8px', textAlign: 'center', position: 'relative'
+              }}>
+                <div style={{ fontSize: '1.4rem', marginTop: '-18px' }}>🥉</div>
+                <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top3?.avatar || '👤'}</div>
+                <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#4a2c1d', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {top3?.name || 'Player'}
+                </div>
+                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#b45309', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                  {sortBy === 'xp' ? `${top3?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top3)}</>}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Leaderboard List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {top20Leaders.length === 0 ? (
+              <div style={{
+                background: '#ffffff', borderRadius: 20, border: '2px solid #b0cbaf',
+                padding: '24px 16px', textAlign: 'center', color: '#0f3825'
+              }}>
+                <Target size={32} color="#16653e" style={{ margin: '0 auto 8px' }} />
+                <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
+                  {sortBy === 'streak' ? 'No Active Streaks Yet Today!' : 'No XP Scores Earned Yet!'}
+                </h3>
+                <p style={{ fontSize: '0.82rem', color: '#4e7361', marginTop: 4, fontWeight: 500 }}>
+                  {sortBy === 'streak'
+                    ? 'Play any game today to ignite your streak and claim the #1 spot!'
+                    : 'Complete a challenge to earn your first XP and take the Lead!'}
+                </p>
+                <button
+                  onClick={() => navigate('/')}
+                  style={{
+                    marginTop: 12, background: '#16653e', color: '#ffffff',
+                    fontWeight: 800, fontSize: '0.85rem', padding: '8px 20px',
+                    borderRadius: 14, border: 'none', boxShadow: '0 3px 0 #0e4329',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Start Playing →
+                </button>
+              </div>
+            ) : (
+              (top20Leaders.length >= 3 ? restLeaders : top20Leaders).map((item, idx) => {
+                const actualRank = top20Leaders.length >= 3 ? idx + 4 : idx + 1;
+                const isMe = item.id === user?.id;
+
+                return (
+                  <div
+                    key={item.id || idx}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      background: isMe ? '#e1f0e2' : '#ffffff',
+                      border: isMe ? '2px solid #16653e' : '2px solid #b0cbaf',
+                      boxShadow: isMe ? '0 3px 0 #0e4329' : '0 3px 0 #b0cbaf',
+                      borderRadius: 16, padding: '12px 14px',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{
+                        width: 28, height: 28, borderRadius: 10,
+                        background: isMe ? '#16653e' : '#e1f0e2',
+                        color: isMe ? '#ffffff' : '#0f3825',
+                        fontWeight: 900, fontSize: '0.85rem',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}>
+                        {actualRank}
+                      </div>
+                      <div style={{ fontSize: '1.4rem' }}>{item.avatar || '👤'}</div>
+                      <div>
+                        <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f3825' }}>
+                          {item.name || 'Learner'} {isMe && <span style={{ color: '#16653e', fontSize: '0.75rem' }}>(You)</span>}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#4e7361', fontWeight: 600 }}>
+                          Level {item.level || 1}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: '#16653e', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      {sortBy === 'xp' ? `${item.xp || 0} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(item)}</>}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+
+            {/* Open Spots Invitation Tile if Top 20 is not full and user is not in Top 20 yet */}
+            {!isUserInTop20 && top20Leaders.length > 0 && top20Leaders.length < 20 && (
+              <div style={{
+                background: 'rgba(225, 240, 226, 0.6)',
+                borderRadius: 16, border: '2px dashed #b0cbaf',
+                padding: '12px 16px', textAlign: 'center',
+                fontSize: '0.82rem', color: '#0f3825', fontWeight: 700
+              }}>
+                ⚡ Open spots in Top 20! Only {top20Leaders.length} {top20Leaders.length === 1 ? 'player has' : 'players have'} qualified today — complete a lesson to claim a spot!
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
 
-      {/* Pinned Bottom User Rank & Target Goal Bar */}
-      {user && (
+      {/* Pinned Bottom User Rank & Target Goal Bar (Only visible when loading is complete) */}
+      {!loading && user && (
         <div className="leaderboard-user-rank-bar" style={{
           flexDirection: 'column',
           gap: !isUserInTop20 ? 6 : 0,
