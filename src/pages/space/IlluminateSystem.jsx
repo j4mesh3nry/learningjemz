@@ -197,7 +197,6 @@ export default function IlluminateSystem() {
       setIsError(true);
       setWrongAttempts(prev => prev + 1);
       setTimeout(() => setIsError(false), 500);
-      setInputValue(''); // Clear on wrong
 
       // Deduct Life
       const remainingLives = lives - 1;
@@ -242,7 +241,23 @@ export default function IlluminateSystem() {
     const currentRevealed = currentObjectHint?.revealedLetters || '';
     if (currentRevealed.length >= targetName.length) return;
 
-    const nextLetters = targetName.substring(0, currentRevealed.length + 1);
+    const typed = inputValue.toUpperCase();
+
+    let i = currentRevealed.length;
+    while (i < typed.length && i < targetName.length && typed.charAt(i) === targetName.charAt(i)) {
+      i++;
+    }
+
+    let nextLength;
+    if (i < typed.length && i < targetName.length) {
+      nextLength = i + 1;
+    } else {
+      nextLength = Math.min(targetName.length, Math.max(currentRevealed.length, typed.length) + 1);
+    }
+
+    if (nextLength <= currentRevealed.length) return;
+
+    const nextLetters = targetName.substring(0, nextLength);
 
     setHintsLeft(prev => prev - 1);
     setUserUsedHint(true);
