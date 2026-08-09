@@ -73,6 +73,25 @@ function sampleRow(id: string, streak: number) {
   };
 }
 
+function samplePendingState(overrides: Record<string, any> = {}) {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const ys = localDateStr(yesterday);
+  return {
+    xp: 250,
+    level: 3,
+    streak: 3,
+    previousStreak: 2,
+    maxStreak: 5,
+    lastVisit: ys,
+    playedDates: [ys],
+    botStats: {},
+    illuminateStats: {},
+    achievements: [],
+    ...overrides
+  };
+}
+
 describe('GameProvider smoke test', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -259,6 +278,92 @@ describe('GameProvider smoke test', () => {
 
     await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
     expect(mockData.lastUpsert.streak).toBe(8);
+  });
+
+  it('a stale local queue never overrides a newer server row (cross-device)', async () => {
+    const now = Date.now();
+    const row = {
+      ...sampleRow('u10', 6),
+      updated_at: new Date(now - 10 * 60 * 1000).toISOString()
+    };
+    mockData.row = row;
+    mockUseAuth.mockReturnValue({ user: { id: 'u10' } });
+
+    // Stale pending snapshot left on THIS device by an old failed session. The
+    // server row was updated afterwards (e.g. the same account played on the
+    // phone), so the snapshot must NOT override the newer cloud data.
+    localStorage.setItem(
+      'learningjemz_pending_sync_u10',
+      JSON.stringify({
+        savedAt: now - 60 * 60 * 1000,
+        state: samplePendingState({ xp: 900, streak: 9, maxStreak: 15 })
+      })
+    );
+
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+
+    // The server row wins — the stale streak:9 must never appear
+    await waitFor(() => expect(screen.getByText('streak:6')).toBeInTheDocument());
+
+    // The stale snapshot was dropped: only the server's values are re-queued
+    // and flushed, so the newer row is never overwritten with old data.
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
+    expect(mockData.lastUpsert.streak).toBe(6);
+    expect(mockData.lastUpsert.xp).toBe(500);
+    expect(localStorage.getItem('learningjemz_pending_sync_u10')).toBeNull();
+  });
+
+  it('a local snapshot newer than the server row wins and is flushed', async () => {
+    const now = Date.now();
+    mockData.row = {
+      ...sampleRow('u11', 4),
+      xp: 100,
+      updated_at: new Date(now - 2 * 60 * 60 * 1000).toISOString()
+    };
+    mockUseAuth.mockReturnValue({ user: { id: 'u11' } });
+
+    // Real unsynced offline progress saved AFTER the server's last write
+    localStorage.setItem(
+      'learningjemz_pending_sync_u11',
+      JSON.stringify({
+        savedAt: now,
+        state: samplePendingState({ xp: 250, streak: 5 })
+      })
+    );
+
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+
+    // Local (newer) snapshot wins and is pushed up so other devices see it too
+    await waitFor(() => expect(screen.getByText('streak:5')).toBeInTheDocument());
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
+    expect(mockData.lastUpsert.xp).toBe(250);
+    expect(mockData.lastUpsert.streak).toBe(5);
+  });
+
+  it('never sends the non-existent played_dates column to Supabase', async () => {
+    const row = sampleRow('u12', 3);
+    mockData.row = row;
+    mockUseAuth.mockReturnValue({ user: { id: 'u12' } });
+
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+    await waitFor(() => expect(screen.getByText('streak:3')).toBeInTheDocument());
+
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
+    expect(mockData.lastUpsert).not.toHaveProperty('played_dates');
+    // Played dates are carried inside bot_stats (the only column that exists)
+    expect(mockData.lastUpsert.bot_stats.playedDates).toBeDefined();
   });
 
   it('flushNow pushes the pending snapshot immediately without the debounce', async () => {

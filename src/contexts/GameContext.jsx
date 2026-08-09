@@ -108,7 +108,6 @@ export function GameProvider({ children }) {
           streak: s.streak,
           max_streak: s.maxStreak,
           last_visit: s.lastVisit,
-          played_dates: s.playedDates,
           chess_wins: s.chessWins,
           puzzles_solved: s.puzzlesSolved,
           provinces_correct: s.provincesCorrect,
@@ -251,23 +250,34 @@ export function GameProvider({ children }) {
           achievements: achievementsData.map(a => ({ id: a.achievement_id, unlockedAt: a.unlocked_at }))
         };
 
-        // Local progress written offline (or after a failed sync) is newer than
-        // the server row — restore it so XP/streak gains are never lost. A queue
-        // holding a pristine default (no progress at all) is a fabrication from a
-        // stuck init/offline fallback — discard it instead of letting it override
-        // the fetched row.
+        // Local progress written offline (or after a failed sync) can be newer
+        // than the server row — restore it so XP/streak gains are never lost.
+        // The server row carries its own write timestamp (updated_at): it is the
+        // source of truth whenever it is AT LEAST as new as the local snapshot
+        // (e.g. progress made on another device since this queue was written).
+        // Only a provably NEWER local snapshot wins. A queue holding a pristine
+        // default (no progress at all) is a fabrication from a stuck init /
+        // offline fallback — discard it instead of overriding the fetched row.
         const pending = getPendingSync(userId);
         if (pending && hasUnsyncedChanges(userId)) {
           if (isPristineDefaultState(pending.state) && !isPristineDefaultState(remoteState)) {
             clearPendingSync(userId);
           } else {
-            const merged = { ...remoteState, ...pending.state };
-            setState(merged);
-            localStorage.setItem(getStorageKey(userId), JSON.stringify(merged));
-            isInitialized.current = true;
-            initFinishedRef.current = true;
-            triggerFlush();
-            return;
+            const serverUpdatedAt = data.updated_at ? new Date(data.updated_at).getTime() : 0;
+            if (pending.savedAt > serverUpdatedAt) {
+              const merged = { ...remoteState, ...pending.state };
+              setState(merged);
+              localStorage.setItem(getStorageKey(userId), JSON.stringify(merged));
+              isInitialized.current = true;
+              initFinishedRef.current = true;
+              triggerFlush();
+              return;
+            }
+            // The server row is as new or newer (a stale queue left over from a
+            // failed sync on this device, or synced progress from another device)
+            // — keep the server data and drop the stale snapshot. Re-queueing it
+            // later could overwrite the newer row, so it must never re-assert.
+            clearPendingSync(userId);
           }
         }
 
@@ -298,7 +308,6 @@ export function GameProvider({ children }) {
           streak: cleanState.streak,
           max_streak: cleanState.maxStreak,
           last_visit: cleanState.lastVisit,
-          played_dates: cleanState.playedDates,
           chess_wins: cleanState.chessWins,
           puzzles_solved: cleanState.puzzlesSolved,
           provinces_correct: cleanState.provincesCorrect,
@@ -484,7 +493,6 @@ if (user) {
         streak: 0,
         max_streak: 0,
         last_visit: null,
-        played_dates: [],
         chess_wins: 0,
         puzzles_solved: 0,
         provinces_correct: 0,
@@ -492,7 +500,7 @@ if (user) {
         flashcards_mastered: 0,
         books_reading: 0,
         quiz_high_score: 0,
-        bot_stats: defaultState.botStats,
+        bot_stats: { ...defaultState.botStats, illuminate: defaultState.illuminateStats, playedDates: [] },
         name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
         avatar: user.user_metadata?.avatar || '👤'
       };
