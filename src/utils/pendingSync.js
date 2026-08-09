@@ -87,3 +87,26 @@ export function hasUnsyncedChanges(userId) {
   const lastSynced = getLastSynced(userId);
   return lastSynced === null || pending.savedAt > lastSynced;
 }
+
+/**
+ * True when a snapshot contains NO user progress at all (fresh default state).
+ * Fabricated default snapshots — a stuck init, or the offline first-load
+ * fallback on a new device — hold nothing to upload, so flushes and the init
+ * restore must never let them override real server data.
+ */
+export function isPristineDefaultState(s) {
+  if (!s) return true;
+  const played = Array.isArray(s.playedDates) ? s.playedDates : [];
+  return (s.xp || 0) === 0
+    && (s.streak || 0) === 0
+    && (s.maxStreak || 0) === 0
+    && !s.lastVisit
+    && played.length === 0
+    && (s.chessWins || 0) === 0
+    && (s.puzzlesSolved || 0) === 0
+    && (s.provincesCorrect || 0) === 0
+    && (s.readingMinutes || 0) === 0
+    && (s.flashcardsMastered || 0) === 0
+    && (s.booksReading || 0) === 0
+    && (s.quizHighScore || 0) === 0;
+}

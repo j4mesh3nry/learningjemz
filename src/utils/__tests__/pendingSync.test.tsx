@@ -7,7 +7,8 @@ import {
   getLastSynced,
   hasUnsyncedChanges,
   getPendingSyncKey,
-  getLastSyncedKey
+  getLastSyncedKey,
+  isPristineDefaultState
 } from '../pendingSync';
 
 describe('pendingSync queue', () => {
@@ -72,5 +73,19 @@ describe('pendingSync queue', () => {
     const pending = getPendingSync('user-a')!;
     localStorage.setItem(getLastSyncedKey('user-a'), String(pending.savedAt + 1));
     expect(hasUnsyncedChanges('user-a')).toBe(false);
+  });
+
+  it('distinguishes pristine (fabricated default) snapshots from real progress', () => {
+    expect(isPristineDefaultState(null)).toBe(true);
+    expect(isPristineDefaultState({})).toBe(true);
+    expect(isPristineDefaultState({ xp: 0, streak: 0, maxStreak: 0, lastVisit: null, playedDates: [] })).toBe(true);
+
+    expect(isPristineDefaultState({ xp: 10 })).toBe(false);
+    expect(isPristineDefaultState({ streak: 2 })).toBe(false);
+    expect(isPristineDefaultState({ maxStreak: 5 })).toBe(false);
+    expect(isPristineDefaultState({ playedDates: ['2026-08-10'] })).toBe(false);
+    expect(isPristineDefaultState({ lastVisit: '2026-08-10' })).toBe(false);
+    expect(isPristineDefaultState({ chessWins: 1 })).toBe(false);
+    expect(isPristineDefaultState({ quizHighScore: 50 })).toBe(false);
   });
 });

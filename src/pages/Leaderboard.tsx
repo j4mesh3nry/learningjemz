@@ -26,16 +26,25 @@ const getStreakDaysInactive = (item: any) => {
   return Math.max(0, Math.round((todayMidnight.getTime() - last.getTime()) / 86400000));
 };
 
+// The user's own entry is ranked/displayed with LIVE app values: the server row
+// can lag the debounced sync by seconds, so the board must never contradict what
+// the app itself shows for the signed-in learner.
+export const withLiveUserValues = (list: any[], user: any, xp: number, streak: number, level: number) => {
+  if (!user?.id) return list;
+  return list.map(item => (item.id === user?.id ? { ...item, xp: xp ?? item.xp, streak: streak ?? item.streak, level: level ?? item.level } : item));
+};
+
 export default function Leaderboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { xp, streak } = useGame();
+  const { xp, streak, level, flushNow } = useGame();
   const [leaders, setLeaders] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [sortBy, setSortBy] = useState<'xp' | 'streak'>('xp');
 
   const processLeaders = useCallback((data: any[], type: 'xp' | 'streak') => {
-    const qualified = data.filter(item => {
+    const merged = withLiveUserValues(data, user, xp, streak, level);
+    const qualified = merged.filter(item => {
       if (type === 'streak') {
         return getRawStreak(item) > 0;
       }
@@ -48,7 +57,7 @@ export default function Leaderboard() {
       if (valB !== valA) return valB - valA;
       return (Number(b.xp) || 0) - (Number(a.xp) || 0);
     });
-  }, []);
+  }, [user, xp, streak, level]);
 
   const fetchLeaders = useCallback(async (isInitial = false) => {
     if (isInitial) setLoading(true);
@@ -66,7 +75,14 @@ export default function Leaderboard() {
   }, [sortBy, processLeaders]);
 
   useEffect(() => {
-    fetchLeaders(leaders.length === 0);
+    let cancelled = false;
+
+    // Push any unsynced local progress first so the board reflects the app's
+    // latest values (the realtime channel re-fetches when the upsert commits).
+    (flushNow?.() ?? Promise.resolve()).then(() => {
+      if (cancelled) return;
+      fetchLeaders(leaders.length === 0);
+    });
 
     const subscription = supabase
       .channel('public:game_progress')
@@ -76,9 +92,10 @@ export default function Leaderboard() {
       .subscribe();
 
     return () => {
+      cancelled = true;
       supabase.removeChannel(subscription);
     };
-  }, [fetchLeaders, leaders.length]);
+  }, [fetchLeaders, leaders.length, flushNow]);
 
   const handleTabChange = (newSortBy: 'xp' | 'streak') => {
     if (newSortBy === sortBy) return;

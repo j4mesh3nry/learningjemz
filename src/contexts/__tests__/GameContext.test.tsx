@@ -1,0 +1,287 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor, act } from '@testing-library/react';
+import { GameProvider, useGame } from '../GameContext';
+
+const { supabaseMock, mockData, mockUseAuth } = vi.hoisted(() => {
+  const mockUseAuth = vi.fn(() => ({ user: null } as any));
+  const mockData: any = { row: null, singleImpl: null, lastUpsert: null };
+  const chainable = {
+    select: vi.fn(() => chainable),
+    order: vi.fn(() => chainable),
+    limit: vi.fn(() => ({ data: [], error: null })),
+    eq: vi.fn(() => chainable),
+    single: vi.fn(() =>
+      mockData.singleImpl
+        ? mockData.singleImpl()
+        : { data: mockData.row, error: mockData.row ? null : { code: 'PGRST116' } }
+    ),
+    insert: vi.fn(() => ({ error: null })),
+    upsert: vi.fn((payload: any) => {
+      mockData.lastUpsert = payload;
+      return Promise.resolve({ error: null });
+    })
+  };
+  return {
+    supabaseMock: {
+      from: vi.fn(() => chainable),
+      channel: vi.fn(() => ({
+        on: vi.fn(() => ({ subscribe: vi.fn(() => ({ unsubscribe: vi.fn() })) }))
+      })),
+      removeChannel: vi.fn()
+    },
+    mockData,
+    mockUseAuth
+  };
+});
+
+vi.mock('../../utils/supabase', () => ({ supabase: supabaseMock }));
+vi.mock('../AuthContext', () => ({ useAuth: mockUseAuth }));
+
+const recordActivityRef: { current: (() => void) | null } = { current: null };
+function Harness() {
+  const game = useGame();
+  recordActivityRef.current = game.recordActivity;
+  return <div>streak:{game.streak}</div>;
+}
+
+function deferred<T>() {
+  let resolve!: (v: T) => void;
+  const promise = new Promise<T>((res) => {
+    resolve = res;
+  });
+  return { promise, resolve };
+}
+
+function localDateStr(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function sampleRow(id: string, streak: number) {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const ys = localDateStr(yesterday);
+  return {
+    id,
+    xp: 500,
+    level: 6,
+    streak,
+    max_streak: 10,
+    last_visit: ys,
+    played_dates: [ys],
+    name: 'Me',
+    avatar: '👤'
+  };
+}
+
+describe('GameProvider smoke test', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockUseAuth.mockReset();
+    mockUseAuth.mockReturnValue({ user: null });
+    mockData.row = null;
+    mockData.singleImpl = null;
+    mockData.lastUpsert = null;
+    recordActivityRef.current = null;
+    localStorage.clear();
+  });
+
+  it('renders children without crashing (guest path incl. sync hooks)', () => {
+    render(
+      <GameProvider>
+        <div>provider-alive</div>
+      </GameProvider>
+    );
+    expect(screen.getByText('provider-alive')).toBeInTheDocument();
+  });
+
+  it('loads a user row, persists a pending snapshot, and flushes it to Supabase', async () => {
+    mockData.row = sampleRow('user-1', 4);
+    mockUseAuth.mockReturnValue({ user: { id: 'user-1', email: 'me@x.com', user_metadata: { name: 'Me' } } });
+
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+
+    // The load is async — the streak must appear only after the fetch applies
+    await waitFor(() => expect(screen.getByText('streak:4')).toBeInTheDocument());
+
+    // The loaded state is flushed to Supabase and marked as synced (the pending
+    // snapshot is transient and cleared on success)
+    await vi.waitFor(() => {
+      expect(localStorage.getItem('learningjemz_last_synced_user-1')).not.toBeNull();
+    });
+    expect(mockData.lastUpsert?.streak).toBe(4);
+  });
+
+  it('re-initializes when auth identity changes mid-fetch and never flushes a zero snapshot', async () => {
+    const row = sampleRow('u1', 7);
+    const d1 = deferred<any>();
+    const d2 = deferred<any>();
+    const singles = [() => d1.promise, () => d2.promise];
+    mockData.singleImpl = () => singles.shift()!();
+
+    // Auth emits two different user object identities with the same id (the
+    // getSession + onAuthStateChange double-fire) while the fetch is in flight.
+    // Everything rendered AFTER the rerender must receive the same object
+    // reference (identityB) so no further init re-runs are triggered.
+    const identityA = { user: { id: 'u1', email: 'a@x.com' } };
+    const identityB = { user: { id: 'u1', email: 'b@x.com' } };
+    mockUseAuth.mockReturnValueOnce(identityA);
+    const { rerender } = render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+    mockUseAuth.mockReturnValueOnce(identityB);
+    rerender(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+    mockUseAuth.mockReturnValue(identityB);
+
+    act(() => {
+      d1.resolve({ data: row, error: null });
+      d2.resolve({ data: row, error: null });
+    });
+
+    // The aborted first init must be re-run — the real streak must appear and a
+    // default-state (streak 0) snapshot must never be flushed.
+    await waitFor(() => expect(screen.getByText('streak:7')).toBeInTheDocument());
+
+    act(() => recordActivityRef.current?.());
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
+    expect(mockData.lastUpsert.streak).toBeGreaterThanOrEqual(7);
+  });
+
+  it('does not queue or flush anything while initialization is in flight', async () => {
+    const row = sampleRow('u2', 3);
+    const d1 = deferred<any>();
+    mockData.singleImpl = () => d1.promise;
+    mockUseAuth.mockReturnValue({ user: { id: 'u2' } });
+
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+
+    // Activity during the slow fetch must not create a pending snapshot or flush
+    act(() => recordActivityRef.current?.());
+    expect(localStorage.getItem('learningjemz_pending_sync_u2')).toBeNull();
+    expect(mockData.lastUpsert).toBeNull();
+
+    d1.resolve({ data: row, error: null });
+    await waitFor(() => expect(screen.getByText('streak:3')).toBeInTheDocument());
+  });
+
+  it('never flushes a pristine default snapshot over a real row (offline fallback)', async () => {
+    mockData.row = null;
+    mockData.singleImpl = () => ({ data: null, error: { code: 'FETCH_FAILED' } });
+    mockUseAuth.mockReturnValue({ user: { id: 'u3' } });
+
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+
+    // Fresh device, offline: init falls back to a pristine local state
+    await waitFor(() => expect(screen.getByText('streak:0')).toBeInTheDocument());
+
+    // The fallback must not queue anything, and even if a stray timer fired, a
+    // pristine snapshot must never reach the server
+    expect(localStorage.getItem('learningjemz_pending_sync_u3')).toBeNull();
+    await new Promise((r) => setTimeout(r, 600));
+    expect(mockData.lastUpsert).toBeNull();
+  });
+
+  it('blocks syncing after an offline fallback until the next successful fetch', async () => {
+    const row = sampleRow('u5', 8);
+    let fail = true;
+    mockData.singleImpl = () =>
+      fail ? { data: null, error: { code: 'FETCH_FAILED' } } : { data: row, error: null };
+    mockUseAuth.mockReturnValue({ user: { id: 'u5' } });
+
+    const firstLoad = render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+    await waitFor(() => expect(screen.getByText('streak:0')).toBeInTheDocument());
+
+    // Playing from the pristine offline base must never reach the server
+    act(() => recordActivityRef.current?.());
+    await new Promise((r) => setTimeout(r, 600));
+    expect(mockData.lastUpsert).toBeNull();
+    expect(localStorage.getItem('learningjemz_pending_sync_u5')).toBeNull();
+
+    // Next app load with network: the real row wins again and sync resumes
+    firstLoad.unmount();
+    fail = false;
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+    await waitFor(() => expect(screen.getByText('streak:8')).toBeInTheDocument());
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
+    expect(mockData.lastUpsert.streak).toBe(8);
+  });
+
+  it('discards a fabricated default snapshot in favour of the real row', async () => {
+    const row = sampleRow('u4', 8);
+    mockData.row = row;
+    mockUseAuth.mockReturnValue({ user: { id: 'u4' } });
+
+    // Stale fabricated default snapshot left over from a buggy session
+    localStorage.setItem(
+      'learningjemz_pending_sync_u4',
+      JSON.stringify({
+        savedAt: Date.now() + 1,
+        state: { xp: 0, streak: 0, level: 1, maxStreak: 0, lastVisit: null, playedDates: [], botStats: {}, illuminateStats: {}, achievements: [] }
+      })
+    );
+
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+
+    await waitFor(() => expect(screen.getByText('streak:8')).toBeInTheDocument());
+
+    // The pristine snapshot was discarded and only real data was re-queued
+    const pending = JSON.parse(localStorage.getItem('learningjemz_pending_sync_u4')!);
+    expect(pending.state.streak).toBe(8);
+
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
+    expect(mockData.lastUpsert.streak).toBe(8);
+  });
+
+  it('flushNow pushes the pending snapshot immediately without the debounce', async () => {
+    const row = sampleRow('u6', 2);
+    mockData.row = row;
+    mockUseAuth.mockReturnValue({ user: { id: 'u6' } });
+
+    let captured: any;
+    function FlushHarness() {
+      const game = useGame();
+      captured = game.flushNow;
+      return <div>streak:{game.streak}</div>;
+    }
+
+    render(
+      <GameProvider>
+        <FlushHarness />
+      </GameProvider>
+    );
+    await waitFor(() => expect(screen.getByText('streak:2')).toBeInTheDocument());
+
+    await captured();
+    expect(mockData.lastUpsert).toBeTruthy();
+    expect(mockData.lastUpsert.streak).toBe(2);
+  });
+});

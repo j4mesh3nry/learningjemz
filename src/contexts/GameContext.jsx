@@ -5,9 +5,14 @@ import { useAuth } from './AuthContext';
 import { ACHIEVEMENTS } from '../utils/achievements';
 import { resetStreakShownForUser } from '../components/StreakScreen';
 import { getLocalDateString, backfillPlayedDates, toLocalDateString, pruneFuturePlayedDates, applyDayRollover } from '../utils/dateUtils';
-import { savePendingSync, getPendingSync, hasUnsyncedChanges, clearPendingSync, markSynced } from '../utils/pendingSync';
+import { savePendingSync, getPendingSync, hasUnsyncedChanges, clearPendingSync, markSynced, isPristineDefaultState } from '../utils/pendingSync';
 
 const GameContext = createContext();
+
+// Hard cap for a single upsert attempt. A request that hangs (flaky mobile
+// network) must never stall the flush queue, or every later snapshot would wait
+// behind it forever and the server row would lag the app.
+const UPSERT_TIMEOUT_MS = 10000;
 
 const defaultState = {
   xp: 0,
@@ -62,9 +67,94 @@ export function GameProvider({ children }) {
   const [state, setState] = useState(defaultState);
   const isInitialized = useRef(false);
   const initializedUserIdRef = useRef(null);
+  const initFinishedRef = useRef(false);
+  const offlineFallbackRef = useRef(false);
   const flushChainRef = useRef(Promise.resolve());
   const flushTimerRef = useRef(null);
   const flushPendingRef = useRef(null);
+
+  // Debounced flush trigger — coalesces rapid XP/streak updates into one write.
+  const triggerFlush = useCallback(() => {
+    const flush = flushPendingRef.current;
+    if (!flush) return;
+    clearTimeout(flushTimerRef.current);
+    flushTimerRef.current = setTimeout(() => { flush(); }, 400);
+  }, []);
+
+  // Pushes the newest pending snapshot to Supabase and clears the queue only on
+  // success. Failures (offline, session expiry, network flake) are non-destructive:
+  // the pending snapshot survives and the next trigger retries it.
+  const flushPending = useCallback(async () => {
+    const userId = user?.id;
+    if (!userId || !isInitialized.current || !initFinishedRef.current || initializedUserIdRef.current !== userId || offlineFallbackRef.current || (typeof navigator !== 'undefined' && !navigator.onLine)) {
+      return;
+    }
+    flushChainRef.current = flushChainRef.current.then(async () => {
+      const pending = getPendingSync(userId);
+      if (!pending || !pending.state) return;
+      if (isPristineDefaultState(pending.state)) {
+        // A fabricated default snapshot (stuck init, offline first-load fallback)
+        // holds no real progress — never flush it over real server data.
+        clearPendingSync(userId);
+        markSynced(userId, pending.savedAt);
+        return;
+      }
+      try {
+        const s = pending.state;
+        const dbPayload = {
+          id: userId,
+          xp: s.xp,
+          level: s.level,
+          streak: s.streak,
+          max_streak: s.maxStreak,
+          last_visit: s.lastVisit,
+          played_dates: s.playedDates,
+          chess_wins: s.chessWins,
+          puzzles_solved: s.puzzlesSolved,
+          provinces_correct: s.provincesCorrect,
+          reading_minutes: s.readingMinutes,
+          flashcards_mastered: s.flashcardsMastered,
+          books_reading: s.booksReading,
+          quiz_high_score: s.quizHighScore,
+          bot_stats: { ...(s.botStats || {}), illuminate: s.illuminateStats || {}, playedDates: s.playedDates || [] },
+          name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
+          avatar: user.user_metadata?.avatar || '👤'
+        };
+        const { error } = await Promise.race([
+          supabase.from('game_progress').upsert(dbPayload),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('sync timeout')), UPSERT_TIMEOUT_MS))
+        ]);
+        if (error) {
+          console.warn('[learningjemz] progress sync failed (queued for retry):', error);
+          return;
+        }
+        clearPendingSync(userId);
+        markSynced(userId, pending.savedAt);
+      } catch (err) {
+        console.warn('[learningjemz] progress sync failed (queued for retry):', err);
+      }
+    });
+    return flushChainRef.current;
+  }, [user]);
+
+  // Exposes the latest flushPending callback stably so init/persist listeners can
+  // trigger a flush without re-running effects when the user object changes.
+  useEffect(() => {
+    flushPendingRef.current = flushPending;
+  }, [flushPending]);
+
+  // Immediate flush (bypasses the debounce), self-healed by UPSERT_TIMEOUT_MS so
+  // callers awaiting it (e.g. the leaderboard) can never hang on a dead queue.
+  const flushNow = useCallback(() => {
+    const userId = user?.id;
+    if (!userId) return Promise.resolve();
+    clearTimeout(flushTimerRef.current);
+    const chain = flushPendingRef.current ? flushPendingRef.current() : Promise.resolve();
+    return Promise.race([
+      chain,
+      new Promise((resolve) => setTimeout(resolve, UPSERT_TIMEOUT_MS))
+    ]);
+  }, [user]);
 
   // Initialize and Sync per logged-in User Account. Keyed on the account ID (not
   // the user object identity) so auth token refreshes never wipe in-flight local
@@ -73,6 +163,8 @@ export function GameProvider({ children }) {
     let isMounted = true;
     const userId = user?.id || null;
     isInitialized.current = false; // Prevent saving old state while fetching
+    initFinishedRef.current = false;
+    offlineFallbackRef.current = false;
 
     if (!userId) {
       initializedUserIdRef.current = null;
@@ -80,13 +172,15 @@ export function GameProvider({ children }) {
         const local = getLocalState(null);
         setState(local);
         isInitialized.current = true;
+        initFinishedRef.current = true;
       }
       return;
     }
 
-    if (initializedUserIdRef.current === userId) {
-      // Same account — an identity refresh (e.g. session token renewal) must not
-      // reset in-memory progress. Just resume normal syncing.
+    if (initializedUserIdRef.current === userId && initFinishedRef.current) {
+      // Same account with a COMPLETED initialization — an identity refresh (e.g.
+      // session token renewal) must not reset in-memory progress. A mid-flight
+      // (aborted) init falls through and re-initializes below.
       isInitialized.current = true;
       return;
     }
@@ -158,15 +252,23 @@ export function GameProvider({ children }) {
         };
 
         // Local progress written offline (or after a failed sync) is newer than
-        // the server row — restore it so XP/streak gains are never lost.
+        // the server row — restore it so XP/streak gains are never lost. A queue
+        // holding a pristine default (no progress at all) is a fabrication from a
+        // stuck init/offline fallback — discard it instead of letting it override
+        // the fetched row.
         const pending = getPendingSync(userId);
         if (pending && hasUnsyncedChanges(userId)) {
-          const merged = { ...remoteState, ...pending.state };
-          setState(merged);
-          localStorage.setItem(getStorageKey(userId), JSON.stringify(merged));
-          isInitialized.current = true;
-          triggerFlush();
-          return;
+          if (isPristineDefaultState(pending.state) && !isPristineDefaultState(remoteState)) {
+            clearPendingSync(userId);
+          } else {
+            const merged = { ...remoteState, ...pending.state };
+            setState(merged);
+            localStorage.setItem(getStorageKey(userId), JSON.stringify(merged));
+            isInitialized.current = true;
+            initFinishedRef.current = true;
+            triggerFlush();
+            return;
+          }
         }
 
         setState(remoteState);
@@ -195,96 +297,43 @@ export function GameProvider({ children }) {
         };
         const insertResult = await supabase.from('game_progress').insert([dbPayload]);
         if (insertResult.error) {
-          // Insert failed (offline/transient) — queue for retry instead of losing
-          // the account row forever.
-          savePendingSync(userId, cleanState);
+          // Insert failed (offline/transient, or the row raced into existence).
+          // Do NOT queue/persist this fresh 0-state snapshot: a real row may
+          // already exist and a later flush would overwrite it. The next real
+          // activity (or the next app load) creates or fetches the row normally.
         } else {
           markSynced(userId);
+          setState(cleanState);
+          localStorage.setItem(getStorageKey(userId), JSON.stringify(cleanState));
         }
-        setState(cleanState);
-        localStorage.setItem(getStorageKey(userId), JSON.stringify(cleanState));
       } else {
         // Fetch failed (offline / transient) — fall back to the local snapshot so
         // the session still works. Only flush when real pending progress exists,
         // so we never overwrite the server row with an empty default state.
         const local = getLocalState(userId);
+        // On a device with NO local progress the fallback is an empty default.
+        // Any activity from that base would look like real progress and could
+        // overwrite the server row — block syncing until a fetch succeeds.
+        offlineFallbackRef.current = isPristineDefaultState(local);
         setState(local);
         localStorage.setItem(getStorageKey(userId), JSON.stringify(local));
         const pending = getPendingSync(userId);
         if (pending && hasUnsyncedChanges(userId)) {
           isInitialized.current = true;
+          initFinishedRef.current = true;
           triggerFlush();
           return;
         }
       }
-      
+
       isInitialized.current = true;
+      initFinishedRef.current = true;
     };
 
     initializeState();
 
     return () => { isMounted = false; };
   }, [user, triggerFlush]);
-
-  // Exposes the latest flushPending callback stably so init/persist listeners can
-  // trigger a flush without re-running effects when the user object changes.
-  useEffect(() => {
-    flushPendingRef.current = flushPending;
-  }, [flushPending]);
-
-  // Debounced flush trigger — coalesces rapid XP/streak updates into one write.
-  const triggerFlush = useCallback(() => {
-    const flush = flushPendingRef.current;
-    if (!flush) return;
-    clearTimeout(flushTimerRef.current);
-    flushTimerRef.current = setTimeout(() => { flush(); }, 400);
-  }, []);
-
-  // Pushes the newest pending snapshot to Supabase and clears the queue only on
-  // success. Failures (offline, session expiry, network flake) are non-destructive:
-  // the pending snapshot survives and the next trigger retries it.
-  const flushPending = useCallback(async () => {
-    const userId = user?.id;
-    if (!userId || !isInitialized.current || (typeof navigator !== 'undefined' && !navigator.onLine)) {
-      return;
-    }
-    flushChainRef.current = flushChainRef.current.then(async () => {
-      const pending = getPendingSync(userId);
-      if (!pending || !pending.state) return;
-      try {
-        const s = pending.state;
-        const dbPayload = {
-          id: userId,
-          xp: s.xp,
-          level: s.level,
-          streak: s.streak,
-          max_streak: s.maxStreak,
-          last_visit: s.lastVisit,
-          played_dates: s.playedDates,
-          chess_wins: s.chessWins,
-          puzzles_solved: s.puzzlesSolved,
-          provinces_correct: s.provincesCorrect,
-          reading_minutes: s.readingMinutes,
-          flashcards_mastered: s.flashcardsMastered,
-          books_reading: s.booksReading,
-          quiz_high_score: s.quizHighScore,
-          bot_stats: { ...(s.botStats || {}), illuminate: s.illuminateStats || {}, playedDates: s.playedDates || [] },
-          name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
-          avatar: user.user_metadata?.avatar || '👤'
-        };
-        const { error } = await supabase.from('game_progress').upsert(dbPayload);
-        if (error) {
-          console.warn('[learningjemz] progress sync failed (queued for retry):', error);
-          return;
-        }
-        clearPendingSync(userId);
-        markSynced(userId, pending.savedAt);
-      } catch (err) {
-        console.warn('[learningjemz] progress sync failed (queued for retry):', err);
-      }
-    });
-    return flushChainRef.current;
-  }, [user]);
 
   // Streak activity recording with exact transition calculation & auto-backfill
   const recordActivity = useCallback(() => {
@@ -355,11 +404,20 @@ export function GameProvider({ children }) {
   // Persist locally + enqueue a pending snapshot whenever state changes. The
   // cloud upsert happens through the debounced queued flush (never fire-and-forget).
   useEffect(() => {
-    if (!isInitialized.current) return;
+    if (!isInitialized.current || !initFinishedRef.current) return;
 
     const userId = user?.id || null;
+    if (userId && initializedUserIdRef.current !== userId) return;
+
     const storageKey = getStorageKey(userId);
     localStorage.setItem(storageKey, JSON.stringify(state));
+
+    if (userId && offlineFallbackRef.current) {
+      // Offline first-load fallback: never queue anything that could overwrite
+      // the real row. The local snapshot is kept for display, sync resumes on
+      // the next successful fetch.
+      return;
+    }
 
     if (userId) {
       savePendingSync(userId, state);
@@ -545,7 +603,8 @@ if (user) {
       winChessGame,
       recordChessGame,
       recordIlluminateTime,
-      resetProgress
+      resetProgress,
+      flushNow
     }}>
       {children}
     </GameContext.Provider>
