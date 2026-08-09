@@ -79,6 +79,7 @@ export default function IlluminateSystem() {
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const [selectedCard, setSelectedCard] = useState(null);
+  const [discoveryShown, setDiscoveryShown] = useState(false);
   const inputRef = useRef(null);
 
   // Auto-start level if URL param or location state is provided
@@ -124,6 +125,15 @@ export default function IlluminateSystem() {
     }
   }, [currentIndex, level, isComplete, isGameOver]);
 
+  // Discovery cue: show subtle pulse when first world (Sun) is revealed
+  useEffect(() => {
+    if (currentIndex === 1 && !discoveryShown) {
+      setDiscoveryShown(true);
+      const timer = setTimeout(() => setDiscoveryShown(false), 4500);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, discoveryShown]);
+
   const startGame = (diffLevel) => {
     setLevel(diffLevel);
     setGameData(SPACE_OBJECTS_BY_SIZE.slice(0, DIFFICULTIES[diffLevel].count));
@@ -141,6 +151,7 @@ export default function IlluminateSystem() {
     setCurrentObjectHint(null);
     setIsNewRecord(false);
     setSelectedCard(null);
+    setDiscoveryShown(false);
     setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
     setTimeout(() => {
       inputRef.current?.focus({ preventScroll: true });
@@ -230,6 +241,10 @@ export default function IlluminateSystem() {
   const handleUseHint = () => {
     if (isComplete || isGameOver) return;
     setShowHintBubble(prev => !prev);
+  };
+
+  const dismissDiscovery = () => {
+    setDiscoveryShown(false);
   };
 
   const handleApplyNextLetter = () => {
@@ -703,26 +718,31 @@ export default function IlluminateSystem() {
       </div>
 
       {/* Grid Box Container */}
-      <div className="illum-grid-container">
+      <div className="illum-grid-container" onClick={dismissDiscovery}>
+        {discoveryShown && (
+          <div className="illum-discovery-pulse" aria-hidden="true" />
+        )}
         <div className="illum-grid">
           {gameData.map((obj, i) => {
             const isRevealed = i < currentIndex;
             const isCurrent = i === currentIndex;
             const glowClass = getGlowClass(obj.type);
             const scale = getRelativeSize(i);
+            const isFirstRevealed = isRevealed && i === 0 && currentIndex === 1;
 
             return (
               <div 
                 key={obj.id} 
                 id={`planet-${i}`}
-                className={`illum-circle-wrapper ${isCurrent ? 'illum-current' : ''} ${isRevealed ? 'revealed-item' : 'unrevealed-item'}`}
+                className={`illum-circle-wrapper ${isCurrent ? 'illum-current' : ''} ${isRevealed ? 'revealed-item' : 'unrevealed-item'} ${isFirstRevealed ? 'illum-first-revealed' : ''}`}
                 onClick={() => {
                   if (isRevealed) {
                     setSelectedCard({ obj, index: i });
+                    dismissDiscovery();
                   }
                 }}
                 style={{ cursor: isRevealed ? 'pointer' : 'default' }}
-                title={isRevealed ? `Tap for mini facts about ${obj.name}` : ''}
+                title={isRevealed ? `Tap for mini facts about this world` : ''}
               >
                 <div 
                   className={`illum-circle ${isRevealed ? glowClass : 'illum-shadow'} ${isRevealed ? 'revealed' : ''}`}

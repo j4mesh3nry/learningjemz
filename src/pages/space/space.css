@@ -939,6 +939,26 @@
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
   box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.illum-discovery-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 215, 0, 0.08);
+  pointer-events: none;
+  animation: discoveryPulse 1.5s ease-in-out infinite;
+  z-index: 5;
+}
+
+@keyframes discoveryPulse {
+  0%, 100% { opacity: 0.06; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.14; transform: translate(-50%, -50%) scale(1.04); }
 }
 
 .illum-grid {
@@ -1031,6 +1051,24 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Discovery cue: extra glow on first revealed world (Sun) */
+.illum-circle-wrapper.illum-first-revealed .illum-circle.revealed {
+  animation: discoveryPulse 1.5s ease-in-out infinite, popGlow 0.5s ease-out;
+}
+.illum-circle-wrapper.illum-first-revealed .illum-circle.revealed::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 215, 0, 0.12);
+  animation: discoveryRing 2s ease-in-out infinite;
+}
+
+@keyframes discoveryRing {
+  0%, 100% { opacity: 0.08; transform: scale(1); }
+  50% { opacity: 0.18; transform: scale(1.08); }
 }
 
 .illum-input-area {
