@@ -5,6 +5,7 @@ import { useAuth } from './AuthContext';
 import { ACHIEVEMENTS } from '../utils/achievements';
 import { resetStreakShownForUser } from '../components/StreakScreen';
 import { getLocalDateString, backfillPlayedDates, toLocalDateString, pruneFuturePlayedDates, applyDayRollover } from '../utils/dateUtils';
+import { savePendingSync, getPendingSync, hasUnsyncedChanges, clearPendingSync, markSynced } from '../utils/pendingSync';
 
 const GameContext = createContext();
 
@@ -60,13 +61,21 @@ export function GameProvider({ children }) {
   const { user } = useAuth();
   const [state, setState] = useState(defaultState);
   const isInitialized = useRef(false);
+  const initializedUserIdRef = useRef(null);
+  const flushChainRef = useRef(Promise.resolve());
+  const flushTimerRef = useRef(null);
+  const flushPendingRef = useRef(null);
 
-  // Initialize and Sync per logged-in User Account
+  // Initialize and Sync per logged-in User Account. Keyed on the account ID (not
+  // the user object identity) so auth token refreshes never wipe in-flight local
+  // progress. Unsynced local progress (pending queue) wins over the server row.
   useEffect(() => {
     let isMounted = true;
+    const userId = user?.id || null;
     isInitialized.current = false; // Prevent saving old state while fetching
 
-    if (!user) {
+    if (!userId) {
+      initializedUserIdRef.current = null;
       if (isMounted) {
         const local = getLocalState(null);
         setState(local);
@@ -75,13 +84,21 @@ export function GameProvider({ children }) {
       return;
     }
 
-    // Reset to defaultState while fetching new user's progress from cloud
+    if (initializedUserIdRef.current === userId) {
+      // Same account — an identity refresh (e.g. session token renewal) must not
+      // reset in-memory progress. Just resume normal syncing.
+      isInitialized.current = true;
+      return;
+    }
+
+    // First time initializing this account in this provider lifetime
+    initializedUserIdRef.current = userId;
     setState(defaultState);
 
     const initializeState = async () => {
       const [progressResponse, achievementsResponse] = await Promise.all([
-        supabase.from('game_progress').select('*').eq('id', user.id).single(),
-        supabase.from('achievements').select('*').eq('user_id', user.id)
+        supabase.from('game_progress').select('*').eq('id', userId).single(),
+        supabase.from('achievements').select('*').eq('user_id', userId)
       ]);
       const { data, error } = progressResponse;
       const achievementsData = achievementsResponse.data || [];
@@ -93,7 +110,7 @@ export function GameProvider({ children }) {
           ? data.played_dates 
           : Array.isArray(data.bot_stats?.playedDates) 
             ? data.bot_stats.playedDates 
-            : getLocalState(user.id).playedDates || [];
+            : getLocalState(userId).playedDates || [];
 
         const streakCount = data.streak || 0;
         const lastVisitDate = data.last_visit || null;
@@ -139,13 +156,26 @@ export function GameProvider({ children }) {
           illuminateStats: data.illuminate_stats || data.bot_stats?.illuminate || defaultState.illuminateStats,
           achievements: achievementsData.map(a => ({ id: a.achievement_id, unlockedAt: a.unlocked_at }))
         };
+
+        // Local progress written offline (or after a failed sync) is newer than
+        // the server row — restore it so XP/streak gains are never lost.
+        const pending = getPendingSync(userId);
+        if (pending && hasUnsyncedChanges(userId)) {
+          const merged = { ...remoteState, ...pending.state };
+          setState(merged);
+          localStorage.setItem(getStorageKey(userId), JSON.stringify(merged));
+          isInitialized.current = true;
+          triggerFlush();
+          return;
+        }
+
         setState(remoteState);
-        localStorage.setItem(getStorageKey(user.id), JSON.stringify(remoteState));
+        localStorage.setItem(getStorageKey(userId), JSON.stringify(remoteState));
       } else if (error && error.code === 'PGRST116') {
         // NEW USER ACCOUNT! Start fresh with defaultState (0 streak, 0 XP, level 1)
         const cleanState = { ...defaultState };
         const dbPayload = {
-          id: user.id,
+          id: userId,
           xp: cleanState.xp,
           level: cleanState.level,
           streak: cleanState.streak,
@@ -163,9 +193,29 @@ export function GameProvider({ children }) {
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
           avatar: user.user_metadata?.avatar || '👤'
         };
-        await supabase.from('game_progress').insert([dbPayload]);
+        const insertResult = await supabase.from('game_progress').insert([dbPayload]);
+        if (insertResult.error) {
+          // Insert failed (offline/transient) — queue for retry instead of losing
+          // the account row forever.
+          savePendingSync(userId, cleanState);
+        } else {
+          markSynced(userId);
+        }
         setState(cleanState);
-        localStorage.setItem(getStorageKey(user.id), JSON.stringify(cleanState));
+        localStorage.setItem(getStorageKey(userId), JSON.stringify(cleanState));
+      } else {
+        // Fetch failed (offline / transient) — fall back to the local snapshot so
+        // the session still works. Only flush when real pending progress exists,
+        // so we never overwrite the server row with an empty default state.
+        const local = getLocalState(userId);
+        setState(local);
+        localStorage.setItem(getStorageKey(userId), JSON.stringify(local));
+        const pending = getPendingSync(userId);
+        if (pending && hasUnsyncedChanges(userId)) {
+          isInitialized.current = true;
+          triggerFlush();
+          return;
+        }
       }
       
       isInitialized.current = true;
@@ -174,6 +224,66 @@ export function GameProvider({ children }) {
     initializeState();
 
     return () => { isMounted = false; };
+  }, [user, triggerFlush]);
+
+  // Exposes the latest flushPending callback stably so init/persist listeners can
+  // trigger a flush without re-running effects when the user object changes.
+  useEffect(() => {
+    flushPendingRef.current = flushPending;
+  }, [flushPending]);
+
+  // Debounced flush trigger — coalesces rapid XP/streak updates into one write.
+  const triggerFlush = useCallback(() => {
+    const flush = flushPendingRef.current;
+    if (!flush) return;
+    clearTimeout(flushTimerRef.current);
+    flushTimerRef.current = setTimeout(() => { flush(); }, 400);
+  }, []);
+
+  // Pushes the newest pending snapshot to Supabase and clears the queue only on
+  // success. Failures (offline, session expiry, network flake) are non-destructive:
+  // the pending snapshot survives and the next trigger retries it.
+  const flushPending = useCallback(async () => {
+    const userId = user?.id;
+    if (!userId || !isInitialized.current || (typeof navigator !== 'undefined' && !navigator.onLine)) {
+      return;
+    }
+    flushChainRef.current = flushChainRef.current.then(async () => {
+      const pending = getPendingSync(userId);
+      if (!pending || !pending.state) return;
+      try {
+        const s = pending.state;
+        const dbPayload = {
+          id: userId,
+          xp: s.xp,
+          level: s.level,
+          streak: s.streak,
+          max_streak: s.maxStreak,
+          last_visit: s.lastVisit,
+          played_dates: s.playedDates,
+          chess_wins: s.chessWins,
+          puzzles_solved: s.puzzlesSolved,
+          provinces_correct: s.provincesCorrect,
+          reading_minutes: s.readingMinutes,
+          flashcards_mastered: s.flashcardsMastered,
+          books_reading: s.booksReading,
+          quiz_high_score: s.quizHighScore,
+          bot_stats: { ...(s.botStats || {}), illuminate: s.illuminateStats || {}, playedDates: s.playedDates || [] },
+          name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
+          avatar: user.user_metadata?.avatar || '👤'
+        };
+        const { error } = await supabase.from('game_progress').upsert(dbPayload);
+        if (error) {
+          console.warn('[learningjemz] progress sync failed (queued for retry):', error);
+          return;
+        }
+        clearPendingSync(userId);
+        markSynced(userId, pending.savedAt);
+      } catch (err) {
+        console.warn('[learningjemz] progress sync failed (queued for retry):', err);
+      }
+    });
+    return flushChainRef.current;
   }, [user]);
 
   // Streak activity recording with exact transition calculation & auto-backfill
@@ -242,37 +352,35 @@ export function GameProvider({ children }) {
     return streakResult;
   }, [user?.id]);
 
-  // Save to DB and LocalStorage whenever state changes for current user
+  // Persist locally + enqueue a pending snapshot whenever state changes. The
+  // cloud upsert happens through the debounced queued flush (never fire-and-forget).
   useEffect(() => {
     if (!isInitialized.current) return;
 
-    const storageKey = getStorageKey(user?.id);
+    const userId = user?.id || null;
+    const storageKey = getStorageKey(userId);
     localStorage.setItem(storageKey, JSON.stringify(state));
 
-    if (user) {
-      const dbPayload = {
-        id: user.id,
-        xp: state.xp,
-        level: state.level,
-        streak: state.streak,
-        max_streak: state.maxStreak,
-        last_visit: state.lastVisit,
-        played_dates: state.playedDates,
-        chess_wins: state.chessWins,
-        puzzles_solved: state.puzzlesSolved,
-        provinces_correct: state.provincesCorrect,
-        reading_minutes: state.readingMinutes,
-        flashcards_mastered: state.flashcardsMastered,
-        books_reading: state.booksReading,
-        quiz_high_score: state.quizHighScore,
-        bot_stats: { ...state.botStats, illuminate: state.illuminateStats, playedDates: state.playedDates },
-        name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
-        avatar: user.user_metadata?.avatar || '👤'
-      };
-      
-      supabase.from('game_progress').upsert(dbPayload).then();
+    if (userId) {
+      savePendingSync(userId, state);
+      triggerFlush();
     }
-  }, [state, user]);
+  }, [state, user?.id, triggerFlush]);
+
+  // Re-flush when connectivity returns or the tab becomes visible (backgrounded
+  // sessions may have missed the debounced flush).
+  useEffect(() => {
+    const onOnline = () => triggerFlush();
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') triggerFlush();
+    };
+    window.addEventListener('online', onOnline);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      window.removeEventListener('online', onOnline);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [triggerFlush]);
 
   const resetProgress = useCallback(async () => {
     setState(defaultState);
@@ -280,7 +388,7 @@ export function GameProvider({ children }) {
     localStorage.setItem(storageKey, JSON.stringify(defaultState));
     resetStreakShownForUser(user?.id);
 
-    if (user) {
+if (user) {
       const dbPayload = {
         id: user.id,
         xp: 0,
@@ -297,13 +405,11 @@ export function GameProvider({ children }) {
         books_reading: 0,
         quiz_high_score: 0,
         bot_stats: defaultState.botStats,
-        illuminate_stats: defaultState.illuminateStats,
         name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
         avatar: user.user_metadata?.avatar || '👤'
       };
-      
+      clearPendingSync(user.id);
       await supabase.from('game_progress').upsert(dbPayload);
-      await supabase.from('achievements').delete().eq('user_id', user.id);
     }
   }, [user]);
 

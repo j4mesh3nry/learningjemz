@@ -33,7 +33,8 @@ This context holds all the gamification state and syncs it between `localStorage
   - `maxStreak` (Highest streak achieved)
   - `lastVisit` (Timestamp string to track daily logins)
   - Module-specific stats (`chessWins`, `puzzlesSolved`, `provincesCorrect`, `flashcardsMastered`, `quizHighScore`, `booksReading`).
-- **Data Syncing**: Uses a `useEffect` hook to debounce saves to Supabase whenever the local state changes, ensuring cloud persistence without spamming the database.
+- **Data Syncing (lossless queue, never fire-and-forget)**: A `useEffect` writes every state change to `localStorage` and snapshots it into a per-account "pending sync" queue (`utils/pendingSync.js`). A debounced flusher then upserts the newest snapshot to Supabase and clears the queue **only on success**. Failures (offline PWA play, mobile network flakes, expired sessions) keep the queue and retry on state change, the `online` event, and tab visibility. On startup, pending local progress wins over the server row so XP/streak gains are never dropped; a failed account fetch falls back to the local snapshot without overwriting the cloud row with defaults.
+  - Initialization is keyed on the account ID (not the user object identity), so auth token refreshes no longer reset/resync mid-session progress.
 
 ---
 
@@ -63,6 +64,10 @@ Streaks are the core retention mechanic, heavily leveraging psychological trigge
    - After a dramatic 0.8s delay, the `.igniting` CSS class is applied.
    - The fire icon physically pulses (`scale(1.5)`), drops its grayscale filter, bursts into full vibrant color, and the number dynamically ticks up by 1.
    - Upon returning to the main menu, the streak is now permanently "lit" globally for the rest of the day.
+
+### D. Leaderboards
+- **XP Leaderboard**: ranks accounts with `xp > 0` by total XP descending (ties broken by XP). Live-updates via the `postgres_changes` realtime subscription on `game_progress`, plus a manual refresh button.
+- **Streak Leaderboard**: ranks accounts with `streak > 0` by their **real stored streak value** descending (ties broken by XP). A player who simply hasn't played today **stays ranked** — nobody is hidden for a stale visit. A player drops off only when their streak is actually `0` (the local-midnight rollover enforces this on their next app visit) or when enough higher streaks push them past rank 20. Players whose last visit was more than a day ago are tagged `Inactive · last played X days ago` for honesty. The board intentionally never fabricates "effective" streaks server- or client-side.
 
 ### C. Achievements
 - Managed in `utils/achievements.js`.

@@ -57,6 +57,12 @@
 - **Streak Transition Animations**: Counter transitions smoothly from `previousStreak` to `currentStreak` (e.g., `3 -> 4`) with animated `+1` badge effects upon completing daily learning activities.
 - **Indicator**: Active Flame (`#ff3d00` / `#ff6d00`), Inactive Flame (`#888888`).
 - **Reset Trigger**: Absence of recorded activity on the previous calendar day (enforced at the next local midnight).
+- **Cloud Sync (lossless, offline-safe)**: Every state change snapshots into a per-account "pending sync" queue in `localStorage` *before* the Supabase `game_progress` upsert is attempted. The queue is cleared only after the server write succeeds; failed writes (offline play, flaky mobile networks, expired sessions) are retried automatically on state change, on reconnection (`online`), and when the tab becomes visible again. On app start, unsynced local progress **wins over the server row** (never the inverse), so XP/streak gains can't be silently dropped or overwritten by stale cloud data. A fetch failure at startup falls back to the local snapshot without clobbering the server row. Auth token refreshes no longer reset in-memory progress (initialization is keyed on the account ID).
+
+### Leaderboards & Rankings
+- **XP Board**: Ranks learners by total XP (descending), tie-broken by XP (already the key) — only accounts with `xp > 0` qualify.
+- **Streak Board**: Ranks learners by their **real stored streak value**. Missing a day removes NOBODY — players remain ranked until their streak is actually `0` (enforced by the local-midnight rollover on the player's next visit) or until stronger streaks push them out of the Top 20. Stale players show an honest `Inactive · last played X days ago` caption instead of being hidden.
+- **Real-Time Updates**: Subscribes to `postgres_changes` on `game_progress` so the board refreshes live as players earn XP/streaks; a manual refresh button is available in the header.
 
 ### XP & Level Progression
 - **Level Formula**: `Level = floor(Total XP / 100) + 1`

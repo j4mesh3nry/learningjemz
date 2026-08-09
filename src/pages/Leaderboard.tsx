@@ -4,23 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
-import { Trophy, Flame, Zap, Crown, ArrowRight, Target } from 'lucide-react';
+import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw } from 'lucide-react';
 import { Header } from '../components/Header';
 import { JemzLoader } from '../components/JemzLoader';
+import { toLocalDateString } from '../utils/dateUtils';
 import '../index.css';
 
-const getEffectiveStreak = (item: any) => {
-  if (!item || !item.last_visit) return 0;
-  const todayStr = new Date().toDateString();
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toDateString();
+// Streaks are ranked by their REAL stored value. Missing a day does not remove a
+// player — the streak only drops off the board when it is actually 0 (which the
+// app enforces at the next local midnight after a missed day).
+const getRawStreak = (item: any) => Number(item?.streak) || 0;
 
-  const itemDate = new Date(item.last_visit).toDateString();
-  if (itemDate === todayStr || itemDate === yesterdayStr) {
-    return item.streak || 0;
-  }
-  return 0;
+// Whole days since the player's last recorded visit (0 = today, 1 = yesterday).
+const getStreakDaysInactive = (item: any) => {
+  const lastVisitStr = toLocalDateString(item?.last_visit);
+  if (!lastVisitStr) return 0;
+  const [y, m, d] = lastVisitStr.split('-').map(Number);
+  const last = new Date(y, m - 1, d);
+  const now = new Date();
+  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.max(0, Math.round((todayMidnight.getTime() - last.getTime()) / 86400000));
 };
 
 export default function Leaderboard() {
@@ -34,14 +37,14 @@ export default function Leaderboard() {
   const processLeaders = useCallback((data: any[], type: 'xp' | 'streak') => {
     const qualified = data.filter(item => {
       if (type === 'streak') {
-        return getEffectiveStreak(item) > 0;
+        return getRawStreak(item) > 0;
       }
       return (Number(item.xp) || 0) > 0;
     });
 
     return qualified.sort((a, b) => {
-      const valA = type === 'streak' ? getEffectiveStreak(a) : (Number(a.xp) || 0);
-      const valB = type === 'streak' ? getEffectiveStreak(b) : (Number(b.xp) || 0);
+      const valA = type === 'streak' ? getRawStreak(a) : (Number(a.xp) || 0);
+      const valB = type === 'streak' ? getRawStreak(b) : (Number(b.xp) || 0);
       if (valB !== valA) return valB - valA;
       return (Number(b.xp) || 0) - (Number(a.xp) || 0);
     });
@@ -107,7 +110,7 @@ export default function Leaderboard() {
     if (!isUserInTop20) {
       const rank20Item = top20Leaders[19];
       if (rank20Item) {
-        const targetVal = sortBy === 'streak' ? getEffectiveStreak(rank20Item) : Number(rank20Item.xp);
+        const targetVal = sortBy === 'streak' ? getRawStreak(rank20Item) : Number(rank20Item.xp);
         const myVal = sortBy === 'streak' ? streak : xp;
         const needed = Math.max(1, targetVal - myVal + 1);
 
@@ -124,7 +127,7 @@ export default function Leaderboard() {
 
     const playerAhead = top20Leaders[fullUserRankIndex - 1];
     if (playerAhead) {
-      const aheadVal = sortBy === 'streak' ? getEffectiveStreak(playerAhead) : Number(playerAhead.xp);
+      const aheadVal = sortBy === 'streak' ? getRawStreak(playerAhead) : Number(playerAhead.xp);
       const myVal = sortBy === 'streak' ? streak : xp;
       const needed = Math.max(1, aheadVal - myVal + 1);
 
@@ -162,10 +165,23 @@ export default function Leaderboard() {
         </div>
 
         {/* Tab Switcher */}
-        <div style={{
-          display: 'flex', background: '#ffffff', padding: '3px',
-          borderRadius: 14, border: '2px solid #b0cbaf'
-        }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button
+            onClick={() => fetchLeaders(true)}
+            disabled={loading}
+            aria-label="Refresh leaderboard"
+            style={{
+              background: '#ffffff', border: '2px solid #b0cbaf', borderRadius: 12,
+              padding: '6px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center',
+              boxShadow: '0 3px 0 #b0cbaf', transition: 'all 0.15s ease'
+            }}
+          >
+            <RefreshCw size={14} color={loading ? '#9db8a9' : '#16653e'} />
+          </button>
+          <div style={{
+            display: 'flex', background: '#ffffff', padding: '3px',
+            borderRadius: 14, border: '2px solid #b0cbaf'
+          }}>
           <button
             onClick={() => handleTabChange('xp')}
             style={{
@@ -190,6 +206,7 @@ export default function Leaderboard() {
           >
             <Flame size={13} color={sortBy === 'streak' ? '#ff5252' : '#4e7361'} /> Streak
           </button>
+          </div>
         </div>
       </div>
 
@@ -218,7 +235,7 @@ export default function Leaderboard() {
                   {top2?.name || 'Player'}
                 </div>
                 <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#16653e', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-                  {sortBy === 'xp' ? `${top2?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top2)}</>}
+                  {sortBy === 'xp' ? `${top2?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getRawStreak(top2)}</>}
                 </div>
               </div>
 
@@ -236,7 +253,7 @@ export default function Leaderboard() {
                   {top1?.name || 'Champion'}
                 </div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#d97706', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-                  {sortBy === 'xp' ? `${top1?.xp || 0} XP` : <><Flame size={14} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top1)}</>}
+                  {sortBy === 'xp' ? `${top1?.xp || 0} XP` : <><Flame size={14} color="#ff4d4d" fill="#ff4d4d" /> {getRawStreak(top1)}</>}
                 </div>
               </div>
 
@@ -252,7 +269,7 @@ export default function Leaderboard() {
                   {top3?.name || 'Player'}
                 </div>
                 <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#b45309', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-                  {sortBy === 'xp' ? `${top3?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(top3)}</>}
+                  {sortBy === 'xp' ? `${top3?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getRawStreak(top3)}</>}
                 </div>
               </div>
             </div>
@@ -267,11 +284,11 @@ export default function Leaderboard() {
               }}>
                 <Target size={32} color="#16653e" style={{ margin: '0 auto 8px' }} />
                 <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
-                  {sortBy === 'streak' ? 'No Active Streaks Yet Today!' : 'No XP Scores Earned Yet!'}
+                  {sortBy === 'streak' ? 'No Active Streaks Yet!' : 'No XP Scores Earned Yet!'}
                 </h3>
                 <p style={{ fontSize: '0.82rem', color: '#4e7361', marginTop: 4, fontWeight: 500 }}>
                   {sortBy === 'streak'
-                    ? 'Play any game today to ignite your streak and claim the #1 spot!'
+                    ? 'Play any game to ignite your flame and claim the #1 spot!'
                     : 'Complete a challenge to earn your first XP and take the Lead!'}
                 </p>
                 <button
@@ -290,6 +307,7 @@ export default function Leaderboard() {
               (top20Leaders.length >= 3 ? restLeaders : top20Leaders).map((item, idx) => {
                 const actualRank = top20Leaders.length >= 3 ? idx + 4 : idx + 1;
                 const isMe = item.id === user?.id;
+                const inactiveDays = sortBy === 'streak' ? getStreakDaysInactive(item) : 0;
 
                 return (
                   <div
@@ -319,13 +337,13 @@ export default function Leaderboard() {
                           {item.name || 'Learner'} {isMe && <span style={{ color: '#16653e', fontSize: '0.75rem' }}>(You)</span>}
                         </div>
                         <div style={{ fontSize: '0.75rem', color: '#4e7361', fontWeight: 600 }}>
-                          Level {item.level || 1}
+                          {sortBy === 'streak' && inactiveDays > 0 ? `Inactive · last played ${inactiveDays === 1 ? 'yesterday' : `${inactiveDays} days ago`}` : `Level ${item.level || 1}`}
                         </div>
                       </div>
                     </div>
 
                     <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: '#16653e', display: 'flex', alignItems: 'center', gap: 4 }}>
-                      {sortBy === 'xp' ? `${item.xp || 0} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {getEffectiveStreak(item)}</>}
+                      {sortBy === 'xp' ? `${item.xp || 0} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {getRawStreak(item)}</>}
                     </div>
                   </div>
                 );
@@ -340,7 +358,7 @@ export default function Leaderboard() {
                 padding: '12px 16px', textAlign: 'center',
                 fontSize: '0.82rem', color: '#0f3825', fontWeight: 700
               }}>
-                ⚡ Open spots in Top 20! Only {top20Leaders.length} {top20Leaders.length === 1 ? 'player has' : 'players have'} qualified today — complete a lesson to claim a spot!
+                ⚡ Open spots in Top 20! Only {top20Leaders.length} {top20Leaders.length === 1 ? 'player has' : 'players have'} {sortBy === 'streak' ? 'a streak' : 'earned XP'} — {sortBy === 'streak' ? 'keep your streak alive to hold the spot, or play to take it!' : 'earn XP to claim a spot!'}
               </div>
             )}
           </div>
