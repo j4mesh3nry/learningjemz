@@ -1311,11 +1311,11 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 6px));
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom, 6px));
   background: rgba(14, 18, 30, 0.98);
   border-top: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px 16px 0 0;
@@ -1328,19 +1328,19 @@
 .illum-keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   width: 100%;
 }
 
 .illum-key {
   flex: 1;
   min-width: 0;
-  height: 48px;
+  height: 56px;
   border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 8px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.22);
   color: #ffffff;
-  font-size: 1.18rem;
+  font-size: 1.4rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
@@ -1363,26 +1363,26 @@
   background: rgba(239, 83, 80, 0.45);
   border: 1px solid rgba(239, 83, 80, 0.6);
   color: #ffffff;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
 }
 
 .illum-key-space {
   flex: 2.2;
-  height: 46px;
+  height: 54px;
   background: rgba(255, 255, 255, 0.28);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   font-weight: 900;
   letter-spacing: 1px;
 }
 
 .illum-key-enter {
   flex: 2.4;
-  height: 46px;
+  height: 54px;
   background: linear-gradient(135deg, #1e2044 0%, #11132b 100%);
   border: 1.5px solid #38bdf8;
   color: #ffffff;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   font-weight: 900;
   letter-spacing: 1px;
   box-shadow: 0 2px 0 #0b0d1e;
