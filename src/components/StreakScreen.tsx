@@ -1,5 +1,5 @@
 // src/components/StreakScreen.tsx
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Flame, Gem, Sparkles, Calendar as CalendarIcon, X } from 'lucide-react';
 import { getLocalDateString, getCurrentWeekDates, backfillPlayedDates } from '../utils/dateUtils';
 import { useGame } from '../contexts/GameContext';
@@ -72,6 +72,8 @@ export interface StreakScreenProps {
 
 const DAYS_HEADER = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
+const EMPTY_PLAYED_DATES: string[] = [];
+
 export default function StreakScreen({
   isOpen,
   streak = 1,
@@ -81,7 +83,10 @@ export default function StreakScreen({
   userId,
 }: StreakScreenProps) {
   const gameContext = useGame();
-  const contextPlayedDates = gameContext?.playedDates || [];
+  const contextPlayedDates = useMemo(
+    () => gameContext?.playedDates ?? EMPTY_PLAYED_DATES,
+    [gameContext?.playedDates]
+  );
 
   const targetStreak = Math.max(1, streak);
   const initialStreak = previousStreak !== undefined 

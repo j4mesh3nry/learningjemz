@@ -1,6 +1,6 @@
 // src/components/VictoryScreen.tsx
 import React, { useState, useEffect } from 'react';
-import { Flame, Trophy, Sparkles, Gem } from 'lucide-react';
+import { Flame, Trophy, Sparkles, Gem, Eye } from 'lucide-react';
 import StreakScreen, { hasShownStreakToday } from './StreakScreen';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
@@ -56,6 +56,7 @@ export default function VictoryScreen({
     : (gameContext?.hasPlayedToday ?? true);
 
   const [showingStreakModal, setShowingStreakModal] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -68,6 +69,7 @@ export default function VictoryScreen({
       }
     } else {
       setShowingStreakModal(false);
+      setIsMinimized(false);
     }
   }, [isOpen, activeStreak, disableDailyStreakModal, userId]);
 
@@ -87,6 +89,25 @@ export default function VictoryScreen({
   }
 
   const themeClass = `theme-${theme}`;
+
+  if (isMinimized) {
+    return (
+      <div className={`victory-minimized-dock ${themeClass}`}>
+        <button className="victory-btn-restore" onClick={() => setIsMinimized(false)}>
+          <Eye size={18} />
+          <span>Show Results</span>
+        </button>
+        {onPlayAgain && (
+          <button className="victory-btn-secondary-mini" onClick={onPlayAgain}>
+            Play Again
+          </button>
+        )}
+        <button className="victory-btn-primary-mini" onClick={onContinue}>
+          {continueText}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={`victory-overlay ${themeClass}`} role="dialog" aria-modal="true" aria-label={title}>
@@ -143,6 +164,10 @@ export default function VictoryScreen({
               Play Again
             </button>
           )}
+          <button className="victory-btn-view" onClick={() => setIsMinimized(true)}>
+            <Eye size={16} />
+            <span>View Screen</span>
+          </button>
         </div>
       </div>
     </div>

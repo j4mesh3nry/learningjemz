@@ -34,6 +34,9 @@ export function getCurrentWeekDates(today = new Date()) {
 /**
  * Automatically reconstructs/backfills played date strings (YYYY-MM-DD)
  * for a user's active streak based on their streak count and last visit date.
+ * @param {number} [streak]
+ * @param {string | Date | null} [lastVisit]
+ * @param {string[]} [existingPlayedDates]
  */
 export function backfillPlayedDates(streak = 0, lastVisit = null, existingPlayedDates = []) {
   const dateSet = new Set(Array.isArray(existingPlayedDates) ? existingPlayedDates : []);

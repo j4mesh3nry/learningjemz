@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy, ArrowRight, X, HelpCircle, Info, Sun, Globe, Moon, Sparkles, Ruler, Compass, Delete } from 'lucide-react';
+import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy, ArrowRight, X, HelpCircle, Info, Sun, Globe, Moon, Sparkles, Ruler, Compass, Delete, Eye } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE, getMnemonicUpToIndex } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
 import VictoryScreen from '../../components/VictoryScreen';
+import HeartCrackIcon from '../../components/icons/HeartCrackIcon';
 import './space.css';
 
 const DIFFICULTIES = {
@@ -68,6 +69,7 @@ export default function IlluminateSystem() {
   const [isError, setIsError] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isGameOverMinimized, setIsGameOverMinimized] = useState(false);
   const [lives, setLives] = useState(3);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [userUsedHint, setUserUsedHint] = useState(false);
@@ -130,6 +132,7 @@ export default function IlluminateSystem() {
     setInputValue('');
     setIsComplete(false);
     setIsGameOver(false);
+    setIsGameOverMinimized(false);
     setLives(DIFFICULTIES[diffLevel].maxLives);
     setElapsedTime(0);
     setUserUsedHint(false);
@@ -860,40 +863,61 @@ export default function IlluminateSystem() {
           </div>
         }
         xpGained={(DIFFICULTIES[level]?.xp || 10) + (level === 'hard' && scoreData.hintsUsed === 0 ? 10 : 0)}
-        onContinue={() => setLevel(null)}
+        onContinue={() => navigate('/space/objects-by-size')}
         onPlayAgain={() => startGame(level)}
         continueText="Back to Menu"
       />
 
       {/* Game Over Screen Overlay */}
-      {isGameOver && (
-        <div className="ss-victory-overlay">
-          <div className="ss-victory-card" style={{ border: '2px solid rgba(239, 83, 80, 0.4)' }}>
-            <div style={{
-              width: 60, height: 60, margin: '0 auto 0.75rem',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'rgba(239, 83, 80, 0.15)', border: '2px solid rgba(239, 83, 80, 0.4)',
-              borderRadius: '50%', boxShadow: '0 0 20px rgba(239, 83, 80, 0.3)'
-            }}>
-              <Heart size={30} color="#ef5350" fill="transparent" strokeWidth={2.5} />
+      {isGameOver && !isGameOverMinimized && (
+        <div className="illum-gameover-overlay" role="dialog" aria-modal="true" aria-label="Game Over">
+          <div className="illum-gameover-card">
+            <div className="illum-gameover-icon">
+              <HeartCrackIcon size={30} color="#ffffff" strokeWidth={2.2} />
             </div>
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', color: '#ff4d4d', fontWeight: 900 }}>
-              Game Over
-            </h2>
-            <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#e0e0e0' }}>
-              You ran out of lives!
-            </p>
-            <p style={{ fontSize: '0.95rem', marginBottom: '1.5rem', color: '#b0bec5' }}>
-              Illuminated <strong>{currentIndex} of {gameData.length}</strong> objects in {formatTime(elapsedTime)}.
-            </p>
+            <h2 className="illum-gameover-title">Game Over</h2>
+            <p className="illum-gameover-subtitle">You ran out of lives!</p>
 
-            <button className="ss-btn-primary" onClick={() => startGame(level)} style={{ width: '100%', marginBottom: '0.75rem', background: 'linear-gradient(135deg, #1c7c54 0%, #155d3e 100%)' }}>
-              Try Again
-            </button>
-            <button className="ss-btn-secondary" onClick={() => setLevel(null)} style={{ width: '100%' }}>
-              Back to Menu
-            </button>
+            <div className="illum-gameover-stats">
+              <div className="illum-gameover-stat">
+                <span className="illum-gameover-stat-val">{currentIndex} / {gameData.length}</span>
+                <span className="illum-gameover-stat-lbl">Objects Illuminated</span>
+              </div>
+              <div className="illum-gameover-stat">
+                <span className="illum-gameover-stat-val">{formatTime(elapsedTime)}</span>
+                <span className="illum-gameover-stat-lbl">Time</span>
+              </div>
+            </div>
+
+            <div className="illum-gameover-actions">
+              <button type="button" className="illum-gameover-btn-try" onClick={() => startGame(level)}>
+                Try Again
+              </button>
+              <button type="button" className="illum-gameover-btn-view" onClick={() => setIsGameOverMinimized(true)}>
+                <Eye size={16} />
+                <span>View Screen</span>
+              </button>
+              <button type="button" className="illum-gameover-btn-menu" onClick={() => navigate('/space/objects-by-size')}>
+                Back to Menu
+              </button>
+            </div>
           </div>
+        </div>
+      )}
+
+      {/* Game Over Minimized Dock (View Screen) */}
+      {isGameOver && isGameOverMinimized && (
+        <div className="illum-gameover-dock">
+          <button type="button" className="illum-gameover-btn-restore" onClick={() => setIsGameOverMinimized(false)}>
+            <Eye size={16} />
+            <span>Show Results</span>
+          </button>
+          <button type="button" className="illum-gameover-btn-mini-try" onClick={() => startGame(level)}>
+            Try Again
+          </button>
+          <button type="button" className="illum-gameover-btn-mini-menu" onClick={() => navigate('/space/objects-by-size')}>
+            Back to Menu
+          </button>
         </div>
       )}
     </div>

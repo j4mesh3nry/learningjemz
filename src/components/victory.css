@@ -122,6 +122,16 @@
   box-shadow: 0 1px 0 #334155;
 }
 
+.theme-space .victory-btn-view {
+  background: #1e293b;
+  color: #38bdf8;
+  border: 2px dashed #0284c7;
+}
+
+.theme-space .victory-btn-view:hover {
+  background: #0f172a;
+}
+
 
 /* --- ♟️ CHESS THEME (`theme-chess`) --- */
 .victory-modal-clean.theme-chess {
@@ -196,6 +206,16 @@
   background: #44403c;
 }
 
+.theme-chess .victory-btn-view {
+  background: #292524;
+  color: #fbbf24;
+  border: 2px dashed #d97706;
+}
+
+.theme-chess .victory-btn-view:hover {
+  background: #1c1917;
+}
+
 
 /* --- 🗺️ GEO THEME (`theme-geo`) --- */
 .victory-modal-clean.theme-geo {
@@ -231,6 +251,12 @@
   color: #15803d;
   border: 2px solid #b0cbaf;
   box-shadow: 0 3px 0 #b0cbaf;
+}
+
+.theme-geo .victory-btn-view {
+  background: #ffffff;
+  color: #15803d;
+  border: 2px dashed #15803d;
 }
 
 
@@ -420,6 +446,150 @@
 .victory-btn-secondary:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 #b0cbaf;
+}
+
+.victory-btn-view {
+  width: 100%;
+  background: #ffffff;
+  color: #16653e;
+  border: 2px dashed #16653e;
+  padding: 10px;
+  border-radius: 14px;
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.1s ease, background 0.15s ease;
+  box-sizing: border-box;
+}
+
+.victory-btn-view:hover {
+  background: #e1f0e2;
+  transform: translateY(-1px);
+}
+
+.victory-btn-view:active {
+  transform: translateY(1px);
+}
+
+/* Floating Bottom Restore Dock Bar (Minimized Result Screen View) */
+.victory-minimized-dock {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  background: #ffffff;
+  border: 3px solid #b0cbaf;
+  box-shadow: 0 6px 0 #b0cbaf;
+  border-radius: 20px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  box-sizing: border-box;
+  max-width: 90vw;
+}
+
+.victory-minimized-dock.theme-space {
+  background: #161936;
+  border: 3px solid #0284c7;
+  box-shadow: 0 6px 0 #0369a1;
+  color: #ffffff;
+}
+
+.victory-minimized-dock.theme-chess {
+  background: #1c1917;
+  border: 3px solid #d97706;
+  box-shadow: 0 6px 0 #92400e;
+  color: #ffffff;
+}
+
+.victory-minimized-dock.theme-geo {
+  background: #f0fdf4;
+  border: 3px solid #16653e;
+  box-shadow: 0 6px 0 #14532d;
+  color: #0f3825;
+}
+
+.victory-btn-restore {
+  background: #16653e;
+  color: #ffffff;
+  border: 2px solid #22c55e;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 3px 0 #0e4329;
+}
+
+.theme-space .victory-btn-restore {
+  background: #0284c7;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 3px 0 #0369a1;
+}
+
+.theme-chess .victory-btn-restore {
+  background: #d97706;
+  border: 2px solid #f59e0b;
+  box-shadow: 0 3px 0 #92400e;
+}
+
+.victory-btn-restore:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 currentColor;
+}
+
+.victory-btn-primary-mini {
+  background: #ffffff;
+  color: #0f3825;
+  border: 2px solid #b0cbaf;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 2px 0 #b0cbaf;
+  white-space: nowrap;
+}
+
+.theme-space .victory-btn-primary-mini {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 2px solid #475569;
+  box-shadow: 0 2px 0 #334155;
+}
+
+.theme-chess .victory-btn-primary-mini {
+  background: #292524;
+  color: #f5f5f4;
+  border: 2px solid #57534e;
+  box-shadow: 0 2px 0 #44403c;
+}
+
+.victory-btn-secondary-mini {
+  background: transparent;
+  color: inherit;
+  border: 1.5px solid currentColor;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  opacity: 0.9;
 }
 
 @keyframes fadeIn {
