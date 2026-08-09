@@ -90,12 +90,13 @@
       - **Hard**: All 35 objects (Sun → Salacia), 5 Lives, **+30 XP reward** (+10 XP bonus for perfect zero-hint completion).
     - **Dynamic Interactive Speech Bubble Hint Engine**:
       - Positioned directly below the top `Hint (N)` button with an upward pointer tile (`#161936` cosmic dark card, `#2d3264` border).
-      - **Reveal Letter Clue**: Displays the starting or next letter inside the bubble (e.g. `Letter: "S"`, `Letters: "SU"`) without force-filling the input field, encouraging active typing.
+      - **Reveal Letter Clue (Progressive & Input-Aware)**: Detects the first letter the learner typed incorrectly and reveals the correct prefix through that position (e.g. typed `JUPETIR` reveals `JUPI`, then `JUPITE`, then `JUPITER`). If everything typed so far matches, it reveals the next letter beyond the current input (e.g. `JUP` → `JUPI`). Costs 1 hint per reveal, caps at the full name, and never force-fills the input field. On a wrong submission the learner's typed text is kept in the box so they can consult the hint to check spelling.
       - **Mnemonic Sentence Line**: Displays a strict 1-to-1 progressive mnemonic sentence mapped exactly across all 35 celestial objects (e.g. index 15 Triton displays up to word 15 "Tumble", strictly masking words 16-34 for Pluto, Eris, Titania, etc.).
       - **Per-Object Clue Locking & Anti-Abuse**: Clues unlocked on an object can be re-viewed for free; learners can spend additional hints from their 3-hint pool to unlock both letter and mnemonic clues on a single object.
     - **Interactive Mini Fact Cards (Revealed Objects)**: Tapping any illuminated object circle opens an interactive reference card showing its texture preview, astronomical classification, physical diameter (km), orbital position / host body, and 1-sentence fun fact.
+    - **Discovery Cue ("Tap for Facts")**: When the first object (Sun) is correctly identified, a brief non-blocking cue appears — a subtle gold chip reading "Tap any lit objects for facts" with a soft glow pulse around the revealed Sun — teaching that revealed objects are tappable for details. Auto-dismisses after ~4s or on first tap.
     - **Iconography Standard**: Strictly NO using emojis in UI or data. All icons are cleanly rendered via Lucide React components (`Sun`, `Globe`, `Moon`, `Sparkles`, `Ruler`, `Compass`, `Lightbulb`).
-    - **Custom Touch Keyboard System**: Compact 4-row virtual keyboard (`48px` key height, space theme styling) tailored for touch interaction without soft-keyboard overlap.
+    - **Custom Touch Keyboard System**: Compact 4-row virtual keyboard (`48px` key height, space theme styling) with tight 4px key gaps for faster touch typing, tailored for touch interaction without soft-keyboard overlap.
     - **Personal Best Records**: Tracks and persists top completion times per difficulty tier in Supabase (`illuminate_stats`) and local storage.
 
 ### 🗺️ Geography Module (`/geo`)

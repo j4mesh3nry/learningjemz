@@ -124,6 +124,7 @@ Focused currently on Philippine geography.
 A memory and trivia module.
 - **Flashcards**: Uses a basic implementation of Spaced Repetition. Mastering a flashcard grants +2 XP.
 - **Quizzes**: Tests knowledge retained from flashcards. High scores are tracked in the global state (`quizHighScore`).
+- **Illuminate the System**: Size-ordering spelling puzzle across up to 35 solar objects. The Reveal Letter hint is progressive and input-aware — it reveals the correct prefix up to the first letter typed incorrectly (e.g. `JUPETIR` → `JUPI`), advancing with each hint while skipping positions already typed correctly. Wrong submissions retain the learner's typed text so they can consult the hint. After the first object (Sun) is guessed, a brief non-blocking gold cue ("Tap any lit objects for facts") teaches that revealed objects are tappable for mini facts.
 
 ### D. Reading Module (`/reading`)
 A focus and comprehension module.
