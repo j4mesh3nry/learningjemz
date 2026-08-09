@@ -84,6 +84,18 @@ export default function Leaderboard() {
       fetchLeaders(leaders.length === 0);
     });
 
+    // Mobile browsers drop websockets/background timers aggressively — refresh
+    // whenever the app returns to the foreground so the board is never stale.
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        (flushNow?.() ?? Promise.resolve()).then(() => {
+          if (cancelled) return;
+          fetchLeaders(false);
+        });
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
     const subscription = supabase
       .channel('public:game_progress')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'game_progress' }, () => {
@@ -93,6 +105,7 @@ export default function Leaderboard() {
 
     return () => {
       cancelled = true;
+      document.removeEventListener('visibilitychange', onVisibility);
       supabase.removeChannel(subscription);
     };
   }, [fetchLeaders, leaders.length, flushNow]);

@@ -12,7 +12,7 @@ import '../index.css';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { xp, level, streak, hasPlayedToday, achievements, playedDates: contextPlayedDates } = useGame();
+  const { xp, level, streak, hasPlayedToday, achievements, playedDates: contextPlayedDates, flushNow } = useGame();
   const { user, logout } = useAuth();
 
   const [avatar, setAvatar] = useState(() => user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar') || '👤');
@@ -34,6 +34,16 @@ export default function Profile() {
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(null), 3000);
+  };
+
+  // Push any unsynced progress to the cloud before signing out so the row other
+  // learners see is current. The pending-sync queue survives logout regardless,
+  // so a failed/aborted flush still restores on the next login.
+  const handleLogout = async () => {
+    try {
+      await flushNow?.();
+    } catch {}
+    await logout();
   };
 
   const PFP_OPTIONS = ['👤', '🦊', '🦉', '🐯', '🐼', '🐸', '🐶', '🦄', '🤖', '👽', '🦸‍♂️', '👩‍🚀', '🐱', '🦁'];
@@ -408,7 +418,7 @@ export default function Profile() {
           {/* Logout Action Button */}
           <div style={{ paddingBottom: 24 }}>
             <button
-              onClick={logout}
+              onClick={handleLogout}
               style={{
                 width: '100%',
                 padding: 16,

@@ -274,6 +274,21 @@ export function GameProvider({ children }) {
         setState(remoteState);
         localStorage.setItem(getStorageKey(userId), JSON.stringify(remoteState));
       } else if (error && error.code === 'PGRST116') {
+        // No row exists on the server. A pending snapshot holding REAL progress
+        // (e.g. the row was deleted, or the account was recreated while this
+        // device still had unsynced play) must win over a fresh zero-state —
+        // restore it and flush so the row other learners see is never reset.
+        const pending = getPendingSync(userId);
+        if (pending && hasUnsyncedChanges(userId) && !isPristineDefaultState(pending.state)) {
+          const restored = { ...defaultState, ...pending.state };
+          setState(restored);
+          localStorage.setItem(getStorageKey(userId), JSON.stringify(restored));
+          isInitialized.current = true;
+          initFinishedRef.current = true;
+          triggerFlush();
+          return;
+        }
+
         // NEW USER ACCOUNT! Start fresh with defaultState (0 streak, 0 XP, level 1)
         const cleanState = { ...defaultState };
         const dbPayload = {
@@ -426,16 +441,31 @@ export function GameProvider({ children }) {
   }, [state, user?.id, triggerFlush]);
 
   // Re-flush when connectivity returns or the tab becomes visible (backgrounded
-  // sessions may have missed the debounced flush).
+  // sessions may have missed the debounced flush). Mobile browsers also throttle
+  // timers hard once the page is hidden or closed, so fire an IMMEDIATE flush on
+  // pagehide / visibility-hidden instead of relying on the debounce — otherwise
+  // the newest XP/streak snapshot may only reach the cloud on the next app start.
+  const flushNowRef = useRef(flushNow);
+  useEffect(() => {
+    flushNowRef.current = flushNow;
+  }, [flushNow]);
+
   useEffect(() => {
     const onOnline = () => triggerFlush();
     const onVisibility = () => {
-      if (document.visibilityState === 'visible') triggerFlush();
+      if (document.visibilityState === 'visible') {
+        triggerFlush();
+      } else {
+        flushNowRef.current?.();
+      }
     };
+    const onPageHide = () => flushNowRef.current?.();
     window.addEventListener('online', onOnline);
+    window.addEventListener('pagehide', onPageHide);
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
       window.removeEventListener('online', onOnline);
+      window.removeEventListener('pagehide', onPageHide);
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [triggerFlush]);

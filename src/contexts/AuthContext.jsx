@@ -46,10 +46,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    // Clear all learningjemz keys on logout to prevent state pollution across user accounts
+    // Clear app state keys on logout to prevent state pollution across user
+    // accounts — BUT keep the per-user pending-sync queue and its last-synced
+    // marker. Those are keyed by user id (never shared between accounts) and are
+    // the only copy of progress whose cloud flush failed or was still debounced
+    // (flaky mobile network, quick sign-out). Wiping them here is what made XP
+    // and streaks revert to old values after logging back in.
     try {
       Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('learningjemz')) {
+        if (key.startsWith('learningjemz') && !key.startsWith('learningjemz_pending_sync_') && !key.startsWith('learningjemz_last_synced_')) {
           localStorage.removeItem(key);
         }
       });

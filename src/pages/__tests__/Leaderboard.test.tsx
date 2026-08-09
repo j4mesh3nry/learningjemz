@@ -1,5 +1,58 @@
-import { describe, it, expect } from 'vitest';
-import { withLiveUserValues } from '../Leaderboard';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, waitFor, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import Leaderboard, { withLiveUserValues } from '../Leaderboard';
+
+const { supabaseMock, mockSelect, mockFlushNow } = vi.hoisted(() => {
+  const mockSelect = vi.fn(() => chainable);
+  const mockFlushNow = vi.fn(() => Promise.resolve());
+  const chainable = {
+    select: mockSelect,
+    order: vi.fn(() => chainable),
+    limit: vi.fn(() => Promise.resolve({ data: [], error: null })),
+    eq: vi.fn(() => chainable),
+    single: vi.fn(() => ({ data: null, error: { code: 'PGRST116' } }))
+  };
+  return {
+    supabaseMock: {
+      from: vi.fn(() => chainable),
+      channel: vi.fn(() => ({
+        on: vi.fn(() => ({ subscribe: vi.fn(() => ({ unsubscribe: vi.fn() })) }))
+      })),
+      removeChannel: vi.fn()
+    },
+    mockSelect,
+    mockFlushNow
+  };
+});
+
+vi.mock('../../utils/supabase', () => ({ supabase: supabaseMock }));
+vi.mock('../../contexts/AuthContext', () => ({ useAuth: () => ({ user: { id: 'me', email: 'me@x.com' } }) }));
+vi.mock('../../contexts/GameContext', () => ({
+  useGame: () => ({ xp: 350, streak: 3, level: 4, flushNow: mockFlushNow })
+}));
+
+describe('Leaderboard', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
+  });
+
+  it('refetches the board when the app returns to the foreground (visibilitychange)', async () => {
+    render(
+      <MemoryRouter>
+        <Leaderboard />
+      </MemoryRouter>
+    );
+    await waitFor(() => expect(mockSelect).toHaveBeenCalled());
+    const callsAfterMount = mockSelect.mock.calls.length;
+
+    fireEvent(document, new Event('visibilitychange'));
+
+    await waitFor(() => expect(mockSelect.mock.calls.length).toBeGreaterThan(callsAfterMount));
+    expect(mockFlushNow.mock.calls.length).toBeGreaterThanOrEqual(2);
+  });
+});
 
 describe('withLiveUserValues', () => {
   it('overlays the signed-in user row with live app values', () => {

@@ -21,6 +21,7 @@ vi.mock('lucide-react', async () => {
 
 describe('Profile', () => {
   const mockLogout = vi.fn();
+  const mockFlushNow = vi.fn();
   
   beforeEach(() => {
     vi.clearAllMocks();
@@ -32,6 +33,7 @@ describe('Profile', () => {
       streak: 7,
       hasPlayedToday: true,
       stats: {},
+      flushNow: mockFlushNow,
     } as any);
 
     vi.spyOn(AuthContext, 'useAuth').mockReturnValue({
@@ -60,7 +62,8 @@ describe('Profile', () => {
     expect(screen.getByText('Streak Calendar')).toBeInTheDocument();
   });
 
-  it('calls logout when sign out is clicked', async () => {
+  it('flushes pending progress before calling logout', async () => {
+    mockFlushNow.mockResolvedValue(undefined);
     const user = userEvent.setup();
     render(
       <MemoryRouter>
@@ -70,7 +73,12 @@ describe('Profile', () => {
 
     const logoutBtn = screen.getByRole('button', { name: /sign out/i });
     await user.click(logoutBtn);
-    expect(mockLogout).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(mockLogout).toHaveBeenCalledTimes(1));
+    expect(mockFlushNow).toHaveBeenCalledTimes(1);
+    // The flush is awaited BEFORE signOut so the server row is current when leaving
+    expect(mockLogout.mock.invocationCallOrder[0]).toBeGreaterThan(
+      mockFlushNow.mock.invocationCallOrder[0]
+    );
   });
 
   it('can open and close avatar modal', async () => {

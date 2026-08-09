@@ -284,4 +284,72 @@ describe('GameProvider smoke test', () => {
     expect(mockData.lastUpsert).toBeTruthy();
     expect(mockData.lastUpsert.streak).toBe(2);
   });
+
+  it('flushes immediately on pagehide so a backgrounded/closed session is not lost', async () => {
+    mockData.row = sampleRow('u8', 2);
+    mockUseAuth.mockReturnValue({ user: { id: 'u8' } });
+
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+    await waitFor(() => expect(screen.getByText('streak:2')).toBeInTheDocument());
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
+
+    // Fresh activity creates a new pending snapshot with a debounced flush…
+    act(() => recordActivityRef.current?.());
+    mockData.lastUpsert = null;
+
+    // …pagehide cancels the debounce and pushes the newest state to the cloud
+    // immediately (mobile browsers stop JS timers once the page is hidden)
+    act(() => {
+      window.dispatchEvent(new Event('pagehide'));
+    });
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
+    expect(mockData.lastUpsert.streak).toBeGreaterThanOrEqual(3);
+  });
+
+  it('restores a real pending snapshot when the server row is missing (PGRST116)', async () => {
+    mockData.row = null;
+    mockData.singleImpl = () => ({ data: null, error: { code: 'PGRST116' } });
+    mockUseAuth.mockReturnValue({ user: { id: 'u9' } });
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const ys = localDateStr(yesterday);
+
+    // Device holds REAL unsynced progress while the server row is gone
+    localStorage.setItem(
+      'learningjemz_pending_sync_u9',
+      JSON.stringify({
+        savedAt: Date.now(),
+        state: {
+          xp: 250,
+          level: 3,
+          streak: 3,
+          previousStreak: 2,
+          maxStreak: 5,
+          lastVisit: ys,
+          playedDates: [ys],
+          botStats: {},
+          illuminateStats: {},
+          achievements: []
+        }
+      })
+    );
+
+    render(
+      <GameProvider>
+        <Harness />
+      </GameProvider>
+    );
+
+    // The pending snapshot wins — no zero-state reset, and it is flushed so the
+    // row other learners see carries the real progress
+    await waitFor(() => expect(screen.getByText('streak:3')).toBeInTheDocument());
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
+    expect(mockData.lastUpsert.xp).toBe(250);
+    expect(mockData.lastUpsert.streak).toBe(3);
+  });
 });
