@@ -18,6 +18,71 @@ export function getLocalDateString(inputDate = new Date()) {
 }
 
 /**
+ * Parses a YYYY-MM-DD string as a LOCAL calendar date (never UTC), avoiding
+ * the one-day shift caused by `new Date('YYYY-MM-DD')` (UTC midnight).
+ * Accepts Date objects / ISO timestamps as fallback. Returns null if invalid.
+ * @param {string | Date | null | undefined} input
+ * @returns {Date | null}
+ */
+export function fromLocalDateString(input) {
+  if (input == null || input === '') return null;
+  if (input instanceof Date) {
+    return isNaN(input.getTime()) ? null : new Date(input.getTime());
+  }
+  if (typeof input === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input)) {
+    const [year, month, day] = input.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return isNaN(date.getTime()) ? null : date;
+  }
+  const date = new Date(input);
+  return isNaN(date.getTime()) ? null : date;
+}
+
+/**
+ * Normalizes any stored value (YYYY-MM-DD string, Date, or ISO timestamp)
+ * into a local YYYY-MM-DD string without UTC shifts. Returns null if unparseable.
+ * @param {string | Date | null | undefined} input
+ * @returns {string | null}
+ */
+export function toLocalDateString(input) {
+  const date = fromLocalDateString(input);
+  return date ? getLocalDateString(date) : null;
+}
+
+/**
+ * Drops played dates that fall strictly AFTER the last visit date.
+ * Such dates are artifacts of fabricating a streak forward from "today".
+ * @param {string[]} playedDates
+ * @param {string | null} [lastVisitStr]
+ * @returns {string[]}
+ */
+export function pruneFuturePlayedDates(playedDates = [], lastVisitStr = null) {
+  if (!lastVisitStr) return playedDates;
+  return (Array.isArray(playedDates) ? playedDates : []).filter(d => d <= lastVisitStr);
+}
+
+/**
+ * Day-rollover logic for local midnight: if the previous day was NOT played,
+ * a stale streak (count that survives missed days) resets to 0 immediately and
+ * fabricated future played dates are pruned. If yesterday WAS played or today
+ * was already recorded, state is returned unchanged (streak survives).
+ */
+export function applyDayRollover(state, todayStr, yesterdayStr) {
+  if (!state) return state;
+  const lastVisitStr = toLocalDateString(state.lastVisit);
+  if (!lastVisitStr || lastVisitStr === todayStr || lastVisitStr === yesterdayStr) {
+    return state;
+  }
+  if ((state.streak || 0) <= 0) return state;
+  return {
+    ...state,
+    streak: 0,
+    previousStreak: 0,
+    playedDates: pruneFuturePlayedDates(state.playedDates, lastVisitStr)
+  };
+}
+
+/**
  * Returns an array of YYYY-MM-DD date strings for the current week (Sun-Sat).
  */
 export function getCurrentWeekDates(today = new Date()) {
@@ -42,8 +107,8 @@ export function backfillPlayedDates(streak = 0, lastVisit = null, existingPlayed
   const dateSet = new Set(Array.isArray(existingPlayedDates) ? existingPlayedDates : []);
   
   if (streak > 0) {
-    let endDate = lastVisit ? new Date(lastVisit) : new Date();
-    if (isNaN(endDate.getTime())) {
+    let endDate = lastVisit ? fromLocalDateString(lastVisit) : new Date();
+    if (!endDate) {
       endDate = new Date();
     }
     

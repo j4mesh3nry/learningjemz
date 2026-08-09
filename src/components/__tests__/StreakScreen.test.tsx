@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import StreakScreen, { hasShownStreakToday, markStreakShownToday } from '../StreakScreen';
+import StreakScreen, { hasShownStreakToday, markStreakShownToday, getPlayedDatesStorageKey } from '../StreakScreen';
+import { getLocalDateString } from '../../utils/dateUtils';
 
 describe('StreakScreen', () => {
   const defaultProps = {
@@ -81,5 +82,30 @@ describe('StreakScreen', () => {
 
     expect(container.firstChild).toBeNull();
     expect(onContinue).toHaveBeenCalledTimes(1);
+  });
+
+  it('does NOT mark today as played in the week bar when today was not played', async () => {
+    const { container } = render(<StreakScreen {...defaultProps} />);
+
+    const todaySlot = container.querySelector('.jemz-pill-slot.today')!;
+    expect(todaySlot).toBeTruthy();
+    await waitFor(() => {
+      expect(todaySlot.className).toContain('unplayed');
+    });
+    expect(todaySlot.querySelector('svg')).toBeNull();
+  });
+
+  it('marks today as played in the week bar only when today is in played dates', async () => {
+    const today = getLocalDateString(new Date());
+    localStorage.setItem(getPlayedDatesStorageKey(), JSON.stringify([today]));
+
+    const { container } = render(<StreakScreen {...defaultProps} />);
+
+    const todaySlot = container.querySelector('.jemz-pill-slot.today')!;
+    expect(todaySlot).toBeTruthy();
+    await waitFor(() => {
+      expect(todaySlot.className).toContain('played');
+    });
+    expect(todaySlot.querySelector('svg')).not.toBeNull();
   });
 });

@@ -52,11 +52,13 @@ Level progression is designed to be intentionally slow and demanding. We avoid r
 ### B. The Streak "Ignition" System
 Streaks are the core retention mechanic, heavily leveraging psychological triggers.
 1. **Activity-Based**: Streaks are *not* awarded for just opening the app. They are only awarded via the `recordActivity()` function when a user completes a task (e.g., checkmating a bot).
-2. **`hasPlayedToday` State**: The `GameContext` checks `state.lastVisit === new Date().toDateString()` and exports a global boolean `hasPlayedToday`.
-3. **The Global "Unlit" Psychological Trigger**: 
+2. **`hasPlayedToday` State**: The `GameContext` compares the local `YYYY-MM-DD` date of `lastVisit` against today (strings parsed as local dates only — never through UTC `new Date()`), exporting a global boolean `hasPlayedToday`.
+3. **`playedDates` = Actual Played Days Only**: Calendars (Profile and Streak Screen) render only genuinely played dates. No backfilling from "today" or from stale streak counts — a missed day is never shown as played.
+4. **Local Midnight Rollover**: A `GameContext` heartbeat (30s `setInterval` + `visibilitychange` listener) fires on the local 12:00am day change. If the previous day was missed, the stale streak resets to `0` immediately (pruning any fabricated future dates); if yesterday was played, the streak count survives. The forced re-render makes `hasPlayedToday` false app-wide (headers, Profile, module headers, Victory screen all show unlit/pale fire icons) with no page reload, and the corrected state syncs to Supabase.
+5. **The Global "Unlit" Psychological Trigger**: 
    - When a user logs in, if `hasPlayedToday` is false, the 🔥 streak badges across the Home page, Profile, and all Module headers are rendered with the `.unlit-icon` class (`filter: grayscale(100%) opacity(40%)`) and `.unlit-text` class (grey text).
    - This creates a visual "void" that the user feels compelled to fill by completing a task.
-4. **The "Ignition" Animation**:
+6. **The "Ignition" Animation**:
    - When a user wins their first game of the day, the victory overlay pops up showing their old streak number and the greyed-out fire icon.
    - After a dramatic 0.8s delay, the `.igniting` CSS class is applied.
    - The fire icon physically pulses (`scale(1.5)`), drops its grayscale filter, bursts into full vibrant color, and the number dynamically ticks up by 1.
@@ -71,7 +73,7 @@ Streaks are the core retention mechanic, heavily leveraging psychological trigge
 
 ## 4. UI/UX Design Language & Theming
 
-The application explicitly avoids Dark Mode to maintain a bright, energetic, and engaging environment.
+The application explicitly avoids Dark Mode to maintain a bright, energetic, and engaging environment. This is enforced against device-level dark/forced-color overrides: `index.html` declares `<meta name="color-scheme" content="light">`, the `:root` block declares `color-scheme: light only` + `forced-color-adjust: none`, and a `@media (forced-colors: active)` block applies `forced-color-adjust: none` to all elements and re-asserts the canvas colors on `html`/`body` — so browsers (Chrome auto dark, Samsung force dark, Windows High Contrast, forced-colors high contrast) never re-tint the UI.
 
 ### Typography
 - **Headings & Large Numbers**: `Outfit` (sans-serif) - chosen for its modern, geometric, and highly legible structure.

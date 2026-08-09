@@ -3,7 +3,9 @@
 
 :root {
   color-scheme: light;
-  
+  color-scheme: only light;
+  forced-color-adjust: none;
+
   /* Primary palette - Forest & Sage Green */
   --color-primary: #16653e; 
   --color-primary-light: #288456;
@@ -55,12 +57,36 @@
 html, body, #root {
   min-height: 100vh;
 }
+html {
+  /* Explicit non-trivial html background so the canvas keeps the author palette
+     under forced colors mode (a transparent html would inherit body's adjusted
+     forced background at paint time and render as the system Canvas color). */
+  background-color: var(--color-bg-page);
+  color: var(--color-text);
+}
 body {
   font-family: var(--font-body);
   background-color: var(--color-bg-page);
   color: var(--color-text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Forced Colors Mode (Windows High Contrast, Android high contrast text, etc.):
+   keep the app's exact palette — the user agent must not substitute system
+   colors anywhere. `forced-color-adjust: none` is inherited from :root, but the
+   universal re-assertion also covers buttons, inputs, SVGs, and pseudo-elements. */
+@media (forced-colors: active) {
+  *,
+  *::before,
+  *::after {
+    forced-color-adjust: none;
+  }
+  html,
+  body {
+    background-color: var(--color-bg-page);
+    color: var(--color-text);
+  }
 }
 
 /* ── Accessibility ─────────────────────────────── */

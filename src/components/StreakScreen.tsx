@@ -1,7 +1,7 @@
 // src/components/StreakScreen.tsx
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Flame, Gem, Sparkles, Calendar as CalendarIcon, X } from 'lucide-react';
-import { getLocalDateString, getCurrentWeekDates, backfillPlayedDates } from '../utils/dateUtils';
+import { getLocalDateString, getCurrentWeekDates } from '../utils/dateUtils';
 import { useGame } from '../contexts/GameContext';
 import './streak.css';
 
@@ -28,7 +28,6 @@ export function markStreakShownToday(userId?: string): void {
     const today = getLocalDateString(new Date());
     const key = getStreakStorageKey(userId);
     localStorage.setItem(key, today);
-    recordPlayedDateToday(userId);
   } catch {}
 }
 
@@ -47,18 +46,6 @@ export function getPlayedDates(userId?: string): string[] {
   } catch {
     return [];
   }
-}
-
-export function recordPlayedDateToday(userId?: string): void {
-  try {
-    const today = getLocalDateString(new Date());
-    const dates = getPlayedDates(userId);
-    if (!dates.includes(today)) {
-      dates.push(today);
-      const key = getPlayedDatesStorageKey(userId);
-      localStorage.setItem(key, JSON.stringify(dates));
-    }
-  } catch {}
 }
 
 export interface StreakScreenProps {
@@ -109,11 +96,9 @@ export default function StreakScreen({
         onContinue();
         return;
       }
-      recordPlayedDateToday(userId);
       const localDates = getPlayedDates(userId);
       const combined = Array.from(new Set([...contextPlayedDates, ...localDates]));
-      const filled = backfillPlayedDates(targetStreak, new Date(), combined);
-      setPlayedDates(filled);
+      setPlayedDates(combined);
 
       // Reset animation state
       setCurrentDisplayStreak(initialStreak);
@@ -218,7 +203,7 @@ export default function StreakScreen({
           <div className="jemz-pill-bar">
             {currentWeekDates.map((dateStr, idx) => {
               const isToday = idx === todayIndex;
-              const hasPlayed = playedDates.includes(dateStr) || isToday;
+              const hasPlayed = playedDates.includes(dateStr);
 
               return (
                 <div

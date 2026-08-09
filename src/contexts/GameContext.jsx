@@ -4,7 +4,7 @@ import { supabase } from '../utils/supabase';
 import { useAuth } from './AuthContext';
 import { ACHIEVEMENTS } from '../utils/achievements';
 import { resetStreakShownForUser } from '../components/StreakScreen';
-import { getLocalDateString, backfillPlayedDates } from '../utils/dateUtils';
+import { getLocalDateString, backfillPlayedDates, toLocalDateString, pruneFuturePlayedDates, applyDayRollover } from '../utils/dateUtils';
 
 const GameContext = createContext();
 
@@ -46,7 +46,10 @@ export function getLocalState(userId) {
     const raw = localStorage.getItem(key);
     if (!raw) return defaultState;
     const parsed = { ...defaultState, ...JSON.parse(raw) };
-    parsed.playedDates = backfillPlayedDates(parsed.streak, parsed.lastVisit, parsed.playedDates);
+    parsed.playedDates = pruneFuturePlayedDates(
+      backfillPlayedDates(parsed.streak, parsed.lastVisit, parsed.playedDates),
+      toLocalDateString(parsed.lastVisit)
+    );
     return parsed;
   } catch {
     return defaultState;
@@ -94,11 +97,14 @@ export function GameProvider({ children }) {
 
         const streakCount = data.streak || 0;
         const lastVisitDate = data.last_visit || null;
-        const filledPlayedDates = backfillPlayedDates(streakCount, lastVisitDate, rawDates);
+        const lastVisitStr = toLocalDateString(lastVisitDate);
+        const filledPlayedDates = pruneFuturePlayedDates(
+          backfillPlayedDates(streakCount, lastVisitDate, rawDates),
+          lastVisitStr
+        );
 
         let initialPrevStreak = Math.max(0, streakCount - 1);
-        if (lastVisitDate) {
-          const lastVisitStr = getLocalDateString(new Date(lastVisitDate));
+        if (lastVisitStr) {
           const todayStr = getLocalDateString(new Date());
           const yesterday = new Date();
           yesterday.setDate(yesterday.getDate() - 1);
@@ -178,7 +184,7 @@ export function GameProvider({ children }) {
     let streakResult = { previousStreak: 0, currentStreak: 0, isNewDay: false };
 
     setState(prev => {
-      let lastVisitStr = prev.lastVisit ? getLocalDateString(new Date(prev.lastVisit)) : null;
+      let lastVisitStr = prev.lastVisit ? toLocalDateString(prev.lastVisit) : null;
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       const yesterdayStr = getLocalDateString(yesterday);
@@ -381,13 +387,50 @@ export function GameProvider({ children }) {
 
   const hasPlayedToday = (() => {
     if (!state.lastVisit) return false;
-    return getLocalDateString(new Date(state.lastVisit)) === getLocalDateString(new Date());
+    const lastVisitStr = toLocalDateString(state.lastVisit);
+    if (!lastVisitStr) return false;
+    return lastVisitStr === getLocalDateString(new Date());
   })();
+
+  // Changes identity on local day rollover so every consumer re-renders with a
+  // fresh hasPlayedToday (unlit fire icons) even when state itself is unchanged.
+  const [currentDay, setCurrentDay] = useState(() => getLocalDateString(new Date()));
+
+  // Local-midnight day rollover: fires without a reload so a stale streak resets
+  // to 0 (when yesterday was missed) while played dates remain actual history.
+  useEffect(() => {
+    const lastCheckedDayRef = { current: getLocalDateString(new Date()) };
+
+    const tick = () => {
+      const todayStr = getLocalDateString(new Date());
+      if (todayStr === lastCheckedDayRef.current) return;
+      lastCheckedDayRef.current = todayStr;
+
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = getLocalDateString(yesterday);
+
+      setState(prev => applyDayRollover(prev, todayStr, yesterdayStr));
+      setCurrentDay(todayStr);
+    };
+
+    const intervalId = setInterval(tick, 30000);
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') tick();
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, []);
 
   return (
     <GameContext.Provider value={{
       ...state,
       playedDates: state.playedDates || [],
+      currentDay,
       hasPlayedToday,
       recordActivity,
       unlockAchievement,

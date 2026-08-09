@@ -35,6 +35,7 @@
   - **Card Surface**: Crisp White (`#ffffff`) with Muted Sage Borders (`#b0cbaf`).
   - **Tactile 3D Shadows**: `box-shadow: 0 4px 0 #b0cbaf` (elements) and `0 3px 0 #0e4329` (buttons). Active press translates `2px` downward.
   - **Anti-Glassmorphism & Anti-Glow Rule**: Strictly avoid glassmorphism (`backdrop-filter`), translucent fuzzy overlays, and neon glow effects (`box-shadow: 0 0 ... glow`, radial-gradient auras). All modals, cards, and UI surfaces use clean, solid background colors with solid contrast 3D borders and tactile offset shadows.
+  - **Light-Only Color Scheme Enforcement**: The app is deliberately light-only. `index.html` ships `<meta name="color-scheme" content="light">` and `src/index.css` `:root` sets `color-scheme: light only` plus `forced-color-adjust: none`. A `@media (forced-colors: active)` block re-asserts `forced-color-adjust: none` on every element/pseudo-element and re-declares the canvas colors on `html`/`body`, so phone browsers (Chrome auto dark mode, Samsung Internet force dark, OS dark-theme engines) and forced-colors engines (Windows High Contrast, Android high contrast text) never re-tint or invert the palette, while the design itself stays identical.
 - **Typography**:
   - **Headings**: `Outfit` (Bold, rounded geometric sans-serif, `800 - 900`).
   - **Body**: `Inter` (Clean, legible sans-serif).
@@ -49,12 +50,13 @@
 
 ### Streak System & Calendar
 - **Logic**: Tracks consecutive daily activity completion in real-time.
-- **Local Date Handling**: Standardized `YYYY-MM-DD` formatting based on local timezone to eliminate UTC midnight date shifts.
-- **Played History Persistence (`playedDates`)**: Persists array of active played dates (`YYYY-MM-DD`) in global `GameContext` state, browser `localStorage`, and Supabase `game_progress` cloud database (`played_dates` / `bot_stats.playedDates`).
-- **Duolingo Streak Calendar**: Rendered in Profile and Streak Screen drawer modal. Days where the learner played display lit fire badges (`Flame`); past days with no activity remain open/unlit.
+- **Local Date Handling**: Standardized `YYYY-MM-DD` formatting based on local timezone to eliminate UTC midnight date shifts. `YYYY-MM-DD` strings are always parsed as *local* calendar dates (`fromLocalDateString`), never through `new Date('YYYY-MM-DD')` (which parses as UTC midnight and shifts a day for negative-offset timezones).
+- **Played History Persistence (`playedDates`)**: Persists array of active played dates (`YYYY-MM-DD`) in global `GameContext` state, browser `localStorage`, and Supabase `game_progress` cloud database (`played_dates` / `bot_stats.playedDates`). **`playedDates` contains only genuinely played days — calendars never backfill/fabricate dates from today or from a stale streak count.**
+- **Local Midnight Rollover (no reload needed)**: A `GameContext` heartbeat (30s interval + `visibilitychange` when the tab becomes visible) detects the local day change at 12:00am. If the previous day was missed, a stale streak immediately resets to `0` (and any fabricated future dates are pruned); if yesterday was played the streak survives. `hasPlayedToday` recomputes on the forced re-render, so fire icons across headers, Profile ("Me"), module headers, and the Victory screen instantly switch to the unlit grey state without requiring a page reload. Corrected state syncs to Supabase automatically.
+- **Duolingo Streak Calendar**: Rendered in Profile and Streak Screen drawer modal. Days where the learner *actually* played display lit fire badges (`Flame`); past days with no activity remain open/unlit. The current day is lit only after the learner completes their first activity of that day.
 - **Streak Transition Animations**: Counter transitions smoothly from `previousStreak` to `currentStreak` (e.g., `3 -> 4`) with animated `+1` badge effects upon completing daily learning activities.
 - **Indicator**: Active Flame (`#ff3d00` / `#ff6d00`), Inactive Flame (`#888888`).
-- **Reset Trigger**: Absence of recorded activity on the previous calendar day.
+- **Reset Trigger**: Absence of recorded activity on the previous calendar day (enforced at the next local midnight).
 
 ### XP & Level Progression
 - **Level Formula**: `Level = floor(Total XP / 100) + 1`

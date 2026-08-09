@@ -7,7 +7,7 @@ import { ACHIEVEMENTS } from '../utils/achievements.js';
 import { Settings, LogOut, Trophy, Lock, Pencil, Flame, Calendar as CalendarIcon } from 'lucide-react';
 import { updateAvatar, updateName } from '../api/supabase.js';
 import { getPlayedDates } from '../components/StreakScreen';
-import { getLocalDateString, backfillPlayedDates } from '../utils/dateUtils';
+import { getLocalDateString } from '../utils/dateUtils';
 import '../index.css';
 
 export default function Profile() {
@@ -28,9 +28,8 @@ export default function Profile() {
   useEffect(() => {
     const local = getPlayedDates(user?.id);
     const combined = Array.from(new Set([...(contextPlayedDates || []), ...local]));
-    const filled = backfillPlayedDates(streak, new Date(), combined);
-    setPlayedDates(filled);
-  }, [user?.id, contextPlayedDates, streak]);
+    setPlayedDates(combined);
+  }, [user?.id, contextPlayedDates]);
 
   const showToast = (msg: string) => {
     setToast(msg);
