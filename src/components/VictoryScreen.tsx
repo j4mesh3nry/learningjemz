@@ -6,6 +6,25 @@ import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
 import './victory.css';
 
+const DEFAULT_PALETTE = {
+  gem: '#ffffff',
+  sparkles: '#9aa3c4',
+  flameActive: '#ff6d5a',
+  flameInactive: '#a3a8c2',
+  flameInactiveFill: '#777b94',
+  trophy: '#c9a24b',
+  trophyFill: '#e0bd6e',
+};
+
+const ICON_PALETTES: Record<string, typeof DEFAULT_PALETTE> = {
+  default: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
+  space: { gem: '#e8ecf8', sparkles: '#aa5f5a', flameActive: '#d9a2a2', flameInactive: '#8f94b0', flameInactiveFill: '#a6aac4', trophy: '#a5923f', trophyFill: '#d3bd7a' },
+  chess: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
+  geo: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
+  reading: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
+  dark: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
+};
+
 export interface VictoryScreenProps {
   isOpen: boolean;
   title?: string;
@@ -40,6 +59,8 @@ export default function VictoryScreen({
   const { user } = useAuth();
   const gameContext = useGame();
   const userId = user?.id;
+
+  const palette = ICON_PALETTES[theme] || DEFAULT_PALETTE;
 
   const activeStreak = propStreak !== undefined && propStreak > 0 
     ? propStreak 
@@ -115,9 +136,9 @@ export default function VictoryScreen({
         {/* Top LearningJemz Logo Icon Container */}
         <div className="victory-icon-container">
           <div className="victory-logo-bg">
-            <Gem size={34} color="#ffffff" strokeWidth={2.5} />
+            <Gem size={34} color={palette.gem} strokeWidth={2.5} />
           </div>
-          <Sparkles className="sparkles-badge" size={22} color="#ffb300" />
+          <Sparkles className="sparkles-badge" size={22} color={palette.sparkles} />
         </div>
 
         {/* Title & Subtitle */}
@@ -132,8 +153,8 @@ export default function VictoryScreen({
             <div className="reward-icon-wrap flame-bounce">
               <Flame
                 size={24}
-                color={activeHasPlayedToday ? '#ff4d4d' : '#888888'}
-                fill={activeHasPlayedToday ? '#ff4d4d' : '#bbbbbb'}
+                color={activeHasPlayedToday ? palette.flameActive : palette.flameInactive}
+                fill={activeHasPlayedToday ? palette.flameActive : palette.flameInactiveFill}
               />
             </div>
             <div className="reward-text-wrap">
@@ -145,7 +166,7 @@ export default function VictoryScreen({
           {/* XP Box */}
           <div className="reward-box xp-box">
             <div className="reward-icon-wrap xp-icon-wrap trophy-bounce">
-              <Trophy size={24} color="#f57f17" fill="#ffb300" />
+              <Trophy size={24} color={palette.trophy} fill={palette.trophyFill} />
             </div>
             <div className="reward-text-wrap">
               <span className="reward-val">+{xpGained}</span>

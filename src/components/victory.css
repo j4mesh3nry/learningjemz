@@ -40,96 +40,128 @@
    MODULE THEME VARIANTS (Clean, Solid 3D Aesthetics - NO Glows / NO Blur)
    ========================================================================== */
 
-/* --- 🚀 SPACE THEME (`theme-space`) --- */
+/* --- SPACE THEME (`theme-space`) — matches the Illuminate game-over card --- */
 .victory-modal-clean.theme-space {
-  background: #161936;
-  border: 3px solid #0284c7;
-  box-shadow: 0 8px 0 #0369a1;
-  color: #ffffff;
+  background: #171a38;
+  border: 2px solid #3d4461;
+  box-shadow: 0 6px 0 #0b0d22;
+  border-radius: 20px;
+  padding: 26px 20px 20px;
+  max-width: 340px;
+  color: #f4f6fc;
 }
 
 .theme-space .victory-logo-bg {
-  background: #0284c7;
-  border: 3px solid #38bdf8;
-  box-shadow: 0 4px 0 #0369a1;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: #21254a;
+  border: 2px solid #3d4461;
+  box-shadow: 0 3px 0 #0b0d22;
+  margin-bottom: 14px;
+}
+
+.theme-space .sparkles-badge {
+  display: none;
 }
 
 .theme-space .victory-clean-title {
-  color: #ffffff;
+  color: #f4f6fc;
+  font-size: 1.45rem;
+  margin: 0 0 4px 0;
 }
 
 .theme-space .victory-clean-subtitle {
-  color: #94a3b8;
+  color: #a8b0d0;
+  font-size: 0.82rem;
+  margin-bottom: 20px;
 }
 
 .theme-space .victory-clean-children {
-  color: #cbd5e1;
+  color: #c9cfe8;
 }
 
-.theme-space .streak-box {
-  background: #251c2e;
-  border: 2px solid #ef4444;
-  box-shadow: 0 3px 0 #b91c1c;
+.theme-space .streak-box,
+.theme-space .xp-box {
+  background: #1d2040;
+  border: 1.5px solid #3a4461;
+  box-shadow: none;
+  border-radius: 12px;
+  padding: 10px 6px;
+}
+
+.theme-space .streak-box.active-streak {
+  background: #1d2040;
+  border: 1.5px solid #3a4461;
+  box-shadow: none;
 }
 
 .theme-space .streak-box.active-streak .reward-val {
-  color: #f87171;
-}
-
-.theme-space .xp-box {
-  background: #2b2214;
-  border: 2px solid #f59e0b;
-  box-shadow: 0 3px 0 #b45309;
+  color: #d8a8a8;
 }
 
 .theme-space .xp-box .reward-val {
-  color: #fbbf24;
+  color: #d9c58f;
+}
+
+.theme-space .reward-val {
+  font-size: 1.1rem;
+  color: #e4e7f6;
 }
 
 .theme-space .reward-lbl {
-  color: #94a3b8;
+  color: #8d93b4;
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
 }
 
 .theme-space .victory-btn-primary {
-  background: #0284c7;
-  color: #ffffff;
-  border: 2px solid #38bdf8;
-  box-shadow: 0 4px 0 #0369a1;
+  background: #2c3261;
+  color: #f4f6fc;
+  border: 2px solid #39406c;
+  box-shadow: 0 4px 0 #0b0d22;
+  border-radius: 14px;
+  padding: 13px;
 }
 
 .theme-space .victory-btn-primary:hover {
-  background: #0369a1;
+  background: #333b72;
 }
 
 .theme-space .victory-btn-primary:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #0369a1;
+  box-shadow: 0 2px 0 #0b0d22;
 }
 
 .theme-space .victory-btn-secondary {
-  background: #1e293b;
-  color: #e2e8f0;
-  border: 2px solid #475569;
-  box-shadow: 0 3px 0 #334155;
+  background: #1d2040;
+  color: #c6cbe4;
+  border: 2px solid #3a4461;
+  box-shadow: none;
+  border-radius: 12px;
+  padding: 10px;
 }
 
 .theme-space .victory-btn-secondary:hover {
-  background: #334155;
+  background: #262a52;
 }
 
 .theme-space .victory-btn-secondary:active {
   transform: translateY(2px);
-  box-shadow: 0 1px 0 #334155;
+  box-shadow: 0 0 0 #0b0d22;
 }
 
 .theme-space .victory-btn-view {
-  background: #1e293b;
-  color: #38bdf8;
-  border: 2px dashed #0284c7;
+  background: transparent;
+  color: #8d93b4;
+  border: 1.5px solid #3a4461;
+  border-radius: 12px;
+  padding: 9px;
 }
 
 .theme-space .victory-btn-view:hover {
-  background: #0f172a;
+  background: #1d2040;
+  color: #c6cbe4;
 }
 
 
@@ -497,10 +529,10 @@
 }
 
 .victory-minimized-dock.theme-space {
-  background: #161936;
-  border: 3px solid #0284c7;
-  box-shadow: 0 6px 0 #0369a1;
-  color: #ffffff;
+  background: #171a38;
+  border: 2px solid #3d4461;
+  box-shadow: 0 5px 0 #0b0d22;
+  color: #eef0f8;
 }
 
 .victory-minimized-dock.theme-chess {
@@ -534,9 +566,9 @@
 }
 
 .theme-space .victory-btn-restore {
-  background: #0284c7;
-  border: 2px solid #38bdf8;
-  box-shadow: 0 3px 0 #0369a1;
+  background: #2c3261;
+  border: 2px solid #39406c;
+  box-shadow: 0 3px 0 #0b0d22;
 }
 
 .theme-chess .victory-btn-restore {
@@ -565,10 +597,10 @@
 }
 
 .theme-space .victory-btn-primary-mini {
-  background: #1e293b;
-  color: #e2e8f0;
-  border: 2px solid #475569;
-  box-shadow: 0 2px 0 #334155;
+  background: #1d2040;
+  color: #d0d6ee;
+  border: 2px solid #3a4461;
+  box-shadow: 0 2px 0 #0b0d22;
 }
 
 .theme-chess .victory-btn-primary-mini {

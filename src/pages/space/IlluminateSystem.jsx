@@ -844,19 +844,19 @@ export default function IlluminateSystem() {
         title="System Illuminated!"
         subtitle={
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', margin: '8px 0' }}>
-            <div style={{ color: '#e0e0e0', fontSize: '1rem' }}>
+            <div style={{ color: '#c6cbe4', fontSize: '1rem' }}>
               Time: <strong>{formatTime(elapsedTime)}</strong>
             </div>
             {isNewRecord && (
-              <div style={{ color: '#00e5ff', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ color: '#d3bd7a', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Zap size={16} /> NEW PERSONAL BEST!
               </div>
             )}
-            <div style={{ color: '#ff4d4d', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <div style={{ color: '#a8b0d0', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span>Lives Left:</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
                 {Array.from({ length: lives }).map((_, i) => (
-                  <Heart key={i} size={14} fill="#ff4d4d" color="#ff4d4d" />
+                  <Heart key={i} size={14} fill="#d9a2a2" color="#d9a2a2" />
                 ))}
               </div>
             </div>
@@ -873,7 +873,7 @@ export default function IlluminateSystem() {
         <div className="illum-gameover-overlay" role="dialog" aria-modal="true" aria-label="Game Over">
           <div className="illum-gameover-card">
             <div className="illum-gameover-icon">
-              <HeartCrackIcon size={30} color="#ffffff" strokeWidth={2.2} />
+              <HeartCrackIcon size={26} color="#e8ecf8" strokeWidth={2.2} />
             </div>
             <h2 className="illum-gameover-title">Game Over</h2>
             <p className="illum-gameover-subtitle">You ran out of lives!</p>
@@ -893,13 +893,15 @@ export default function IlluminateSystem() {
               <button type="button" className="illum-gameover-btn-try" onClick={() => startGame(level)}>
                 Try Again
               </button>
-              <button type="button" className="illum-gameover-btn-view" onClick={() => setIsGameOverMinimized(true)}>
-                <Eye size={16} />
-                <span>View Screen</span>
-              </button>
-              <button type="button" className="illum-gameover-btn-menu" onClick={() => navigate('/space/objects-by-size')}>
-                Back to Menu
-              </button>
+              <div className="illum-gameover-btn-row">
+                <button type="button" className="illum-gameover-btn-view" onClick={() => setIsGameOverMinimized(true)}>
+                  <Eye size={15} />
+                  <span>View Screen</span>
+                </button>
+                <button type="button" className="illum-gameover-btn-menu" onClick={() => navigate('/space/objects-by-size')}>
+                  Back to Menu
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -1786,7 +1786,7 @@
 }
 
 /* -------------------------------------
- * Illuminate the System - Game Over Screen (Tactile 3D Flat)
+ * Illuminate the System - Game Over Screen (Muted Minimal)
  * ------------------------------------- */
 
 .illum-gameover-overlay {
@@ -1795,7 +1795,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(14, 15, 30, 0.72);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1807,29 +1807,29 @@
 }
 
 .illum-gameover-card {
-  background: var(--bg-space);
-  border: 3px solid #0284c7;
-  box-shadow: 0 8px 0 #0369a1;
-  border-radius: 24px;
-  padding: 28px 24px 24px;
+  background: #171a38;
+  border: 2px solid #3d4461;
+  box-shadow: 0 6px 0 #0b0d22;
+  border-radius: 20px;
+  padding: 26px 20px 20px;
   width: 100%;
-  max-width: 360px;
+  max-width: 340px;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
   text-align: center;
   animation: illumGameoverSlideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.15);
-  color: #ffffff;
+  color: #eef0f8;
 }
 
 .illum-gameover-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  background: #dc2626;
-  border: 3px solid #f87171;
-  box-shadow: 0 4px 0 #7f1d1d;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: #21254a;
+  border: 2px solid #3d4461;
+  box-shadow: 0 3px 0 #0b0d22;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1838,145 +1838,128 @@
 
 .illum-gameover-title {
   font-family: var(--font-heading);
-  font-size: 1.6rem;
+  font-size: 1.45rem;
   font-weight: 900;
-  color: #ffffff;
-  margin: 0 0 6px 0;
+  color: #f4f6fc;
+  margin: 0 0 4px 0;
   letter-spacing: -0.3px;
 }
 
 .illum-gameover-subtitle {
-  font-size: 0.92rem;
-  color: #94a3b8;
-  font-weight: 600;
-  margin-bottom: 18px;
+  font-size: 0.85rem;
+  color: #a8b0d0;
+  font-weight: 500;
+  margin-bottom: 20px;
   line-height: 1.4;
 }
 
 .illum-gameover-stats {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .illum-gameover-stat {
   flex: 1;
-  background: #1e293b;
-  border: 2px solid #475569;
-  box-shadow: 0 3px 0 #334155;
-  border-radius: 16px;
-  padding: 12px 8px;
+  background: #1d2040;
+  border: 1.5px solid #3a4461;
+  border-radius: 12px;
+  padding: 10px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   box-sizing: border-box;
 }
 
 .illum-gameover-stat-val {
   font-family: var(--font-heading);
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 900;
-  color: #ffffff;
+  color: #e4e7f6;
   line-height: 1.2;
 }
 
 .illum-gameover-stat-lbl {
-  font-size: 0.68rem;
-  font-weight: 800;
+  font-size: 0.62rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #94a3b8;
+  color: #8d93b4;
 }
 
 .illum-gameover-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
 }
 
 .illum-gameover-btn-try {
   width: 100%;
-  background: #dc2626;
-  color: #ffffff;
-  border: 2px solid #f87171;
-  padding: 14px;
-  border-radius: 16px;
+  background: #2c3261;
+  color: #f4f6fc;
+  border: 2px solid #39406c;
+  padding: 13px;
+  border-radius: 14px;
   font-family: var(--font-heading);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 0 #7f1d1d;
+  box-shadow: 0 4px 0 #0b0d22;
   transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
   box-sizing: border-box;
 }
 
 .illum-gameover-btn-try:hover {
-  background: #b91c1c;
+  background: #333b72;
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 #7f1d1d;
+  box-shadow: 0 6px 0 #0b0d22;
 }
 
 .illum-gameover-btn-try:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #7f1d1d;
+  box-shadow: 0 2px 0 #0b0d22;
 }
 
-.illum-gameover-btn-view {
+.illum-gameover-btn-row {
+  display: flex;
+  gap: 8px;
   width: 100%;
-  background: #1e293b;
-  color: #f87171;
-  border: 2px dashed #dc2626;
-  padding: 10px;
-  border-radius: 14px;
+}
+
+.illum-gameover-btn-view,
+.illum-gameover-btn-menu {
+  flex: 1;
+  background: #1d2040;
+  color: #c6cbe4;
+  border: 2px solid #3a4461;
+  padding: 9px;
+  border-radius: 12px;
   font-family: var(--font-heading);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
+  box-shadow: 0 2px 0 #0b0d22;
   transition: transform 0.1s ease, background 0.15s ease;
   box-sizing: border-box;
 }
 
-.illum-gameover-btn-view:hover {
-  background: #334155;
+.illum-gameover-btn-view:hover,
+.illum-gameover-btn-menu:hover {
+  background: #262a52;
   transform: translateY(-1px);
 }
 
-.illum-gameover-btn-view:active {
-  transform: translateY(1px);
-}
-
-.illum-gameover-btn-menu {
-  width: 100%;
-  background: #1e293b;
-  color: #e2e8f0;
-  border: 2px solid #475569;
-  padding: 12px;
-  border-radius: 16px;
-  font-family: var(--font-heading);
-  font-size: 0.92rem;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 3px 0 #334155;
-  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
-  box-sizing: border-box;
-}
-
-.illum-gameover-btn-menu:hover {
-  background: #334155;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 #334155;
-}
-
+.illum-gameover-btn-view:active,
 .illum-gameover-btn-menu:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #334155;
+  transform: translateY(1px);
+  box-shadow: 0 0 0 #0b0d22;
 }
 
 /* Floating Bottom Dock (minimized "View Screen" state) */
@@ -1986,72 +1969,88 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 1001;
-  background: #1d1b33;
-  border: 3px solid #dc2626;
-  box-shadow: 0 6px 0 #7f1d1d;
-  border-radius: 20px;
-  padding: 8px 14px;
+  background: #171a38;
+  border: 2px solid #3d4461;
+  box-shadow: 0 5px 0 #0b0d22;
+  border-radius: 16px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   box-sizing: border-box;
   max-width: 90vw;
-  animation: illumosSlideUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  animation: illumGameoverSlideUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
 }
 
 .illum-gameover-btn-restore {
-  background: #dc2626;
-  color: #ffffff;
-  border: 2px solid #f87171;
+  background: #2c3261;
+  color: #f4f6fc;
+  border: 2px solid #39406c;
   padding: 8px 14px;
   border-radius: 12px;
   font-family: var(--font-heading);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 3px 0 #7f1d1d;
+  box-shadow: 0 3px 0 #0b0d22;
   white-space: nowrap;
+}
+
+.illum-gameover-btn-restore:hover {
+  background: #333b72;
 }
 
 .illum-gameover-btn-restore:active {
   transform: translateY(2px);
-  box-shadow: 0 1px 0 #7f1d1d;
+  box-shadow: 0 1px 0 #0b0d22;
 }
 
 .illum-gameover-btn-mini-try {
-  background: #1e293b;
-  color: #e2e8f0;
-  border: 2px solid #475569;
-  box-shadow: 0 2px 0 #334155;
+  background: #1d2040;
+  color: #c8cbe4;
+  border: 2px solid #3a4461;
+  box-shadow: 0 2px 0 #0b0d22;
   padding: 8px 12px;
   border-radius: 12px;
   font-family: var(--font-heading);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.illum-gameover-btn-mini-try:hover {
+  background: #262a52;
 }
 
 .illum-gameover-btn-mini-try:active {
   transform: translateY(2px);
-  box-shadow: 0 0 0 #334155;
+  box-shadow: 0 0 0 #0b0d22;
 }
 
 .illum-gameover-btn-mini-menu {
   background: transparent;
-  color: #94a3b8;
-  border: 1.5px solid currentColor;
+  color: #8d93b4;
+  border: 1.5px solid #3a4461;
   padding: 8px 12px;
   border-radius: 12px;
   font-family: var(--font-heading);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
-  opacity: 0.9;
+}
+
+.illum-gameover-btn-mini-menu:hover {
+  background: #1d2040;
+  color: #c8cbe4;
+}
+
+.illum-gameover-btn-mini-menu:active {
+  transform: translateY(2px);
 }
 
 @keyframes illumGameoverFadeIn {
