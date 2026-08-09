@@ -1311,7 +1311,7 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
@@ -1328,7 +1328,7 @@
 .illum-keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 9px;
+  gap: 4px;
   width: 100%;
 }
 
