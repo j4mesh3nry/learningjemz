@@ -1328,19 +1328,19 @@
 .illum-keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 9px;
   width: 100%;
 }
 
 .illum-key {
   flex: 1;
   min-width: 0;
-  height: 56px;
+  height: 62px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.22);
   color: #ffffff;
-  font-size: 1.4rem;
+  font-size: 1.55rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
@@ -1363,26 +1363,26 @@
   background: rgba(239, 83, 80, 0.45);
   border: 1px solid rgba(239, 83, 80, 0.6);
   color: #ffffff;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
 }
 
 .illum-key-space {
   flex: 2.2;
-  height: 54px;
+  height: 60px;
   background: rgba(255, 255, 255, 0.28);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 900;
   letter-spacing: 1px;
 }
 
 .illum-key-enter {
   flex: 2.4;
-  height: 54px;
+  height: 60px;
   background: linear-gradient(135deg, #1e2044 0%, #11132b 100%);
   border: 1.5px solid #38bdf8;
   color: #ffffff;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 900;
   letter-spacing: 1px;
   box-shadow: 0 2px 0 #0b0d1e;
