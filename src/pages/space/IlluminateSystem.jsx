@@ -80,6 +80,7 @@ export default function IlluminateSystem() {
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const [selectedCard, setSelectedCard] = useState(null);
   const [discoveryShown, setDiscoveryShown] = useState(false);
+  const [discoveryTriggered, setDiscoveryTriggered] = useState(false);
   const inputRef = useRef(null);
 
   // Auto-start level if URL param or location state is provided
@@ -127,12 +128,13 @@ export default function IlluminateSystem() {
 
   // Discovery cue: show subtle pulse when first world (Sun) is revealed
   useEffect(() => {
-    if (currentIndex === 1 && !discoveryShown) {
+    if (currentIndex === 1 && !discoveryTriggered) {
+      setDiscoveryTriggered(true);
       setDiscoveryShown(true);
       const timer = setTimeout(() => setDiscoveryShown(false), 4500);
       return () => clearTimeout(timer);
     }
-  }, [currentIndex, discoveryShown]);
+  }, [currentIndex, discoveryTriggered]);
 
   const startGame = (diffLevel) => {
     setLevel(diffLevel);
@@ -152,6 +154,7 @@ export default function IlluminateSystem() {
     setIsNewRecord(false);
     setSelectedCard(null);
     setDiscoveryShown(false);
+    setDiscoveryTriggered(false);
     setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
     setTimeout(() => {
       inputRef.current?.focus({ preventScroll: true });
@@ -718,7 +721,7 @@ export default function IlluminateSystem() {
       </div>
 
       {/* Grid Box Container */}
-      <div className="illum-grid-container" onClick={dismissDiscovery}>
+      <div className="illum-grid-container">
         {discoveryShown && (
           <div className="illum-discovery-pulse" aria-hidden="true" />
         )}
