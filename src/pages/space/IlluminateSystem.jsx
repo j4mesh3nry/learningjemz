@@ -130,11 +130,15 @@ export default function IlluminateSystem() {
   useEffect(() => {
     if (currentIndex === 1 && !discoveryTriggered) {
       setDiscoveryTriggered(true);
-      setDiscoveryShown(true);
-      const timer = setTimeout(() => setDiscoveryShown(false), 4500);
-      return () => clearTimeout(timer);
     }
   }, [currentIndex, discoveryTriggered]);
+
+  useEffect(() => {
+    if (!discoveryTriggered) return;
+    setDiscoveryShown(true);
+    const timer = setTimeout(() => setDiscoveryShown(false), 4500);
+    return () => clearTimeout(timer);
+  }, [discoveryTriggered]);
 
   const startGame = (diffLevel) => {
     setLevel(diffLevel);

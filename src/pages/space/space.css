@@ -1055,20 +1055,12 @@
 
 /* Discovery cue: extra glow on first revealed world (Sun) */
 .illum-circle-wrapper.illum-first-revealed .illum-circle.revealed {
-  animation: discoveryPulse 1.5s ease-in-out infinite, popGlow 0.5s ease-out;
-}
-.illum-circle-wrapper.illum-first-revealed .illum-circle.revealed::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 215, 0, 0.12);
-  animation: discoveryRing 2s ease-in-out infinite;
+  animation: popGlow 0.5s ease-out, illumCirclePulse 1.5s ease-in-out infinite;
 }
 
-@keyframes discoveryRing {
-  0%, 100% { opacity: 0.08; transform: scale(1); }
-  50% { opacity: 0.18; transform: scale(1.08); }
+@keyframes illumCirclePulse {
+  0%, 100% { box-shadow: 0 0 20px #ff9800, inset 0 0 10px #ffeb3b; }
+  50% { box-shadow: 0 0 30px #ffc107, inset 0 0 14px #fff59d; }
 }
 
 .illum-input-area {
