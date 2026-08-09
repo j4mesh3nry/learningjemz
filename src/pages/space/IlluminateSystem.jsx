@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy, ArrowRight, X, HelpCircle, Info, Sun, Globe, Moon, Sparkles, Ruler, Compass, Delete, Eye } from 'lucide-react';
+import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy, ArrowRight, X, HelpCircle, Info, Sun, Globe, Moon, Sparkles, Ruler, Compass, Delete, Eye, MousePointerClick } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE, getMnemonicUpToIndex } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -136,7 +136,7 @@ export default function IlluminateSystem() {
   useEffect(() => {
     if (!discoveryTriggered) return;
     setDiscoveryShown(true);
-    const timer = setTimeout(() => setDiscoveryShown(false), 4500);
+    const timer = setTimeout(() => setDiscoveryShown(false), 6000);
     return () => clearTimeout(timer);
   }, [discoveryTriggered]);
 
@@ -727,7 +727,13 @@ export default function IlluminateSystem() {
       {/* Grid Box Container */}
       <div className="illum-grid-container">
         {discoveryShown && (
-          <div className="illum-discovery-pulse" aria-hidden="true" />
+          <div className="illum-discovery-overlay" aria-hidden="true">
+            <div className="illum-discovery-pulse" />
+            <div className="illum-discovery-chip">
+              <MousePointerClick size={14} color="#ffd54f" strokeWidth={2.5} />
+              <span>Tap a world for facts</span>
+            </div>
+          </div>
         )}
         <div className="illum-grid">
           {gameData.map((obj, i) => {
