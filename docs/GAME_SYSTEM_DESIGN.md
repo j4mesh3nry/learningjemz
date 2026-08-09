@@ -89,6 +89,7 @@ Each learning module has its own distinct background color to create a sense of 
 - **Geography Module**: Philippines Teal (`--bg-geo: #0066cc`)
 - **Reading Module**: Warm Amber (`--bg-reading: #d16f2c`)
 - **Space Module**: Deep Space Black (`--bg-space: #0a0a0a`)
+- **Space Victory / Game Over Screens**: Muted minimal palette shared by the Illuminate System victory (`theme="space"`) and game-over cards: solid indigo card `#171a38`, muted steel border `#3d4461`, tactile offset shadow `#0b0d22`, slate stat/action surfaces `#1d2040`, streak value muted rose `#d8a8a8`, XP value muted gold `#d9c58f`. No vibrant or glowy accents on these screens.
 
 ### Key CSS Animations
 Stored in module CSS files (like `chess.css`), we utilize keyframes to make the UI feel alive:
