@@ -115,7 +115,7 @@ export default function VictoryScreen({
     return (
       <div className={`victory-minimized-dock ${themeClass}`}>
         <button className="victory-btn-restore" onClick={() => setIsMinimized(false)}>
-          <span>Show Screen</span>
+          <span>Show Results</span>
         </button>
         {onPlayAgain && (
           <button className="victory-btn-secondary-mini" onClick={onPlayAgain}>
@@ -186,7 +186,7 @@ export default function VictoryScreen({
             </button>
           )}
           <button className="victory-btn-view" onClick={() => setIsMinimized(true)}>
-            <span>Show Screen</span>
+            <span>Show Results</span>
           </button>
         </div>
       </div>
