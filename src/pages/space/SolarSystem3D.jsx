@@ -944,6 +944,9 @@ export default function SolarSystem3D() {
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#07081a', overflow: 'hidden' }}>
+      {/* Loading Overlay */}
+      <SolarLoadingOverlay />
+
       {/* Navigation Bar */}
       <div style={{
         position: 'absolute', top: 16, left: 16, right: 16, zIndex: 40,
@@ -987,7 +990,6 @@ export default function SolarSystem3D() {
         <ambientLight intensity={0.4} />
         <pointLight position={[0, 0, 0]} intensity={3.5} distance={500} decay={0.3} color="#fff8e7" />
 
-        <SolarLoadingOverlay />
         <Stars radius={1500} depth={300} count={12000} factor={5} saturation={0.2} fade speed={0.3} />
         <OrbitControls
           ref={controlsRef}
