@@ -19,8 +19,6 @@ const Settings = lazy(() => import('./pages/Settings.tsx'));
 const Leaderboard = lazy(() => import('./pages/Leaderboard.tsx'));
 const StorePage = lazy(() => import('./pages/Store.tsx'));
 const ChessHome = lazy(() => import('./pages/chess/ChessHome.tsx'));
-const GeoHome = lazy(() => import('./pages/geo/GeoHome.tsx'));
-const ReadingHome = lazy(() => import('./pages/reading/ReadingHome.tsx'));
 const SpaceHome = lazy(() => import('./pages/space/SpaceHome.tsx'));
 
 
@@ -98,8 +96,6 @@ function Layout() {
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/chess/*" element={<ProtectedRoute><ChessHome /></ProtectedRoute>} />
-            <Route path="/geo/*" element={<ProtectedRoute><GeoHome /></ProtectedRoute>} />
-            <Route path="/reading/*" element={<ProtectedRoute><ReadingHome /></ProtectedRoute>} />
             <Route path="/space/*" element={<ProtectedRoute><SpaceHome /></ProtectedRoute>} />
           </Routes>
         </Suspense>

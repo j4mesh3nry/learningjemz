@@ -1,24 +1,23 @@
-// src/pages/Home.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Header } from '../components/Header';
-import { Lock, ArrowRight } from 'lucide-react';
+import { Lock, ArrowRight, BookOpen, Globe, Music, ScrollText, Calculator, Rocket, Swords, Orbit } from 'lucide-react';
 import '../index.css';
 
 const modules = [
   {
     to: '/chess',
-    icon: '♟️',
+    icon: <Swords size={24} color="#ffffff" />,
     title: 'Chess',
-    subtitle: 'Play against AI & Puzzles',
+    subtitle: 'Play against Stockfish AI',
     bg: '#16653e',
     shadow: '0 4px 0 #0e4329',
     pattern: 'chess',
   },
   {
     to: '/space',
-    icon: '🪐',
+    icon: <Orbit size={24} color="#ffffff" />,
     title: 'Space',
     subtitle: 'Planets & Solar System',
     bg: '#161936',
@@ -28,11 +27,11 @@ const modules = [
 ];
 
 const lockedModules = [
-  { icon: '📖', title: 'Reading', subtitle: 'Books & Novels' },
-  { icon: '🌍', title: 'Geography', subtitle: 'Philippine Provinces' },
-  { icon: '🎵', title: 'Learning Songs', subtitle: 'Sing & Learn' },
-  { icon: '📜', title: 'Poems', subtitle: 'Rhymes & Verses' },
-  { icon: '🧮', title: 'Math', subtitle: 'Numbers & Logic' },
+  { icon: <BookOpen size={24} color="#16653e" />, title: 'Reading', subtitle: 'Books & Stories' },
+  { icon: <Globe size={24} color="#16653e" />, title: 'Geography', subtitle: 'Maps & Regions' },
+  { icon: <Music size={24} color="#16653e" />, title: 'Learning Songs', subtitle: 'Sing & Learn' },
+  { icon: <ScrollText size={24} color="#16653e" />, title: 'Poems', subtitle: 'Rhymes & Verses' },
+  { icon: <Calculator size={24} color="#16653e" />, title: 'Math', subtitle: 'Numbers & Logic' },
 ];
 
 function StarDots() {
@@ -146,7 +145,7 @@ export default function Home() {
         marginTop: 30, marginBottom: 14, color: '#0f3825', fontWeight: 800,
         display: 'flex', alignItems: 'center', gap: '6px'
       }}>
-        <span>🚀</span> Coming Soon
+        <Rocket size={20} color="#16653e" /> Coming Soon
       </h2>
 
       <div className="responsive-grid-locked">

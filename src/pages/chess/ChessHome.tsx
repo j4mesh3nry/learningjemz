@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useGame } from '../../contexts/GameContext';
 import ChessPlay from './ChessPlay';
-import { Flame, Star, BookOpen, Gamepad2, ArrowLeft, Lock, ArrowRight } from 'lucide-react';
+import { Flame, Star, BookOpen, Gamepad2, ArrowLeft, Lock, ArrowRight, Swords, Bot, Zap } from 'lucide-react';
 import { Card } from '../../components/Card';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import './chess.css';
 
 function ChessMenu() {
@@ -40,12 +41,12 @@ function ChessMenu() {
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{
-              fontSize: '1.1rem', width: 32, height: 32,
+              width: 32, height: 32,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: '#16653e', borderRadius: 10,
               boxShadow: '0 2px 0 #0e4329'
             }}>
-              ♟️
+              <Swords size={18} color="#ffffff" />
             </div>
             <h1 className="chess-page-title" style={{ margin: 0, color: '#0f3825', fontSize: '1.4rem', fontWeight: 900 }}>
               Chess
@@ -155,11 +156,11 @@ function ChessMenu() {
               filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
             }}>
               <div style={{
-                fontSize: '1.6rem', width: 44, height: 44,
+                width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: '#e1f0e2', borderRadius: 12, flexShrink: 0
               }}>
-                📚
+                <BookOpen size={24} color="#16653e" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Chess Lessons</h3>
@@ -194,18 +195,17 @@ function ChessMenu() {
               }}
             >
               <div style={{
-                fontSize: '1.6rem', width: 44, height: 44,
+                width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: 'rgba(255,255,255,0.18)', borderRadius: 12,
                 flexShrink: 0
               }}>
-                🤖
+                <Bot size={24} color="#ffffff" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>Play with Bot</h3>
                 <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Practice against AI bots</p>
               </div>
-              {/* Sleek Right Arrow Badge */}
               <div style={{
                 position: 'relative', zIndex: 1,
                 width: 32, height: 32,
@@ -242,11 +242,11 @@ function ChessMenu() {
                 filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
               }}>
                 <div style={{
-                  fontSize: '1.6rem', width: 44, height: 44,
+                  width: 44, height: 44,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: '#e1f0e2', borderRadius: 12, flexShrink: 0
                 }}>
-                  ⚔️
+                  <Zap size={24} color="#16653e" />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Speed Blitz</h3>
@@ -260,8 +260,6 @@ function ChessMenu() {
     </div>
   );
 }
-
-import ErrorBoundary from '../../components/ErrorBoundary';
 
 export default function ChessHome() {
   return (

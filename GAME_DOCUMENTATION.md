@@ -6,11 +6,9 @@
 - **Detailed Platform Description**:
   LearningJemz is a modern multi-subject learning ecosystem designed to turn daily practice into an addictive adventure. Rather than focusing on a single subject, the platform is engineered to continuously introduce new educational frontiers. 
   - **Active Learning Realms**:
-    - ♟️ **Chess Tactics & AI Strategy**: Master opening patterns, solve tactical puzzles, and test skills against adaptive Stockfish AI bot levels.
-    - 🚀 **Space Exploration & Astronomy**: Discover planetary science, scale of the solar system, interactive 3D planet visualizers, and astronomical trivia.
-    - 🗺️ **Geography & Cultural Maps**: Explore interactive regional SVG maps (Philippine provinces & World regions), landmark trivia, and spatial quizzes.
-    - 📚 **Reading & Literature Hub**: Digital bookshelf connected to OpenLibrary APIs, story comprehension challenges, and reading milestone tracking.
-  - **Future Horizon**: Architected to seamlessly integrate upcoming modules such as **Math & Logic Puzzles**, **Science Experiments**, **History Timelines**, **Coding Fundamentals**, **Financial Literacy**, and **Languages**.
+    - 🚀 **Space Exploration & Astronomy**: Discover planetary science, scale of the solar system, 3D planet visualizer with natural satellites, and Illuminate the System size-ordering spelling challenge.
+    - ♟️ **Chess Tactics & AI Strategy**: Master AI strategy and test skills against adaptive Stockfish AI bot levels.
+  - **Future Horizon**: Architected to seamlessly integrate upcoming modules such as **Geography & Maps**, **Reading & Literature**, **Math & Logic Puzzles**, **Science Experiments**, **History Timelines**, **Coding Fundamentals**, and **Languages**.
 - **Target Audience**: Students, children, and lifelong learners seeking an intuitive, fun, and visually stunning hub to explore diverse topics at their own pace.
 
 ---
@@ -121,14 +119,6 @@
     - **Iconography Standard**: Strictly NO using emojis in UI or data. All icons are cleanly rendered via Lucide React components (`Sun`, `Globe`, `Moon`, `Sparkles`, `Ruler`, `Compass`, `Lightbulb`).
     - **Custom Touch Keyboard System**: Compact 4-row virtual keyboard (`48px` key height, space theme styling) with tight 4px key gaps for faster touch typing, tailored for touch interaction without soft-keyboard overlap.
     - **Personal Best Records**: Tracks and persists top completion times per difficulty tier in Supabase (`illuminate_stats`) and local storage.
-
-### 🗺️ Geography Module (`/geo`)
-- **Components**: `GeoHome.tsx`, `MapExplorer.jsx`, `ProvinceQuiz.jsx`, `geo.css`.
-- **Game Modes**: Interactive SVG Philippine Map & World Map exploration, province trivia, regional quizzes.
-
-### 📚 Reading Module (`/reading`)
-- **Components**: `ReadingHome.tsx`, `bookService.js`, `reading.css`.
-- **Game Modes**: OpenLibrary API book bookshelf, reader view, comprehension quizzes.
 
 ---
 

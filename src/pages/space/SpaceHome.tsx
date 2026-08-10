@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useGame } from '../../contexts/GameContext';
-import Flashcards from './Flashcards';
-import SpaceQuiz from './SpaceQuiz';
 import SolarSystem3D from './SolarSystem3D';
-import SizeStack from './SizeStack';
 import ObjectsBySizeMenu from './ObjectsBySizeMenu';
 import IlluminateSystem from './IlluminateSystem';
 import { preloadSpaceObjectImages } from '../../data/space-objects';
-import { Flame, Star, BookOpen, Gamepad2, ArrowLeft, Lock, ArrowRight } from 'lucide-react';
+import { Flame, Star, BookOpen, Gamepad2, ArrowLeft, Lock, ArrowRight, Orbit, Ruler, Sparkles, Target } from 'lucide-react';
 import { Card } from '../../components/Card';
 import './space.css';
 
@@ -70,12 +67,12 @@ function SpaceHub() {
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{
-              fontSize: '1.1rem', width: 32, height: 32,
+              width: 32, height: 32,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: '#161936', borderRadius: 10,
               boxShadow: '0 2px 0 #0b0d1e'
             }}>
-              🪐
+              <Orbit size={18} color="#ffffff" />
             </div>
             <h1 className="space-page-title" style={{ margin: 0, color: '#0f3825', fontSize: '1.4rem', fontWeight: 900 }}>
               Space
@@ -188,18 +185,17 @@ function SpaceHub() {
               }}
             >
               <div style={{
-                fontSize: '1.6rem', width: 44, height: 44,
+                width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: 'rgba(255,255,255,0.18)', borderRadius: 12,
                 flexShrink: 0
               }}>
-                🪐
+                <Orbit size={24} color="#ffffff" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>Solar Explorer</h3>
                 <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Explore 3D solar map</p>
               </div>
-              {/* Sleek Right Arrow Badge */}
               <div style={{
                 position: 'relative', zIndex: 1,
                 width: 32, height: 32,
@@ -236,11 +232,11 @@ function SpaceHub() {
                 filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
               }}>
                 <div style={{
-                  fontSize: '1.6rem', width: 44, height: 44,
+                  width: 44, height: 44,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: '#e1f0e2', borderRadius: 12, flexShrink: 0
                 }}>
-                  ✨
+                  <Sparkles size={24} color="#16653e" />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Deep Nebula</h3>
@@ -275,18 +271,17 @@ function SpaceHub() {
               }}
             >
               <div style={{
-                fontSize: '1.6rem', width: 44, height: 44,
+                width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: 'rgba(255,255,255,0.18)', borderRadius: 12,
                 flexShrink: 0
               }}>
-                📏
+                <Ruler size={24} color="#ffffff" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>Objects by Size</h3>
                 <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Compare cosmic sizes</p>
               </div>
-              {/* Sleek Right Arrow Badge */}
               <div style={{
                 position: 'relative', zIndex: 1,
                 width: 32, height: 32,
@@ -323,11 +318,11 @@ function SpaceHub() {
                 filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
               }}>
                 <div style={{
-                  fontSize: '1.6rem', width: 44, height: 44,
+                  width: 44, height: 44,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: '#e1f0e2', borderRadius: 12, flexShrink: 0
                 }}>
-                  🎯
+                  <Target size={24} color="#16653e" />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Space Quiz</h3>
@@ -349,9 +344,6 @@ export default function SpaceHome() {
       <Route path="solar-system" element={<SolarSystem3D />} />
       <Route path="illuminate" element={<IlluminateSystem />} />
       <Route path="objects-by-size" element={<ObjectsBySizeMenu />} />
-      <Route path="size-stack" element={<SizeStack />} />
-      <Route path="flashcards" element={<Flashcards />} />
-      <Route path="quiz" element={<SpaceQuiz />} />
     </Routes>
   );
 }
