@@ -223,24 +223,39 @@ function CameraController({ selected, planetRefs, controlsRef }) {
 }
 
 /* ─── Moon component ─── */
-function Moon({ config }) {
-  const moonRef = useRef();
+function Moon({ config, labelsHidden }) {
+  const groupRef = useRef();
   const initialAngle = useRef(Math.random() * Math.PI * 2);
   
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     const angle = initialAngle.current + t * config.speed;
-    if (moonRef.current) {
-      moonRef.current.position.x = Math.cos(angle) * config.distance;
-      moonRef.current.position.z = Math.sin(angle) * config.distance;
+    if (groupRef.current) {
+      groupRef.current.position.x = Math.cos(angle) * config.distance;
+      groupRef.current.position.z = Math.sin(angle) * config.distance;
     }
   });
 
   return (
-    <mesh ref={moonRef}>
-      <sphereGeometry args={[config.size, 16, 16]} />
-      <meshStandardMaterial color={config.color} roughness={0.8} />
-    </mesh>
+    <group ref={groupRef}>
+      <mesh>
+        <sphereGeometry args={[config.size, 16, 16]} />
+        <meshStandardMaterial color={config.color} roughness={0.8} />
+      </mesh>
+      {config.name && (
+        <Html position={[0, -(config.size + 0.25), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
+          <div style={{
+            color: 'rgba(255,255,255,0.45)',
+            fontSize: '0.55rem',
+            fontWeight: 600,
+            userSelect: 'none',
+            letterSpacing: '0.5px',
+          }}>
+            {config.name}
+          </div>
+        </Html>
+      )}
+    </group>
   );
 }
 
@@ -319,7 +334,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
       )}
 
       {/* Orbiting Moons */}
-      {config.moons && config.moons.map((m, i) => <Moon key={i} config={m} />)}
+      {config.moons && config.moons.map((m, i) => <Moon key={i} config={m} labelsHidden={labelsHidden} />)}
 
       {/* Uranus thin ring */}
       {isUranus && (
