@@ -244,14 +244,14 @@ function CameraController({ selected, planetRefs, controlsRef }) {
 
       // Tailored close-up zoom distance based on object size
       const cfg = PLANET_CONFIG[selected.name];
-      let zoomDist = 8.0;
+      let zoomDist = 7.0;
       if (selected.id === 'sun') {
-        zoomDist = 18.0;
+        zoomDist = 15.0;
       } else if (cfg) {
-        if (cfg.size >= 1.3) zoomDist = 12.0;      // Jupiter, Saturn
-        else if (cfg.size >= 0.8) zoomDist = 7.5;  // Uranus, Neptune
-        else if (cfg.size >= 0.25) zoomDist = 5.0; // Earth, Venus, Mars
-        else zoomDist = 3.8;                        // Mercury, Pluto, Ceres
+        if (cfg.size >= 1.3) zoomDist = 9.5;       // Jupiter, Saturn
+        else if (cfg.size >= 0.8) zoomDist = 6.2;   // Uranus, Neptune
+        else if (cfg.size >= 0.25) zoomDist = 4.2;  // Earth, Venus, Mars
+        else zoomDist = 3.2;                         // Mercury, Pluto, Ceres
       }
 
       // Camera view direction
@@ -260,10 +260,10 @@ function CameraController({ selected, planetRefs, controlsRef }) {
         .normalize();
       if (camDir.lengthSq() === 0) camDir.set(0, 0.5, 1).normalize();
 
-      // Compute vertical offset so the target sits BELOW the planet,
-      // positioning the planet in the upper 30-35% of the viewport above the InfoPanel!
+      // Compute vertical offset so the target sits gently below the planet,
+      // positioning the planet in the open upper-middle viewport below top nav and above InfoPanel!
       const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
-      const verticalOffset = cameraUp.clone().multiplyScalar(-zoomDist * 0.32);
+      const verticalOffset = cameraUp.clone().multiplyScalar(-zoomDist * 0.14);
 
       desiredTarget.copy(planetPos).add(verticalOffset);
       desiredCamPos.copy(planetPos).add(camDir.multiplyScalar(zoomDist)).add(verticalOffset);
