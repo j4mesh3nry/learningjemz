@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Html, useTexture, Preload, useProgress } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap } from 'lucide-react';
+import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap, Circle } from 'lucide-react';
 import * as THREE from 'three';
 import { planets, sunData, dwarfPlanets, moons } from '../../data/space-data.js';
 import JemzLoader from '../../components/JemzLoader';
@@ -707,80 +707,109 @@ function InfoPanel({ planet, onSelect, onClose }) {
         border: '1.5px solid rgba(255,255,255,0.1)',
         boxShadow: '0 6px 0 #07081a',
       }}>
+        {/* Close Button - dedicated top-right position */}
         <button onClick={onClose} style={{
           position: 'absolute', top: 16, right: 16,
           background: 'rgba(255,255,255,0.1)', border: '1.5px solid rgba(255,255,255,0.15)',
           borderRadius: '50%', width: 32, height: 32,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', color: '#fff', transition: 'background 0.2s', zIndex: 2
+          cursor: 'pointer', color: '#fff', transition: 'background 0.2s', zIndex: 10
         }}>
           <X size={16} />
         </button>
 
-        {/* Moon Selector Strip */}
-        {availableMoons.length > 0 && (
-          <div style={{
-            display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 10, marginBottom: 14,
-            paddingRight: 44,
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            scrollbarWidth: 'none', msOverflowStyle: 'none'
-          }}>
-            <button
-              onClick={() => onSelect(hostPlanet)}
-              style={{
-                background: !activeTarget.isMoon ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.06)',
-                border: !activeTarget.isMoon ? `1.5px solid ${hostPlanet.color || '#fff'}` : '1.5px solid rgba(255,255,255,0.1)',
-                borderRadius: 12, padding: '5px 10px', color: '#fff', fontSize: '0.7rem', fontWeight: 700,
-                cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4,
-                transition: 'all 0.2s ease'
-              }}
-            >
-              🪐 {hostPlanet.name}
-            </button>
-            {availableMoons.map((m) => {
-              const isSelected = activeTarget.isMoon && activeTarget.name.toLowerCase() === m.name.toLowerCase();
-              return (
-                <button
-                  key={m.name}
-                  onClick={() => onSelect({ ...m, isMoon: true, hostPlanet })}
-                  style={{
-                    background: isSelected ? 'rgba(253,184,19,0.25)' : 'rgba(255,255,255,0.06)',
-                    border: isSelected ? '1.5px solid #FDB813' : '1.5px solid rgba(255,255,255,0.1)',
-                    borderRadius: 12, padding: '5px 10px',
-                    color: isSelected ? '#FDB813' : 'rgba(255,255,255,0.7)',
-                    fontSize: '0.7rem', fontWeight: 700,
-                    cursor: 'pointer', whiteSpace: 'nowrap',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  🌕 {m.name}
-                </button>
-              );
-            })}
+        {/* Top Header: Avatar + Title (has right padding to clear X button) */}
+        {activeTarget.isMoon ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, paddingRight: 44 }}>
+            <div style={{
+              width: 50, height: 50, borderRadius: '50%',
+              background: activeTarget.color || '#aaa',
+              border: '2px solid rgba(255,255,255,0.3)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0
+            }}>
+              <Circle size={24} style={{ color: '#fff', fill: 'rgba(255,255,255,0.4)' }} />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.3px' }}>{activeTarget.name}</h3>
+              <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
+                Natural Satellite of {hostPlanet.name}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, paddingRight: 44 }}>
+            <div style={{
+              width: 52, height: 52, borderRadius: '50%',
+              backgroundImage: `url(${TEXTURE_PATHS[planet.name] || TEXTURE_PATHS.Earth})`,
+              backgroundSize: 'cover', backgroundPosition: 'center',
+              border: `2px solid ${planet.color || '#888'}`,
+              flexShrink: 0,
+            }} />
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, letterSpacing: '-0.3px' }}>{planet.name}</h3>
+              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>{planet.type}</span>
+            </div>
           </div>
         )}
 
-        {/* Content Card (Moon vs Planet) */}
+        {/* Dedicated Satellite Explorer Bar (Below Header, full width, 0% X-button overlap!) */}
+        {availableMoons.length > 0 && (
+          <div style={{
+            marginBottom: 14, padding: '8px 10px',
+            background: 'rgba(255,255,255,0.04)',
+            borderRadius: 14, border: '1px solid rgba(255,255,255,0.07)'
+          }}>
+            <div style={{
+              fontSize: '0.62rem', fontWeight: 800, color: '#FDB813',
+              textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 6,
+              display: 'flex', alignItems: 'center', gap: 5
+            }}>
+              <Orbit size={12} color="#FDB813" /> SATELLITES OF {hostPlanet.name.toUpperCase()} ({availableMoons.length})
+            </div>
+            <div style={{
+              display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 2,
+              scrollbarWidth: 'none', msOverflowStyle: 'none'
+            }}>
+              <button
+                onClick={() => onSelect(hostPlanet)}
+                style={{
+                  background: !activeTarget.isMoon ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.06)',
+                  border: !activeTarget.isMoon ? `1.5px solid ${hostPlanet.color || '#fff'}` : '1.5px solid rgba(255,255,255,0.1)',
+                  borderRadius: 10, padding: '4px 10px', color: '#fff', fontSize: '0.7rem', fontWeight: 700,
+                  cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 5,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <Globe size={11} /> {hostPlanet.name}
+              </button>
+              {availableMoons.map((m) => {
+                const isSelected = activeTarget.isMoon && activeTarget.name.toLowerCase() === m.name.toLowerCase();
+                return (
+                  <button
+                    key={m.name}
+                    onClick={() => onSelect({ ...m, isMoon: true, hostPlanet })}
+                    style={{
+                      background: isSelected ? 'rgba(253,184,19,0.25)' : 'rgba(255,255,255,0.06)',
+                      border: isSelected ? '1.5px solid #FDB813' : '1.5px solid rgba(255,255,255,0.1)',
+                      borderRadius: 10, padding: '4px 10px',
+                      color: isSelected ? '#FDB813' : 'rgba(255,255,255,0.75)',
+                      fontSize: '0.7rem', fontWeight: 700,
+                      cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4,
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <Circle size={8} style={{ fill: isSelected ? '#FDB813' : 'rgba(255,255,255,0.6)' }} /> {m.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Content Card Details (Moon vs Planet) */}
         {activeTarget.isMoon ? (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
-              <div style={{
-                width: 52, height: 52, borderRadius: '50%',
-                background: activeTarget.color || '#aaa',
-                border: '2px solid rgba(255,255,255,0.3)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '1.2rem', flexShrink: 0
-              }}>
-                🌕
-              </div>
-              <div>
-                <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.3px' }}>{activeTarget.name}</h3>
-                <span style={{ fontSize: '0.73rem', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
-                  Natural Satellite of {hostPlanet.name}
-                </span>
-              </div>
-            </div>
-
             {/* Moon Educational Badge */}
             {MOON_BADGES[activeTarget.name.toLowerCase()] && (() => {
               const badge = MOON_BADGES[activeTarget.name.toLowerCase()];
@@ -830,19 +859,6 @@ function InfoPanel({ planet, onSelect, onClose }) {
           </div>
         ) : (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-              <div style={{
-                width: 56, height: 56, borderRadius: '50%',
-                backgroundImage: `url(${TEXTURE_PATHS[planet.name] || TEXTURE_PATHS.Earth})`,
-                backgroundSize: 'cover', backgroundPosition: 'center',
-                border: `2px solid ${planet.color || '#888'}`,
-                flexShrink: 0,
-              }} />
-              <div>
-                <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, letterSpacing: '-0.3px' }}>{planet.name}</h3>
-                <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>{planet.type}</span>
-              </div>
-            </div>
             {PLANET_BADGES[planet.id] && (() => {
               const badge = PLANET_BADGES[planet.id];
               const BadgeIcon = badge.icon;
