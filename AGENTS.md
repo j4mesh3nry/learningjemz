@@ -22,6 +22,7 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 - **No glassmorphism** (`backdrop-filter`), no translucent or semi-transparent surfaces (`rgba`/`hsla`/opacity panels, buttons, cards, tiles, borders — solid hex fills only), and no neon glows (`box-shadow: 0 0 ...`, `text-shadow` glows, radial auras, gradient text via `background-clip`). Tactile 3D flat design only: solid colors, solid borders, offset solid shadows (e.g. `box-shadow: 0 4px 0 ...`).
 - **Theme connection**: screens/modals must hook into the global tokens in `src/index.css` (`--bg-*`, `--color-*`, `--font-heading`) and the established module palettes (e.g. `theme-space` in `victory.css`) so nothing looks out of place.
 - Outfit for headings, Inter for body. Vanilla CSS with tokens in `src/index.css`; no CSS framework.
+- **No visible scrollbars**: page and container scrollbars must never be visible (scroll must still work). Enforced globally in `src/index.css`; don't re-enable scrollbars on any element.
 
 ## Architecture
 

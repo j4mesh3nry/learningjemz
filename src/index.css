@@ -58,6 +58,15 @@
 html, body, #root {
   min-height: 100vh;
 }
+
+/* Hide all scrollbars (page and containers) while keeping scroll functionality */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
 html {
   /* Explicit non-trivial html background so the canvas keeps the author palette
      under forced colors mode (a transparent html would inherit body's adjusted
