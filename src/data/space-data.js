@@ -238,6 +238,51 @@ export const quizQuestions = [
   { id: 'q30', question: 'What element makes up most of a star?', options: ['Oxygen', 'Helium', 'Carbon', 'Hydrogen'], correctIndex: 3, category: 'stars', difficulty: 1 }
 ];
 
+export const dwarfPlanets = [
+  {
+    id: 'pluto',
+    name: 'Pluto',
+    type: 'Dwarf Planet',
+    distanceFromSun: 5906380000,
+    diameter: 2377,
+    mass: '1.31 × 10^22 kg',
+    gravity: '0.62 m/s²',
+    dayLength: '153.3 hours',
+    yearLength: '248 Earth years',
+    moons: 5,
+    atmosphere: 'Thin (nitrogen, methane, carbon monoxide)',
+    temperature: '-229°C (Average)',
+    funFacts: [
+      'Pluto has a heart-shaped glacier called Tombaugh Regio made of nitrogen ice.',
+      'It was considered the 9th planet from 1930 to 2006 before being reclassified as a dwarf planet.',
+      'Pluto and its largest moon Charon are tidally locked — they always show the same face to each other.'
+    ],
+    color: '#a89f91',
+    emoji: '🪐'
+  },
+  {
+    id: 'ceres',
+    name: 'Ceres',
+    type: 'Dwarf Planet',
+    distanceFromSun: 413000000,
+    diameter: 939,
+    mass: '9.39 × 10^20 kg',
+    gravity: '0.28 m/s²',
+    dayLength: '9 hours',
+    yearLength: '4.6 Earth years',
+    moons: 0,
+    atmosphere: 'Transient water vapor',
+    temperature: '-105°C (Average)',
+    funFacts: [
+      'Ceres is the largest object in the asteroid belt and the only dwarf planet in the inner solar system.',
+      'It was the first dwarf planet visited by a spacecraft (NASA\'s Dawn mission, 2015).',
+      'Bright spots in Occator Crater are salt deposits from briny water that reached the surface.'
+    ],
+    color: '#c8c2b8',
+    emoji: '🪐'
+  }
+];
+
 export const flashcards = [
   { id: 'f1', front: 'Mercury', back: 'The smallest and fastest planet. It has no moons and a very thin atmosphere.', category: 'planets', image: '🪐' },
   { id: 'f2', front: 'Venus', back: 'The hottest planet in our solar system due to a thick, toxic atmosphere that traps heat.', category: 'planets', image: '🪐' },
