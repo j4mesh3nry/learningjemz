@@ -25,28 +25,30 @@ const TEXTURE_PATHS = {
 };
 
 /* Planet orbital configs
-   Distances: 1 AU = 10 units (true Sun-relative AU ratios)
-   Sizes: Earth diameter = 1.0 unit (true diameter ratios, radius values below)
-   Moons: display distance capped at 14 units (true distances would run 30-96 units)
-   Sun: capped so planets stay visible — badge notes the real 109× ratio */
+   Distances: Logarithmically scaled relative orbits (Mercury 8.1 -> Pluto 61.0)
+              Ensures inner planets are well-spaced and labels never overlap,
+              while outer planets remain easy to see and explore.
+   Sizes: True comparative relative scales:
+          Sun (2.0) > Jupiter (1.6) > Saturn (1.3) > Uranus (0.85) >= Neptune (0.82)
+          > Earth (0.48) >= Venus (0.45) > Mars (0.28) > Mercury (0.22) > Pluto (0.14) > Ceres (0.08) */
 const PLANET_CONFIG = {
-  Mercury: { size: 0.192, orbit: 3.87, speed: 1.6, emissive: '#888888', emissiveIntensity: 0, rotationSpeed: 0.0005, tilt: 0.03 },
-  Venus:   { size: 0.475, orbit: 7.23, speed: 1.17, emissive: '#e3bb76', emissiveIntensity: 0, rotationSpeed: -0.0002, tilt: 3.1 },
-  Earth:   { size: 0.5, orbit: 10.0, speed: 1.0, emissive: '#2266aa', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.41, moons: [{ name: 'Moon', size: 0.135, distance: 14, speed: 2.0, color: '#dddddd' }] },
-  Mars:    { size: 0.266, orbit: 15.24, speed: 0.8, emissive: '#aa4422', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.44 },
-  Jupiter: { size: 5.485, orbit: 52.03, speed: 0.44, emissive: '#c49a6c', emissiveIntensity: 0, rotationSpeed: 0.012, tilt: 0.05, moons: [{ name: 'Europa', size: 0.123, distance: 14, speed: 1.5, color: '#e6dfd1' }] },
-  Saturn:  { size: 4.57, orbit: 95.37, speed: 0.32, emissive: '#d4c07a', emissiveIntensity: 0, rotationSpeed: 0.011, tilt: 0.47, moons: [{ name: 'Titan', size: 0.202, distance: 14, speed: 0.8, color: '#d39c55' }] },
-  Uranus:  { size: 1.99, orbit: 191.91, speed: 0.22, emissive: '#7fcfcf', emissiveIntensity: 0, rotationSpeed: -0.007, tilt: 1.71 },
-  Neptune: { size: 1.93, orbit: 300.7, speed: 0.18, emissive: '#3355bb', emissiveIntensity: 0, rotationSpeed: 0.008, tilt: 0.49 },
-  Pluto:   { size: 0.093, orbit: 394.8, speed: 0.16, emissive: '#a89f91', emissiveIntensity: 0, rotationSpeed: 0.001, tilt: 2.03, binary: { companionName: 'Charon', companionSize: 0.048, distance: 1.54, speed: 1.2, color: '#888888', massRatio: 0.118 } },
-  Ceres:   { size: 0.037, orbit: 27.67, speed: 0.6, emissive: '#c8c2b8', emissiveIntensity: 0, rotationSpeed: 0.003, tilt: 0.04 },
+  Mercury: { size: 0.22, orbit: 8.1, speed: 1.6, emissive: '#888888', emissiveIntensity: 0, rotationSpeed: 0.0005, tilt: 0.03 },
+  Venus:   { size: 0.45, orbit: 10.2, speed: 1.17, emissive: '#e3bb76', emissiveIntensity: 0, rotationSpeed: -0.0002, tilt: 3.1 },
+  Earth:   { size: 0.48, orbit: 12.5, speed: 1.0, emissive: '#2266aa', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.41, moons: [{ name: 'Moon', size: 0.13, distance: 1.2, speed: 2.0, color: '#dddddd' }] },
+  Mars:    { size: 0.28, orbit: 15.2, speed: 0.8, emissive: '#aa4422', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.44 },
+  Ceres:   { size: 0.08, orbit: 19.0, speed: 0.6, emissive: '#c8c2b8', emissiveIntensity: 0, rotationSpeed: 0.003, tilt: 0.04 },
+  Jupiter: { size: 1.60, orbit: 25.5, speed: 0.44, emissive: '#c49a6c', emissiveIntensity: 0, rotationSpeed: 0.012, tilt: 0.05, moons: [{ name: 'Europa', size: 0.14, distance: 2.5, speed: 1.5, color: '#e6dfd1' }] },
+  Saturn:  { size: 1.30, orbit: 34.0, speed: 0.32, emissive: '#d4c07a', emissiveIntensity: 0, rotationSpeed: 0.011, tilt: 0.47, moons: [{ name: 'Titan', size: 0.18, distance: 2.4, speed: 0.8, color: '#d39c55' }] },
+  Uranus:  { size: 0.85, orbit: 44.0, speed: 0.22, emissive: '#7fcfcf', emissiveIntensity: 0, rotationSpeed: -0.007, tilt: 1.71 },
+  Neptune: { size: 0.82, orbit: 53.0, speed: 0.18, emissive: '#3355bb', emissiveIntensity: 0, rotationSpeed: 0.008, tilt: 0.49 },
+  Pluto:   { size: 0.14, orbit: 61.0, speed: 0.16, emissive: '#a89f91', emissiveIntensity: 0, rotationSpeed: 0.001, tilt: 2.03, binary: { companionName: 'Charon', companionSize: 0.07, distance: 0.55, speed: 1.2, color: '#888888', massRatio: 0.118 } },
 };
 
 /* ─── Educational badges shown in the Info Panel ─── */
 const PLANET_BADGES = {
   sun: {
     icon: Zap, title: 'Giver of Light', color: '#FDB813',
-    text: "Contains 99.86% of all mass in the solar system — truly 109× Earth's width. Shown here at ~1/30 scale so the planets stay visible."
+    text: "Contains 99.86% of all mass in the solar system — truly 109× Earth's width. Rendered in a visually balanced scale so all orbiting worlds remain clear and easy to explore."
   },
   mercury: {
     icon: Gauge, title: 'Fastest Planet', color: '#b8b8b8',
@@ -113,13 +115,13 @@ function OrbitRing({ radius }) {
 }
 
 /* ─── Asteroid Belt ─── */
-function AsteroidBelt({ count = 4000, innerRadius = 21.0, outerRadius = 33.0 }) {
+function AsteroidBelt({ count = 3500, innerRadius = 17.5, outerRadius = 20.5 }) {
   const points = useMemo(() => {
     const pts = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
       const radius = innerRadius + Math.random() * (outerRadius - innerRadius);
-      const y = (Math.random() - 0.5) * 2.0; // slight vertical scatter
+      const y = (Math.random() - 0.5) * 1.5; // slight vertical scatter
       pts[i * 3] = Math.cos(angle) * radius;
       pts[i * 3 + 1] = y;
       pts[i * 3 + 2] = Math.sin(angle) * radius;
@@ -137,7 +139,7 @@ function AsteroidBelt({ count = 4000, innerRadius = 21.0, outerRadius = 33.0 }) 
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" array={points} count={count} itemSize={3} />
       </bufferGeometry>
-      <pointsMaterial color="#c0b0a0" size={0.08} sizeAttenuation transparent opacity={0.9} />
+      <pointsMaterial color="#c0b0a0" size={0.08} sizeAttenuation transparent opacity={0.85} />
     </points>
   );
 }
@@ -161,19 +163,19 @@ const Sun = React.forwardRef(({ onSelect, labelsHidden }, ref) => {
         onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer'; }}
         onPointerOut={() => { document.body.style.cursor = 'auto'; }}
       >
-        <sphereGeometry args={[1.75, 64, 64]} />
+        <sphereGeometry args={[2.0, 64, 64]} />
         <meshBasicMaterial map={sunTexture} />
       </mesh>
       <mesh>
-        <sphereGeometry args={[2.2, 32, 32]} />
+        <sphereGeometry args={[2.4, 32, 32]} />
         <meshBasicMaterial color="#FDB813" transparent opacity={0.15} />
       </mesh>
       <mesh>
-        <sphereGeometry args={[2.9, 32, 32]} />
+        <sphereGeometry args={[3.0, 32, 32]} />
         <meshBasicMaterial color="#ff9900" transparent opacity={0.06} />
       </mesh>
-      <pointLight color="#FDB813" intensity={1500} distance={2000} decay={1.5} />
-      <Html position={[0, -3, 0]} center style={{ pointerEvents: 'none', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
+      <pointLight color="#FDB813" intensity={250} distance={300} decay={1} />
+      <Html position={[0, -2.8, 0]} center style={{ pointerEvents: 'none', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
         <div style={{
           color: '#FDB813', fontSize: '0.7rem', fontWeight: 700,
           textShadow: '0 0 10px rgba(253,184,19,0.8)', userSelect: 'none', letterSpacing: '1px',
@@ -281,7 +283,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
       {/* Saturn rings */}
       {isSaturn && (
         <mesh rotation={[Math.PI / 2 + (config.tilt || 0), 0, 0]}>
-          <ringGeometry args={[config.size * 1.4, config.size * 2.2, 64]} />
+          <ringGeometry args={[config.size * 1.35, config.size * 2.3, 64]} />
           <meshStandardMaterial
             map={saturnRingTex}
             emissive="#d4c58a"
@@ -305,7 +307,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
       )}
 
       {/* Label */}
-      <Html position={[0, -(config.size + 0.5), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
+      <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
         <div style={{
           color: hovered ? '#fff' : 'rgba(255,255,255,0.7)',
           fontSize: hovered ? '0.75rem' : '0.65rem',
@@ -413,7 +415,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
 
       {/* Pluto label */}
       <group ref={labelRef}>
-        <Html position={[0, -(config.size + 0.5), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
+        <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
           <div style={{
             color: hovered ? '#fff' : 'rgba(255,255,255,0.7)',
             fontSize: hovered ? '0.75rem' : '0.65rem',
@@ -430,7 +432,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
 
       {/* Charon label */}
       <group ref={companionLabelRef}>
-        <Html position={[0, -(config.binary.companionSize + 0.4), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
+        <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
           <div style={{
             color: 'rgba(255,255,255,0.45)',
             fontSize: '0.55rem',
@@ -609,20 +611,20 @@ export default function SolarSystem3D() {
 
       {/* Canvas */}
       <Canvas
-        camera={{ position: [60, 140, 340], fov: 50 }}
+        camera={{ position: [20, 45, 75], fov: 50 }}
         style={{ width: '100%', height: '100%' }}
         gl={{ antialias: true, alpha: false }}
         onCreated={({ gl }) => { gl.setClearColor('#050510'); }}
       >
-        <ambientLight intensity={1.5} color="#6688cc" />
-        <directionalLight position={[10, 10, 5]} intensity={2.0} color="#ffffff" />
-        <Stars radius={900} depth={180} count={12000} factor={5} saturation={0.2} fade speed={0.3} />
+        <ambientLight intensity={1.2} color="#6688cc" />
+        <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffffff" />
+        <Stars radius={400} depth={100} count={9000} factor={5} saturation={0.2} fade speed={0.3} />
         <OrbitControls
           ref={controlsRef}
           enableZoom
           enablePan
-          minDistance={3}
-          maxDistance={1000}
+          minDistance={6}
+          maxDistance={180}
           autoRotate={!selected}
           autoRotateSpeed={0.08}
           maxPolarAngle={Math.PI / 1.8}
