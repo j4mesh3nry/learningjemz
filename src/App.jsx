@@ -138,7 +138,7 @@ function AppAssetLoader({ onFinish }) {
     <JemzLoader
       message="Loading LearningJemz..."
       subtext={`Preloading space assets... ${progress}%`}
-      darkTheme={true}
+      darkTheme={false}
       fullScreen={true}
     />
   );
