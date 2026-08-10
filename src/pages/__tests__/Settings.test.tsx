@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Settings from '../Settings';
 
 vi.mock('../../contexts/GameContext', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = (await importOriginal()) as Record<string, unknown>;
   return {
     ...actual,
     useGame: () => ({
