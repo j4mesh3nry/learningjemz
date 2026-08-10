@@ -239,37 +239,21 @@ function CameraController({ selected, planetRefs, controlsRef }) {
     prevSelected.current = selected;
 
     if (selected) {
-      const hostName = selected.isMoon ? selected.hostPlanet.name : selected.name;
-      const ref = planetRefs.current[hostName];
+      const targetObj = selected.isMoon ? selected.hostPlanet : selected;
+      const ref = planetRefs.current[targetObj.name];
       if (ref) {
         ref.getWorldPosition(planetPos);
 
-        let focusPos = planetPos.clone();
-        let zoomDist = 8.0;
-
-        if (selected.isMoon) {
-          // Track specific moon position relative to host planet
-          const t = clock.getElapsedTime();
-          const angle = (selected.initialAngle || 0) + t * (selected.speed || 1.0);
-          const mDist = selected.distance || 2.0;
-          const moonOffset = new THREE.Vector3(
-            Math.cos(angle) * mDist,
-            0,
-            Math.sin(angle) * mDist
-          );
-          focusPos.add(moonOffset);
-          zoomDist = Math.max(2.2, selected.size * 12 || 2.8);
-        } else {
-          // Tailored close-up zoom distance based on object size
-          const cfg = PLANET_CONFIG[selected.name];
-          if (selected.id === 'sun') {
-            zoomDist = 15.0;
-          } else if (cfg) {
-            if (cfg.size >= 1.3) zoomDist = 9.5;       // Jupiter, Saturn
-            else if (cfg.size >= 0.8) zoomDist = 6.2;   // Uranus, Neptune
-            else if (cfg.size >= 0.25) zoomDist = 4.2;  // Earth, Venus, Mars
-            else zoomDist = 3.2;                         // Mercury, Pluto, Ceres
-          }
+        // Tailored close-up zoom distance based on host planet size
+        const cfg = PLANET_CONFIG[targetObj.name];
+        let zoomDist = 7.0;
+        if (targetObj.id === 'sun') {
+          zoomDist = 15.0;
+        } else if (cfg) {
+          if (cfg.size >= 1.3) zoomDist = 9.5;       // Jupiter, Saturn
+          else if (cfg.size >= 0.8) zoomDist = 6.2;   // Uranus, Neptune
+          else if (cfg.size >= 0.25) zoomDist = 4.2;  // Earth, Venus, Mars
+          else zoomDist = 3.2;                         // Mercury, Pluto, Ceres
         }
 
         // Camera view direction
@@ -278,13 +262,13 @@ function CameraController({ selected, planetRefs, controlsRef }) {
           .normalize();
         if (camDir.lengthSq() === 0) camDir.set(0, 0.5, 1).normalize();
 
-        // Compute vertical offset so target sits gently below target object,
+        // Compute vertical offset so target sits gently below host planet,
         // positioning it in the open upper-middle viewport above InfoPanel!
         const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
         const verticalOffset = cameraUp.clone().multiplyScalar(-zoomDist * 0.14);
 
-        desiredTarget.copy(focusPos).add(verticalOffset);
-        desiredCamPos.copy(focusPos).add(camDir.multiplyScalar(zoomDist)).add(verticalOffset);
+        desiredTarget.copy(planetPos).add(verticalOffset);
+        desiredCamPos.copy(planetPos).add(camDir.multiplyScalar(zoomDist)).add(verticalOffset);
 
         controlsRef.current.target.lerp(desiredTarget, 0.08);
         camera.position.lerp(desiredCamPos, 0.08);
@@ -737,6 +721,7 @@ function InfoPanel({ planet, onSelect, onClose }) {
         {availableMoons.length > 0 && (
           <div style={{
             display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 10, marginBottom: 14,
+            paddingRight: 44,
             borderBottom: '1px solid rgba(255,255,255,0.08)',
             scrollbarWidth: 'none', msOverflowStyle: 'none'
           }}>
@@ -750,7 +735,7 @@ function InfoPanel({ planet, onSelect, onClose }) {
                 transition: 'all 0.2s ease'
               }}
             >
-              🪐 {hostPlanet.name} (Host)
+              🪐 {hostPlanet.name}
             </button>
             {availableMoons.map((m) => {
               const isSelected = activeTarget.isMoon && activeTarget.name.toLowerCase() === m.name.toLowerCase();
