@@ -33,13 +33,33 @@ const TEXTURE_PATHS = {
 const PLANET_CONFIG = {
   Mercury: { size: 0.22, orbit: 10.5, speed: 1.6, emissive: '#888888', emissiveIntensity: 0, rotationSpeed: 0.0005, tilt: 0.03 },
   Venus:   { size: 0.45, orbit: 13.0, speed: 1.17, emissive: '#e3bb76', emissiveIntensity: 0, rotationSpeed: -0.0002, tilt: 3.1 },
-  Earth:   { size: 0.48, orbit: 15.5, speed: 1.0, emissive: '#2266aa', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.41, moons: [{ name: 'Moon', size: 0.13, distance: 1.2, speed: 2.0, color: '#dddddd' }] },
+  Earth:   { size: 0.48, orbit: 15.5, speed: 1.0, emissive: '#2266aa', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.41, moons: [
+    { name: 'Luna', size: 0.13, distance: 1.1, speed: 2.0, color: '#dddddd' }
+  ]},
   Mars:    { size: 0.28, orbit: 18.5, speed: 0.8, emissive: '#aa4422', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.44 },
   Ceres:   { size: 0.08, orbit: 22.5, speed: 0.6, emissive: '#c8c2b8', emissiveIntensity: 0, rotationSpeed: 0.003, tilt: 0.04 },
-  Jupiter: { size: 1.60, orbit: 29.5, speed: 0.44, emissive: '#c49a6c', emissiveIntensity: 0, rotationSpeed: 0.012, tilt: 0.05, moons: [{ name: 'Europa', size: 0.14, distance: 2.5, speed: 1.5, color: '#e6dfd1' }] },
-  Saturn:  { size: 1.30, orbit: 39.0, speed: 0.32, emissive: '#d4c07a', emissiveIntensity: 0, rotationSpeed: 0.011, tilt: 0.47, moons: [{ name: 'Titan', size: 0.18, distance: 2.4, speed: 0.8, color: '#d39c55' }] },
-  Uranus:  { size: 0.85, orbit: 49.5, speed: 0.22, emissive: '#7fcfcf', emissiveIntensity: 0, rotationSpeed: -0.007, tilt: 1.71 },
-  Neptune: { size: 0.82, orbit: 59.5, speed: 0.18, emissive: '#3355bb', emissiveIntensity: 0, rotationSpeed: 0.008, tilt: 0.49 },
+  Jupiter: { size: 1.60, orbit: 29.5, speed: 0.44, emissive: '#c49a6c', emissiveIntensity: 0, rotationSpeed: 0.012, tilt: 0.05, moons: [
+    { name: 'Io', size: 0.13, distance: 2.2, speed: 2.5, color: '#d9a74a' },
+    { name: 'Europa', size: 0.12, distance: 2.9, speed: 1.8, color: '#e6dfd1' },
+    { name: 'Ganymede', size: 0.18, distance: 3.6, speed: 1.2, color: '#b5a48e' },
+    { name: 'Callisto', size: 0.16, distance: 4.4, speed: 0.8, color: '#8a8074' }
+  ]},
+  Saturn:  { size: 1.30, orbit: 39.0, speed: 0.32, emissive: '#d4c07a', emissiveIntensity: 0, rotationSpeed: 0.011, tilt: 0.47, moons: [
+    { name: 'Tethys', size: 0.08, distance: 3.4, speed: 2.2, color: '#cfc7bd' },
+    { name: 'Dione', size: 0.09, distance: 4.0, speed: 1.8, color: '#d0c8be' },
+    { name: 'Rhea', size: 0.11, distance: 4.6, speed: 1.4, color: '#c2b6a3' },
+    { name: 'Titan', size: 0.18, distance: 5.3, speed: 0.9, color: '#d39c55' },
+    { name: 'Iapetus', size: 0.10, distance: 6.2, speed: 0.5, color: '#999085' }
+  ]},
+  Uranus:  { size: 0.85, orbit: 49.5, speed: 0.22, emissive: '#7fcfcf', emissiveIntensity: 0, rotationSpeed: -0.007, tilt: 1.71, moons: [
+    { name: 'Ariel', size: 0.09, distance: 1.5, speed: 2.2, color: '#c5bbb0' },
+    { name: 'Umbriel', size: 0.09, distance: 2.0, speed: 1.7, color: '#706b63' },
+    { name: 'Titania', size: 0.11, distance: 2.6, speed: 1.2, color: '#b0a599' },
+    { name: 'Oberon', size: 0.10, distance: 3.2, speed: 0.8, color: '#a3978a' }
+  ]},
+  Neptune: { size: 0.82, orbit: 59.5, speed: 0.18, emissive: '#3355bb', emissiveIntensity: 0, rotationSpeed: 0.008, tilt: 0.49, moons: [
+    { name: 'Triton', size: 0.14, distance: 1.8, speed: -1.2, color: '#b3c2c7' }
+  ]},
   Pluto:   { size: 0.14, orbit: 68.0, speed: 0.16, emissive: '#a89f91', emissiveIntensity: 0, rotationSpeed: 0.001, tilt: 2.03, binary: { companionName: 'Charon', companionSize: 0.07, distance: 0.55, speed: 1.2, color: '#888888', massRatio: 0.118 } },
 };
 
@@ -203,12 +223,14 @@ function CameraController({ selected, planetRefs, controlsRef }) {
 /* ─── Moon component ─── */
 function Moon({ config }) {
   const moonRef = useRef();
+  const initialAngle = useRef(Math.random() * Math.PI * 2);
   
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
+    const angle = initialAngle.current + t * config.speed;
     if (moonRef.current) {
-      moonRef.current.position.x = Math.cos(t * config.speed) * config.distance;
-      moonRef.current.position.z = Math.sin(t * config.speed) * config.distance;
+      moonRef.current.position.x = Math.cos(angle) * config.distance;
+      moonRef.current.position.z = Math.sin(angle) * config.distance;
     }
   });
 
