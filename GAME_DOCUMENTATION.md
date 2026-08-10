@@ -19,6 +19,7 @@
 - **GitHub**: Repository `j4mesh3nry/learningjemz`
   - Active Production Branch: `main`
   - Primary Dev Branch: `dev`
+  - Prepared Feature Branch: `feature/next-session`
 - **Vercel Deployment**: Live URL: `https://learningjemz.vercel.app`
   - Headers: `Cache-Control: no-cache, no-store, must-revalidate` for `index.html` and `sw.js`.
 - **Supabase Backend**: Realtime Database & User Auth

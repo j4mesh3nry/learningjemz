@@ -11,7 +11,7 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 
 ## Git workflow & Windows gotchas
 
-- Active branch is `dev` (also the default checkout). Work on `dev` or `feature/*`; commit and push to `origin/dev`.
+- Active branch is `dev` (also the default checkout). Work on `dev` or `feature/*` (e.g. `feature/next-session`); commit and push to `origin/dev` or `origin/feature/*`.
 - CI (`.github/workflows/ci.yml`) runs lint + test **only on pushes/PRs to `main`** (plus pushes on `enhance/*`). `dev` has no CI guard — validate locally before pushing.
 - Windows / CRLF: `core.autocrlf=true` makes `git status` show ~70 files as modified even when only a few have real diffs. Check `git diff --ignore-cr-at-eol` first; never `git add -A` blindly.
 - When merging features to `main`, update `GAME_DOCUMENTATION.md` (and `docs/GAME_SYSTEM_DESIGN.md`) to match.
