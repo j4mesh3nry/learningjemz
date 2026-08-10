@@ -968,24 +968,12 @@ function SolarLoadingOverlay() {
   if (!loading) return null;
 
   return (
-    <div style={{
-      position: 'absolute', inset: 0, zIndex: 100,
-      background: 'rgba(11, 13, 34, 0.88)',
-      backdropFilter: 'blur(16px)',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      gap: 16, transition: 'opacity 0.4s ease'
-    }}>
-      <div style={{
-        width: 48, height: 48, borderRadius: '50%',
-        border: '3px solid rgba(253, 184, 19, 0.2)',
-        borderTopColor: '#FDB813',
-        animation: 'spin 1s linear infinite'
-      }} />
-      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff', letterSpacing: '0.5px' }}>
-        Loading 3D Solar System ({Math.round(progress)}%)
-      </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+    <JemzLoader
+      message="Loading 3D Solar System..."
+      subtext={`Downloading 2K planet textures & orbits... ${Math.round(progress)}%`}
+      darkTheme={true}
+      fullScreen={true}
+    />
   );
 }
 
