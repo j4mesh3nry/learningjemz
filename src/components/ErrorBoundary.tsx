@@ -110,14 +110,27 @@ export class ErrorBoundary extends Component<Props, State> {
             <h2
               style={{
                 fontFamily: 'var(--font-heading, system-ui, sans-serif)',
-                fontSize: '1.4rem',
+                fontSize: '1.6rem',
                 fontWeight: 900,
                 color: '#0f3825',
-                margin: '0 0 8px 0',
+                margin: '0 0 4px 0',
+                lineHeight: 1.2
               }}
             >
-              {this.props.fallbackTitle || 'Oops! Something went wrong'}
+              Oops!
             </h2>
+            <p
+              style={{
+                fontFamily: 'var(--font-heading, system-ui, sans-serif)',
+                fontSize: '1.15rem',
+                fontWeight: 800,
+                color: '#16653e',
+                margin: '0 0 16px 0',
+                lineHeight: 1.2
+              }}
+            >
+              {this.props.fallbackTitle || 'Something went wrong'}
+            </p>
 
             <p
               style={{
