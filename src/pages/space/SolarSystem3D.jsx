@@ -69,7 +69,7 @@ const PLANET_CONFIG = {
 const PLANET_BADGES = {
   sun: {
     icon: Zap, title: 'Giver of Light', color: '#FDB813',
-    text: "Contains 99.86% of all mass in the solar system — truly 109× Earth's width. Rendered with a commanding central presence so all orbiting worlds remain clear and easy to explore."
+    text: "Contains 99.86% of all mass in the solar system — powers every planet with nuclear light and heat."
   },
   mercury: {
     icon: Gauge, title: 'Fastest Planet', color: '#b8b8b8',
@@ -85,7 +85,7 @@ const PLANET_BADGES = {
   },
   mars: {
     icon: Mountain, title: 'Red Planet', color: '#c1440e',
-    text: 'Home to Olympus Mons, the tallest volcano in the solar system — nearly 3× the height of Everest.'
+    text: 'Covered in rusty iron oxide dust, creating its signature crimson surface and pinkish sky.'
   },
   jupiter: {
     icon: Globe, title: 'Largest Planet', color: '#d39c7e',
@@ -93,7 +93,7 @@ const PLANET_BADGES = {
   },
   saturn: {
     icon: Sparkles, title: 'Ringed Giant', color: '#ead6b8',
-    text: 'The least dense planet — it could float in water if a big enough bathtub existed.'
+    text: 'Famous for its magnificent ring system spanning 282,000 km across, composed of billions of icy particles.'
   },
   uranus: {
     icon: RefreshCcw, title: 'Sideways Rotation', color: '#4b70dd',
