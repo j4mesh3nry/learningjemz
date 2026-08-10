@@ -35,6 +35,7 @@
   - **Tactile 3D Shadows**: `box-shadow: 0 4px 0 #b0cbaf` (elements) and `0 3px 0 #0e4329` (buttons). Active press translates `2px` downward.
   - **Anti-Glassmorphism & Anti-Glow Rule**: Strictly avoid glassmorphism (`backdrop-filter`), translucent fuzzy overlays, and neon glow effects (`box-shadow: 0 0 ... glow`, radial-gradient auras). All modals, cards, and UI surfaces use clean, solid background colors with solid contrast 3D borders and tactile offset shadows.
   - **Light-Only Color Scheme Enforcement**: The app is deliberately light-only. `index.html` ships `<meta name="color-scheme" content="light">` and `src/index.css` `:root` sets `color-scheme: light only` plus `forced-color-adjust: none`. A `@media (forced-colors: active)` block re-asserts `forced-color-adjust: none` on every element/pseudo-element and re-declares the canvas colors on `html`/`body`, so phone browsers (Chrome auto dark mode, Samsung Internet force dark, OS dark-theme engines) and forced-colors engines (Windows High Contrast, Android high contrast text) never re-tint or invert the palette, while the design itself stays identical.
+- **Module Theme Backgrounds**: `data-module-theme` is applied to both `body` and `html` tags, ensuring the theme's background color seamlessly covers the entire viewport and overscroll regions (e.g., `#ebe3cf` ivory for Chess, `#0b0d1c` deep space for Space).
 - **Typography**:
   - **Headings**: `Outfit` (Bold, rounded geometric sans-serif, `800 - 900`).
   - **Body**: `Inter` (Clean, legible sans-serif).
