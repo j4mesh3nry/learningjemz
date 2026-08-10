@@ -221,7 +221,7 @@ function CameraController({ selected, planetRefs, controlsRef }) {
   const isRestoring = useRef(false);
   const restoreTime = useRef(0);
 
-  useFrame(({ camera }, delta) => {
+  useFrame(({ camera, clock }, delta) => {
     if (!controlsRef.current) return;
 
     // Detect transition from unselected to selected: save pre-click view state!
@@ -238,39 +238,58 @@ function CameraController({ selected, planetRefs, controlsRef }) {
     }
     prevSelected.current = selected;
 
-    if (selected && planetRefs.current[selected.name]) {
-      const ref = planetRefs.current[selected.name];
-      ref.getWorldPosition(planetPos);
+    if (selected) {
+      const hostName = selected.isMoon ? selected.hostPlanet.name : selected.name;
+      const ref = planetRefs.current[hostName];
+      if (ref) {
+        ref.getWorldPosition(planetPos);
 
-      // Tailored close-up zoom distance based on object size
-      const cfg = PLANET_CONFIG[selected.name];
-      let zoomDist = 7.0;
-      if (selected.id === 'sun') {
-        zoomDist = 15.0;
-      } else if (cfg) {
-        if (cfg.size >= 1.3) zoomDist = 9.5;       // Jupiter, Saturn
-        else if (cfg.size >= 0.8) zoomDist = 6.2;   // Uranus, Neptune
-        else if (cfg.size >= 0.25) zoomDist = 4.2;  // Earth, Venus, Mars
-        else zoomDist = 3.2;                         // Mercury, Pluto, Ceres
+        let focusPos = planetPos.clone();
+        let zoomDist = 8.0;
+
+        if (selected.isMoon) {
+          // Track specific moon position relative to host planet
+          const t = clock.getElapsedTime();
+          const angle = (selected.initialAngle || 0) + t * (selected.speed || 1.0);
+          const mDist = selected.distance || 2.0;
+          const moonOffset = new THREE.Vector3(
+            Math.cos(angle) * mDist,
+            0,
+            Math.sin(angle) * mDist
+          );
+          focusPos.add(moonOffset);
+          zoomDist = Math.max(2.2, selected.size * 12 || 2.8);
+        } else {
+          // Tailored close-up zoom distance based on object size
+          const cfg = PLANET_CONFIG[selected.name];
+          if (selected.id === 'sun') {
+            zoomDist = 15.0;
+          } else if (cfg) {
+            if (cfg.size >= 1.3) zoomDist = 9.5;       // Jupiter, Saturn
+            else if (cfg.size >= 0.8) zoomDist = 6.2;   // Uranus, Neptune
+            else if (cfg.size >= 0.25) zoomDist = 4.2;  // Earth, Venus, Mars
+            else zoomDist = 3.2;                         // Mercury, Pluto, Ceres
+          }
+        }
+
+        // Camera view direction
+        const camDir = new THREE.Vector3()
+          .subVectors(camera.position, controlsRef.current.target)
+          .normalize();
+        if (camDir.lengthSq() === 0) camDir.set(0, 0.5, 1).normalize();
+
+        // Compute vertical offset so target sits gently below target object,
+        // positioning it in the open upper-middle viewport above InfoPanel!
+        const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
+        const verticalOffset = cameraUp.clone().multiplyScalar(-zoomDist * 0.14);
+
+        desiredTarget.copy(focusPos).add(verticalOffset);
+        desiredCamPos.copy(focusPos).add(camDir.multiplyScalar(zoomDist)).add(verticalOffset);
+
+        controlsRef.current.target.lerp(desiredTarget, 0.08);
+        camera.position.lerp(desiredCamPos, 0.08);
+        controlsRef.current.update();
       }
-
-      // Camera view direction
-      const camDir = new THREE.Vector3()
-        .subVectors(camera.position, controlsRef.current.target)
-        .normalize();
-      if (camDir.lengthSq() === 0) camDir.set(0, 0.5, 1).normalize();
-
-      // Compute vertical offset so the target sits gently below the planet,
-      // positioning the planet in the open upper-middle viewport below top nav and above InfoPanel!
-      const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
-      const verticalOffset = cameraUp.clone().multiplyScalar(-zoomDist * 0.14);
-
-      desiredTarget.copy(planetPos).add(verticalOffset);
-      desiredCamPos.copy(planetPos).add(camDir.multiplyScalar(zoomDist)).add(verticalOffset);
-
-      controlsRef.current.target.lerp(desiredTarget, 0.08);
-      camera.position.lerp(desiredCamPos, 0.08);
-      controlsRef.current.update();
     } else if (isRestoring.current && savedCamPos.current && savedCamTarget.current) {
       // Smoothly lerp back to pre-selection view over max 0.4 seconds, then release control to user!
       restoreTime.current += delta;
@@ -295,9 +314,10 @@ function CameraController({ selected, planetRefs, controlsRef }) {
 }
 
 /* ─── Moon component ─── */
-function Moon({ config, labelsHidden }) {
+function Moon({ config, labelsHidden, onSelect, hostPlanet }) {
   const groupRef = useRef();
   const initialAngle = useRef(Math.random() * Math.PI * 2);
+  const [hovered, setHovered] = useState(false);
   
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
@@ -308,20 +328,51 @@ function Moon({ config, labelsHidden }) {
     }
   });
 
+  // Look up full moon data from moons dataset
+  const moonData = useMemo(() => {
+    const found = moons.find((m) => m.name.toLowerCase() === config.name.toLowerCase());
+    return found || {
+      name: config.name,
+      planet: hostPlanet?.name || 'Solar System',
+      diameter: '—',
+      orbitalPeriod: '—',
+      funFact: `A natural satellite orbiting ${hostPlanet?.name || 'its parent body'}.`
+    };
+  }, [config.name, hostPlanet]);
+
   return (
     <group ref={groupRef}>
-      <mesh>
+      <mesh
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect({
+            ...moonData,
+            ...config,
+            isMoon: true,
+            hostPlanet,
+            initialAngle: initialAngle.current
+          });
+        }}
+        onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
+      >
         <sphereGeometry args={[config.size, 16, 16]} />
-        <meshStandardMaterial color={config.color} roughness={0.8} />
+        <meshStandardMaterial
+          color={config.color}
+          emissive={config.color}
+          emissiveIntensity={hovered ? 0.3 : 0}
+          roughness={0.8}
+        />
       </mesh>
       {config.name && (
         <Html position={[0, -(config.size + 0.25), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
           <div style={{
-            color: 'rgba(255,255,255,0.45)',
-            fontSize: '0.55rem',
+            color: hovered ? '#fff' : 'rgba(255,255,255,0.45)',
+            fontSize: hovered ? '0.62rem' : '0.55rem',
             fontWeight: 600,
             userSelect: 'none',
             letterSpacing: '0.5px',
+            transition: 'all 0.2s ease',
           }}>
             {config.name}
           </div>
@@ -406,7 +457,9 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
       )}
 
       {/* Orbiting Moons */}
-      {config.moons && config.moons.map((m, i) => <Moon key={i} config={m} labelsHidden={labelsHidden} />)}
+      {config.moons && config.moons.map((m, i) => (
+        <Moon key={i} config={m} labelsHidden={labelsHidden} onSelect={onSelect} hostPlanet={data} />
+      ))}
 
       {/* Uranus thin ring */}
       {isUranus && (
@@ -449,6 +502,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
   const companionLabelRef = useRef();
   const initialAngle = useRef(Math.random() * Math.PI * 2);
   const [hovered, setHovered] = useState(false);
+  const [companionHovered, setCompanionHovered] = useState(false);
   const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
 
   const D = config.binary.distance;
@@ -492,6 +546,17 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
     }
   });
 
+  const charonData = useMemo(() => {
+    const found = moons.find((m) => m.name.toLowerCase() === 'charon');
+    return found || {
+      name: 'Charon',
+      planet: 'Pluto',
+      diameter: '1,212 km',
+      orbitalPeriod: '6.4 days',
+      funFact: 'So large compared to Pluto that they orbit a shared barycenter outside Pluto.'
+    };
+  }, []);
+
   return (
     <group ref={groupRef}>
       {/* Glow aura around Pluto */}
@@ -518,9 +583,31 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
       </mesh>
 
       {/* Charon body */}
-      <mesh ref={companionRef}>
+      <mesh
+        ref={companionRef}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect({
+            ...charonData,
+            name: 'Charon',
+            size: config.binary.companionSize,
+            distance: config.binary.distance,
+            speed: config.binary.speed,
+            color: config.binary.color,
+            isMoon: true,
+            hostPlanet: data
+          });
+        }}
+        onPointerOver={(e) => { e.stopPropagation(); setCompanionHovered(true); document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { setCompanionHovered(false); document.body.style.cursor = 'auto'; }}
+      >
         <sphereGeometry args={[config.binary.companionSize, 32, 32]} />
-        <meshStandardMaterial color={config.binary.color} roughness={0.8} />
+        <meshStandardMaterial
+          color={config.binary.color}
+          emissive={config.binary.color}
+          emissiveIntensity={companionHovered ? 0.3 : 0}
+          roughness={0.8}
+        />
       </mesh>
 
       {/* Pluto label */}
@@ -544,11 +631,12 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
       <group ref={companionLabelRef}>
         <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
           <div style={{
-            color: 'rgba(255,255,255,0.45)',
-            fontSize: '0.55rem',
+            color: companionHovered ? '#fff' : 'rgba(255,255,255,0.45)',
+            fontSize: companionHovered ? '0.62rem' : '0.55rem',
             fontWeight: 600,
             userSelect: 'none',
             letterSpacing: '0.5px',
+            transition: 'all 0.2s ease',
           }}>
             {config.binary.companionName}
           </div>
@@ -558,9 +646,59 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
   );
 });
 
+/* ─── Educational Badges for Moons ─── */
+const MOON_BADGES = {
+  ganymede: { icon: Globe, title: 'Largest Moon in Solar System', color: '#b5a48e', text: 'Bigger than the planet Mercury and dwarf planet Pluto, with its own magnetic field.' },
+  titan: { icon: Wind, title: 'Atmosphere & Methane Lakes', color: '#d39c55', text: 'The only moon with a dense atmosphere and stable surface liquid (lakes of methane).' },
+  io: { icon: Flame, title: 'Volcanic Powerhouse', color: '#d9a74a', text: 'Over 400 active volcanoes make Io the most volcanically active body in the solar system.' },
+  europa: { icon: Sparkles, title: 'Subsurface Water Ocean', color: '#e6dfd1', text: "Conceals a global liquid water ocean beneath its icy crust, holding 2x Earth's oceans." },
+  callisto: { icon: Mountain, title: 'Cratered Veteran', color: '#8a8074', text: 'The most heavily cratered surface in the solar system, unchanged for 4 billion years.' },
+  triton: { icon: RefreshCcw, title: 'Retrograde Orbit', color: '#b3c2c7', text: "Orbits Neptune backwards compared to Neptune's rotation — a captured Kuiper Belt object." },
+  moon: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only world humans have stepped on." },
+  luna: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only world humans have stepped on." },
+  charon: { icon: Orbit, title: 'Double Dwarf Partner', color: '#888888', text: 'Tidally locked with Pluto so both worlds forever show the exact same face to each other.' }
+};
+
 /* ─── Info Panel Component ─── */
-function InfoPanel({ planet, onClose }) {
+function InfoPanel({ planet, onSelect, onClose }) {
   if (!planet) return null;
+
+  // Determine host planet and active target (planet vs moon)
+  const hostPlanet = planet.isMoon ? planet.hostPlanet : planet;
+  const activeTarget = planet;
+
+  // Gather available moons for the host planet
+  const availableMoons = useMemo(() => {
+    if (!hostPlanet) return [];
+    const cfg = PLANET_CONFIG[hostPlanet.name];
+    const moonList = [];
+
+    if (cfg && cfg.moons) {
+      cfg.moons.forEach((m) => {
+        const found = moons.find((item) => item.name.toLowerCase() === m.name.toLowerCase());
+        moonList.push({
+          ...found,
+          ...m,
+          name: m.name
+        });
+      });
+    }
+
+    if (cfg && cfg.binary && cfg.binary.companionName) {
+      const found = moons.find((item) => item.name.toLowerCase() === cfg.binary.companionName.toLowerCase());
+      moonList.push({
+        ...found,
+        name: cfg.binary.companionName,
+        size: cfg.binary.companionSize,
+        distance: cfg.binary.distance,
+        speed: cfg.binary.speed,
+        color: cfg.binary.color
+      });
+    }
+
+    return moonList;
+  }, [hostPlanet]);
+
   return (
     <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, padding: '0 12px 16px', animation: 'slideUp 0.3s ease' }}>
       <div style={{
@@ -569,7 +707,7 @@ function InfoPanel({ planet, onClose }) {
         background: 'rgba(11,13,34,0.85)',
         backdropFilter: 'blur(18px)',
         borderRadius: '20px 20px 16px 16px',
-        padding: '20px 20px 16px', color: '#fff',
+        padding: '18px 20px 16px', color: '#fff',
         border: '1.5px solid rgba(255,255,255,0.1)',
         boxShadow: '0 6px 0 #07081a',
       }}>
@@ -578,62 +716,177 @@ function InfoPanel({ planet, onClose }) {
           background: 'rgba(255,255,255,0.1)', border: '1.5px solid rgba(255,255,255,0.15)',
           borderRadius: '50%', width: 32, height: 32,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', color: '#fff', transition: 'background 0.2s',
+          cursor: 'pointer', color: '#fff', transition: 'background 0.2s', zIndex: 2
         }}>
           <X size={16} />
         </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
+
+        {/* Moon Selector Strip */}
+        {availableMoons.length > 0 && (
           <div style={{
-            width: 56, height: 56, borderRadius: '50%',
-            backgroundImage: `url(${TEXTURE_PATHS[planet.name] || TEXTURE_PATHS.Earth})`,
-            backgroundSize: 'cover', backgroundPosition: 'center',
-            border: `2px solid ${planet.color || '#888'}`,
-            flexShrink: 0,
-          }} />
+            display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 10, marginBottom: 14,
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            scrollbarWidth: 'none', msOverflowStyle: 'none'
+          }}>
+            <button
+              onClick={() => onSelect(hostPlanet)}
+              style={{
+                background: !activeTarget.isMoon ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.06)',
+                border: !activeTarget.isMoon ? `1.5px solid ${hostPlanet.color || '#fff'}` : '1.5px solid rgba(255,255,255,0.1)',
+                borderRadius: 12, padding: '5px 10px', color: '#fff', fontSize: '0.7rem', fontWeight: 700,
+                cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4,
+                transition: 'all 0.2s ease'
+              }}
+            >
+              🪐 {hostPlanet.name} (Host)
+            </button>
+            {availableMoons.map((m) => {
+              const isSelected = activeTarget.isMoon && activeTarget.name.toLowerCase() === m.name.toLowerCase();
+              return (
+                <button
+                  key={m.name}
+                  onClick={() => onSelect({ ...m, isMoon: true, hostPlanet })}
+                  style={{
+                    background: isSelected ? 'rgba(253,184,19,0.25)' : 'rgba(255,255,255,0.06)',
+                    border: isSelected ? '1.5px solid #FDB813' : '1.5px solid rgba(255,255,255,0.1)',
+                    borderRadius: 12, padding: '5px 10px',
+                    color: isSelected ? '#FDB813' : 'rgba(255,255,255,0.7)',
+                    fontSize: '0.7rem', fontWeight: 700,
+                    cursor: 'pointer', whiteSpace: 'nowrap',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  🌕 {m.name}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Content Card (Moon vs Planet) */}
+        {activeTarget.isMoon ? (
           <div>
-            <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, letterSpacing: '-0.3px' }}>{planet.name}</h3>
-            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>{planet.type}</span>
-          </div>
-        </div>
-        {PLANET_BADGES[planet.id] && (() => {
-          const badge = PLANET_BADGES[planet.id];
-          const BadgeIcon = badge.icon;
-          return (
-            <div style={{
-              background: 'rgba(255,255,255,0.06)',
-              border: '1.5px solid rgba(255,255,255,0.1)',
-              borderRadius: 12, padding: '10px 12px',
-              marginBottom: 12,
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, fontWeight: 800, color: badge.color, textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '0.5px' }}>
-                <BadgeIcon size={12} /> {badge.title}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
+              <div style={{
+                width: 52, height: 52, borderRadius: '50%',
+                background: activeTarget.color || '#aaa',
+                border: '2px solid rgba(255,255,255,0.3)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1.2rem', flexShrink: 0
+              }}>
+                🌕
               </div>
-              <p style={{ margin: 0, fontSize: '0.78rem', lineHeight: 1.5, color: 'rgba(255,255,255,0.85)' }}>{badge.text}</p>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.3px' }}>{activeTarget.name}</h3>
+                <span style={{ fontSize: '0.73rem', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
+                  Natural Satellite of {hostPlanet.name}
+                </span>
+              </div>
             </div>
-          );
-        })()}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: 16 }}>
-          {[{ label: 'Moons', value: planet.moons },
-            { label: 'Temperature', value: planet.temperature?.split(' ')[0] || '—' },
-            { label: 'Year Length', value: planet.yearLength },
-            { label: 'Gravity', value: planet.gravity }].map((stat) => (
-            <div key={stat.label} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: '10px 12px', border: '1.5px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{stat.label}</div>
-              <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{stat.value}</div>
+
+            {/* Moon Educational Badge */}
+            {MOON_BADGES[activeTarget.name.toLowerCase()] && (() => {
+              const badge = MOON_BADGES[activeTarget.name.toLowerCase()];
+              const BadgeIcon = badge.icon;
+              return (
+                <div style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1.5px solid rgba(255,255,255,0.1)',
+                  borderRadius: 12, padding: '10px 12px', marginBottom: 12,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, fontWeight: 800, color: badge.color, textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '0.5px' }}>
+                    <BadgeIcon size={12} /> {badge.title}
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.78rem', lineHeight: 1.5, color: 'rgba(255,255,255,0.85)' }}>{badge.text}</p>
+                </div>
+              );
+            })()}
+
+            {/* Moon Stat Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: 14 }}>
+              {[
+                { label: 'Diameter', value: activeTarget.diameter || '—' },
+                { label: 'Orbital Period', value: activeTarget.orbitalPeriod || '—' },
+                { label: 'Discovered By', value: activeTarget.discoveredBy || 'Antiquity' },
+                { label: 'Discovery Year', value: activeTarget.discoveredYear || 'Ancient' }
+              ].map((stat) => (
+                <div key={stat.label} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: '10px 12px', border: '1.5px solid rgba(255,255,255,0.08)' }}>
+                  <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{stat.label}</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.85rem' }}>{stat.value}</div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div style={{
-          background: 'rgba(255,255,255,0.05)',
-          borderRadius: 12, padding: '12px 16px',
-          border: '1.5px solid rgba(255,255,255,0.08)', marginBottom: 14,
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-            <Info size={13} style={{ color: planet.color, opacity: 0.8 }} />
-            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: planet.color, opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Fun Fact</span>
+
+            {/* Moon Fun Fact */}
+            <div style={{
+              background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: '12px 16px',
+              border: '1.5px solid rgba(255,255,255,0.08)', marginBottom: 14
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                <Info size={13} style={{ color: '#FDB813', opacity: 0.8 }} />
+                <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#FDB813', opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Fun Fact</span>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.82rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.85)' }}>
+                {activeTarget.funFact || `A natural satellite orbiting ${hostPlanet.name} in our solar system.`}
+              </p>
+            </div>
           </div>
-          <p style={{ margin: 0, fontSize: '0.82rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.85)' }}>{planet.funFacts?.[0] || 'No fact available.'}</p>
-        </div>
+        ) : (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
+              <div style={{
+                width: 56, height: 56, borderRadius: '50%',
+                backgroundImage: `url(${TEXTURE_PATHS[planet.name] || TEXTURE_PATHS.Earth})`,
+                backgroundSize: 'cover', backgroundPosition: 'center',
+                border: `2px solid ${planet.color || '#888'}`,
+                flexShrink: 0,
+              }} />
+              <div>
+                <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, letterSpacing: '-0.3px' }}>{planet.name}</h3>
+                <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>{planet.type}</span>
+              </div>
+            </div>
+            {PLANET_BADGES[planet.id] && (() => {
+              const badge = PLANET_BADGES[planet.id];
+              const BadgeIcon = badge.icon;
+              return (
+                <div style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1.5px solid rgba(255,255,255,0.1)',
+                  borderRadius: 12, padding: '10px 12px',
+                  marginBottom: 12,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, fontWeight: 800, color: badge.color, textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '0.5px' }}>
+                    <BadgeIcon size={12} /> {badge.title}
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.78rem', lineHeight: 1.5, color: 'rgba(255,255,255,0.85)' }}>{badge.text}</p>
+                </div>
+              );
+            })()}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: 16 }}>
+              {[{ label: 'Moons', value: planet.moons },
+                { label: 'Temperature', value: planet.temperature?.split(' ')[0] || '—' },
+                { label: 'Year Length', value: planet.yearLength },
+                { label: 'Gravity', value: planet.gravity }].map((stat) => (
+                <div key={stat.label} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: '10px 12px', border: '1.5px solid rgba(255,255,255,0.08)' }}>
+                  <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{stat.label}</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{stat.value}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{
+              background: 'rgba(255,255,255,0.05)',
+              borderRadius: 12, padding: '12px 16px',
+              border: '1.5px solid rgba(255,255,255,0.08)', marginBottom: 14,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                <Info size={13} style={{ color: planet.color, opacity: 0.8 }} />
+                <span style={{ fontSize: '0.7rem', fontWeight: 700, color: planet.color, opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Fun Fact</span>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.82rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.85)' }}>{planet.funFacts?.[0] || 'No fact available.'}</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -661,74 +914,80 @@ function SolarLoadingOverlay() {
   if (!loading) return null;
 
   return (
-    <JemzLoader
-      message="Loading 3D Solar System..."
-      subtext={`Downloading 2K planet textures & orbits... ${Math.round(progress)}%`}
-      darkTheme={true}
-      fullScreen={true}
-    />
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 100,
+      background: 'rgba(11, 13, 34, 0.88)',
+      backdropFilter: 'blur(16px)',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      gap: 16, transition: 'opacity 0.4s ease'
+    }}>
+      <div style={{
+        width: 48, height: 48, borderRadius: '50%',
+        border: '3px solid rgba(253, 184, 19, 0.2)',
+        borderTopColor: '#FDB813',
+        animation: 'spin 1s linear infinite'
+      }} />
+      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff', letterSpacing: '0.5px' }}>
+        Loading 3D Solar System ({Math.round(progress)}%)
+      </div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
   );
 }
 
-/* ─── Main Component ─── */
+/* ─── Main 3D Solar Explorer Page ─── */
 export default function SolarSystem3D() {
-  const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
-  const planetRefs = useRef({});
   const controlsRef = useRef();
+  const planetRefs = useRef({});
+  const [selected, setSelected] = useState(null);
 
   return (
-    <div style={{
-      position: 'relative', width: '100%', height: '100vh',
-      background: 'radial-gradient(ellipse at 50% 50%, #0a0a2e 0%, #050510 60%, #020208 100%)',
-      overflow: 'hidden',
-    }}>
-      <SolarLoadingOverlay />
-      {/* Nav */}
+    <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#07081a', overflow: 'hidden' }}>
+      {/* Navigation Bar */}
       <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10,
-        padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        position: 'absolute', top: 16, left: 16, right: 16, zIndex: 40,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        pointerEvents: 'none',
       }}>
-        <button onClick={() => navigate('/space')} style={{
-          display: 'flex', alignItems: 'center', gap: 6,
-          background: 'rgba(255,255,255,0.08)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 12, padding: '8px 14px',
-          color: '#fff', fontWeight: 600, fontSize: '0.85rem',
-          cursor: 'pointer', transition: 'background 0.2s',
-        }}>
-          <ArrowLeft size={18} /> Back
+        <button
+          onClick={() => navigate('/space')}
+          style={{
+            pointerEvents: 'auto',
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '10px 18px', borderRadius: 24,
+            background: 'rgba(11,13,34,0.72)', backdropFilter: 'blur(12px)',
+            border: '1.5px solid rgba(255,255,255,0.12)', color: '#fff',
+            fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
+            boxShadow: '0 4px 0 #07081a',
+          }}
+        >
+          <ArrowLeft size={16} /> Back
         </button>
+
         <div style={{
-          background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12,
-          padding: '6px 14px', color: 'rgba(255,255,255,0.6)', fontSize: '0.72rem', fontWeight: 600,
-          letterSpacing: '1px', textTransform: 'uppercase',
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '8px 16px', borderRadius: 20,
+          background: 'rgba(11,13,34,0.72)', backdropFilter: 'blur(12px)',
+          border: '1.5px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.7)',
+          fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase',
+          boxShadow: '0 4px 0 #07081a',
         }}>
-          🪐 Solar Explorer
+          🪐 SOLAR EXPLORER
         </div>
       </div>
 
-      {/* Hint */}
-      <div style={{
-        position: 'absolute', bottom: selected ? 320 : 24, left: '50%',
-        transform: 'translateX(-50%)', zIndex: 5, pointerEvents: 'none',
-        color: 'rgba(255,255,255,0.25)', fontSize: '0.7rem', fontWeight: 500,
-        textAlign: 'center', transition: 'bottom 0.3s ease',
-      }}>
-        Swipe to rotate · Pinch to zoom · Tap a planet
-      </div>
-
-      {/* Canvas */}
+      {/* 3D Canvas */}
       <Canvas
-        camera={{ position: [20, 45, 75], fov: 50 }}
+        camera={{ position: [20, 45, 75], fov: 45, near: 0.1, far: 2500 }}
         style={{ width: '100%', height: '100%' }}
-        gl={{ antialias: true, alpha: false }}
-        onCreated={({ gl }) => { gl.setClearColor('#050510'); }}
+        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
       >
-        <ambientLight intensity={1.2} color="#6688cc" />
-        <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffffff" />
+        <color attach="background" args={['#050614']} />
+        <ambientLight intensity={0.4} />
+        <pointLight position={[0, 0, 0]} intensity={3.5} distance={500} decay={0.3} color="#fff8e7" />
+
+        <SolarLoadingOverlay />
         <Stars radius={1500} depth={300} count={12000} factor={5} saturation={0.2} fade speed={0.3} />
         <OrbitControls
           ref={controlsRef}
@@ -776,7 +1035,7 @@ export default function SolarSystem3D() {
         <Preload all />
       </Canvas>
 
-      <InfoPanel planet={selected} onClose={() => setSelected(null)} />
+      <InfoPanel planet={selected} onSelect={setSelected} onClose={() => setSelected(null)} />
 
       <style>{`@keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`}</style>
     </div>

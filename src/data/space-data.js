@@ -171,6 +171,7 @@ export const planets = [
 
 export const moons = [
   { id: 'moon', name: 'Moon', planet: 'Earth', diameter: '3,474 km', orbitalPeriod: '27.3 days', funFact: 'The only celestial body besides Earth that humans have visited.', discoveredBy: 'Prehistoric humans', discoveredYear: 'Antiquity' },
+  { id: 'luna', name: 'Luna', planet: 'Earth', diameter: '3,474 km', orbitalPeriod: '27.3 days', funFact: 'The only celestial body besides Earth that humans have visited.', discoveredBy: 'Prehistoric humans', discoveredYear: 'Antiquity' },
   { id: 'phobos', name: 'Phobos', planet: 'Mars', diameter: '22 km', orbitalPeriod: '7.6 hours', funFact: 'Orbits so close to Mars that it rises in the west and sets in the east twice a day.', discoveredBy: 'Asaph Hall', discoveredYear: '1877' },
   { id: 'deimos', name: 'Deimos', planet: 'Mars', diameter: '12 km', orbitalPeriod: '30.3 hours', funFact: 'Smaller and further away from Mars than Phobos.', discoveredBy: 'Asaph Hall', discoveredYear: '1877' },
   { id: 'io', name: 'Io', planet: 'Jupiter', diameter: '3,642 km', orbitalPeriod: '1.8 days', funFact: 'The most volcanically active body in the solar system.', discoveredBy: 'Galileo Galilei', discoveredYear: '1610' },
@@ -181,8 +182,13 @@ export const moons = [
   { id: 'enceladus', name: 'Enceladus', planet: 'Saturn', diameter: '504 km', orbitalPeriod: '1.3 days', funFact: 'Shoots geysers of water ice and vapor from its south pole.', discoveredBy: 'William Herschel', discoveredYear: '1789' },
   { id: 'mimas', name: 'Mimas', planet: 'Saturn', diameter: '396 km', orbitalPeriod: '22.6 hours', funFact: 'Looks like the Death Star from Star Wars due to a giant crater named Herschel.', discoveredBy: 'William Herschel', discoveredYear: '1789' },
   { id: 'rhea', name: 'Rhea', planet: 'Saturn', diameter: '1,527 km', orbitalPeriod: '4.5 days', funFact: 'The second-largest moon of Saturn, mostly made of water ice.', discoveredBy: 'Giovanni Domenico Cassini', discoveredYear: '1672' },
+  { id: 'iapetus', name: 'Iapetus', planet: 'Saturn', diameter: '1,469 km', orbitalPeriod: '79.3 days', funFact: 'Has a dramatic two-tone surface, with one hemisphere dark as asphalt and the other bright as snow.', discoveredBy: 'Giovanni Domenico Cassini', discoveredYear: '1671' },
+  { id: 'dione', name: 'Dione', planet: 'Saturn', diameter: '1,123 km', orbitalPeriod: '2.7 days', funFact: 'Features bright ice cliffs and fractures created by tectonic activity.', discoveredBy: 'Giovanni Domenico Cassini', discoveredYear: '1684' },
+  { id: 'tethys', name: 'Tethys', planet: 'Saturn', diameter: '1,062 km', orbitalPeriod: '1.9 days', funFact: 'Has a massive impact crater named Odysseus that spans 2/5ths of the moon\'s diameter.', discoveredBy: 'Giovanni Domenico Cassini', discoveredYear: '1684' },
   { id: 'titania', name: 'Titania', planet: 'Uranus', diameter: '1,576 km', orbitalPeriod: '8.7 days', funFact: 'The largest moon of Uranus, named after the queen of the fairies in A Midsummer Night\'s Dream.', discoveredBy: 'William Herschel', discoveredYear: '1787' },
   { id: 'oberon', name: 'Oberon', planet: 'Uranus', diameter: '1,522 km', orbitalPeriod: '13.5 days', funFact: 'The outermost of the major moons of Uranus.', discoveredBy: 'William Herschel', discoveredYear: '1787' },
+  { id: 'umbriel', name: 'Umbriel', planet: 'Uranus', diameter: '1,169 km', orbitalPeriod: '4.1 days', funFact: 'The darkest of Uranus\'s large moons, reflecting only half as much light as Ariel.', discoveredBy: 'William Lassell', discoveredYear: '1851' },
+  { id: 'ariel', name: 'Ariel', planet: 'Uranus', diameter: '1,158 km', orbitalPeriod: '2.5 days', funFact: 'Has the youngest and brightest surface of all Uranus\'s moons, covered in vast fault canyons.', discoveredBy: 'William Lassell', discoveredYear: '1851' },
   { id: 'triton', name: 'Triton', planet: 'Neptune', diameter: '2,706 km', orbitalPeriod: '5.8 days', funFact: 'Orbits Neptune in the opposite direction of the planet\'s rotation (retrograde orbit).', discoveredBy: 'William Lassell', discoveredYear: '1846' },
   { id: 'charon', name: 'Charon', planet: 'Pluto', diameter: '1,212 km', orbitalPeriod: '6.4 days', funFact: 'So large compared to Pluto that they are sometimes considered a double dwarf planet system.', discoveredBy: 'James Christy', discoveredYear: '1978' }
 ];
