@@ -4,7 +4,7 @@
   "description": "A gamified learning hub for Chess, Geography, Reading, and Space",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#d4e8d5",
   "theme_color": "#1c7c54",
   "orientation": "portrait",
   "categories": ["education", "games"],
