@@ -659,6 +659,35 @@ const MOON_BADGES = {
 function InfoPanel({ planet, onSelect, onClose }) {
   if (!planet) return null;
 
+  // Mouse drag-scroll handlers for Satellite Explorer strip
+  const scrollRef = useRef(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeftPos = useRef(0);
+
+  const handleMouseDown = (e) => {
+    isDragging.current = true;
+    if (!scrollRef.current) return;
+    startX.current = e.pageX - scrollRef.current.offsetLeft;
+    scrollLeftPos.current = scrollRef.current.scrollLeft;
+  };
+
+  const handleMouseLeave = () => {
+    isDragging.current = false;
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5;
+    scrollRef.current.scrollLeft = scrollLeftPos.current - walk;
+  };
+
   // Determine host planet and active target (planet vs moon)
   const hostPlanet = planet.isMoon ? planet.hostPlanet : planet;
   const activeTarget = planet;
@@ -699,8 +728,8 @@ function InfoPanel({ planet, onSelect, onClose }) {
     <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, padding: '0 12px 16px', animation: 'slideUp 0.3s ease' }}>
       <div style={{
         maxWidth: 420, margin: '0 auto',
-        maxHeight: '48vh', overflowY: 'auto',
-        background: 'rgba(11,13,34,0.85)',
+        maxHeight: '52vh', overflowY: 'auto',
+        background: 'rgba(11,13,34,0.92)',
         backdropFilter: 'blur(18px)',
         borderRadius: '20px 20px 16px 16px',
         padding: '18px 20px 16px', color: '#fff',
@@ -753,7 +782,7 @@ function InfoPanel({ planet, onSelect, onClose }) {
           </div>
         )}
 
-        {/* Dedicated Satellite Explorer Bar (Below Header, full width, 0% X-button overlap!) */}
+        {/* Dedicated Satellite Explorer Bar (Below Header, full width, smooth swipe + mouse drag!) */}
         {availableMoons.length > 0 && (
           <div style={{
             marginBottom: 14, padding: '8px 10px',
@@ -767,10 +796,22 @@ function InfoPanel({ planet, onSelect, onClose }) {
             }}>
               <Orbit size={12} color="#FDB813" /> SATELLITES OF {hostPlanet.name.toUpperCase()} ({availableMoons.length})
             </div>
-            <div style={{
-              display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 2,
-              scrollbarWidth: 'none', msOverflowStyle: 'none'
-            }}>
+            <div
+              ref={scrollRef}
+              onMouseDown={handleMouseDown}
+              onMouseLeave={handleMouseLeave}
+              onMouseUp={handleMouseUp}
+              onMouseMove={handleMouseMove}
+              onTouchStart={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
+              style={{
+                display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 4,
+                scrollbarWidth: 'none', msOverflowStyle: 'none',
+                touchAction: 'pan-x', WebkitOverflowScrolling: 'touch',
+                cursor: 'grab', userSelect: 'none'
+              }}
+            >
               <button
                 onClick={() => onSelect(hostPlanet)}
                 style={{
@@ -778,7 +819,7 @@ function InfoPanel({ planet, onSelect, onClose }) {
                   border: !activeTarget.isMoon ? `1.5px solid ${hostPlanet.color || '#fff'}` : '1.5px solid rgba(255,255,255,0.1)',
                   borderRadius: 10, padding: '4px 10px', color: '#fff', fontSize: '0.7rem', fontWeight: 700,
                   cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 5,
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease', flexShrink: 0
                 }}
               >
                 <Globe size={11} /> {hostPlanet.name}
@@ -796,7 +837,7 @@ function InfoPanel({ planet, onSelect, onClose }) {
                       color: isSelected ? '#FDB813' : 'rgba(255,255,255,0.75)',
                       fontSize: '0.7rem', fontWeight: 700,
                       cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4,
-                      transition: 'all 0.2s ease'
+                      transition: 'all 0.2s ease', flexShrink: 0
                     }}
                   >
                     <Circle size={8} style={{ fill: isSelected ? '#FDB813' : 'rgba(255,255,255,0.6)' }} /> {m.name}
