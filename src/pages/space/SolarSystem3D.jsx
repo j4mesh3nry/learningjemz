@@ -4,7 +4,7 @@ import { OrbitControls, Stars, Html, useTexture, Preload, useProgress } from '@r
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap } from 'lucide-react';
 import * as THREE from 'three';
-import { planets, sunData, dwarfPlanets } from '../../data/space-data.js';
+import { planets, sunData, dwarfPlanets, moons } from '../../data/space-data.js';
 import JemzLoader from '../../components/JemzLoader';
 import './space.css';
 
