@@ -946,37 +946,6 @@ function InfoPanel({ planet, onSelect, onClose }) {
   );
 }
 
-/* ─── 3D Loading Overlay ─── */
-function SolarLoadingOverlay() {
-  const { active, progress } = useProgress();
-  const [loading, setLoading] = useState(true);
-  const startTimeRef = useRef(Date.now());
-
-  useEffect(() => {
-    if (!active || progress >= 100) {
-      const elapsed = Date.now() - startTimeRef.current;
-      const minDisplayTime = 650;
-      const remaining = Math.max(0, minDisplayTime - elapsed);
-
-      const timer = setTimeout(() => setLoading(false), remaining);
-      return () => clearTimeout(timer);
-    } else {
-      setLoading(true);
-    }
-  }, [active, progress]);
-
-  if (!loading) return null;
-
-  return (
-    <JemzLoader
-      message="Loading 3D Solar System..."
-      subtext={`Downloading 2K planet textures & orbits... ${Math.round(progress)}%`}
-      darkTheme={true}
-      fullScreen={true}
-    />
-  );
-}
-
 /* ─── Main 3D Solar Explorer Page ─── */
 export default function SolarSystem3D() {
   const navigate = useNavigate();
@@ -986,8 +955,6 @@ export default function SolarSystem3D() {
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#07081a', overflow: 'hidden' }}>
-      {/* Loading Overlay */}
-      <SolarLoadingOverlay />
 
       {/* Navigation Bar */}
       <div style={{
