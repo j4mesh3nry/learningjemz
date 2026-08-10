@@ -213,10 +213,21 @@ function CameraController({ selected, planetRefs, controlsRef }) {
   const planetPos = useMemo(() => new THREE.Vector3(), []);
   const desiredTarget = useMemo(() => new THREE.Vector3(), []);
   const desiredCamPos = useMemo(() => new THREE.Vector3(), []);
-  const defaultTarget = useMemo(() => new THREE.Vector3(0, 0, 0), []);
+
+  // Saved state before opening a planet panel
+  const savedCamPos = useRef(null);
+  const savedCamTarget = useRef(null);
+  const prevSelected = useRef(null);
 
   useFrame(({ camera }) => {
     if (!controlsRef.current) return;
+
+    // Detect transition from unselected to selected: save pre-click view state!
+    if (selected && !prevSelected.current) {
+      savedCamPos.current = camera.position.clone();
+      savedCamTarget.current = controlsRef.current.target.clone();
+    }
+    prevSelected.current = selected;
 
     if (selected && planetRefs.current[selected.name]) {
       const ref = planetRefs.current[selected.name];
@@ -251,11 +262,19 @@ function CameraController({ selected, planetRefs, controlsRef }) {
       controlsRef.current.target.lerp(desiredTarget, 0.08);
       camera.position.lerp(desiredCamPos, 0.08);
       controlsRef.current.update();
-    } else {
-      // Return target smoothly to origin [0, 0, 0] when InfoPanel is closed
-      if (controlsRef.current.target.distanceTo(defaultTarget) > 0.05) {
-        controlsRef.current.target.lerp(defaultTarget, 0.05);
-        controlsRef.current.update();
+    } else if (!selected && savedCamPos.current && savedCamTarget.current) {
+      // Smoothly return camera position AND target back to pre-selection state!
+      controlsRef.current.target.lerp(savedCamTarget.current, 0.08);
+      camera.position.lerp(savedCamPos.current, 0.08);
+      controlsRef.current.update();
+
+      // Clear saved state once camera has returned
+      if (
+        camera.position.distanceTo(savedCamPos.current) < 0.1 &&
+        controlsRef.current.target.distanceTo(savedCamTarget.current) < 0.1
+      ) {
+        savedCamPos.current = null;
+        savedCamTarget.current = null;
       }
     }
   });
