@@ -218,14 +218,23 @@ function CameraController({ selected, planetRefs, controlsRef }) {
   const savedCamPos = useRef(null);
   const savedCamTarget = useRef(null);
   const prevSelected = useRef(null);
+  const isRestoring = useRef(false);
+  const restoreTime = useRef(0);
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera }, delta) => {
     if (!controlsRef.current) return;
 
     // Detect transition from unselected to selected: save pre-click view state!
     if (selected && !prevSelected.current) {
       savedCamPos.current = camera.position.clone();
       savedCamTarget.current = controlsRef.current.target.clone();
+      isRestoring.current = false;
+    }
+
+    // Detect transition from selected to unselected: trigger bounded restoration animation!
+    if (!selected && prevSelected.current && savedCamPos.current) {
+      isRestoring.current = true;
+      restoreTime.current = 0;
     }
     prevSelected.current = selected;
 
@@ -262,17 +271,20 @@ function CameraController({ selected, planetRefs, controlsRef }) {
       controlsRef.current.target.lerp(desiredTarget, 0.08);
       camera.position.lerp(desiredCamPos, 0.08);
       controlsRef.current.update();
-    } else if (!selected && savedCamPos.current && savedCamTarget.current) {
-      // Smoothly return camera position AND target back to pre-selection state!
-      controlsRef.current.target.lerp(savedCamTarget.current, 0.08);
-      camera.position.lerp(savedCamPos.current, 0.08);
+    } else if (isRestoring.current && savedCamPos.current && savedCamTarget.current) {
+      // Smoothly lerp back to pre-selection view over max 0.4 seconds, then release control to user!
+      restoreTime.current += delta;
+      
+      controlsRef.current.target.lerp(savedCamTarget.current, 0.12);
+      camera.position.lerp(savedCamPos.current, 0.12);
       controlsRef.current.update();
 
-      // Clear saved state once camera has returned
       if (
-        camera.position.distanceTo(savedCamPos.current) < 0.1 &&
-        controlsRef.current.target.distanceTo(savedCamTarget.current) < 0.1
+        restoreTime.current >= 0.45 ||
+        (camera.position.distanceTo(savedCamPos.current) < 0.15 &&
+         controlsRef.current.target.distanceTo(savedCamTarget.current) < 0.15)
       ) {
+        isRestoring.current = false;
         savedCamPos.current = null;
         savedCamTarget.current = null;
       }
