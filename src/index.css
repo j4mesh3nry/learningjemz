@@ -102,6 +102,17 @@ body {
   }
 }
 
+/* Hard opt-out from UA forced-dark / auto-dark color transformations (Brave
+   Night Mode, Samsung force dark, Chrome auto dark). The meta tag alone is
+   not always sufficient — element-level + !important re-assertions keep every
+   surface author-painted. */
+html {
+  color-scheme: light only !important;
+}
+img, picture, video, canvas, iframe, svg {
+  color-scheme: light only;
+}
+
 /* ── Accessibility ─────────────────────────────── */
 
 /* Visible focus ring for keyboard users only */
