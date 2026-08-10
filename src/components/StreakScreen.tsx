@@ -167,7 +167,7 @@ export default function StreakScreen({
 
         {/* Big Number, Transitioning +1 Badge & Label */}
         <div className="jemz-streak-typography">
-          <div className="jemz-streak-number-row">
+          <div className="jemz-streak-number-wrapper">
             <span key={currentDisplayStreak} className={`jemz-streak-number ${isIgnited ? 'ignite-pop' : ''}`}>
               {currentDisplayStreak}
             </span>

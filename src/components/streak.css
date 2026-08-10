@@ -1,4 +1,4 @@
-/* src/components/streak.css — Tactile 3D Flat Streak Screen */
+/* src/components/streak.css — Tactile 3D Flat Streak Screen (Sage Theme) */
 
 @keyframes jemzFadeIn {
   from { opacity: 0; }
@@ -10,38 +10,35 @@
   100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
-/* +1 Fade In & Fade Out Keyframes */
-@keyframes plusOneFadeIn {
-  0% { opacity: 0; transform: scale(0.6) translateY(6px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-@keyframes plusOneFadeOut {
-  0% { opacity: 1; transform: scale(1) translateY(0); }
-  100% { opacity: 0; transform: scale(1.35) translateY(-14px); }
+/* +1 Floating Float-Up & Scale Keyframes */
+@keyframes plusOneFloatUp {
+  0% { opacity: 0; transform: translateY(12px) scale(0.6) rotate(-8deg); }
+  35% { opacity: 1; transform: translateY(-4px) scale(1.15) rotate(4deg); }
+  70% { opacity: 1; transform: translateY(-16px) scale(1) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(-30px) scale(0.85) rotate(6deg); }
 }
 
 /* Main Streak Number Igniting Scale Pop */
 @keyframes numberIgnitePop {
   0% { transform: scale(1); }
-  50% { transform: scale(1.25); color: #ffd600; }
-  100% { transform: scale(1); color: #ffffff; }
+  40% { transform: scale(1.28); color: #d97706; }
+  100% { transform: scale(1); color: #0f3825; }
 }
 
 @keyframes flameBadgePop {
   0% { transform: scale(1); }
-  50% { transform: scale(1.25) rotate(-10deg); }
+  50% { transform: scale(1.3) rotate(-12deg); }
   100% { transform: scale(1) rotate(0deg); }
 }
 
-/* Screen Container — Solid deep-green canvas */
+/* Screen Container — Soft Light Sage background */
 .jemz-streak-screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #0b3420;
+  background: #d4e8d5;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -108,7 +105,7 @@
   background: #ffffff;
   border-radius: 50%;
   padding: 8px;
-  box-shadow: 0 4px 0 #b45309;
+  box-shadow: 0 4px 0 #b0cbaf;
   border: 3px solid #ff9800;
   display: flex;
   align-items: center;
@@ -120,21 +117,21 @@
   animation: flameBadgePop 0.4s ease-out forwards;
 }
 
-/* Typography & Fading +1 Badge */
+/* Typography & Fading Floating +1 Badge */
 .jemz-streak-typography {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 16px;
+  position: relative;
 }
 
-.jemz-streak-number-row {
-  display: flex;
+.jemz-streak-number-wrapper {
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  position: relative;
-  height: 90px;
+  height: 95px;
 }
 
 .jemz-streak-number {
@@ -142,7 +139,7 @@
   font-size: 5.5rem;
   font-weight: 900;
   line-height: 1;
-  color: #ffffff;
+  color: #0f3825;
   letter-spacing: -1px;
   display: inline-block;
 }
@@ -151,25 +148,30 @@
   animation: numberIgnitePop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.35) forwards;
 }
 
+/* Absolute positioned floating +1 badge (Zero layout shift) */
 .jemz-plus-one-badge {
-  background: #e65100;
+  position: absolute;
+  top: -10px;
+  right: -42px;
+  background: #ff5722;
   color: #ffffff;
   font-family: var(--font-heading, system-ui, sans-serif);
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   font-weight: 900;
-  padding: 4px 12px;
+  padding: 4px 14px;
   border-radius: 20px;
   border: 2px solid #ff9800;
-  box-shadow: 0 3px 0 #bf360c;
-  display: inline-block;
+  box-shadow: 0 3px 0 #e65100;
+  pointer-events: none;
+  z-index: 10;
 }
 
 .jemz-plus-one-badge.fade-in {
-  animation: plusOneFadeIn 0.35s ease-out forwards;
+  animation: plusOneFloatUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .jemz-plus-one-badge.fade-out {
-  animation: plusOneFadeOut 0.45s ease-in forwards;
+  opacity: 0;
 }
 
 .jemz-streak-label {
@@ -177,30 +179,30 @@
   font-size: 1.6rem;
   font-weight: 900;
   letter-spacing: 0.8px;
-  color: #ffd600;
+  color: #16653e;
   text-transform: uppercase;
   margin-top: 2px;
 }
 
 .jemz-streak-subtitle {
   font-size: 0.95rem;
-  color: #a7d6b8;
+  color: #4e7361;
   margin: 8px 0 0 0;
   font-weight: 600;
   max-width: 310px;
   line-height: 1.4;
 }
 
-/* 7-Day Week Tracker Card — solid dark card */
+/* 7-Day Week Tracker Card — crisp white card on light sage canvas */
 .jemz-week-card {
   width: 100%;
-  background: #0e4329;
-  border: 2px solid #1c7c54;
+  background: #ffffff;
+  border: 2px solid #b0cbaf;
   border-radius: 20px;
   padding: 16px 12px;
   box-sizing: border-box;
   margin-bottom: 20px;
-  box-shadow: 0 4px 0 #072618;
+  box-shadow: 0 4px 0 #b0cbaf;
 }
 
 .jemz-days-header {
@@ -214,13 +216,13 @@
   font-family: var(--font-heading, system-ui, sans-serif);
   font-size: 0.85rem;
   font-weight: 800;
-  color: #5fb88a;
+  color: #4e7361;
   flex: 1;
   text-align: center;
 }
 
 .jemz-day-name.today {
-  color: #ffffff;
+  color: #0f3825;
   font-weight: 900;
 }
 
@@ -228,10 +230,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #072618;
+  background: #f4f9f4;
   border-radius: 30px;
   padding: 6px 8px;
-  border: 1.5px solid #1c7c54;
+  border: 1.5px solid #b0cbaf;
 }
 
 .jemz-pill-slot {
@@ -244,15 +246,15 @@
 }
 
 .jemz-pill-slot.played {
-  background: #5d2800;
+  background: #fff3e0;
   border-radius: 50%;
 }
 
 .jemz-pill-slot.today.ignite-slot {
-  background: #e65100;
+  background: #ff6d00;
   border-radius: 50%;
   border: 2px solid #ff9800;
-  box-shadow: 0 3px 0 #bf360c;
+  box-shadow: 0 3px 0 #e65100;
   transform: scale(1.1);
 }
 
@@ -260,7 +262,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #1c7c54;
+  background: #b0cbaf;
 }
 
 /* Action Footer Buttons — Tactile 3D flat */
@@ -276,7 +278,7 @@
   width: 100%;
   padding: 16px;
   border-radius: 16px;
-  border: 2px solid #22c55e;
+  border: 2px solid #16653e;
   background: #16653e;
   color: #ffffff;
   font-family: var(--font-heading, system-ui, sans-serif);
@@ -291,7 +293,7 @@
 }
 
 .jemz-continue-btn:hover {
-  background: #1c7c54;
+  background: #197647;
   transform: translateY(-2px);
   box-shadow: 0 7px 0 #0e4329;
 }
@@ -305,9 +307,9 @@
   width: 100%;
   padding: 13px;
   border-radius: 14px;
-  border: 2px solid #1c7c54;
-  background: #0e4329;
-  color: #a7d6b8;
+  border: 2px solid #b0cbaf;
+  background: #ffffff;
+  color: #0f3825;
   font-family: var(--font-heading, system-ui, sans-serif);
   font-size: 0.95rem;
   font-weight: 800;
@@ -316,30 +318,30 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 3px 0 #072618;
+  box-shadow: 0 3px 0 #b0cbaf;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 .jemz-calendar-btn:hover {
-  background: #1c7c54;
-  color: #ffffff;
+  background: #e1f0e2;
+  color: #0f3825;
   transform: translateY(-1px);
-  box-shadow: 0 4px 0 #072618;
+  box-shadow: 0 4px 0 #b0cbaf;
 }
 
 .jemz-calendar-btn:active {
   transform: translateY(2px);
-  box-shadow: 0 1px 0 #072618;
+  box-shadow: 0 1px 0 #b0cbaf;
 }
 
-/* Streak Calendar Modal — solid dark card, no backdrop-filter */
+/* Streak Calendar Modal — solid white card */
 .jemz-calendar-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #050e09;
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -350,8 +352,8 @@
 }
 
 .jemz-calendar-modal {
-  background: #0e4329;
-  border: 2px solid #1c7c54;
+  background: #ffffff;
+  border: 2.5px solid #b0cbaf;
   border-radius: 20px;
   padding: 24px;
   width: 100%;
@@ -359,9 +361,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 6px 0 #072618;
+  box-shadow: 0 6px 0 #b0cbaf;
   box-sizing: border-box;
-  color: #ffffff;
+  color: #0f3825;
 }
 
 .jemz-calendar-header {
@@ -377,13 +379,13 @@
   font-size: 1.2rem;
   font-weight: 900;
   margin: 0;
-  color: #ffffff;
+  color: #0f3825;
 }
 
 .jemz-close-btn {
-  background: #1c7c54;
-  border: 2px solid #288456;
-  color: #ffffff;
+  background: #e1f0e2;
+  border: 2px solid #b0cbaf;
+  color: #0f3825;
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -391,7 +393,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 0 #0e4329;
+  box-shadow: 0 2px 0 #b0cbaf;
 }
 
 .jemz-close-btn:active {
@@ -411,7 +413,7 @@
 .jemz-month-day-head {
   font-size: 0.75rem;
   font-weight: 800;
-  color: #5fb88a;
+  color: #4e7361;
   text-align: center;
   padding-bottom: 4px;
 }
@@ -419,16 +421,16 @@
 .jemz-month-day {
   height: 34px;
   border-radius: 10px;
-  background: #072618;
+  background: #f4f9f4;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #5fb88a;
+  color: #4e7361;
   position: relative;
-  border: 1px solid #0e4329;
+  border: 1px solid #b0cbaf;
 }
 
 .jemz-month-day.empty {
@@ -437,9 +439,9 @@
 }
 
 .jemz-month-day.played {
-  background: #5d2800;
-  border: 1.5px solid #e65100;
-  color: #ffffff;
+  background: #fff3e0;
+  border: 1.5px solid #ff9800;
+  color: #e65100;
 }
 
 .cal-flame {
@@ -450,7 +452,7 @@
   width: 100%;
   padding: 12px;
   border-radius: 14px;
-  border: 2px solid #1c7c54;
+  border: 2px solid #16653e;
   background: #16653e;
   color: #ffffff;
   font-family: var(--font-heading);
@@ -462,7 +464,7 @@
 }
 
 .jemz-close-cal-btn:hover {
-  background: #1c7c54;
+  background: #197647;
   transform: translateY(-1px);
   box-shadow: 0 4px 0 #0e4329;
 }
@@ -471,3 +473,4 @@
   transform: translateY(2px);
   box-shadow: 0 1px 0 #0e4329;
 }
+
