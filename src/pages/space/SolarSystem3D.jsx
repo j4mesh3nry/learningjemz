@@ -210,15 +210,56 @@ const Sun = React.forwardRef(({ onSelect, labelsHidden }, ref) => {
 
 /* ─── Camera Controller ─── */
 function CameraController({ selected, planetRefs, controlsRef }) {
-  const target = useMemo(() => new THREE.Vector3(), []);
-  
-  useFrame(() => {
+  const planetPos = useMemo(() => new THREE.Vector3(), []);
+  const desiredTarget = useMemo(() => new THREE.Vector3(), []);
+  const desiredCamPos = useMemo(() => new THREE.Vector3(), []);
+  const defaultTarget = useMemo(() => new THREE.Vector3(0, 0, 0), []);
+
+  useFrame(({ camera }) => {
     if (!controlsRef.current) return;
+
     if (selected && planetRefs.current[selected.name]) {
-      planetRefs.current[selected.name].getWorldPosition(target);
-      controlsRef.current.target.lerp(target, 0.05);
+      const ref = planetRefs.current[selected.name];
+      ref.getWorldPosition(planetPos);
+
+      // Tailored close-up zoom distance based on object size
+      const cfg = PLANET_CONFIG[selected.name];
+      let zoomDist = 8.0;
+      if (selected.id === 'sun') {
+        zoomDist = 18.0;
+      } else if (cfg) {
+        if (cfg.size >= 1.3) zoomDist = 12.0;      // Jupiter, Saturn
+        else if (cfg.size >= 0.8) zoomDist = 7.5;  // Uranus, Neptune
+        else if (cfg.size >= 0.25) zoomDist = 5.0; // Earth, Venus, Mars
+        else zoomDist = 3.8;                        // Mercury, Pluto, Ceres
+      }
+
+      // Camera view direction
+      const camDir = new THREE.Vector3()
+        .subVectors(camera.position, controlsRef.current.target)
+        .normalize();
+      if (camDir.lengthSq() === 0) camDir.set(0, 0.5, 1).normalize();
+
+      // Compute vertical offset so the target sits BELOW the planet,
+      // positioning the planet in the upper 30-35% of the viewport above the InfoPanel!
+      const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
+      const verticalOffset = cameraUp.clone().multiplyScalar(-zoomDist * 0.32);
+
+      desiredTarget.copy(planetPos).add(verticalOffset);
+      desiredCamPos.copy(planetPos).add(camDir.multiplyScalar(zoomDist)).add(verticalOffset);
+
+      controlsRef.current.target.lerp(desiredTarget, 0.08);
+      camera.position.lerp(desiredCamPos, 0.08);
+      controlsRef.current.update();
+    } else {
+      // Return target smoothly to origin [0, 0, 0] when InfoPanel is closed
+      if (controlsRef.current.target.distanceTo(defaultTarget) > 0.05) {
+        controlsRef.current.target.lerp(defaultTarget, 0.05);
+        controlsRef.current.update();
+      }
     }
   });
+
   return null;
 }
 
@@ -493,10 +534,11 @@ function InfoPanel({ planet, onClose }) {
     <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, padding: '0 12px 16px', animation: 'slideUp 0.3s ease' }}>
       <div style={{
         maxWidth: 420, margin: '0 auto',
-        background: 'rgba(11,13,34,0.72)',
+        maxHeight: '48vh', overflowY: 'auto',
+        background: 'rgba(11,13,34,0.85)',
         backdropFilter: 'blur(18px)',
         borderRadius: '20px 20px 16px 16px',
-        padding: '24px', color: '#fff',
+        padding: '20px 20px 16px', color: '#fff',
         border: '1.5px solid rgba(255,255,255,0.1)',
         boxShadow: '0 6px 0 #07081a',
       }}>
