@@ -104,10 +104,10 @@ export default function Login() {
         </p>
       </div>
 
-      {/* Glassmorphic Auth Card */}
+      {/* Solid Opaque Auth Card — previously rgba(255,255,255,0.95)+blur let the green
+          gradient show through, tinting every white/neutral color on certain devices */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(20px)',
+        background: '#ffffff',
         borderRadius: '32px', padding: '32px 24px',
         width: '100%', maxWidth: '400px',
         boxShadow: '0 24px 48px rgba(0,0,0,0.4)',

@@ -21,6 +21,7 @@
   /* Neutral colors - Medium-Light Sage Green Canvas */
   --color-bg-page: #d4e8d5; /* Medium-light sage green canvas */
   --color-bg-card: #ffffff;
+  --color-bg: #ffffff; /* Opaque white surface (auth card, form fields) — must NOT be translucent, or the green canvas bleeds through as a "green tint" on white/neutral surfaces */
   --color-bg-dark: #0e4329;
   --color-text: #0f3825;
   --color-muted: #4e7361;
@@ -82,6 +83,18 @@ body {
   *::after {
     forced-color-adjust: none;
   }
+  html,
+  body {
+    background-color: var(--color-bg-page);
+    color: var(--color-text);
+  }
+}
+
+/* Extra force-dark insurance: some older OEM browsers / Android WebViews auto-darken
+   the page canvas purely from the OS `prefers-color-scheme` query even when the page
+   declares `color-scheme: light`. Re-assert the exact light canvas so the intended
+   palette (never a darkened/inverted green) renders identically everywhere. */
+@media (prefers-color-scheme: dark) {
   html,
   body {
     background-color: var(--color-bg-page);
