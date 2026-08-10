@@ -9,9 +9,9 @@ import HeartCrackIcon from '../../components/icons/HeartCrackIcon';
 import './space.css';
 
 const DIFFICULTIES = {
-  easy: { name: 'Easy', count: 8, label: 'Top 8 (Sun → Mars)', xp: 10, maxLives: 3 },
-  medium: { name: 'Medium', count: 15, label: 'Top 15 (Sun → Europa)', xp: 20, maxLives: 4 },
-  hard: { name: 'Hard', count: 35, label: 'All 35 (Sun → Salacia)', xp: 30, maxLives: 5 }
+  easy: { name: 'Easy', count: 8, label: 'Top 8 (Sun → Mars)', xp: 15, maxLives: 3, targetTime: 45 },
+  medium: { name: 'Medium', count: 15, label: 'Top 15 (Sun → Europa)', xp: 35, maxLives: 4, targetTime: 120 },
+  hard: { name: 'Hard', count: 35, label: 'All 35 (Sun → Salacia)', xp: 75, maxLives: 5, targetTime: 240 }
 };
 
 function getTypeIcon(iconType, size = 16) {
@@ -83,6 +83,7 @@ export default function IlluminateSystem() {
   const [showHintBubble, setShowHintBubble] = useState(false);
   const [currentObjectHint, setCurrentObjectHint] = useState(null);
   const [isNewRecord, setIsNewRecord] = useState(false);
+  const [earnedXP, setEarnedXP] = useState(0);
   const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
   const [selectedCard, setSelectedCard] = useState(null);
   const [discoveryShown, setDiscoveryShown] = useState(false);
@@ -207,14 +208,30 @@ export default function IlluminateSystem() {
           setIsNewRecord(true);
         }
 
-        let xpReward = DIFFICULTIES[level]?.xp || 10;
-        if (level === 'hard' && scoreData.hintsUsed === 0) {
-          xpReward += 10; // Bonus for perfect hard
+        const baseXP = DIFFICULTIES[level]?.xp || 15;
+        let zeroHintBonus = 0;
+        let speedBonus = 0;
+
+        if (scoreData.hintsUsed === 0) {
+          if (level === 'easy') zeroHintBonus = 5;
+          else if (level === 'medium') zeroHintBonus = 10;
+          else if (level === 'hard') zeroHintBonus = 20;
         }
+
+        const targetTime = DIFFICULTIES[level]?.targetTime || 999;
+        if (elapsedTime <= targetTime) {
+          if (level === 'easy') speedBonus = 5;
+          else if (level === 'medium') speedBonus = 10;
+          else if (level === 'hard') speedBonus = 15;
+        }
+
+        const totalXP = baseXP + zeroHintBonus + speedBonus;
+        setEarnedXP(totalXP);
+
         if (addXP) {
-          addXP(xpReward);
+          addXP(totalXP);
         } else if (addXp) {
-          addXp(xpReward);
+          addXp(totalXP);
         }
       }
     } else {
@@ -915,7 +932,7 @@ export default function IlluminateSystem() {
             </div>
           </div>
         }
-        xpGained={(DIFFICULTIES[level]?.xp || 10) + (level === 'hard' && scoreData.hintsUsed === 0 ? 10 : 0)}
+        xpGained={earnedXP || DIFFICULTIES[level]?.xp || 15}
         onContinue={() => navigate('/space/objects-by-size')}
         onPlayAgain={() => startGame(level)}
         continueText="Back to Menu"

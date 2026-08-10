@@ -63,7 +63,9 @@ export default function ChessPlay() {
 
   const gameContext = useGame() || {};
   const { 
-    winChessGame = () => 10, 
+    winChessGame = () => 30, 
+    drawChessGame = () => 10,
+    lossChessGame = () => 5,
     recordChessGame = () => {}, 
     level = 1, 
     streak = 0, 
@@ -153,7 +155,8 @@ export default function ChessPlay() {
   const updateGame = useCallback((newGame) => {
     setGame(newGame);
     setBoard(newGame.board());
-    setHistory(newGame.history({ verbose: true }));
+    const moves = newGame.history({ verbose: true });
+    setHistory(moves);
     
     if (newGame.isCheckmate()) {
       setGameState('checkmate');
@@ -162,20 +165,22 @@ export default function ChessPlay() {
         const xpGained = winChessGame(difficulty);
         recordChessGame(difficulty, true);
         recordActivity();
-        setVictoryStats({ xpGained });
+        setVictoryStats({ xpGained, result: 'win' });
       } else {
+        const xpGained = lossChessGame(difficulty, moves.length);
         recordChessGame(difficulty, false);
         recordActivity();
-        setVictoryStats({ xpGained: 0 });
+        setVictoryStats({ xpGained, result: 'loss' });
       }
     } else if (newGame.isDraw()) {
       setGameState('draw');
       setShowOverlay(true);
+      const xpGained = drawChessGame(difficulty);
       recordChessGame(difficulty, false);
       recordActivity();
-      setVictoryStats({ xpGained: 0 });
+      setVictoryStats({ xpGained, result: 'draw' });
     }
-  }, [winChessGame, recordActivity, streak, playerColor, difficulty, recordChessGame]);
+  }, [winChessGame, drawChessGame, lossChessGame, recordActivity, streak, playerColor, difficulty, recordChessGame]);
 
   const makeAIMove = useCallback(() => {
     if (!game || game.isGameOver() || gameState !== 'playing') return;
@@ -387,7 +392,10 @@ export default function ChessPlay() {
     setShowOverlay(true);
     recordChessGame(difficulty, false);
     
-    setVictoryStats({ streakIncreased: false, xpGained: 0 });
+    const moveCount = history.length;
+    const xpGained = lossChessGame(difficulty, moveCount);
+    
+    setVictoryStats({ streakIncreased: false, xpGained, result: 'resigned' });
     setDisplayedStreak(streak);
     setIgniting(false);
   };

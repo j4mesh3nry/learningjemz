@@ -67,6 +67,17 @@
 - **Level Formula**: `Level = floor(Total XP / 100) + 1`
 - **XP Progress Bar**: Displays `(Total XP % 100) / 100` progress to next level.
 - **Level Badge**: Gold Star pill (`#f57f17`).
+- **Balanced XP Economy (Time-to-Reward Parity ~10-15 XP / min)**:
+  - **🚀 Space — Illuminate the System**:
+    - **Easy** (Top 8): +15 XP Base (+5 Zero-Hint Bonus, +5 Speed Bonus < 45s, Max 25 XP)
+    - **Medium** (Top 15): +35 XP Base (+10 Zero-Hint Bonus, +10 Speed Bonus < 120s, Max 55 XP)
+    - **Hard** (All 35): +75 XP Base (+20 Zero-Hint Bonus, +15 Speed Bonus < 240s, Max 110 XP)
+  - **♟️ Chess vs Stockfish AI Bot**:
+    - **Level 1 (Novice ~800 Elo)**: +30 XP Win | +10 XP Draw | +5 XP Effort Loss (>= 10 moves)
+    - **Level 2 (Casual ~1000 Elo)**: +50 XP Win | +20 XP Draw | +10 XP Effort Loss (>= 10 moves)
+    - **Level 3 (Intermediate ~1200 Elo)**: +75 XP Win | +30 XP Draw | +15 XP Effort Loss (>= 10 moves)
+    - **Level 4 (Advanced ~1400 Elo)**: +110 XP Win | +45 XP Draw | +20 XP Effort Loss (>= 10 moves)
+    - **Level 5 (Master ~1600+ Elo)**: +160 XP Win | +60 XP Draw | +25 XP Effort Loss (>= 10 moves)
 
 ### Victory Screen & Module Theme System
 - **Module Theme Modes**: Supports `theme="space"` (deep muted indigo solid card `#171a38`, muted steel border `#3d4461`, muted slate action buttons), `theme="chess"` (dark warm solid card `#1c1917`, 3D amber border `#d97706`), `theme="geo"` (emerald card `#f0fdf4`, green border `#16653e`), and `theme="default"` (playful white/emerald card). The Space victory and Illuminate game-over screens share a unified minimal palette (no vibrant/glowy colors): streak shown in muted rose `#d8a8a8`, XP in muted gold `#d9c58f`, with a clean 54px icon tile and compact stat-slot boxes.

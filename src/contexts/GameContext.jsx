@@ -544,7 +544,35 @@ if (user) {
   }, []);
 
   const winChessGame = useCallback((difficulty) => {
-    const xpGained = difficulty === 'Hard' ? 30 : difficulty === 'Medium' ? 20 : 10;
+    const diffLower = (difficulty || '').toLowerCase();
+    const xpGained = diffLower.includes('master') || diffLower.includes('hard') || diffLower.includes('5') ? 160
+      : diffLower.includes('advanced') || diffLower.includes('4') ? 110
+      : diffLower.includes('intermediate') || diffLower.includes('3') ? 75
+      : diffLower.includes('casual') || diffLower.includes('medium') || diffLower.includes('2') ? 50
+      : 30; // Novice / Easy / Level 1
+    addXP(xpGained);
+    return xpGained;
+  }, [addXP]);
+
+  const drawChessGame = useCallback((difficulty) => {
+    const diffLower = (difficulty || '').toLowerCase();
+    const xpGained = diffLower.includes('master') || diffLower.includes('hard') || diffLower.includes('5') ? 60
+      : diffLower.includes('advanced') || diffLower.includes('4') ? 45
+      : diffLower.includes('intermediate') || diffLower.includes('3') ? 30
+      : diffLower.includes('casual') || diffLower.includes('medium') || diffLower.includes('2') ? 20
+      : 10;
+    addXP(xpGained);
+    return xpGained;
+  }, [addXP]);
+
+  const lossChessGame = useCallback((difficulty, moveCount = 0) => {
+    if (moveCount < 10) return 0;
+    const diffLower = (difficulty || '').toLowerCase();
+    const xpGained = diffLower.includes('master') || diffLower.includes('hard') || diffLower.includes('5') ? 25
+      : diffLower.includes('advanced') || diffLower.includes('4') ? 20
+      : diffLower.includes('intermediate') || diffLower.includes('3') ? 15
+      : diffLower.includes('casual') || diffLower.includes('medium') || diffLower.includes('2') ? 10
+      : 5;
     addXP(xpGained);
     return xpGained;
   }, [addXP]);
@@ -639,6 +667,8 @@ if (user) {
       addXP,
       addXp: addXP,
       winChessGame,
+      drawChessGame,
+      lossChessGame,
       recordChessGame,
       recordIlluminateTime,
       resetProgress,
