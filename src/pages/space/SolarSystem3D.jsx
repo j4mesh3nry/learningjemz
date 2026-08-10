@@ -648,15 +648,27 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
 
 /* ─── Educational Badges for Moons ─── */
 const MOON_BADGES = {
-  ganymede: { icon: Globe, title: 'Largest Moon in Solar System', color: '#b5a48e', text: 'Bigger than the planet Mercury and dwarf planet Pluto, with its own magnetic field.' },
-  titan: { icon: Wind, title: 'Atmosphere & Methane Lakes', color: '#d39c55', text: 'The only moon with a dense atmosphere and stable surface liquid (lakes of methane).' },
-  io: { icon: Flame, title: 'Volcanic Powerhouse', color: '#d9a74a', text: 'Over 400 active volcanoes make Io the most volcanically active body in the solar system.' },
-  europa: { icon: Sparkles, title: 'Subsurface Water Ocean', color: '#e6dfd1', text: "Conceals a global liquid water ocean beneath its icy crust, holding 2x Earth's oceans." },
-  callisto: { icon: Mountain, title: 'Cratered Veteran', color: '#8a8074', text: 'The most heavily cratered surface in the solar system, unchanged for 4 billion years.' },
-  triton: { icon: RefreshCcw, title: 'Retrograde Orbit', color: '#b3c2c7', text: "Orbits Neptune backwards compared to Neptune's rotation — a captured Kuiper Belt object." },
-  moon: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only world humans have stepped on." },
-  luna: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only world humans have stepped on." },
-  charon: { icon: Orbit, title: 'Double Dwarf Partner', color: '#888888', text: 'Tidally locked with Pluto so both worlds forever show the exact same face to each other.' }
+  ganymede: { icon: Globe, title: 'Largest Moon in Solar System', color: '#b5a48e', text: 'Bigger than the planet Mercury and dwarf planet Pluto.' },
+  titan: { icon: Wind, title: 'Atmosphere & Methane Lakes', color: '#d39c55', text: 'The only moon in the solar system with a dense atmosphere and rivers/lakes of liquid methane.' },
+  io: { icon: Flame, title: 'Volcanic Powerhouse', color: '#d9a74a', text: 'Over 400 active volcanoes make Io the most volcanically active world in the solar system.' },
+  europa: { icon: Sparkles, title: 'Subsurface Water Ocean', color: '#e6dfd1', text: "Conceals a global liquid ocean beneath its icy shell holding twice as much water as Earth's oceans combined." },
+  callisto: { icon: Mountain, title: 'Cratered Veteran', color: '#8a8074', text: 'The most heavily cratered surface in the solar system, virtually unchanged for 4 billion years.' },
+  triton: { icon: RefreshCcw, title: 'Retrograde Orbit', color: '#b3c2c7', text: "Orbits Neptune backwards relative to the planet's rotation — a captured Kuiper Belt object." },
+  moon: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only celestial world humans have stepped on." },
+  luna: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only celestial world humans have stepped on." },
+  charon: { icon: Orbit, title: 'Double Dwarf Partner', color: '#888888', text: 'Tidally locked with Pluto so both worlds forever show the exact same face to each other.' },
+  phobos: { icon: Gauge, title: 'Ultra-Close Orbit', color: '#aa7766', text: 'Orbits Mars closer than any other moon orbits its planet — completing an orbit in just 7.6 hours.' },
+  deimos: { icon: Mountain, title: 'Tiny Outer Satellite', color: '#bbaa99', text: 'Small, potato-shaped outer Martian moon measuring only 12 km across.' },
+  enceladus: { icon: Sparkles, title: 'Cryovolcano Geysers', color: '#e6f2ff', text: 'Erupts towering geysers of water ice and organic compounds from warm fracture zones at its south pole.' },
+  mimas: { icon: Orbit, title: 'Herschel Crater World', color: '#aaaaaa', text: 'Dominated by the colossal 130 km wide Herschel impact crater.' },
+  rhea: { icon: Globe, title: 'Icy Rings Candidate', color: '#cccccc', text: "Saturn's second-largest moon, composed predominantly of dense water ice." },
+  iapetus: { icon: Sparkles, title: 'Two-Tone World', color: '#d4af37', text: 'Features a dramatic contrast with one coal-dark hemisphere and one snow-white hemisphere.' },
+  dione: { icon: Mountain, title: 'Fractured Ice Cliffs', color: '#b0c4de', text: 'Crisscrossed by bright, miles-high ice cliffs formed by ancient tectonic fracturing.' },
+  tethys: { icon: Mountain, title: 'Odysseus Crater Giant', color: '#c0c0c0', text: 'Cut by the massive 2,000 km long Ithaca Chasma trench and the giant Odysseus crater.' },
+  titania: { icon: Globe, title: 'Fairyland Queen', color: '#b0e0e6', text: "The largest moon of Uranus, carved by massive fault lines and rift valleys." },
+  oberon: { icon: Mountain, title: 'Ancient Outer Titan', color: '#a9a9a9', text: 'Outermost major moon of Uranus, heavily pitted by ancient asteroid bombardments.' },
+  umbriel: { icon: Orbit, title: 'Dark Ice World', color: '#708090', text: "The darkest of Uranus's major moons, reflecting only half as much light as Ariel." },
+  ariel: { icon: Sparkles, title: 'Bright Slush Valleys', color: '#afeeee', text: "Features the youngest and brightest surface of Uranus's moons, flooded by ancient ice volcanoes." }
 };
 
 /* ─── Info Panel Component ─── */
