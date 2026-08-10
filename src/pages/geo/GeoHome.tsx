@@ -1,6 +1,6 @@
 import React, { useState, lazy, Suspense } from 'react';
 import { Card } from '../../components/Card';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import ProvinceQuiz from './ProvinceQuiz';
 const MapExplorer = lazy(() => import('./MapExplorer'));
 import { useGame } from '../../contexts/GameContext';
@@ -9,8 +9,28 @@ import '../../pages/geo/geo.css';
 
 function GeoDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { level, streak, provincesCorrect, hasPlayedToday } = useGame();
-  const [tab, setTab] = useState<'play' | 'learn'>('play');
+
+  const [tab, setTabState] = useState<'play' | 'learn'>(() => {
+    if (location.state && (location.state as any).tab) {
+      return (location.state as any).tab;
+    }
+    const qTab = searchParams.get('tab');
+    if (qTab === 'learn' || qTab === 'play') return qTab;
+
+    const saved = sessionStorage.getItem('geo_active_tab');
+    if (saved === 'learn' || saved === 'play') return saved;
+
+    return 'play';
+  });
+
+  const setTab = (newTab: 'play' | 'learn') => {
+    setTabState(newTab);
+    sessionStorage.setItem('geo_active_tab', newTab);
+    setSearchParams({ tab: newTab }, { replace: true });
+  };
 
   return (
     <div className="geo-module-page">

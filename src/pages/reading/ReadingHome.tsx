@@ -1,6 +1,6 @@
 // src/pages/reading/ReadingHome.tsx
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { Plus, BookOpen, Trash2, Flame, Star, Gamepad2, ArrowLeft, Lock, ArrowRight } from 'lucide-react';
 import { getLibrary, getReadingProgress, getCoverUrl, removeFromLibrary } from '../../utils/bookService';
 import { useGame } from '../../contexts/GameContext';
@@ -145,8 +145,28 @@ const LibraryView = () => {
 
 const ReadingDashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { level, streak, booksReading, hasPlayedToday } = useGame();
-  const [tab, setTab] = useState<'play' | 'learn'>('play');
+
+  const [tab, setTabState] = useState<'play' | 'learn'>(() => {
+    if (location.state && (location.state as any).tab) {
+      return (location.state as any).tab;
+    }
+    const qTab = searchParams.get('tab');
+    if (qTab === 'learn' || qTab === 'play') return qTab;
+
+    const saved = sessionStorage.getItem('reading_active_tab');
+    if (saved === 'learn' || saved === 'play') return saved;
+
+    return 'play';
+  });
+
+  const setTab = (newTab: 'play' | 'learn') => {
+    setTabState(newTab);
+    sessionStorage.setItem('reading_active_tab', newTab);
+    setSearchParams({ tab: newTab }, { replace: true });
+  };
 
   return (
     <div className="reading-module-page">

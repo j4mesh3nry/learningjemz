@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useGame } from '../../contexts/GameContext';
 import Flashcards from './Flashcards';
 import SpaceQuiz from './SpaceQuiz';
@@ -13,8 +13,28 @@ import './space.css';
 
 function SpaceHub() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { level, streak, hasPlayedToday } = useGame();
-  const [tab, setTab] = useState<'play' | 'learn'>('play');
+
+  const [tab, setTabState] = useState<'play' | 'learn'>(() => {
+    if (location.state && (location.state as any).tab) {
+      return (location.state as any).tab;
+    }
+    const qTab = searchParams.get('tab');
+    if (qTab === 'learn' || qTab === 'play') return qTab;
+
+    const saved = sessionStorage.getItem('space_active_tab');
+    if (saved === 'learn' || saved === 'play') return saved;
+
+    return 'play';
+  });
+
+  const setTab = (newTab: 'play' | 'learn') => {
+    setTabState(newTab);
+    sessionStorage.setItem('space_active_tab', newTab);
+    setSearchParams({ tab: newTab }, { replace: true });
+  };
 
   return (
     <div className="space-module-page">
