@@ -14,6 +14,25 @@ const GameContext = createContext();
 // behind it forever and the server row would lag the app.
 const UPSERT_TIMEOUT_MS = 10000;
 
+export function xpToReachLevel(n) {
+  if (n <= 1) return 0;
+  return Math.round(38 * Math.pow(n - 1, 1.6));
+}
+
+export function getLevelProgress(totalXP) {
+  let level = 1;
+  while (xpToReachLevel(level + 1) <= totalXP) {
+    level++;
+  }
+  const currentLevelXP = xpToReachLevel(level);
+  const nextLevelXP = xpToReachLevel(level + 1);
+  const xpInLevel = totalXP - currentLevelXP;
+  const levelXPReq = nextLevelXP - currentLevelXP;
+  const pct = Math.min(100, Math.max(0, (xpInLevel / levelXPReq) * 100));
+  return { level, currentLevelXP, nextLevelXP, xpInLevel, levelXPReq, pct };
+}
+
+
 const defaultState = {
   xp: 0,
   level: 1,
@@ -534,7 +553,7 @@ if (user) {
   const addXP = useCallback((amount) => {
     setState(prev => {
       const newXP = (prev.xp || 0) + amount;
-      const newLevel = Math.floor(newXP / 100) + 1;
+      const { level: newLevel } = getLevelProgress(newXP);
       return {
         ...prev,
         xp: newXP,
@@ -545,18 +564,20 @@ if (user) {
 
   const winChessGame = useCallback((difficulty) => {
     const diffLower = (difficulty || '').toLowerCase();
-    const xpGained = diffLower.includes('hard') ? 160
-      : diffLower.includes('medium') ? 75
-      : 30; // Easy
+    // Easy=15, Medium=30, Hard=45
+    const xpGained = diffLower.includes('hard') ? 45
+      : diffLower.includes('medium') ? 30
+      : 15; // Easy
     addXP(xpGained);
     return xpGained;
   }, [addXP]);
 
   const drawChessGame = useCallback((difficulty) => {
     const diffLower = (difficulty || '').toLowerCase();
-    const xpGained = diffLower.includes('hard') ? 60
-      : diffLower.includes('medium') ? 30
-      : 10; // Easy
+    // Easy=8, Medium=16, Hard=22
+    const xpGained = diffLower.includes('hard') ? 22
+      : diffLower.includes('medium') ? 16
+      : 8; // Easy
     addXP(xpGained);
     return xpGained;
   }, [addXP]);
@@ -564,8 +585,9 @@ if (user) {
   const lossChessGame = useCallback((difficulty, moveCount = 0) => {
     if (moveCount < 10) return 0;
     const diffLower = (difficulty || '').toLowerCase();
-    const xpGained = diffLower.includes('hard') ? 25
-      : diffLower.includes('medium') ? 15
+    // Easy=5, Medium=10, Hard=15 (effort reward for 10+ move games)
+    const xpGained = diffLower.includes('hard') ? 15
+      : diffLower.includes('medium') ? 10
       : 5; // Easy
     addXP(xpGained);
     return xpGained;

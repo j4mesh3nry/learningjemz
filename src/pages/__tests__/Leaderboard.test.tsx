@@ -28,9 +28,13 @@ const { supabaseMock, mockSelect, mockFlushNow } = vi.hoisted(() => {
 
 vi.mock('../../utils/supabase', () => ({ supabase: supabaseMock }));
 vi.mock('../../contexts/AuthContext', () => ({ useAuth: () => ({ user: { id: 'me', email: 'me@x.com' } }) }));
-vi.mock('../../contexts/GameContext', () => ({
-  useGame: () => ({ xp: 350, streak: 3, level: 4, flushNow: mockFlushNow })
-}));
+vi.mock('../../contexts/GameContext', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useGame: () => ({ xp: 350, streak: 3, level: 4, flushNow: mockFlushNow })
+  };
+});
 
 describe('Leaderboard', () => {
   beforeEach(() => {

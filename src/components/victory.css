@@ -1,13 +1,13 @@
 /* src/components/victory.css - Tactile 3D Solid Module Theme System */
 
-/* Overlay backdrop: Solid clean dimming (NO backdrop-filter blur) */
+/* Overlay backdrop: dim layer only, no blur */
 .victory-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.72);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,8 +28,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 3px solid #b0cbaf;
-  box-shadow: 0 8px 0 #b0cbaf;
+  border: 2px solid #b0cbaf;
+  box-shadow: 0 6px 0 #b0cbaf;
   animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.15);
   box-sizing: border-box;
   text-align: center;
@@ -84,7 +84,7 @@
 .theme-space .streak-box,
 .theme-space .xp-box {
   background: #1d2040;
-  border: 1.5px solid #3a4461;
+  border: 2px solid #3a4461;
   box-shadow: none;
   border-radius: 12px;
   padding: 10px 6px;
@@ -92,7 +92,7 @@
 
 .theme-space .streak-box.active-streak {
   background: #1d2040;
-  border: 1.5px solid #3a4461;
+  border: 2px solid #3a4461;
   box-shadow: none;
 }
 
@@ -154,7 +154,7 @@
 .theme-space .victory-btn-view {
   background: transparent;
   color: #8d93b4;
-  border: 1.5px solid #3a4461;
+  border: 2px solid #3a4461;
   border-radius: 12px;
   padding: 9px;
 }
@@ -165,101 +165,142 @@
 }
 
 
-/* --- ♟️ CHESS THEME (`theme-chess`) --- */
+/* --- CHESS THEME (`theme-chess`) — deep forest green, mirrors space structure --- */
 .victory-modal-clean.theme-chess {
-  background: #1c1917;
-  border: 3px solid #d97706;
-  box-shadow: 0 8px 0 #92400e;
-  color: #f5f5f4;
+  background: #0b3420;
+  border: 2px solid #1c7c54;
+  box-shadow: 0 6px 0 #072618;
+  border-radius: 20px;
+  padding: 26px 20px 20px;
+  max-width: 340px;
+  color: #e8f5e9;
 }
 
 .theme-chess .victory-logo-bg {
-  background: #d97706;
-  border: 3px solid #f59e0b;
-  box-shadow: 0 4px 0 #92400e;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: #16653e;
+  border: 2px solid #1c7c54;
+  box-shadow: 0 3px 0 #072618;
+  margin-bottom: 14px;
+}
+
+.theme-chess .sparkles-badge {
+  display: none;
 }
 
 .theme-chess .victory-clean-title {
-  color: #ffffff;
+  color: #e8f5e9;
+  font-size: 1.45rem;
+  margin: 0 0 4px 0;
 }
 
 .theme-chess .victory-clean-subtitle {
-  color: #a8a29e;
+  color: #7cb894;
+  font-size: 0.82rem;
+  margin-bottom: 20px;
 }
 
-.theme-chess .streak-box {
-  background: #291a1a;
-  border: 2px solid #dc2626;
-  box-shadow: 0 3px 0 #991b1b;
+.theme-chess .victory-clean-children {
+  color: #a7d6b8;
+}
+
+.theme-chess .streak-box,
+.theme-chess .xp-box {
+  background: #0e4329;
+  border: 2px solid #1c7c54;
+  box-shadow: none;
+  border-radius: 12px;
+  padding: 10px 6px;
+}
+
+.theme-chess .streak-box.active-streak {
+  background: #0e4329;
+  border: 2px solid #1c7c54;
+  box-shadow: none;
 }
 
 .theme-chess .streak-box.active-streak .reward-val {
-  color: #f87171;
-}
-
-.theme-chess .xp-box {
-  background: #2e2111;
-  border: 2px solid #d97706;
-  box-shadow: 0 3px 0 #92400e;
+  color: #d9a2a2;
 }
 
 .theme-chess .xp-box .reward-val {
-  color: #fbbf24;
+  color: #d9c58f;
+}
+
+.theme-chess .reward-val {
+  font-size: 1.1rem;
+  color: #e8f5e9;
 }
 
 .theme-chess .reward-lbl {
-  color: #a8a29e;
+  color: #5fb88a;
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
 }
 
 .theme-chess .victory-btn-primary {
-  background: #d97706;
-  color: #ffffff;
-  border: 2px solid #f59e0b;
-  box-shadow: 0 4px 0 #92400e;
+  background: #16653e;
+  color: #e8f5e9;
+  border: 2px solid #22c55e;
+  box-shadow: 0 4px 0 #072618;
+  border-radius: 14px;
+  padding: 13px;
 }
 
 .theme-chess .victory-btn-primary:hover {
-  background: #b45309;
+  background: #1c7c54;
 }
 
 .theme-chess .victory-btn-primary:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #92400e;
+  box-shadow: 0 2px 0 #072618;
 }
 
 .theme-chess .victory-btn-secondary {
-  background: #292524;
-  color: #e7e5e4;
-  border: 2px solid #57534e;
-  box-shadow: 0 3px 0 #44403c;
+  background: #0e4329;
+  color: #a7d6b8;
+  border: 2px solid #1c7c54;
+  box-shadow: none;
+  border-radius: 12px;
+  padding: 10px;
 }
 
 .theme-chess .victory-btn-secondary:hover {
-  background: #44403c;
+  background: #16653e;
+}
+
+.theme-chess .victory-btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #072618;
 }
 
 .theme-chess .victory-btn-view {
-  background: #292524;
-  color: #fbbf24;
-  border: 2px dashed #d97706;
+  background: transparent;
+  color: #5fb88a;
+  border: 2px solid #1c7c54;
+  border-radius: 12px;
+  padding: 9px;
 }
 
 .theme-chess .victory-btn-view:hover {
-  background: #1c1917;
+  background: #0e4329;
+  color: #a7d6b8;
 }
 
 
 /* --- 🗺️ GEO THEME (`theme-geo`) --- */
 .victory-modal-clean.theme-geo {
   background: #f0fdf4;
-  border: 3px solid #16653e;
-  box-shadow: 0 8px 0 #14532d;
+  border: 2px solid #16653e;
+  box-shadow: 0 6px 0 #14532d;
   color: #0f3825;
 }
 
 .theme-geo .victory-logo-bg {
   background: #15803d;
-  border: 3px solid #22c55e;
+  border: 2px solid #22c55e;
   box-shadow: 0 4px 0 #14532d;
 }
 
@@ -288,7 +329,7 @@
 .theme-geo .victory-btn-view {
   background: #ffffff;
   color: #15803d;
-  border: 2px dashed #15803d;
+  border: 2px solid #15803d;
 }
 
 
@@ -309,7 +350,7 @@
   height: 64px;
   border-radius: 18px;
   background: #16653e;
-  border: 3px solid #22c55e;
+  border: 2px solid #22c55e;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -484,7 +525,7 @@
   width: 100%;
   background: #ffffff;
   color: #16653e;
-  border: 2px dashed #16653e;
+  border: 2px solid #16653e;
   padding: 10px;
   border-radius: 14px;
   font-family: var(--font-heading);
@@ -516,16 +557,17 @@
   transform: translateX(-50%);
   z-index: 1001;
   background: #ffffff;
-  border: 3px solid #b0cbaf;
-  box-shadow: 0 6px 0 #b0cbaf;
-  border-radius: 20px;
-  padding: 8px 14px;
+  border: 2px solid #b0cbaf;
+  box-shadow: 0 4px 0 #b0cbaf;
+  border-radius: 18px;
+  padding: 6px 10px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  animation: slideUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  gap: 7px;
+  animation: dockPop 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.25);
   box-sizing: border-box;
-  max-width: 90vw;
+  max-width: 96vw;
+  white-space: nowrap;
 }
 
 .victory-minimized-dock.theme-space {
@@ -536,16 +578,16 @@
 }
 
 .victory-minimized-dock.theme-chess {
-  background: #1c1917;
-  border: 3px solid #d97706;
-  box-shadow: 0 6px 0 #92400e;
-  color: #ffffff;
+  background: #0b3420;
+  border: 2px solid #1c7c54;
+  box-shadow: 0 5px 0 #072618;
+  color: #e8f5e9;
 }
 
 .victory-minimized-dock.theme-geo {
   background: #f0fdf4;
-  border: 3px solid #16653e;
-  box-shadow: 0 6px 0 #14532d;
+  border: 2px solid #16653e;
+  box-shadow: 0 5px 0 #14532d;
   color: #0f3825;
 }
 
@@ -553,16 +595,17 @@
   background: #16653e;
   color: #ffffff;
   border: 2px solid #22c55e;
-  padding: 8px 14px;
-  border-radius: 12px;
+  padding: 6px 14px;
+  border-radius: 10px;
   font-family: var(--font-heading);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
-  box-shadow: 0 3px 0 #0e4329;
+  justify-content: center;
+  box-shadow: 0 2px 0 #0e4329;
+  white-space: nowrap;
 }
 
 .theme-space .victory-btn-restore {
@@ -572,9 +615,9 @@
 }
 
 .theme-chess .victory-btn-restore {
-  background: #d97706;
-  border: 2px solid #f59e0b;
-  box-shadow: 0 3px 0 #92400e;
+  background: #16653e;
+  border: 2px solid #22c55e;
+  box-shadow: 0 3px 0 #072618;
 }
 
 .victory-btn-restore:active {
@@ -586,10 +629,10 @@
   background: #ffffff;
   color: #0f3825;
   border: 2px solid #b0cbaf;
-  padding: 8px 12px;
-  border-radius: 12px;
+  padding: 6px 11px;
+  border-radius: 10px;
   font-family: var(--font-heading);
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 2px 0 #b0cbaf;
@@ -604,20 +647,20 @@
 }
 
 .theme-chess .victory-btn-primary-mini {
-  background: #292524;
-  color: #f5f5f4;
-  border: 2px solid #57534e;
-  box-shadow: 0 2px 0 #44403c;
+  background: #0e4329;
+  color: #a7d6b8;
+  border: 2px solid #1c7c54;
+  box-shadow: 0 2px 0 #072618;
 }
 
 .victory-btn-secondary-mini {
   background: transparent;
   color: inherit;
   border: 1.5px solid currentColor;
-  padding: 8px 12px;
-  border-radius: 12px;
+  padding: 6px 11px;
+  border-radius: 10px;
   font-family: var(--font-heading);
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
@@ -632,4 +675,10 @@
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dock pop-in: scale from centre like the main victory modal, no slide glitch */
+@keyframes dockPop {
+  0%   { opacity: 0; transform: translateX(-50%) scale(0.82); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1); }
 }

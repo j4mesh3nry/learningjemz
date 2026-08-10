@@ -45,7 +45,7 @@ describe('VictoryScreen', () => {
   it('calls onContinue when continue button is clicked', async () => {
     const user = userEvent.setup();
     render(<VictoryScreen {...defaultProps} />);
-    const continueBtn = screen.getByRole('button', { name: /continue/i });
+    const continueBtn = screen.getByRole('button', { name: /back to menu/i });
     await user.click(continueBtn);
     expect(defaultProps.onContinue).toHaveBeenCalledTimes(1);
   });

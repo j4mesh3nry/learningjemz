@@ -1,6 +1,6 @@
 // src/components/VictoryScreen.tsx
 import React, { useState, useEffect } from 'react';
-import { Flame, Trophy, Sparkles, Gem, Eye } from 'lucide-react';
+import { Flame, Trophy, Sparkles, Gem } from 'lucide-react';
 import StreakScreen, { hasShownStreakToday } from './StreakScreen';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
@@ -17,12 +17,12 @@ const DEFAULT_PALETTE = {
 };
 
 const ICON_PALETTES: Record<string, typeof DEFAULT_PALETTE> = {
-  default: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
-  space: { gem: '#e8ecf8', sparkles: '#aa5f5a', flameActive: '#d9a2a2', flameInactive: '#8f94b0', flameInactiveFill: '#a6aac4', trophy: '#a5923f', trophyFill: '#d3bd7a' },
-  chess: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
-  geo: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
-  reading: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
-  dark: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4d4d', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
+  default: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4500', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
+  space:   { gem: '#e8ecf8', sparkles: '#aa5f5a', flameActive: '#e8805a', flameInactive: '#8f94b0', flameInactiveFill: '#a6aac4', trophy: '#a5923f', trophyFill: '#d3bd7a' },
+  chess:   { gem: '#e8f5e9', sparkles: '#5fb88a', flameActive: '#ff4500', flameInactive: '#5fb88a', flameInactiveFill: '#7cb894', trophy: '#a5923f', trophyFill: '#d3bd7a' },
+  geo:     { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4500', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
+  reading: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4500', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
+  dark:    { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4500', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
 };
 
 export interface VictoryScreenProps {
@@ -52,7 +52,7 @@ export default function VictoryScreen({
   theme = 'default',
   onContinue,
   onPlayAgain,
-  continueText = "Continue",
+  continueText = "Back to Menu",
   children,
   disableDailyStreakModal = false,
 }: VictoryScreenProps) {
@@ -115,8 +115,7 @@ export default function VictoryScreen({
     return (
       <div className={`victory-minimized-dock ${themeClass}`}>
         <button className="victory-btn-restore" onClick={() => setIsMinimized(false)}>
-          <Eye size={18} />
-          <span>Show Results</span>
+          <span>Show Screen</span>
         </button>
         {onPlayAgain && (
           <button className="victory-btn-secondary-mini" onClick={onPlayAgain}>
@@ -152,9 +151,10 @@ export default function VictoryScreen({
           <div className={`reward-box streak-box ${activeHasPlayedToday ? 'active-streak' : 'unlit-streak'}`}>
             <div className="reward-icon-wrap flame-bounce">
               <Flame
-                size={24}
+                size={26}
                 color={activeHasPlayedToday ? palette.flameActive : palette.flameInactive}
-                fill={activeHasPlayedToday ? palette.flameActive : palette.flameInactiveFill}
+                fill={activeHasPlayedToday ? '#ff6a00' : palette.flameInactiveFill}
+                strokeWidth={1.8}
               />
             </div>
             <div className="reward-text-wrap">
@@ -186,8 +186,7 @@ export default function VictoryScreen({
             </button>
           )}
           <button className="victory-btn-view" onClick={() => setIsMinimized(true)}>
-            <Eye size={16} />
-            <span>View Screen</span>
+            <span>Show Screen</span>
           </button>
         </div>
       </div>

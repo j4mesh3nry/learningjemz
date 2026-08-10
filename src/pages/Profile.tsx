@@ -270,7 +270,7 @@ export default function Profile() {
             >
               <span>Level {level}</span>
               <span style={{ color: '#b0cbaf' }}>•</span>
-              <span>{level >= 10 ? '👑 Master' : level >= 5 ? '🎓 Scholar' : '🌱 Beginner'}</span>
+              <span>{level >= 20 ? 'Master' : level >= 10 ? 'Scholar' : level >= 5 ? 'Apprentice' : 'Beginner'}</span>
             </div>
           </div>
 

@@ -872,6 +872,7 @@ export default function ChessPlay() {
           xpGained={victoryStats?.xpGained || 0}
           onContinue={() => confirmBack()}
           onPlayAgain={() => resetGame()}
+          continueText="Back to Menu"
         />
         </>
       )}

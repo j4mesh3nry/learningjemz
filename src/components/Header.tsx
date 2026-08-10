@@ -1,13 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGame } from '../contexts/GameContext.jsx';
+import { useGame, getLevelProgress } from '../contexts/GameContext.jsx';
 import { Gem, Flame, Star } from 'lucide-react';
 import '../index.css';
 
 export function Header() {
   const { xp, level, streak, hasPlayedToday } = useGame();
-  const xpInLevel = xp - (level - 1) * 100;
-  const pct = Math.min(xpInLevel, 100);
+  const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const navigate = useNavigate();
 
   return (
@@ -85,7 +84,7 @@ export function Header() {
           }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: '#0f3825', marginTop: 3, fontWeight: 700 }}>
-          <span>{xpInLevel}/100 XP</span>
+          <span>{xpInLevel}/{levelXPReq} XP</span>
           <span>Next: Lv.{level + 1}</span>
         </div>
       </div>

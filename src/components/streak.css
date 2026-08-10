@@ -1,11 +1,12 @@
-/* src/components/streak.css */
+/* src/components/streak.css — Tactile 3D Flat Streak Screen */
+
 @keyframes jemzFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
 @keyframes jemzPopUp {
-  0% { transform: scale(0.9) translateY(15px); opacity: 0; }
+  0% { transform: scale(0.92) translateY(18px); opacity: 0; }
   100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
@@ -23,7 +24,7 @@
 /* Main Streak Number Igniting Scale Pop */
 @keyframes numberIgnitePop {
   0% { transform: scale(1); }
-  50% { transform: scale(1.3); color: #ffd600; }
+  50% { transform: scale(1.25); color: #ffd600; }
   100% { transform: scale(1); color: #ffffff; }
 }
 
@@ -33,14 +34,14 @@
   100% { transform: scale(1) rotate(0deg); }
 }
 
-/* Screen Container (LearningJemz Vibrant Dual-Tone Brand Green) */
+/* Screen Container — Solid deep-green canvas */
 .jemz-streak-screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(180deg, #08311d 0%, #1c7c54 50%, #0c4228 100%);
+  background: #0b3420;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,12 +84,12 @@
   width: 92px;
   height: 92px;
   border-radius: 28px;
-  background: linear-gradient(135deg, #1c7c54 0%, #10b981 100%);
+  background: #16653e;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+  border: 3px solid #22c55e;
+  box-shadow: 0 6px 0 #0e4329;
   position: relative;
   z-index: 2;
 }
@@ -97,7 +98,6 @@
   position: absolute;
   top: -6px;
   right: -6px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
 .jemz-flame-badge {
@@ -108,8 +108,8 @@
   background: #ffffff;
   border-radius: 50%;
   padding: 8px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-  border: 3px solid #ffb74d;
+  box-shadow: 0 4px 0 #b45309;
+  border: 3px solid #ff9800;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,15 +152,15 @@
 }
 
 .jemz-plus-one-badge {
-  background: linear-gradient(135deg, #ff5722 0%, #ff9800 100%);
+  background: #e65100;
   color: #ffffff;
   font-family: var(--font-heading, system-ui, sans-serif);
   font-size: 1.3rem;
   font-weight: 900;
   padding: 4px 12px;
   border-radius: 20px;
-  border: 2px solid #ffd600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border: 2px solid #ff9800;
+  box-shadow: 0 3px 0 #bf360c;
   display: inline-block;
 }
 
@@ -180,29 +180,27 @@
   color: #ffd600;
   text-transform: uppercase;
   margin-top: 2px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .jemz-streak-subtitle {
   font-size: 0.95rem;
-  color: #e8f5e9;
-  opacity: 0.95;
+  color: #a7d6b8;
   margin: 8px 0 0 0;
   font-weight: 600;
   max-width: 310px;
   line-height: 1.4;
 }
 
-/* 7-Day Week Tracker Card */
+/* 7-Day Week Tracker Card — solid dark card */
 .jemz-week-card {
   width: 100%;
-  background: rgba(0, 0, 0, 0.22);
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
-  border-radius: 24px;
+  background: #0e4329;
+  border: 2px solid #1c7c54;
+  border-radius: 20px;
   padding: 16px 12px;
   box-sizing: border-box;
   margin-bottom: 20px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 0 #072618;
 }
 
 .jemz-days-header {
@@ -216,7 +214,7 @@
   font-family: var(--font-heading, system-ui, sans-serif);
   font-size: 0.85rem;
   font-weight: 800;
-  color: #a7f3d0;
+  color: #5fb88a;
   flex: 1;
   text-align: center;
 }
@@ -230,10 +228,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0, 0, 0, 0.3);
+  background: #072618;
   border-radius: 30px;
   padding: 6px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1.5px solid #1c7c54;
 }
 
 .jemz-pill-slot {
@@ -246,15 +244,15 @@
 }
 
 .jemz-pill-slot.played {
-  background: rgba(255, 109, 0, 0.25);
+  background: #5d2800;
   border-radius: 50%;
 }
 
 .jemz-pill-slot.today.ignite-slot {
-  background: linear-gradient(135deg, #ff3d00 0%, #ff9800 100%);
+  background: #e65100;
   border-radius: 50%;
-  border: 2px solid #ffd600;
-  box-shadow: 0 4px 14px rgba(255, 61, 0, 0.4);
+  border: 2px solid #ff9800;
+  box-shadow: 0 3px 0 #bf360c;
   transform: scale(1.1);
 }
 
@@ -262,10 +260,10 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
+  background: #1c7c54;
 }
 
-/* Action Footer Buttons */
+/* Action Footer Buttons — Tactile 3D flat */
 .jemz-actions-footer {
   width: 100%;
   display: flex;
@@ -277,37 +275,39 @@
 .jemz-continue-btn {
   width: 100%;
   padding: 16px;
-  border-radius: 20px;
-  border: none;
-  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+  border-radius: 16px;
+  border: 2px solid #22c55e;
+  background: #16653e;
   color: #ffffff;
   font-family: var(--font-heading, system-ui, sans-serif);
   font-size: 1.15rem;
   font-weight: 900;
   letter-spacing: 0.8px;
   cursor: pointer;
-  box-shadow: 0 5px 0 #064e3b, 0 8px 20px rgba(0, 0, 0, 0.2);
-  transition: all 0.12s ease;
+  box-shadow: 0 5px 0 #0e4329;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
   position: relative;
   top: 0;
 }
 
 .jemz-continue-btn:hover {
-  background: linear-gradient(180deg, #34d399 0%, #047857 100%);
+  background: #1c7c54;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 #0e4329;
 }
 
 .jemz-continue-btn:active {
   top: 3px;
-  box-shadow: 0 1px 0 #064e3b;
+  box-shadow: 0 2px 0 #0e4329;
 }
 
 .jemz-calendar-btn {
   width: 100%;
   padding: 13px;
-  border-radius: 18px;
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  border-radius: 14px;
+  border: 2px solid #1c7c54;
+  background: #0e4329;
+  color: #a7d6b8;
   font-family: var(--font-heading, system-ui, sans-serif);
   font-size: 0.95rem;
   font-weight: 800;
@@ -316,22 +316,30 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background 0.15s ease;
+  box-shadow: 0 3px 0 #072618;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 .jemz-calendar-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #1c7c54;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #072618;
 }
 
-/* Streak Calendar Modal */
+.jemz-calendar-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #072618;
+}
+
+/* Streak Calendar Modal — solid dark card, no backdrop-filter */
 .jemz-calendar-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
+  background: #050e09;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -342,16 +350,16 @@
 }
 
 .jemz-calendar-modal {
-  background: #0f172a;
-  border: 2px solid #10b981;
-  border-radius: 24px;
+  background: #0e4329;
+  border: 2px solid #1c7c54;
+  border-radius: 20px;
   padding: 24px;
   width: 100%;
   max-width: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 0 #072618;
   box-sizing: border-box;
   color: #ffffff;
 }
@@ -373,9 +381,9 @@
 }
 
 .jemz-close-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: #94a3b8;
+  background: #1c7c54;
+  border: 2px solid #288456;
+  color: #ffffff;
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -383,6 +391,12 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  box-shadow: 0 2px 0 #0e4329;
+}
+
+.jemz-close-btn:active {
+  transform: translateY(2px);
+  box-shadow: none;
 }
 
 /* Monthly Calendar Grid */
@@ -397,7 +411,7 @@
 .jemz-month-day-head {
   font-size: 0.75rem;
   font-weight: 800;
-  color: #6ee7b7;
+  color: #5fb88a;
   text-align: center;
   padding-bottom: 4px;
 }
@@ -405,24 +419,26 @@
 .jemz-month-day {
   height: 34px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #072618;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: #5fb88a;
   position: relative;
+  border: 1px solid #0e4329;
 }
 
 .jemz-month-day.empty {
   background: transparent;
+  border: none;
 }
 
 .jemz-month-day.played {
-  background: rgba(230, 81, 0, 0.25);
-  border: 1px solid #ff6d00;
+  background: #5d2800;
+  border: 1.5px solid #e65100;
   color: #ffffff;
 }
 
@@ -433,12 +449,25 @@
 .jemz-close-cal-btn {
   width: 100%;
   padding: 12px;
-  border-radius: 16px;
-  border: none;
-  background: rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  border: 2px solid #1c7c54;
+  background: #16653e;
   color: #ffffff;
   font-family: var(--font-heading);
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 3px 0 #0e4329;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.jemz-close-cal-btn:hover {
+  background: #1c7c54;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #0e4329;
+}
+
+.jemz-close-cal-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #0e4329;
 }

@@ -56,7 +56,7 @@ describe('Profile', () => {
     expect(screen.getByText('test@example.com')).toBeInTheDocument();
     expect(screen.getByText('🤖')).toBeInTheDocument(); // avatar
     expect(screen.getByText('Level 3')).toBeInTheDocument();
-    expect(screen.getByText('🌱 Beginner')).toBeInTheDocument();
+    expect(screen.getByText('Beginner')).toBeInTheDocument();
     expect(screen.getAllByText('7')[0]).toBeInTheDocument(); // streak
     expect(screen.getByText('250')).toBeInTheDocument(); // xp
     expect(screen.getByText('Streak Calendar')).toBeInTheDocument();

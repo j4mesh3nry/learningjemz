@@ -4,11 +4,15 @@ import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import Settings from '../Settings';
 
-vi.mock('../../contexts/GameContext', () => ({
-  useGame: () => ({
-    resetProgress: vi.fn(),
-  }),
-}));
+vi.mock('../../contexts/GameContext', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useGame: () => ({
+      resetProgress: vi.fn(),
+    }),
+  };
+});
 
 vi.mock('../../contexts/AuthContext', () => ({
   useAuth: () => ({
