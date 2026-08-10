@@ -64,18 +64,20 @@
 - **Real-Time Updates**: Subscribes to `postgres_changes` on `game_progress` so the board refreshes live as players earn XP/streaks; a manual refresh button is available in the header.
 
 ### XP & Level Progression
-- **Level Formula**: `Level = floor(Total XP / 100) + 1`
-- **XP Progress Bar**: Displays `(Total XP % 100) / 100` progress to next level.
+- **Level Formula**: Progressive curve `Level = N` where total XP required to reach Level N is `Math.round(38 * (N - 1)^1.6)` (e.g. Level 2 = 38 XP, Level 5 = 326 XP, Level 10 = 1,277 XP).
+- **XP Progress Bar**: Displays progress within current level `(xpInLevel / levelXPReq) * 100`.
 - **Level Badge**: Gold Star pill (`#f57f17`).
-- **Balanced XP Economy (Time-to-Reward Parity ~10-15 XP / min)**:
+- **Balanced XP Economy**:
   - **🚀 Space — Illuminate the System**:
-    - **Easy** (Top 8): +15 XP Base (+5 Zero-Hint Bonus, +5 Speed Bonus < 45s, Max 25 XP)
-    - **Medium** (Top 15): +35 XP Base (+10 Zero-Hint Bonus, +10 Speed Bonus < 120s, Max 55 XP)
-    - **Hard** (All 35): +75 XP Base (+20 Zero-Hint Bonus, +15 Speed Bonus < 240s, Max 110 XP)
+    - **Easy** (Top 8): +6 XP Base (+2 Zero-Hint Bonus, +1 Speed Bonus < 45s, Max 9 XP)
+    - **Medium** (Top 15): +13 XP Base (+3 Zero-Hint Bonus, +3 Speed Bonus < 120s, Max 19 XP)
+    - **Hard** (All 35): +22 XP Base (+5 Zero-Hint Bonus, +4 Speed Bonus < 240s, Max 31 XP)
+    - **Loss**: 0 XP (completion required)
   - **♟️ Chess vs Stockfish AI Bot**:
-    - **Easy (Beginner Bob ~400 Elo)**: +30 XP Win | +10 XP Draw | +5 XP Effort Loss (>= 10 moves)
-    - **Medium (Intermediate Ivy ~1200 Elo)**: +75 XP Win | +30 XP Draw | +15 XP Effort Loss (>= 10 moves)
-    - **Hard (Grandmaster Gary ~2500 Elo)**: +160 XP Win | +60 XP Draw | +25 XP Effort Loss (>= 10 moves)
+    - **Easy (Beginner Bob ~400 Elo)**: +15 XP Win | +8 XP Draw | +5 XP Effort Loss (>= 10 moves)
+    - **Medium (Intermediate Ivy ~1200 Elo)**: +30 XP Win | +16 XP Draw | +10 XP Effort Loss (>= 10 moves)
+    - **Hard (Grandmaster Gary ~2500 Elo)**: +45 XP Win | +22 XP Draw | +15 XP Effort Loss (>= 10 moves)
+
 
 ### Victory Screen & Module Theme System
 - **Module Theme Modes**: Supports `theme="space"` (deep muted indigo solid card `#171a38`, muted steel border `#3d4461`, muted slate action buttons), `theme="chess"` (dark warm solid card `#1c1917`, 3D amber border `#d97706`), `theme="geo"` (emerald card `#f0fdf4`, green border `#16653e`), and `theme="default"` (playful white/emerald card). The Space victory and Illuminate game-over screens share a unified minimal palette (no vibrant/glowy colors): streak shown in muted rose `#d8a8a8`, XP in muted gold `#d9c58f`, with a clean 54px icon tile and compact stat-slot boxes.
