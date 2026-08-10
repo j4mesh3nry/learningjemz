@@ -66,15 +66,23 @@ export default function IlluminateSystem() {
 
   const personalBests = illuminateStats || {};
   
-  const [level, setLevel] = useState(null);
-  const [gameData, setGameData] = useState([]);
+  const searchParams = new URLSearchParams(location.search);
+  const paramLevel = location.state?.level || searchParams.get('level');
+  const initialLevel = (paramLevel && DIFFICULTIES[paramLevel]) ? paramLevel : null;
+
+  const [level, setLevel] = useState(initialLevel);
+  const [gameData, setGameData] = useState(() => 
+    initialLevel ? SPACE_OBJECTS_BY_SIZE.slice(0, DIFFICULTIES[initialLevel].count) : []
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [isError, setIsError] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [lives, setLives] = useState(3);
+  const [lives, setLives] = useState(() => 
+    initialLevel ? DIFFICULTIES[initialLevel].maxLives : 3
+  );
   const [elapsedTime, setElapsedTime] = useState(0);
   const [userUsedHint, setUserUsedHint] = useState(false);
   const [hintsLeft, setHintsLeft] = useState(3);
@@ -82,7 +90,11 @@ export default function IlluminateSystem() {
   const [currentObjectHint, setCurrentObjectHint] = useState(null);
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
-  const [scoreData, setScoreData] = useState({ hintsUsed: 0, startTime: null, endTime: null });
+  const [scoreData, setScoreData] = useState(() => ({
+    hintsUsed: 0,
+    startTime: initialLevel ? Date.now() : null,
+    endTime: null
+  }));
   const [selectedCard, setSelectedCard] = useState(null);
   const [discoveryShown, setDiscoveryShown] = useState(false);
   const [discoveryTriggered, setDiscoveryTriggered] = useState(false);
@@ -98,6 +110,16 @@ export default function IlluminateSystem() {
       navigate('/space/objects-by-size', { replace: true });
     }
   }, [location, level, navigate]);
+
+  // Focus input and scroll to current planet on start
+  useEffect(() => {
+    if (level && !isComplete && !isGameOver) {
+      setTimeout(() => {
+        inputRef.current?.focus({ preventScroll: true });
+        scrollToCurrentPlanet();
+      }, 100);
+    }
+  }, [level]);
 
   // Live Timer Effect
   useEffect(() => {
