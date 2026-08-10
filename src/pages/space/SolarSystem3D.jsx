@@ -617,17 +617,18 @@ export default function SolarSystem3D() {
       >
         <ambientLight intensity={1.2} color="#6688cc" />
         <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffffff" />
-        <Stars radius={400} depth={100} count={9000} factor={5} saturation={0.2} fade speed={0.3} />
+        <Stars radius={1500} depth={300} count={12000} factor={5} saturation={0.2} fade speed={0.3} />
         <OrbitControls
           ref={controlsRef}
           enableZoom
           enablePan
-          minDistance={6}
-          maxDistance={180}
+          screenSpacePanning={true}
+          minDistance={3}
+          maxDistance={1200}
           autoRotate={!selected}
           autoRotateSpeed={0.08}
-          maxPolarAngle={Math.PI / 1.8}
-          minPolarAngle={Math.PI / 6}
+          maxPolarAngle={Math.PI - 0.05}
+          minPolarAngle={0.01}
         />
         <CameraController selected={selected} planetRefs={planetRefs} controlsRef={controlsRef} />
         <Suspense fallback={null}>
