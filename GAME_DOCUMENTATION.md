@@ -90,7 +90,13 @@
 ### 🚀 Space Module (`/space`)
 - **Components**: `SpaceHome.tsx`, `IlluminateSystem.jsx`, `SolarSystem3D.jsx`, `space-objects.js`, `space.css`.
 - **Game Modes**:
-  - **3D Solar System Visualizer**: Interactive Three.js model of planets and orbits.
+  - **3D Solar System Visualizer (Solar Explorer)**: Interactive Three.js model of planets and orbits rendered at **true proportional scale**:
+  - **Orbits**: 1 AU = 10 units — true Sun-relative AU ratios (Mercury 3.87, Earth 10, Jupiter 52.03, Saturn 95.37, Uranus 191.91, Neptune 300.7, Pluto 394.8). The asteroid belt sits at its real 2.1–3.3 AU ring (21–33 units), with Ceres (dwarf planet, 2.77 AU) orbiting inside it.
+  - **Sizes**: Earth diameter = 1.0 unit — true diameter ratios (Jupiter 10.97×, Saturn 9.14×, Uranus 3.98×, Neptune 3.86×, Venus 0.95×, Mars 0.53×, Mercury 0.38×, Pluto 0.186×, Ceres 0.074×). Charon is correctly smaller than Pluto.
+  - **Pluto-Charon Binary System**: Both bodies orbit the shared barycenter (mass ratio 0.118 — the barycenter sits outside Pluto's surface); Charon distance & size are true-proportional. Moons (Earth's Moon, Europa, Titan) orbit all bodies with true sizes but a capped 14-unit display distance.
+  - **Sun**: Capped at ~1/30 true scale so planets stay visible; its info badge honestly notes it is truly 109× Earth's width.
+  - **Info Panel**: Translucent blur card (backdrop of orbiting planets shows through) while all 3D name labels fade out when open (drei `Html` labels capped at `zIndexRange [5,0]`). Every body (Sun + all 10 planets/dwarf planets) has an educational badge with a Lucide icon (e.g. "Fastest Planet", "Ringed Giant", "Binary Dwarf Planet System") plus stat grid and fun fact.
+  - Textures for Pluto/Ceres come from `public/textures/objects/` (planet textures live in `public/textures/planets/`).
   - **Illuminate the System Challenge**: Size-ordering spelling puzzle covering up to 35 solar objects (Sun → Salacia).
     - **Difficulty Tiers & XP Rewards**:
       - **Easy**: Top 8 largest objects (Sun → Mars), 3 Lives, **+10 XP reward**.

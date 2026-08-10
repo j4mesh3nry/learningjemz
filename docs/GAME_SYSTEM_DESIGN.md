@@ -134,6 +134,13 @@ A memory and trivia module.
 - **Flashcards**: Uses a basic implementation of Spaced Repetition. Mastering a flashcard grants +2 XP.
 - **Quizzes**: Tests knowledge retained from flashcards. High scores are tracked in the global state (`quizHighScore`).
 - **Illuminate the System**: Size-ordering spelling puzzle across up to 35 solar objects. The Reveal Letter hint is progressive and input-aware — it reveals the correct prefix up to the first letter typed incorrectly (e.g. `JUPETIR` → `JUPI`), advancing with each hint while skipping positions already typed correctly. Wrong submissions retain the learner's typed text so they can consult the hint. After the first object (Sun) is guessed, a brief non-blocking gold cue ("Tap any lit objects for facts") teaches that revealed objects are tappable for mini facts.
+- **SolarSystem3D (Solar Explorer)**: Interactive Three.js visualizer (`/space/solar-system`) using **true proportional scale** so learners can compare real distances and sizes:
+  - Scale convention: **1 AU = 10 units** (orbits) and **Earth diameter = 1.0 unit** (sizes; the `size` fields are radii). Config lives in `PLANET_CONFIG` in `SolarSystem3D.jsx`; body data comes from `planets` (8 planets) + `dwarfPlanets` (Pluto, Ceres — exported from `space-data.js`) + `sunData`.
+  - Distances are true AU ratios (Mercury 0.387 AU → 3.87, Pluto 39.48 AU → 394.8); the asteroid belt renders at its real 2.1–3.3 AU range and Ceres orbits inside it.
+  - Sizes are true diameter ratios (Jupiter ≈ 11× Earth; Ceres ≈ 0.074×). Moons use true size ratios but a **capped 14-unit display distance** (true distances of 30–96 units would look detached).
+  - Pluto–Charon is a `BinarySystem` component: both orbit the group origin — the barycenter — with `massRatio 0.118` (Charon/Pluto masses), placing the barycenter outside Pluto's surface. The Sun is capped at ~1/30 true scale so planets remain visible; its badge discloses the real 109× Earth ratio.
+  - InfoPanel: translucent card (`rgba` + `backdrop-filter: blur`) with orbiting planets bleeding through; drei `Html` name labels are capped to `zIndexRange [5, 0]` (below the panel's z-index 50) and fade out entirely while a body is selected (`labelsHidden` prop). Each body has an educational badge from the `PLANET_BADGES` map (Lucide icon + title + fact).
+  - Textures: planet textures in `public/textures/planets/`; Pluto/Ceres reuse `public/textures/objects/` JPEGs.
 
 ### D. Reading Module (`/reading`)
 A focus and comprehension module.
