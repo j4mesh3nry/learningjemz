@@ -116,6 +116,7 @@
   - **App Loading & Background Asset Preloading**:
     - **Startup & Refresh Sequence**: App launch renders the clean white logo `SplashScreen` followed by the light green `<JemzLoader darkTheme={false} />` (`Loading LearningJemz... Preparing your experience... 0% -> 100%`).
     - **Background Preloader (`preloadSpaceObjectImages`)**: Silently pre-caches all 35 high-res space object images into browser memory during app startup, eliminating image pops and flickering during gameplay.
+    - **Global Error Boundary**: The entire app is wrapped in an `ErrorBoundary` component. If a network chunk loading error occurs (common right after pushing updates due to stale PWA Service Worker caching) or the app experiences a runtime crash, it intercepts the blank screen and presents a custom soft light sage error recovery screen with a tactile 3D **"Refresh App"** button that automatically clears the active browser/PWA caches and hard reloads the application.
   - **Illuminate the System Challenge**: Size-ordering spelling puzzle covering up to 35 solar objects (Sun → Salacia).
     - **Difficulty Tiers & XP Rewards**:
       - **Easy**: Top 8 largest objects (Sun → Mars), 3 Lives, **+10 XP reward**.
