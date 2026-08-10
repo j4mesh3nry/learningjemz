@@ -52,7 +52,7 @@ This project is built using a modern, fast, and scalable web stack:
 - **Styling:** Vanilla CSS (design tokens + modular component styles)
 - **Backend & Database:** Supabase (PostgreSQL, Authentication, Realtime)
 - **Deployment:** Vercel
-- **PWA:** Service Workers, Web App Manifest for offline-ready installation
+- **PWA:** Web App Manifest with installable icons for home-screen installation
 
 ---
 
