@@ -22,16 +22,16 @@ function ChessMenu() {
             title="Back to Home"
             aria-label="Back to Home"
             style={{
-              background: '#ffffff',
-              border: '2px solid #b0cbaf',
-              boxShadow: '0 3px 0 #b0cbaf',
+              background: '#faf6ee',
+              border: '2px solid #b89f80',
+              boxShadow: '0 3px 0 #b89f80',
               borderRadius: 14,
               width: 40,
               height: 40,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#16653e',
+              color: '#4a2c11',
               cursor: 'pointer',
               transition: 'transform 0.1s ease',
               flexShrink: 0
@@ -43,12 +43,12 @@ function ChessMenu() {
             <div style={{
               width: 32, height: 32,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: '#16653e', borderRadius: 10,
-              boxShadow: '0 2px 0 #0e4329'
+              background: '#4a2c11', borderRadius: 10,
+              boxShadow: '0 2px 0 #2f1a08'
             }}>
               <Swords size={18} color="#ffffff" />
             </div>
-            <h1 className="chess-page-title" style={{ margin: 0, color: '#0f3825', fontSize: '1.4rem', fontWeight: 900 }}>
+            <h1 className="chess-page-title" style={{ margin: 0, color: '#2c1b0d', fontSize: '1.4rem', fontWeight: 900 }}>
               Chess
             </h1>
           </div>
@@ -56,8 +56,8 @@ function ChessMenu() {
 
         <div style={{
           display: 'flex', flexDirection: 'column', gap: 3,
-          background: '#ffffff', padding: '5px 9px', borderRadius: 12,
-          border: '2px solid #b0cbaf', boxShadow: '0 2px 0 #b0cbaf',
+          background: '#faf6ee', padding: '5px 9px', borderRadius: 12,
+          border: '2px solid #b89f80', boxShadow: '0 2px 0 #b89f80',
           minWidth: 76, boxSizing: 'border-box'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
@@ -66,9 +66,9 @@ function ChessMenu() {
               color={hasPlayedToday ? '#ff4d4d' : '#888888'} 
               fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
             />
-            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#4e7361' }}>{streak ?? 0}</span>
+            <span style={{ fontWeight: 800, fontSize: '0.75rem', color: hasPlayedToday ? '#e53935' : '#6e5843' }}>{streak ?? 0}</span>
           </div>
-          <div style={{ height: 1, background: '#b0cbaf', margin: '1px 0' }} />
+          <div style={{ height: 1, background: '#b89f80', margin: '1px 0' }} />
           <div onClick={() => navigate('/profile')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, cursor: 'pointer' }}>
             <Star size={13} color="#f57f17" fill="#ffb300" />
             <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#d97706' }}>Lv.{level}</span>
@@ -79,11 +79,11 @@ function ChessMenu() {
       {/* Mode Selector: Play vs Learn */}
       <div style={{
         display: 'flex',
-        background: '#ffffff',
+        background: '#faf6ee',
         padding: '4px',
         borderRadius: 14,
-        border: '2px solid #b0cbaf',
-        boxShadow: '0 3px 0 #b0cbaf',
+        border: '2px solid #b89f80',
+        boxShadow: '0 3px 0 #b89f80',
         marginBottom: 18
       }}>
         <button
@@ -93,8 +93,8 @@ function ChessMenu() {
             padding: '10px 16px',
             borderRadius: 10,
             border: 'none',
-            background: tab === 'play' ? '#16653e' : 'transparent',
-            color: tab === 'play' ? '#ffffff' : '#4e7361',
+            background: tab === 'play' ? '#4a2c11' : 'transparent',
+            color: tab === 'play' ? '#ffffff' : '#6e5843',
             fontWeight: 800,
             fontSize: '0.9rem',
             cursor: 'pointer',
@@ -105,7 +105,7 @@ function ChessMenu() {
             gap: 6
           }}
         >
-          <Gamepad2 size={16} color={tab === 'play' ? '#ffffff' : '#4e7361'} />
+          <Gamepad2 size={16} color={tab === 'play' ? '#ffffff' : '#6e5843'} />
           Play
         </button>
         <button
@@ -115,8 +115,8 @@ function ChessMenu() {
             padding: '10px 16px',
             borderRadius: 10,
             border: 'none',
-            background: tab === 'learn' ? '#16653e' : 'transparent',
-            color: tab === 'learn' ? '#ffffff' : '#4e7361',
+            background: tab === 'learn' ? '#4a2c11' : 'transparent',
+            color: tab === 'learn' ? '#ffffff' : '#6e5843',
             fontWeight: 800,
             fontSize: '0.9rem',
             cursor: 'pointer',
@@ -127,7 +127,7 @@ function ChessMenu() {
             gap: 6
           }}
         >
-          <BookOpen size={16} color={tab === 'learn' ? '#ffffff' : '#4e7361'} />
+          <BookOpen size={16} color={tab === 'learn' ? '#ffffff' : '#6e5843'} />
           Learn
         </button>
       </div>
@@ -137,15 +137,15 @@ function ChessMenu() {
           {/* Blurred Locked Card */}
           <div style={{
             display: 'flex', alignItems: 'center', gap: 14,
-            background: '#ffffff', borderRadius: 16,
-            border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+            background: '#faf6ee', borderRadius: 16,
+            border: '2px solid #b89f80', boxShadow: '0 4px 0 #b89f80',
             padding: '12px 16px', position: 'relative', overflow: 'hidden',
             cursor: 'not-allowed'
           }}>
             <div style={{
               position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-              zIndex: 10, background: '#16653e', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
-              padding: '6px 12px', borderRadius: 12, border: '1.5px solid #0e4329', boxShadow: '0 3px 0 #0e4329',
+              zIndex: 10, background: '#4a2c11', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
+              padding: '6px 12px', borderRadius: 12, border: '1.5px solid #2f1a08', boxShadow: '0 3px 0 #2f1a08',
               display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
             }}>
               <Lock size={12} color="#ffffff" /> Locked
@@ -158,13 +158,13 @@ function ChessMenu() {
               <div style={{
                 width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: '#e1f0e2', borderRadius: 12, flexShrink: 0
+                background: '#ebe3cf', borderRadius: 12, flexShrink: 0
               }}>
-                <BookOpen size={24} color="#16653e" />
+                <BookOpen size={24} color="#4a2c11" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Chess Lessons</h3>
-                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Interactive Puzzles & Guides</p>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#2c1b0d', lineHeight: 1.2 }}>Chess Lessons</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#6e5843', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Interactive Puzzles & Guides</p>
               </div>
             </div>
           </div>
@@ -174,7 +174,7 @@ function ChessMenu() {
           {/* Active Play & Earn Modes */}
           <h2 style={{
             fontFamily: 'var(--font-heading)', fontSize: '1.15rem',
-            margin: '0 0 12px 0', color: '#0f3825', fontWeight: 800
+            margin: '0 0 12px 0', color: '#2c1b0d', fontWeight: 800
           }}>
             Earn XP & Streaks
           </h2>
@@ -187,9 +187,9 @@ function ChessMenu() {
               style={{
                 display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 14,
                 textDecoration: 'none', color: '#fff',
-                background: '#16653e', borderRadius: 16,
+                background: 'linear-gradient(135deg, #4a2c11 0%, #351f0b 100%)', borderRadius: 16,
                 padding: '12px 16px', position: 'relative', overflow: 'hidden',
-                boxShadow: '0 4px 0 #0e4329',
+                boxShadow: '0 4px 0 #2f1a08',
                 border: '2px solid rgba(255,255,255,0.2)',
                 cursor: 'pointer'
               }}
@@ -223,15 +223,15 @@ function ChessMenu() {
             {/* Blurred Locked Cards */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: 14,
-              background: '#ffffff', borderRadius: 16,
-              border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+              background: '#faf6ee', borderRadius: 16,
+              border: '2px solid #b89f80', boxShadow: '0 4px 0 #b89f80',
               padding: '12px 16px', position: 'relative', overflow: 'hidden',
               cursor: 'not-allowed'
             }}>
               <div style={{
                 position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                zIndex: 10, background: '#16653e', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
-                padding: '6px 12px', borderRadius: 12, border: '1.5px solid #0e4329', boxShadow: '0 3px 0 #0e4329',
+                zIndex: 10, background: '#4a2c11', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
+                padding: '6px 12px', borderRadius: 12, border: '1.5px solid #2f1a08', boxShadow: '0 3px 0 #2f1a08',
                 display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
               }}>
                 <Lock size={12} color="#ffffff" /> Locked
@@ -244,13 +244,13 @@ function ChessMenu() {
                 <div style={{
                   width: 44, height: 44,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: '#e1f0e2', borderRadius: 12, flexShrink: 0
+                  background: '#ebe3cf', borderRadius: 12, flexShrink: 0
                 }}>
-                  <Zap size={24} color="#16653e" />
+                  <Zap size={24} color="#4a2c11" />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Speed Blitz</h3>
-                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Timed Rapid Challenges</p>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#2c1b0d', lineHeight: 1.2 }}>Speed Blitz</h3>
+                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#6e5843', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Timed Rapid Challenges</p>
                 </div>
               </div>
             </div>

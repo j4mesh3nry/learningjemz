@@ -79,6 +79,13 @@ function Layout() {
   const showNavPaths = ['/', '/leaderboards', '/store', '/profile'];
   const showNav = user && showNavPaths.includes(location.pathname);
 
+  useEffect(() => {
+    const theme = location.pathname.startsWith('/chess') ? 'chess' :
+                  location.pathname.startsWith('/space') ? 'space' : 'main';
+    document.body.dataset.moduleTheme = theme;
+    document.documentElement.dataset.moduleTheme = theme;
+  }, [location.pathname]);
+
 
 
   return (

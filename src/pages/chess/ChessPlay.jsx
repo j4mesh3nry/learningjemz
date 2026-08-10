@@ -494,7 +494,7 @@ export default function ChessPlay() {
   const renderBotProfile = () => (
     <div className="player-profile-banner">
       <div className="player-avatar">
-        {difficulty === 'Easy' ? <Bot size={24} color="#16653e" /> : 
+        {difficulty === 'Easy' ? <Bot size={24} color="var(--color-primary)" /> : 
          difficulty === 'Medium' ? <BrainCircuit size={24} color="#d97706" /> : 
          <Cpu size={24} color="#e53935" />}
       </div>
@@ -520,7 +520,7 @@ export default function ChessPlay() {
         <div className="player-tagline">
           {difficulty === 'Easy' ? 'Rating: 400 • Casual' : 
            difficulty === 'Medium' ? 'Rating: 1200 • Tactical' : 'Rating: 2500 • Stockfish'}
-          {isThinking && <span style={{ color: '#16653e', fontWeight: 'bold', marginLeft: 6 }}>Thinking...</span>}
+          {isThinking && <span style={{ color: 'var(--color-primary)', fontWeight: 'bold', marginLeft: 6 }}>Thinking...</span>}
         </div>
       </div>
     </div>
@@ -555,7 +555,7 @@ export default function ChessPlay() {
 
   return (
     <div className="chess-module-page">
-      {/* Header Container with Separated Back Button & Long Green Banner */}
+      {/* Header Container with Separated Back Button & Long Banner */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         {/* Separated Back Button */}
         <button 
@@ -563,16 +563,16 @@ export default function ChessPlay() {
           title="Back"
           aria-label="Back"
           style={{
-            background: '#ffffff',
-            border: '2px solid #b0cbaf',
-            boxShadow: '0 3px 0 #b0cbaf',
+            background: '#faf6ee',
+            border: '2px solid #b89f80',
+            boxShadow: '0 3px 0 #b89f80',
             borderRadius: 14,
             width: 44,
             height: 44,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#16653e',
+            color: '#4a2c11',
             cursor: 'pointer',
             flexShrink: 0
           }}
@@ -580,13 +580,13 @@ export default function ChessPlay() {
           <ArrowLeft size={22} strokeWidth={2.5} />
         </button>
 
-        {/* Long Green Banner Rectangle */}
+        {/* Long Banner Rectangle */}
         <div style={{
           flex: 1,
-          background: 'linear-gradient(135deg, #16653e 0%, #0d462b 100%)',
+          background: 'linear-gradient(135deg, #4a2c11 0%, #351f0b 100%)',
           borderRadius: 16,
-          border: '2px solid #0f3825',
-          boxShadow: '0 4px 0 #092c1d',
+          border: '2px solid #6e441f',
+          boxShadow: '0 4px 0 #2f1a08',
           padding: '10px 18px',
           display: 'flex',
           alignItems: 'center'
@@ -606,23 +606,23 @@ export default function ChessPlay() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 6,
-            background: '#ffffff',
-            border: '2px solid #b0cbaf',
-            boxShadow: '0 2.5px 0 #b0cbaf',
+            background: '#faf6ee',
+            border: '2px solid #b89f80',
+            boxShadow: '0 2.5px 0 #b89f80',
             borderRadius: 12,
             padding: '6px 14px',
             marginBottom: 16,
             fontSize: '0.82rem',
-            color: '#0f3825',
+            color: '#2c1b0d',
             fontWeight: 700,
             width: 'fit-content'
           }}>
-            <Target size={14} color="#16653e" /> Choose an opponent difficulty below
+            <Target size={14} color="#4a2c11" /> Choose an opponent difficulty below
           </div>
           <div className="opponent-cards">
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
               <div className="opponent-card-header">
-                <div className="opponent-avatar"><Bot size={36} color="#16653e" /></div>
+                <div className="opponent-avatar"><Bot size={36} color="#4a2c11" /></div>
                 <div className="opponent-info">
                   <h3>Beginner Bob</h3>
                   <p>Easy • High blunder rate</p>
@@ -683,8 +683,8 @@ export default function ChessPlay() {
           </div>
           
           {botStats && (
-            <div className="global-stats-box" style={{ marginTop: 28, padding: 16, background: '#ffffff', borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf' }}>
-              <h3 style={{ textAlign: 'center', marginBottom: 14, color: '#0f3825', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <div className="global-stats-box" style={{ marginTop: 28, padding: 16, background: '#faf6ee', borderRadius: 18, border: '2px solid #b89f80', boxShadow: '0 4px 0 #b89f80' }}>
+              <h3 style={{ textAlign: 'center', marginBottom: 14, color: '#2c1b0d', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 <Trophy size={20} color="#d97706" /> Career Stats
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, textAlign: 'center' }}>
@@ -694,13 +694,13 @@ export default function ChessPlay() {
                   const won = stats.won || 0;
                   const lost = stats.lost || 0;
                   const winRate = played > 0 ? Math.round((won / played) * 100) : 0;
-                  const color = diff === 'Easy' ? '#16653e' : diff === 'Medium' ? '#d97706' : '#e53935';
+                  const color = diff === 'Easy' ? '#4a2c11' : diff === 'Medium' ? '#d97706' : '#e53935';
                   return (
-                    <div key={diff} style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#e1f0e2', padding: '10px 8px', borderRadius: 12, border: '1.5px solid #b0cbaf', borderTop: `3px solid ${color}` }}>
-                      <div style={{ fontWeight: 800, color: '#0f3825', fontSize: '0.85rem' }}>{diff}</div>
-                      <div style={{ color: color, fontWeight: 900, fontSize: '1.15rem' }}>{winRate}% <span style={{ fontSize: '0.7rem', color: '#4e7361', fontWeight: 600 }}>WIN</span></div>
-                      <div style={{ fontSize: '0.8rem', color: '#666', marginTop: 4 }}>{won}W - {lost}L</div>
-                      <div style={{ fontSize: '0.75rem', color: '#aaa' }}>{played} Matches</div>
+                    <div key={diff} style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#ebe3cf', padding: '10px 8px', borderRadius: 12, border: '1.5px solid #b89f80', borderTop: `3px solid ${color}` }}>
+                      <div style={{ fontWeight: 800, color: '#2c1b0d', fontSize: '0.85rem' }}>{diff}</div>
+                      <div style={{ color: color, fontWeight: 900, fontSize: '1.15rem' }}>{winRate}% <span style={{ fontSize: '0.7rem', color: '#6e5843', fontWeight: 600 }}>WIN</span></div>
+                      <div style={{ fontSize: '0.8rem', color: '#6e5843', marginTop: 4 }}>{won}W - {lost}L</div>
+                      <div style={{ fontSize: '0.75rem', color: '#8c7661' }}>{played} Matches</div>
                     </div>
                   );
                 })}
@@ -752,14 +752,14 @@ export default function ChessPlay() {
                         onClick={() => handlePromotionSelect(type)}
                         style={{
                           background: 'white',
-                          border: '2px solid #16653e',
+                          border: '2px solid var(--color-primary)',
                           borderRadius: 12,
                           padding: 10,
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          boxShadow: '0 3px 0 #0e4329'
+                          boxShadow: '0 3px 0 var(--color-primary-dark)'
                         }}
                       >
                         <img src={PIECE_IMAGES[playerColor][type]} alt={type} style={{ width: 36, height: 36 }} />
@@ -810,15 +810,15 @@ export default function ChessPlay() {
           {topIsBot ? renderUserProfile() : renderBotProfile()}
 
           {/* Action Bar with Flip, Restart, Resign */}
-          <div style={{ display: 'flex', gap: 8, padding: 12, width: '100%', background: '#f8faf8', borderTop: '1.5px solid #b0cbaf', boxSizing: 'border-box' }}>
+          <div style={{ display: 'flex', gap: 8, padding: 12, width: '100%', background: 'var(--color-bg-card)', borderTop: '1.5px solid var(--color-border)', boxSizing: 'border-box' }}>
             <button 
               onClick={() => setIsFlipped(prev => !prev)} 
               title="Flip Board"
               style={{
                 flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                padding: '9px 12px', background: '#ffffff', border: '2px solid #b0cbaf',
-                boxShadow: '0 3px 0 #b0cbaf', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
-                color: '#16653e', cursor: 'pointer'
+                padding: '9px 12px', background: 'var(--color-bg-card)', border: '2px solid var(--color-border)',
+                boxShadow: '0 3px 0 var(--color-border)', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
+                color: 'var(--color-primary)', cursor: 'pointer'
               }}
             >
               <RefreshCw size={15} /> Flip
@@ -829,9 +829,9 @@ export default function ChessPlay() {
               title="Restart Match"
               style={{
                 flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                padding: '9px 12px', background: '#ffffff', border: '2px solid #b0cbaf',
-                boxShadow: '0 3px 0 #b0cbaf', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
-                color: '#16653e', cursor: 'pointer'
+                padding: '9px 12px', background: 'var(--color-bg-card)', border: '2px solid var(--color-border)',
+                boxShadow: '0 3px 0 var(--color-border)', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
+                color: 'var(--color-primary)', cursor: 'pointer'
               }}
             >
               <RotateCw size={15} /> Restart
@@ -852,10 +852,10 @@ export default function ChessPlay() {
           </div>
 
           {/* Scrollable Move History Box */}
-          <div style={{ width: '100%', background: '#ffffff', borderTop: '1.5px solid #b0cbaf' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 14px', background: '#f4f9f4', borderBottom: '1px solid #e1f0e2' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f3825', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <ScrollText size={14} color="#16653e" /> Game Notation
+          <div style={{ width: '100%', background: 'var(--color-bg-card)', borderTop: '1.5px solid var(--color-border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 14px', background: 'var(--color-bg-card)', borderBottom: '1px solid var(--color-border)' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <ScrollText size={14} color="var(--color-primary)" /> Game Notation
               </span>
             </div>
             {renderMoveHistoryList()}

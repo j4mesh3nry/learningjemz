@@ -273,8 +273,10 @@ describe('GameProvider smoke test', () => {
     await waitFor(() => expect(screen.getByText('streak:8')).toBeInTheDocument());
 
     // The pristine snapshot was discarded and only real data was re-queued
-    const pending = JSON.parse(localStorage.getItem('learningjemz_pending_sync_u4')!);
-    expect(pending.state.streak).toBe(8);
+    await vi.waitFor(() => {
+      const pending = JSON.parse(localStorage.getItem('learningjemz_pending_sync_u4') || '{}');
+      expect(pending?.state?.streak).toBe(8);
+    });
 
     await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
     expect(mockData.lastUpsert.streak).toBe(8);

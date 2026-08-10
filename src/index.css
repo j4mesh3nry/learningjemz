@@ -67,12 +67,38 @@ html, body, #root {
 *::-webkit-scrollbar {
   display: none;
 }
+/* Module specific theme overrides */
+html[data-module-theme="chess"], body[data-module-theme="chess"] {
+  --color-bg-page: #ebe3cf; /* Warm parchment / limestone ivory */
+  --color-primary: #4a2c11; /* Deep rich mahogany brown */
+  --color-primary-light: #6e441f;
+  --color-primary-dark: #2f1a08;
+  --color-bg-card: #faf6ee;
+  --color-border: #b89f80;
+  --color-shadow: #b89f80;
+  --color-text: #2c1b0d;
+  --color-muted: #6e5843;
+}
+
+html[data-module-theme="space"], body[data-module-theme="space"] {
+  --color-bg-page: #0b0d1e; /* Deep cosmic obsidian space canvas */
+  --color-primary: #161936; /* Dark cosmic indigo */
+  --color-primary-light: #232752;
+  --color-primary-dark: #090b17;
+  --color-bg-card: #161936;
+  --color-border: #385e8a; /* Cold metallic steel-blue border */
+  --color-shadow: #05060f;
+  --color-text: #f1f5f9;
+  --color-muted: #94a3b8;
+}
+
 html {
   /* Explicit non-trivial html background so the canvas keeps the author palette
      under forced colors mode (a transparent html would inherit body's adjusted
      forced background at paint time and render as the system Canvas color). */
   background-color: var(--color-bg-page);
   color: var(--color-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 body {
   font-family: var(--font-body);
@@ -80,6 +106,7 @@ body {
   color: var(--color-text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Forced Colors Mode (Windows High Contrast, Android high contrast text, etc.):

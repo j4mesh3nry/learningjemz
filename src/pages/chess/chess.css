@@ -1,7 +1,7 @@
 /* Clean Mobile-First Chess Styles */
 .chess-module-page {
   min-height: 100vh;
-  background: var(--color-bg-page, #d4e8d5);
+  background: var(--color-bg-page, #ebe3cf);
   padding: 24px 16px 80px;
   max-width: 640px;
   margin: 0 auto;
@@ -23,29 +23,29 @@
 }
 
 .chess-back-btn {
-  background: #f0f0f0;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  background: #faf6ee;
+  border: 2px solid #b89f80;
+  box-shadow: 0 3px 0 #b89f80;
+  border-radius: 14px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  color: #333;
+  color: #4a2c11;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: transform 0.1s ease;
 }
 
 .chess-back-btn:hover {
-  background: #e0e0e0;
+  background: #ebe3cf;
 }
 
 .chess-page-title {
   font-family: var(--font-heading, sans-serif);
   font-size: 1.6rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #0e4d2e 0%, #1c7c54 100%);
+  background: linear-gradient(135deg, #2c1b0d 0%, #5c3a21 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0;
@@ -214,13 +214,13 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background: #ffffff;
-  border: 2px solid #b0cbaf;
+  background: #faf6ee;
+  border: 2px solid #b89f80;
   border-radius: 18px;
   padding: 16px;
   cursor: pointer;
   transition: all 0.15s ease;
-  box-shadow: 0 4px 0 #b0cbaf;
+  box-shadow: 0 4px 0 #b89f80;
 }
 
 .opponent-card:hover {
@@ -229,8 +229,8 @@
 
 .opponent-card.easy:hover,
 .opponent-card.easy.selected {
-  border-color: #16653e;
-  box-shadow: 0 4px 0 #16653e;
+  border-color: #4a2c11;
+  box-shadow: 0 4px 0 #4a2c11;
 }
 
 .opponent-card.medium:hover,
@@ -253,7 +253,7 @@
 }
 
 .opponent-avatar {
-  background: #f8f9fa;
+  background: #ebe3cf;
   width: 64px;
   height: 64px;
   border-radius: 50%;

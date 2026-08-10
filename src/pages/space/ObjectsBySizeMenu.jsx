@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Lock, Target, Trophy, Zap, Heart, ChevronDown, ChevronUp, Lightbulb, Sparkles } from 'lucide-react';
+import { ArrowLeft, Lock, Target, Trophy, Zap, Heart, ChevronDown, ChevronUp, Lightbulb, Sparkles, Ruler } from 'lucide-react';
 import { useGame } from '../../contexts/GameContext';
 import './space.css';
 
 const DIFFICULTIES = {
-  easy: { name: 'Easy', count: 8, label: 'Top 8 (Sun → Mars)', maxLives: 3, color: '#16653e' },
+  easy: { name: 'Easy', count: 8, label: 'Top 8 (Sun → Mars)', maxLives: 3, color: '#0284c7' },
   medium: { name: 'Medium', count: 15, label: 'Top 15 (Sun → Europa)', maxLives: 4, color: '#d97706' },
   hard: { name: 'Hard', count: 35, label: 'All 35 (Sun → Salacia)', maxLives: 5, color: '#e53935' }
 };
@@ -30,7 +30,7 @@ export default function ObjectsBySizeMenu() {
 
   return (
     <div className="space-module-page">
-      {/* Header Container with Separated Back Button & Long Green Banner */}
+      {/* Header Container with Separated Back Button & Long Banner */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         {/* Separated Back Button */}
         <button 
@@ -38,16 +38,16 @@ export default function ObjectsBySizeMenu() {
           title="Back to Space"
           aria-label="Back to Space"
           style={{
-            background: '#ffffff',
-            border: '2px solid #b0cbaf',
-            boxShadow: '0 3px 0 #b0cbaf',
+            background: '#161936',
+            border: '2px solid #385e8a',
+            boxShadow: '0 3px 0 #385e8a',
             borderRadius: 14,
             width: 44,
             height: 44,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#16653e',
+            color: '#38bdf8',
             cursor: 'pointer',
             flexShrink: 0
           }}
@@ -55,13 +55,13 @@ export default function ObjectsBySizeMenu() {
           <ArrowLeft size={22} strokeWidth={2.5} />
         </button>
 
-        {/* Long Green Banner Rectangle */}
+        {/* Long Banner Rectangle */}
         <div style={{
           flex: 1,
-          background: 'linear-gradient(135deg, #16653e 0%, #0d462b 100%)',
+          background: 'linear-gradient(135deg, #161936 0%, #0e1126 100%)',
           borderRadius: 16,
-          border: '2px solid #0f3825',
-          boxShadow: '0 4px 0 #092c1d',
+          border: '2px solid #385e8a',
+          boxShadow: '0 4px 0 #0b0d1e',
           padding: '10px 18px',
           display: 'flex',
           alignItems: 'center'
@@ -75,33 +75,39 @@ export default function ObjectsBySizeMenu() {
         </div>
       </div>
 
-      {/* Simple Subtitle Container Pill */}
+      {/* Primary Description Card */}
       <div style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 6,
-        background: '#ffffff',
-        border: '2px solid #b0cbaf',
-        boxShadow: '0 2.5px 0 #b0cbaf',
-        borderRadius: 12,
-        padding: '6px 14px',
+        background: '#161936',
+        borderRadius: 16,
+        border: '2px solid #385e8a',
+        boxShadow: '0 4px 0 #0b0d1e',
+        padding: '12px 16px',
         marginBottom: 16,
-        fontSize: '0.82rem',
-        color: '#0f3825',
-        fontWeight: 700,
-        width: 'fit-content'
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12
       }}>
-        <Target size={14} color="#16653e" /> Explore and memorize the 35 largest solar objects!
+        <div style={{
+          width: 36, height: 36, borderRadius: 10,
+          background: '#232752', color: '#38bdf8',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0
+        }}>
+          <Target size={20} />
+        </div>
+        <p style={{ margin: 0, fontSize: '0.85rem', color: '#f1f5f9', fontWeight: 700, lineHeight: 1.35 }}>
+          Explore and memorize the 35 largest solar objects!
+        </p>
       </div>
 
-      {/* Mode List */}
+      {/* Active Game Modes Section */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {/* Illuminate the System Card with Accordion Level Selection */}
+        {/* Game 1: Illuminate the System Collapsible Card */}
         <div style={{
-          background: '#ffffff',
+          background: '#161936',
           borderRadius: 18,
-          border: '2px solid #b0cbaf',
-          boxShadow: '0 4px 0 #b0cbaf',
+          border: '2px solid #385e8a',
+          boxShadow: '0 4px 0 #0b0d1e',
           overflow: 'hidden',
           transition: 'all 0.15s ease'
         }}>
@@ -111,29 +117,29 @@ export default function ObjectsBySizeMenu() {
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
               padding: '14px 16px', cursor: 'pointer',
-              background: '#ffffff'
+              background: '#161936'
             }}
           >
             <div style={{
               fontSize: '1.5rem', width: 44, height: 44,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: '#e1f0e2', borderRadius: 12,
+              background: '#232752', borderRadius: 12,
               flexShrink: 0
             }}>
-              <Lightbulb size={22} color="#16653e" />
+              <Lightbulb size={22} color="#38bdf8" />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#f1f5f9', lineHeight: 1.2 }}>
                 Illuminate the System
               </h3>
-              <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 600, lineHeight: 1.2 }}>
+              <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600, lineHeight: 1.2 }}>
                 Type the names in order
               </p>
             </div>
             <div style={{
               width: 32, height: 32, borderRadius: 10,
-              background: showIlluminateLevels ? '#16653e' : '#e1f0e2',
-              color: showIlluminateLevels ? '#ffffff' : '#16653e',
+              background: showIlluminateLevels ? '#385e8a' : '#232752',
+              color: showIlluminateLevels ? '#ffffff' : '#38bdf8',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               transition: 'all 0.15s ease'
             }}>
@@ -144,15 +150,15 @@ export default function ObjectsBySizeMenu() {
           {/* Level Options Expandable Sub-bar */}
           {showIlluminateLevels && (
             <div style={{
-              background: '#f8fdf8',
-              borderTop: '2px solid #b0cbaf',
+              background: '#0f1226',
+              borderTop: '2px solid #385e8a',
               padding: '14px 16px',
               display: 'flex',
               flexDirection: 'column',
               gap: 10,
               animation: 'fadeIn 0.2s ease-out'
             }}>
-              <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#4e7361', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 Select Difficulty:
               </span>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -162,7 +168,7 @@ export default function ObjectsBySizeMenu() {
                     onClick={() => handleStartGame(key)}
                     style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      background: '#ffffff',
+                      background: '#161936',
                       border: `2px solid ${diff.color}`,
                       boxShadow: `0 3px 0 ${diff.color}`,
                       borderRadius: 14,
@@ -180,7 +186,7 @@ export default function ObjectsBySizeMenu() {
                           ))}
                         </div>
                       </div>
-                      <div style={{ fontSize: '0.76rem', color: '#4e7361', fontWeight: 600, marginTop: 2 }}>
+                      <div style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 600, marginTop: 2 }}>
                         {diff.label}
                       </div>
                     </div>
@@ -203,15 +209,15 @@ export default function ObjectsBySizeMenu() {
         {/* Blurred Locked Card */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 14,
-          background: '#ffffff', borderRadius: 18,
-          border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
+          background: '#161936', borderRadius: 18,
+          border: '2px solid #385e8a', boxShadow: '0 4px 0 #0b0d1e',
           padding: '12px 16px', position: 'relative', overflow: 'hidden',
           cursor: 'not-allowed'
         }}>
           <div style={{
             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-            zIndex: 10, background: '#16653e', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
-            padding: '6px 12px', borderRadius: 12, border: '1.5px solid #0e4329', boxShadow: '0 3px 0 #0e4329',
+            zIndex: 10, background: '#385e8a', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
+            padding: '6px 12px', borderRadius: 12, border: '1.5px solid #1e3a8a', boxShadow: '0 3px 0 #1e3a8a',
             display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
           }}>
             <Lock size={12} color="#ffffff" /> Locked
@@ -224,13 +230,13 @@ export default function ObjectsBySizeMenu() {
             <div style={{
               fontSize: '1.6rem', width: 44, height: 44,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: '#e1f0e2', borderRadius: 12, flexShrink: 0
+              background: '#232752', borderRadius: 12, flexShrink: 0
             }}>
-              📏
+              <Ruler size={24} color="#38bdf8" />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f3825', lineHeight: 1.2 }}>Size Stack Challenge</h3>
-              <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#4e7361', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Drag and order planets</p>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#f1f5f9', lineHeight: 1.2 }}>Size Stack Challenge</h3>
+              <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#94a3b8', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Drag and order planets</p>
             </div>
           </div>
         </div>
@@ -239,10 +245,10 @@ export default function ObjectsBySizeMenu() {
       {/* Organized Best Time Records Hub */}
       <div style={{
         marginTop: 20,
-        background: '#ffffff',
+        background: '#161936',
         borderRadius: 20,
-        border: '2px solid #b0cbaf',
-        boxShadow: '0 4px 0 #b0cbaf',
+        border: '2px solid #385e8a',
+        boxShadow: '0 4px 0 #0b0d1e',
         padding: '16px 18px'
       }}>
         {/* Main Section Header */}
@@ -252,12 +258,12 @@ export default function ObjectsBySizeMenu() {
           justifyContent: 'space-between',
           marginBottom: 14,
           paddingBottom: 10,
-          borderBottom: '2px solid #e1f0e2'
+          borderBottom: '2px solid #385e8a'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 900, fontSize: '1rem', color: '#0f3825' }}>
-            <Trophy size={20} color="#d97706" /> Best Time Records
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 900, fontSize: '1rem', color: '#f1f5f9' }}>
+            <Trophy size={20} color="#ffb400" /> Best Time Records
           </div>
-          <span style={{ fontSize: '0.75rem', color: '#16653e', fontWeight: 800, background: '#e1f0e2', padding: '3px 10px', borderRadius: 8 }}>
+          <span style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 800, background: '#232752', padding: '3px 10px', borderRadius: 8 }}>
             Objects by Size
           </span>
         </div>
@@ -266,10 +272,10 @@ export default function ObjectsBySizeMenu() {
         <div style={{ marginBottom: 16 }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 6,
-            fontSize: '0.84rem', fontWeight: 800, color: '#0f3825',
+            fontSize: '0.84rem', fontWeight: 800, color: '#f1f5f9',
             marginBottom: 8
           }}>
-            <span style={{ fontSize: '1rem' }}>💡</span> Illuminate the System
+            <Lightbulb size={16} color="#38bdf8" /> Illuminate the System
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
@@ -280,11 +286,11 @@ export default function ObjectsBySizeMenu() {
                 <div 
                   key={key} 
                   style={{
-                    background: hasRecord ? '#f0f9f1' : '#f8faf8',
+                    background: '#0f1226',
                     borderRadius: 14,
                     padding: '10px 8px',
                     textAlign: 'center',
-                    border: `2px solid ${hasRecord ? diff.color : '#c8dbc7'}`,
+                    border: `2px solid ${hasRecord ? diff.color : '#385e8a'}`,
                     boxShadow: hasRecord ? `0 2.5px 0 ${diff.color}` : 'none',
                     display: 'flex',
                     flexDirection: 'column',
@@ -293,18 +299,18 @@ export default function ObjectsBySizeMenu() {
                     gap: 4
                   }}
                 >
-                  <div style={{ fontSize: '0.78rem', color: '#0f3825', fontWeight: 800 }}>
+                  <div style={{ fontSize: '0.78rem', color: '#f1f5f9', fontWeight: 800 }}>
                     {diff.name}
                   </div>
                   <div style={{
                     fontSize: '1rem',
-                    color: hasRecord ? '#0f3825' : '#888888',
+                    color: hasRecord ? '#f1f5f9' : '#94a3b8',
                     fontWeight: 900,
                     display: 'flex',
                     alignItems: 'center',
                     gap: 3
                   }}>
-                    <Zap size={13} color={hasRecord ? '#ffb300' : '#cccccc'} fill={hasRecord ? '#ffb300' : 'none'} />
+                    <Zap size={13} color={hasRecord ? '#ffb400' : '#475569'} fill={hasRecord ? '#ffb400' : 'none'} />
                     {formatTime(pbTime)}
                   </div>
                 </div>
@@ -315,20 +321,20 @@ export default function ObjectsBySizeMenu() {
 
         {/* Game 2: Size Stack Challenge Records (Future Placeholder) */}
         <div style={{
-          background: '#f8faf8',
+          background: '#0f1226',
           borderRadius: 14,
-          border: '1.5px dashed #b0cbaf',
+          border: '1.5px dashed #385e8a',
           padding: '10px 14px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          opacity: 0.8
+          opacity: 0.85
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', fontWeight: 800, color: '#4e7361' }}>
-            <span style={{ fontSize: '1rem' }}>📏</span> <span style={{ filter: 'blur(6px)', userSelect: 'none' }}>Size Stack Challenge</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', fontWeight: 800, color: '#94a3b8' }}>
+            <Ruler size={16} color="#94a3b8" /> <span style={{ filter: 'blur(6px)', userSelect: 'none' }}>Size Stack Challenge</span>
           </div>
-          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#16653e', background: '#e1f0e2', padding: '2px 8px', borderRadius: 6 }}>
-            🔒 Locked
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', background: '#232752', padding: '2px 8px', borderRadius: 6 }}>
+            Locked
           </span>
         </div>
       </div>

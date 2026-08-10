@@ -11,8 +11,8 @@ const modules = [
     icon: <Swords size={24} color="#ffffff" />,
     title: 'Chess',
     subtitle: 'Play against Stockfish AI',
-    bg: '#16653e',
-    shadow: '0 4px 0 #0e4329',
+    bg: '#4a2c11',
+    shadow: '0 4px 0 #251406',
     pattern: 'chess',
   },
   {
