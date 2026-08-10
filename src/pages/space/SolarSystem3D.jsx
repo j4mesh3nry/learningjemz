@@ -25,30 +25,29 @@ const TEXTURE_PATHS = {
 };
 
 /* Planet orbital configs
-   Distances: Logarithmically scaled relative orbits (Mercury 8.1 -> Pluto 61.0)
-              Ensures inner planets are well-spaced and labels never overlap,
-              while outer planets remain easy to see and explore.
+   Distances: Logarithmically scaled relative orbits (Mercury 10.5 -> Pluto 68.0)
+              Leaves clean room outside the Sun's grand coronal glow.
    Sizes: True comparative relative scales:
-          Sun (2.0) > Jupiter (1.6) > Saturn (1.3) > Uranus (0.85) >= Neptune (0.82)
+          Sun (3.6) >> Jupiter (1.6) > Saturn (1.3) > Uranus (0.85) >= Neptune (0.82)
           > Earth (0.48) >= Venus (0.45) > Mars (0.28) > Mercury (0.22) > Pluto (0.14) > Ceres (0.08) */
 const PLANET_CONFIG = {
-  Mercury: { size: 0.22, orbit: 8.1, speed: 1.6, emissive: '#888888', emissiveIntensity: 0, rotationSpeed: 0.0005, tilt: 0.03 },
-  Venus:   { size: 0.45, orbit: 10.2, speed: 1.17, emissive: '#e3bb76', emissiveIntensity: 0, rotationSpeed: -0.0002, tilt: 3.1 },
-  Earth:   { size: 0.48, orbit: 12.5, speed: 1.0, emissive: '#2266aa', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.41, moons: [{ name: 'Moon', size: 0.13, distance: 1.2, speed: 2.0, color: '#dddddd' }] },
-  Mars:    { size: 0.28, orbit: 15.2, speed: 0.8, emissive: '#aa4422', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.44 },
-  Ceres:   { size: 0.08, orbit: 19.0, speed: 0.6, emissive: '#c8c2b8', emissiveIntensity: 0, rotationSpeed: 0.003, tilt: 0.04 },
-  Jupiter: { size: 1.60, orbit: 25.5, speed: 0.44, emissive: '#c49a6c', emissiveIntensity: 0, rotationSpeed: 0.012, tilt: 0.05, moons: [{ name: 'Europa', size: 0.14, distance: 2.5, speed: 1.5, color: '#e6dfd1' }] },
-  Saturn:  { size: 1.30, orbit: 34.0, speed: 0.32, emissive: '#d4c07a', emissiveIntensity: 0, rotationSpeed: 0.011, tilt: 0.47, moons: [{ name: 'Titan', size: 0.18, distance: 2.4, speed: 0.8, color: '#d39c55' }] },
-  Uranus:  { size: 0.85, orbit: 44.0, speed: 0.22, emissive: '#7fcfcf', emissiveIntensity: 0, rotationSpeed: -0.007, tilt: 1.71 },
-  Neptune: { size: 0.82, orbit: 53.0, speed: 0.18, emissive: '#3355bb', emissiveIntensity: 0, rotationSpeed: 0.008, tilt: 0.49 },
-  Pluto:   { size: 0.14, orbit: 61.0, speed: 0.16, emissive: '#a89f91', emissiveIntensity: 0, rotationSpeed: 0.001, tilt: 2.03, binary: { companionName: 'Charon', companionSize: 0.07, distance: 0.55, speed: 1.2, color: '#888888', massRatio: 0.118 } },
+  Mercury: { size: 0.22, orbit: 10.5, speed: 1.6, emissive: '#888888', emissiveIntensity: 0, rotationSpeed: 0.0005, tilt: 0.03 },
+  Venus:   { size: 0.45, orbit: 13.0, speed: 1.17, emissive: '#e3bb76', emissiveIntensity: 0, rotationSpeed: -0.0002, tilt: 3.1 },
+  Earth:   { size: 0.48, orbit: 15.5, speed: 1.0, emissive: '#2266aa', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.41, moons: [{ name: 'Moon', size: 0.13, distance: 1.2, speed: 2.0, color: '#dddddd' }] },
+  Mars:    { size: 0.28, orbit: 18.5, speed: 0.8, emissive: '#aa4422', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.44 },
+  Ceres:   { size: 0.08, orbit: 22.5, speed: 0.6, emissive: '#c8c2b8', emissiveIntensity: 0, rotationSpeed: 0.003, tilt: 0.04 },
+  Jupiter: { size: 1.60, orbit: 29.5, speed: 0.44, emissive: '#c49a6c', emissiveIntensity: 0, rotationSpeed: 0.012, tilt: 0.05, moons: [{ name: 'Europa', size: 0.14, distance: 2.5, speed: 1.5, color: '#e6dfd1' }] },
+  Saturn:  { size: 1.30, orbit: 39.0, speed: 0.32, emissive: '#d4c07a', emissiveIntensity: 0, rotationSpeed: 0.011, tilt: 0.47, moons: [{ name: 'Titan', size: 0.18, distance: 2.4, speed: 0.8, color: '#d39c55' }] },
+  Uranus:  { size: 0.85, orbit: 49.5, speed: 0.22, emissive: '#7fcfcf', emissiveIntensity: 0, rotationSpeed: -0.007, tilt: 1.71 },
+  Neptune: { size: 0.82, orbit: 59.5, speed: 0.18, emissive: '#3355bb', emissiveIntensity: 0, rotationSpeed: 0.008, tilt: 0.49 },
+  Pluto:   { size: 0.14, orbit: 68.0, speed: 0.16, emissive: '#a89f91', emissiveIntensity: 0, rotationSpeed: 0.001, tilt: 2.03, binary: { companionName: 'Charon', companionSize: 0.07, distance: 0.55, speed: 1.2, color: '#888888', massRatio: 0.118 } },
 };
 
 /* ─── Educational badges shown in the Info Panel ─── */
 const PLANET_BADGES = {
   sun: {
     icon: Zap, title: 'Giver of Light', color: '#FDB813',
-    text: "Contains 99.86% of all mass in the solar system — truly 109× Earth's width. Rendered in a visually balanced scale so all orbiting worlds remain clear and easy to explore."
+    text: "Contains 99.86% of all mass in the solar system — truly 109× Earth's width. Rendered with a commanding central presence so all orbiting worlds remain clear and easy to explore."
   },
   mercury: {
     icon: Gauge, title: 'Fastest Planet', color: '#b8b8b8',
@@ -115,7 +114,7 @@ function OrbitRing({ radius }) {
 }
 
 /* ─── Asteroid Belt ─── */
-function AsteroidBelt({ count = 3500, innerRadius = 17.5, outerRadius = 20.5 }) {
+function AsteroidBelt({ count = 3500, innerRadius = 21.0, outerRadius = 24.0 }) {
   const points = useMemo(() => {
     const pts = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -163,21 +162,21 @@ const Sun = React.forwardRef(({ onSelect, labelsHidden }, ref) => {
         onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer'; }}
         onPointerOut={() => { document.body.style.cursor = 'auto'; }}
       >
-        <sphereGeometry args={[2.0, 64, 64]} />
+        <sphereGeometry args={[3.6, 64, 64]} />
         <meshBasicMaterial map={sunTexture} />
       </mesh>
       <mesh>
-        <sphereGeometry args={[2.4, 32, 32]} />
+        <sphereGeometry args={[4.4, 32, 32]} />
         <meshBasicMaterial color="#FDB813" transparent opacity={0.15} />
       </mesh>
       <mesh>
-        <sphereGeometry args={[3.0, 32, 32]} />
+        <sphereGeometry args={[5.2, 32, 32]} />
         <meshBasicMaterial color="#ff9900" transparent opacity={0.06} />
       </mesh>
-      <pointLight color="#FDB813" intensity={250} distance={300} decay={1} />
-      <Html position={[0, -2.8, 0]} center style={{ pointerEvents: 'none', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
+      <pointLight color="#FDB813" intensity={400} distance={400} decay={1} />
+      <Html position={[0, -4.8, 0]} center style={{ pointerEvents: 'none', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
         <div style={{
-          color: '#FDB813', fontSize: '0.7rem', fontWeight: 700,
+          color: '#FDB813', fontSize: '0.75rem', fontWeight: 700,
           textShadow: '0 0 10px rgba(253,184,19,0.8)', userSelect: 'none', letterSpacing: '1px',
         }}>
           SUN
