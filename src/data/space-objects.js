@@ -477,3 +477,17 @@ export function getMnemonicUpToIndex(objectIndex) {
   const slice = MNEMONIC_WORDS_LIST.slice(0, maxIdx + 1);
   return slice.join(' ') + '...';
 }
+
+/**
+ * Preloads all 35 space object texture images into browser memory cache.
+ * Ensures instant, zero-delay rendering during Objects by Size & Illuminate games.
+ */
+export function preloadSpaceObjectImages() {
+  if (typeof window === 'undefined') return;
+  SPACE_OBJECTS_BY_SIZE.forEach((obj) => {
+    if (obj.img) {
+      const img = new Image();
+      img.src = obj.img;
+    }
+  });
+}

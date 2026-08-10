@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy, ArrowRight, X, HelpCircle, Info, Sun, Globe, Moon, Sparkles, Ruler, Compass, Delete, Eye } from 'lucide-react';
-import { SPACE_OBJECTS_BY_SIZE, getMnemonicUpToIndex } from '../../data/space-objects';
+import { SPACE_OBJECTS_BY_SIZE, getMnemonicUpToIndex, preloadSpaceObjectImages } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
 import VictoryScreen from '../../components/VictoryScreen';
@@ -48,6 +48,8 @@ function SafeObjectImage({ src, alt, iconType, className, size = 26 }) {
       src={src} 
       alt={alt} 
       className={className} 
+      loading="eager"
+      fetchPriority="high"
       onError={() => setImgError(true)} 
     />
   );
@@ -58,6 +60,10 @@ export default function IlluminateSystem() {
   const location = useLocation();
   const { level: userLevel, streak, hasPlayedToday, addXP, addXp, recordActivity, illuminateStats, recordIlluminateTime } = useGame();
   const { user } = useAuth();
+
+  useEffect(() => {
+    preloadSpaceObjectImages();
+  }, []);
 
   const personalBests = illuminateStats || {};
   

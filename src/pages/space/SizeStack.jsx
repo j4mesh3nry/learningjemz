@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   DndContext,
@@ -18,7 +18,7 @@ import {
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { SPACE_OBJECTS_BY_SIZE } from '../../data/space-objects';
+import { SPACE_OBJECTS_BY_SIZE, preloadSpaceObjectImages } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
 import { Flame, Star, ArrowLeft } from 'lucide-react';
 import './space.css';
@@ -52,7 +52,7 @@ function SortableItem({ id, item, isOverlay }) {
       <div className="size-stack-drag-handle">≡</div>
       <div className="size-stack-item-img">
         {item.img ? (
-          <img src={item.img} alt={item.name} />
+          <img src={item.img} alt={item.name} loading="eager" fetchPriority="high" />
         ) : (
           <div className="size-stack-item-fallback">{item.fallback}</div>
         )}
@@ -68,6 +68,10 @@ function SortableItem({ id, item, isOverlay }) {
 export default function SizeStack() {
   const navigate = useNavigate();
   const { level: gameLevel, streak, hasPlayedToday } = useGame();
+
+  useEffect(() => {
+    preloadSpaceObjectImages();
+  }, []);
   const [level, setLevel] = useState(null); // 'beginner', 'easy', 'medium', 'hard'
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);

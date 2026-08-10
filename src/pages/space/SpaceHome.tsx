@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useGame } from '../../contexts/GameContext';
 import Flashcards from './Flashcards';
@@ -7,6 +7,7 @@ import SolarSystem3D from './SolarSystem3D';
 import SizeStack from './SizeStack';
 import ObjectsBySizeMenu from './ObjectsBySizeMenu';
 import IlluminateSystem from './IlluminateSystem';
+import { preloadSpaceObjectImages } from '../../data/space-objects';
 import { Flame, Star, BookOpen, Gamepad2, ArrowLeft, Lock, ArrowRight } from 'lucide-react';
 import { Card } from '../../components/Card';
 import './space.css';
@@ -16,6 +17,10 @@ function SpaceHub() {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { level, streak, hasPlayedToday } = useGame();
+
+  useEffect(() => {
+    preloadSpaceObjectImages();
+  }, []);
 
   const [tab, setTabState] = useState<'play' | 'learn'>(() => {
     if (location.state && (location.state as any).tab) {
