@@ -186,7 +186,7 @@ export default function VictoryScreen({
             </button>
           )}
           <button className="victory-btn-view" onClick={() => setIsMinimized(true)}>
-            <span>Show Results</span>
+            <span>Show Screen</span>
           </button>
         </div>
       </div>
