@@ -116,7 +116,13 @@
   - **App Loading & Background Asset Preloading**:
     - **Startup & Refresh Sequence**: App launch renders the clean white logo `SplashScreen` followed by the light green `<JemzLoader darkTheme={false} />` (`Loading LearningJemz... Preparing your experience... 0% -> 100%`).
     - **Background Preloader (`preloadSpaceObjectImages`)**: Silently pre-caches all 35 high-res space object images into browser memory during app startup, eliminating image pops and flickering during gameplay.
-    - **Global Error Boundary**: The entire app is wrapped in an `ErrorBoundary` component. If a network chunk loading error occurs (common right after pushing updates due to stale PWA Service Worker caching) or the app experiences a runtime crash, it intercepts the blank screen and presents a custom soft light sage error recovery screen with a tactile 3D **"Refresh App"** button that automatically clears the active browser/PWA caches and hard reloads the application.
+    - **Global Error Boundary**: The entire app is wrapped in an `ErrorBoundary` component. If a network chunk loading error occurs or the app experiences a runtime crash, it intercepts the blank screen and presents a custom soft light sage error recovery screen with a tactile 3D **"Refresh App"** button that automatically clears the active browser/PWA caches and hard reloads the application.
+    - **PWA Service Worker & Cache Strategy**:
+      - Registers a custom Service Worker (`public/sw.js`) with an automatic update checking sequence running in the background every 30 minutes.
+      - **Network-First Navigation Strategy**: Directs navigation/index requests to fetch from the network first to guarantee new code deployment hashes load instantly, falling back to cached files only when offline.
+      - **Stale-While-Revalidate Asset Cache**: Background-updates CSS, JS, and image assets seamlessly while serving cached versions immediately for ultra-fast startup.
+      - **Automatic Cache Flushing**: Detects new deployments in the background, automatically activates the new service worker via `skipWaiting()`, and performs a clean background window reload to avoid stale JS chunk exceptions.
+      - **Theme-Aligned Launch Experience**: Configured the native PWA launch background (`background_color` in `manifest.json` and `theme-color` in `index.html`) to match the soft light sage canvas color (`#d4e8d5`) with a translucent status bar (`black-translucent`), preventing the default blank white transition screen on iOS and Android.
   - **Illuminate the System Challenge**: Size-ordering spelling puzzle covering up to 35 solar objects (Sun → Salacia).
     - **Difficulty Tiers & XP Rewards**:
       - **Easy**: Top 8 largest objects (Sun → Mars), 3 Lives, **+10 XP reward**.
