@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Gem, BookOpen, Globe2, Crown, Rocket, Music, ScrollText, Calculator, Microscope, Lightbulb, Compass, Palette, Star, Atom, Trophy, Gamepad2, Award, PenTool, Feather, Dna, Telescope, Brain } from 'lucide-react';
-import { preloadSpaceObjectImages } from '../data/space-objects';
 import './splash.css';
 
 const floatingIcons = [
@@ -62,32 +61,16 @@ const floatingIcons = [
 ];
 
 export default function SplashScreen({ onFinish }) {
-  const [progress, setProgress] = useState(0);
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
-    // Preload all space object photos silently in the background during app startup
-    preloadSpaceObjectImages();
+    const fadeTimer = setTimeout(() => setFade(true), 1200);
+    const doneTimer = setTimeout(() => onFinish(), 1600);
 
-    // Smoothly animate progress counter from 0% to 100%
-    const startTime = Date.now();
-    const duration = 1200; // 1.2s smooth loading duration
-
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const pct = Math.min(100, Math.round((elapsed / duration) * 100));
-      setProgress(pct);
-
-      if (pct >= 100) {
-        clearInterval(interval);
-        setFade(true);
-        setTimeout(() => {
-          onFinish();
-        }, 400);
-      }
-    }, 25);
-
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(doneTimer);
+    };
   }, [onFinish]);
 
   return (
@@ -109,41 +92,13 @@ export default function SplashScreen({ onFinish }) {
         })}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, zIndex: 1 }}>
-        <div className="splash-logo-wrapper">
-          <div className="splash-icon-box">
-            <Gem size={36} color="#ffffff" strokeWidth={2.5} />
-          </div>
-          <h1 className="splash-title">
-            Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
-          </h1>
+      <div className="splash-logo-wrapper">
+        <div className="splash-icon-box">
+          <Gem size={32} color="#ffffff" strokeWidth={2.5} />
         </div>
-
-        {/* Live 0% to 100% Loading Progress Bar */}
-        <div style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-          width: 220
-        }}>
-          <div style={{
-            width: '100%', height: 8, borderRadius: 6,
-            background: 'rgba(28, 124, 84, 0.15)',
-            overflow: 'hidden', border: '1px solid rgba(28, 124, 84, 0.25)'
-          }}>
-            <div style={{
-              width: `${progress}%`, height: '100%',
-              background: '#1c7c54',
-              borderRadius: 6,
-              transition: 'width 0.05s linear'
-            }} />
-          </div>
-          <div style={{
-            display: 'flex', justifyContent: 'space-between', width: '100%',
-            fontSize: '0.75rem', fontWeight: 800, color: '#16653e'
-          }}>
-            <span>Loading assets...</span>
-            <span>{progress}%</span>
-          </div>
-        </div>
+        <h1 className="splash-title">
+          Learning<span style={{ color: '#1c7c54' }}>Jemz</span>
+        </h1>
       </div>
     </div>
   );

@@ -26,6 +26,7 @@ const SpaceHome = lazy(() => import('./pages/space/SpaceHome.tsx'));
 
 
 import JemzLoader from './components/JemzLoader';
+import { preloadSpaceObjectImages } from './data/space-objects';
 
 // Loading spinner for Suspense fallback
 const LoadingFallback = () => (
@@ -107,12 +108,59 @@ function Layout() {
     </div>
   );
 }
+function AppAssetLoader({ onFinish }) {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    // Preload all space object photos silently in the background
+    preloadSpaceObjectImages();
+
+    const startTime = Date.now();
+    const duration = 1200; // 1.2s smooth loading
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const pct = Math.min(100, Math.round((elapsed / duration) * 100));
+      setProgress(pct);
+
+      if (pct >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          onFinish();
+        }, 200);
+      }
+    }, 25);
+
+    return () => clearInterval(interval);
+  }, [onFinish]);
+
+  return (
+    <JemzLoader
+      message="Loading LearningJemz..."
+      subtext={`Preloading space assets... ${progress}%`}
+      darkTheme={true}
+      fullScreen={true}
+    />
+  );
+}
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
+  const [loadingAssets, setLoadingAssets] = useState(false);
 
   if (showSplash) {
-    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+    return (
+      <SplashScreen 
+        onFinish={() => {
+          setShowSplash(false);
+          setLoadingAssets(true);
+        }} 
+      />
+    );
+  }
+
+  if (loadingAssets) {
+    return <AppAssetLoader onFinish={() => setLoadingAssets(false)} />;
   }
 
   return (
