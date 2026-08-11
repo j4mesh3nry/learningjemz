@@ -730,8 +730,6 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
     setIsCollapsed(false);
   }, [planet?.name]);
 
-  if (!planet) return null;
-
   // Mouse drag-scroll handlers for Satellite Explorer strip
   const scrollRef = useRef(null);
   const isDragging = useRef(false);
@@ -762,7 +760,7 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
   };
 
   // Determine host planet and active target (planet vs moon)
-  const hostPlanet = planet.isMoon ? planet.hostPlanet : planet;
+  const hostPlanet = planet?.isMoon ? planet.hostPlanet : planet;
   const activeTarget = planet;
 
   // Gather available moons for the host planet
@@ -796,6 +794,8 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
 
     return moonList;
   }, [hostPlanet]);
+
+  if (!planet) return null;
 
   return (
     <>
