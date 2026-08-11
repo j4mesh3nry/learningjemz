@@ -318,8 +318,8 @@ function Moon({ config, labelsHidden, onSelect, hostPlanet, simTimeRef, simSpeed
     const t = simTimeRef ? simTimeRef.current : 0;
     const angle = initialAngle.current + t * config.speed;
     if (groupRef.current) {
-      groupRef.current.position.x = Math.cos(angle) * config.distance;
-      groupRef.current.position.z = Math.sin(angle) * config.distance;
+      groupRef.current.position.x = Math.cos(angle) * (config.distance * 0.6);
+      groupRef.current.position.z = Math.sin(angle) * (config.distance * 0.6);
     }
   });
 
@@ -528,7 +528,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
   const [companionHovered, setCompanionHovered] = useState(false);
   const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
 
-  const D = config.binary.distance;
+  const D = config.binary.distance * 0.6;
   const ratio = config.binary.massRatio;
   const primaryOffset = (D * ratio) / (1 + ratio);
   const companionOffset = D / (1 + ratio);
