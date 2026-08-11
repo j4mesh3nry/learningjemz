@@ -335,7 +335,7 @@ function CameraController({ selected, planetRefs, controlsRef }) {
 }
 
 /* ─── Moon component ─── */
-function Moon({ config, labelsHidden, onSelect, hostPlanet, simTimeRef, simSpeed }) {
+function Moon({ config, labelsHidden, onSelect, hostPlanet, hostPlanetSize, simTimeRef, simSpeed }) {
   const groupRef = useRef();
   const initialAngle = useRef(Math.random() * Math.PI * 2);
   const [hovered, setHovered] = useState(false);
@@ -344,8 +344,10 @@ function Moon({ config, labelsHidden, onSelect, hostPlanet, simTimeRef, simSpeed
     const t = simTimeRef ? simTimeRef.current : 0;
     const angle = initialAngle.current + t * config.speed;
     if (groupRef.current) {
-      groupRef.current.position.x = Math.cos(angle) * (config.distance * 0.6);
-      groupRef.current.position.z = Math.sin(angle) * (config.distance * 0.6);
+      const R_planet = hostPlanetSize || 0.5;
+      const scaledDistance = R_planet + (config.distance - R_planet) * 0.6 + 0.15;
+      groupRef.current.position.x = Math.cos(angle) * scaledDistance;
+      groupRef.current.position.z = Math.sin(angle) * scaledDistance;
     }
   });
 
@@ -508,7 +510,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTime
 
       {/* Orbiting Moons */}
       {config.moons && config.moons.map((m, i) => (
-        <Moon key={i} config={m} labelsHidden={labelsHidden} onSelect={onSelect} hostPlanet={data} simTimeRef={simTimeRef} simSpeed={simSpeed} />
+        <Moon key={i} config={m} labelsHidden={labelsHidden} onSelect={onSelect} hostPlanet={data} hostPlanetSize={config.size} simTimeRef={simTimeRef} simSpeed={simSpeed} />
       ))}
 
       {/* Uranus thin ring */}
@@ -558,7 +560,8 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
   const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
   const companionTexture = useTexture(TEXTURE_PATHS[config.binary.companionName] || TEXTURE_PATHS.Moon);
 
-  const D = config.binary.distance * 0.6;
+  const R_primary = config.size || 0.5;
+  const D = R_primary + (config.binary.distance - R_primary) * 0.6 + 0.15;
   const ratio = config.binary.massRatio;
   const primaryOffset = (D * ratio) / (1 + ratio);
   const companionOffset = D / (1 + ratio);
