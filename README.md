@@ -27,20 +27,38 @@ LearningJemz is a personal project designed to make learning fun, engaging, and 
 
 ## 🧩 Current Learning Modules
 
+### 🪐 **Space Exploration**
+Explore astronomy and the cosmos through interactive visualizers and game modes.
+- **3D Solar System Visualizer** — Proportional Three.js engine with moon explorer and orbit comparison.
+- **Illuminate the System** — Interactive size-ordering spelling challenge with a smart clue/hint system.
+- **Cosmic Mystery** — sanitised multiple-choice trivia challenge featuring speedrun Sprint and Endless Survival modes.
+
 ### ♟️ **Chess**
-Master the game of kings. Play full games against an AI opponent (Beginner, Intermediate, Grandmaster). 
-- **Play with Bot** — Practice against smart AI opponents
-- **Puzzles & Lessons** — Tactical drill problems and strategic learning
+Master chess tactics and test your strategy.
+- **Play vs AI Bot** — Practice against three Stockfish AI bot levels (Beginner, Intermediate, Grandmaster).
 
-### 🌍 **Geography**
-Explore the world, starting with the Philippines. Interactive maps, province identification, and geography quizzes.
-- **MapExplorer & Province Quiz** — Test your regional knowledge
+---
 
-### 📖 **Reading**
-Discover and read thousands of books from Open Library and Project Gutenberg. Track your reading time and earn XP for every page.
+## 🛣️ Roadmap & Future Plans
 
-### 🪐 **Space**
-Explore astronomy and the cosmos. Interactive solar system, planet facts, and space trivia quizzes.
+LearningJemz is constantly evolving. The platform will continue to expand with new features and a massive variety of learning modules.
+
+### 📚 Upcoming Modules
+- 🌍 **Geography** (Interactive maps, regional identification, and quizzes)
+- 📖 **Reading & Literature** (Read classics, track active reading time, and test comprehension)
+- 🧮 **Math & Logic Puzzles** (Numbers, arithmetic speedruns, and logic drills)
+- 🧪 **Science Experiments** (Interactive virtual labs)
+- 📜 **History Timelines** (Historical event sequence challenges)
+- 💻 **Coding Fundamentals** (Core programming logic)
+- 🗣️ **Languages** (Vocabulary training)
+- 🎵 **Learning Songs & Poems** (Sing-along educational topics)
+
+### 🛠️ Future Features
+- **In-App Store:** An upcoming economy where users can purchase "Jemz" (gems) and exclusive items.
+- **Premium Subscriptions:** Future plans to introduce premium learning tiers.
+- **AI Tutors:** Intelligent, AI-driven assistants to help guide your learning journey.
+- **Mobile App Stores:** Publishing native versions to the iOS App Store and Google Play Store.
+- **Multiplayer:** (Undecided) Potential future plans for online matches against friends and real players.
 
 ---
 
@@ -53,26 +71,6 @@ This project is built using a modern, fast, and scalable web stack:
 - **Backend & Database:** Supabase (PostgreSQL, Authentication, Realtime)
 - **Deployment:** Vercel
 - **PWA:** Web App Manifest with installable icons for home-screen installation
-
----
-
-## 🛣️ Roadmap & Future Plans
-
-LearningJemz is constantly evolving. Depending on the mood and priorities, the platform will continue to expand with new features and a massive variety of learning modules.
-
-### 📚 Upcoming Modules
-The plan is to add lots of different learning modules across various genres, including:
-- **Math** (Numbers & Logic)
-- **Learning Songs** (Sing & Learn)
-- **Poems** (Rhymes & Verses)
-- *And many more...*
-
-### 🛠️ Future Features
-- **In-App Store:** An upcoming economy where users can purchase "Jemz" (gems) and exclusive items.
-- **Premium Subscriptions:** Future plans to introduce premium learning tiers.
-- **AI Tutors:** Intelligent, AI-driven assistants to help guide your learning journey.
-- **Mobile App Stores:** Publishing native versions to the iOS App Store and Google Play Store.
-- **Multiplayer:** (Undecided) Potential future plans for online matches against friends and real players.
 
 ---
 
