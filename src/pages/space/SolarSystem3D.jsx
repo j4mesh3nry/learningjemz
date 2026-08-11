@@ -1278,7 +1278,7 @@ export default function SolarSystem3D() {
           screenSpacePanning={true}
           minDistance={3}
           maxDistance={1200}
-          autoRotate={!selected}
+          autoRotate={!selected && simSpeed > 0}
           autoRotateSpeed={0.08}
           maxPolarAngle={Math.PI - 0.05}
           minPolarAngle={0.01}
