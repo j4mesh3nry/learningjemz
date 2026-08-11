@@ -70,6 +70,9 @@ html, body, #root {
 /* Module specific theme overrides */
 html[data-module-theme="chess"], body[data-module-theme="chess"] {
   --color-bg-page: #ebe3cf; /* Warm parchment / limestone ivory */
+  --bg-pattern: linear-gradient(45deg, rgba(74, 44, 17, 0.05) 25%, transparent 25%, transparent 75%, rgba(74, 44, 17, 0.05) 75%, rgba(74, 44, 17, 0.05)), linear-gradient(45deg, rgba(74, 44, 17, 0.05) 25%, transparent 25%, transparent 75%, rgba(74, 44, 17, 0.05) 75%, rgba(74, 44, 17, 0.05));
+  --bg-pattern-size: 64px 64px;
+  --bg-pattern-pos: 0 0, 32px 32px;
   --color-primary: #4a2c11; /* Deep rich mahogany brown */
   --color-primary-light: #6e441f;
   --color-primary-dark: #2f1a08;
@@ -82,6 +85,9 @@ html[data-module-theme="chess"], body[data-module-theme="chess"] {
 
 html[data-module-theme="space"], body[data-module-theme="space"] {
   --color-bg-page: #0b0d1e; /* Deep cosmic obsidian space canvas */
+  --bg-pattern: radial-gradient(circle at 50% -20%, #161936 0%, transparent 80%);
+  --bg-pattern-size: 100% 100vh;
+  --bg-pattern-pos: top center;
   --color-primary: #161936; /* Dark cosmic indigo */
   --color-primary-light: #232752;
   --color-primary-dark: #090b17;
@@ -97,12 +103,22 @@ html {
      under forced colors mode (a transparent html would inherit body's adjusted
      forced background at paint time and render as the system Canvas color). */
   background-color: var(--color-bg-page);
+  background-image: var(--bg-pattern, none);
+  background-size: var(--bg-pattern-size, auto);
+  background-position: var(--bg-pattern-pos, 0 0);
+  background-repeat: repeat;
+  background-attachment: fixed;
   color: var(--color-text);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 body {
   font-family: var(--font-body);
   background-color: var(--color-bg-page);
+  background-image: var(--bg-pattern, none);
+  background-size: var(--bg-pattern-size, auto);
+  background-position: var(--bg-pattern-pos, 0 0);
+  background-repeat: repeat;
+  background-attachment: fixed;
   color: var(--color-text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;

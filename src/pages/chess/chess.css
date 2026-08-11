@@ -1,7 +1,6 @@
 /* Clean Mobile-First Chess Styles */
 .chess-module-page {
   min-height: 100vh;
-  background: var(--color-bg-page, #ebe3cf);
   padding: 24px 16px 80px;
   max-width: 640px;
   margin: 0 auto;
