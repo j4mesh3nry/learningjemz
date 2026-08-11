@@ -5,8 +5,9 @@ import SolarSystem3D from './SolarSystem3D';
 import ObjectsBySizeMenu from './ObjectsBySizeMenu';
 import IlluminateSystem from './IlluminateSystem';
 import SizeGuide from './SizeGuide';
+import CosmicMystery from './CosmicMystery';
 import { preloadSpaceObjectImages } from '../../data/space-objects';
-import { Flame, Star, BookOpen, Gamepad2, ArrowLeft, Lock, ArrowRight, Orbit, Ruler, Sparkles, Target } from 'lucide-react';
+import { Flame, Star, BookOpen, Gamepad2, ArrowLeft, Lock, ArrowRight, Orbit, Ruler, Sparkles, Target, Zap } from 'lucide-react';
 import { Card } from '../../components/Card';
 import './space.css';
 
@@ -339,6 +340,47 @@ function SpaceHub() {
               </div>
             </Card>
 
+            {/* Cosmic Mystery Card */}
+            <Card
+              className="space-card-item"
+              onClick={() => navigate('/space/mystery')}
+              ariaLabel="Cosmic Mystery"
+              style={{
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 14,
+                textDecoration: 'none', color: '#fff',
+                background: '#161936', borderRadius: 16,
+                padding: '12px 16px', position: 'relative', overflow: 'hidden',
+                boxShadow: '0 4px 0 #0b0d1e',
+                border: '2px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{
+                width: 44, height: 44,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(255,255,255,0.18)', borderRadius: 12,
+                flexShrink: 0
+              }}>
+                <Zap size={24} color="#ffffff" />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>Cosmic Mystery</h3>
+                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>10-card trivia speedrun</p>
+              </div>
+              <div style={{
+                position: 'relative', zIndex: 1,
+                width: 32, height: 32,
+                borderRadius: 10,
+                background: 'rgba(255, 255, 255, 0.16)',
+                border: '1.5px solid rgba(255, 255, 255, 0.25)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+              }}>
+                <ArrowRight size={16} strokeWidth={2.5} color="#ffffff" />
+              </div>
+            </Card>
+
             {/* Blurred Locked Cards */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: 14,
@@ -388,6 +430,8 @@ export default function SpaceHome() {
       <Route path="illuminate" element={<IlluminateSystem />} />
       <Route path="objects-by-size" element={<ObjectsBySizeMenu />} />
       <Route path="size-guide" element={<SizeGuide />} />
+      <Route path="mystery" element={<CosmicMystery />} />
     </Routes>
   );
 }
+

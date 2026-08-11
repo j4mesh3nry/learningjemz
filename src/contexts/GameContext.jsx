@@ -672,6 +672,52 @@ if (user) {
     };
   }, []);
 
+  const recordCosmicMysteryRun = useCallback((mode, data) => {
+    setState(prev => {
+      const currentCosmic = prev.botStats?.cosmicMystery || {
+        sprintBestTime: null,
+        sprintBestCorrect: null,
+        sprintHistory: [],
+        survivalHighScore: null,
+        survivalHistory: [],
+        globalMaxCombo: 0
+      };
+
+      let updated = { ...currentCosmic };
+
+      if (mode === 'SPRINT') {
+        const { time, correct } = data;
+        if (updated.sprintBestTime === null || time < updated.sprintBestTime) {
+          updated.sprintBestTime = time;
+          updated.sprintBestCorrect = correct;
+        } else if (updated.sprintBestCorrect === null) {
+          updated.sprintBestCorrect = correct;
+        }
+        const runInfo = { time, correct, timestamp: Date.now() };
+        updated.sprintHistory = [runInfo, ...(updated.sprintHistory || [])].slice(0, 3);
+      } else if (mode === 'SURVIVAL') {
+        const { score } = data;
+        if (updated.survivalHighScore === null || score > updated.survivalHighScore) {
+          updated.survivalHighScore = score;
+        }
+        const runInfo = { score, timestamp: Date.now() };
+        updated.survivalHistory = [runInfo, ...(updated.survivalHistory || [])].slice(0, 3);
+      }
+
+      if (data.maxCombo && data.maxCombo > (updated.globalMaxCombo || 0)) {
+        updated.globalMaxCombo = data.maxCombo;
+      }
+
+      return {
+        ...prev,
+        botStats: {
+          ...(prev.botStats || {}),
+          cosmicMystery: updated
+        }
+      };
+    });
+  }, []);
+
   return (
     <GameContext.Provider value={{
       ...state,
@@ -687,6 +733,7 @@ if (user) {
       lossChessGame,
       recordChessGame,
       recordIlluminateTime,
+      recordCosmicMysteryRun,
       resetProgress,
       flushNow
     }}>

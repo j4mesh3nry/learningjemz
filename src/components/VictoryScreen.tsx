@@ -39,6 +39,7 @@ export interface VictoryScreenProps {
   continueText?: string;
   children?: React.ReactNode;
   disableDailyStreakModal?: boolean;
+  hideShowScreen?: boolean;
 }
 
 export default function VictoryScreen({
@@ -55,6 +56,7 @@ export default function VictoryScreen({
   continueText = "Back to Menu",
   children,
   disableDailyStreakModal = false,
+  hideShowScreen = false,
 }: VictoryScreenProps) {
   const { user } = useAuth();
   const gameContext = useGame();
@@ -185,9 +187,11 @@ export default function VictoryScreen({
               Play Again
             </button>
           )}
-          <button className="victory-btn-view" onClick={() => setIsMinimized(true)}>
-            <span>Show Screen</span>
-          </button>
+          {!hideShowScreen && (
+            <button className="victory-btn-view" onClick={() => setIsMinimized(true)}>
+              <span>Show Screen</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

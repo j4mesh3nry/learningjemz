@@ -124,6 +124,16 @@
       - **Stale-While-Revalidate Asset Cache**: Background-updates CSS, JS, and image assets seamlessly while serving cached versions immediately for ultra-fast startup.
       - **Automatic Cache Flushing**: Detects new deployments in the background, automatically activates the new service worker via `skipWaiting()`, and performs a clean background window reload to avoid stale JS chunk exceptions.
       - **Theme-Aligned Launch Experience**: Configured the native PWA launch background (`background_color` in `manifest.json` and `theme-color` in `index.html`) to match the soft light sage canvas color (`#d4e8d5`) with a translucent status bar (`black-translucent`), preventing the default blank white transition screen on iOS and Android.
+  - **Cosmic Mystery Card Challenge (`CosmicMystery.tsx`)**:
+    - **Dual Game Modes**:
+      - **10-Card Sprint**: 10-round speedrun trivia format with real-time timer, +3s wrong answer penalty, and local storage Best Time record (`cosmic_mystery_sprint_best_time`). Flawless 10/10 runs unlock a gold `Crown` badge. XP: +1 XP per correct answer, +5 XP perfect run bonus, +5 XP speed demon bonus (<30s).
+      - **Endless Survival**: 3 Lives mode where players answer continuous cards to score as high as possible before losing all 3 lives, displaying total cards answered and accuracy percentage alongside High Score (`cosmic_mystery_survival_high_score`). XP: +1 XP per correct answer + tier bonuses (+5 XP at 10 pts, +10 XP at 20 pts).
+    - **Recent Runs History Timeline**: Displays a row of flat history pills at the bottom of each start card tracking the last 3 runs.
+    - **Combo Streak & High Record Tracking**: Displays a live `Flame` combo badge during gameplay (e.g. `🔥 5 Streak!`) and displays session max streak on the Victory Screen, saving all-time max combo records.
+    - **Supabase Cloud Sync**: All card game records (high scores, crowns, recent run histories, and max streak values) sync to the Supabase `game_progress` table (`bot_stats.cosmicMystery` JSONB column) via `GameContext`, restoring seamlessly across all devices upon login.
+    - **Tricky Multiple-Choice**: 4 options per card with distractors prioritized from the same `astronomicalType` or `type`.
+    - **Sanitized Clues**: Automatically masks occurrences of object names in clues.
+    - **Header Rule Standard**: Sub-page navigation header renders only back button + title banner, omitting the streak & level widget reserved for module hub pages. Reuses `VictoryScreen` overlay with `theme="space"` in a clean 2x2 grid stats layout.
   - **Illuminate the System Challenge**: Size-ordering spelling puzzle covering up to 35 solar objects (Sun → Salacia).
     - **Difficulty Tiers & XP Rewards**:
       - **Easy**: Top 8 largest objects (Sun → Mars), 3 Lives, **+10 XP reward**.

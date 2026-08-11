@@ -23,6 +23,7 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 - **Theme connection**: screens/modals must hook into the global tokens in `src/index.css` (`--bg-*`, `--color-*`, `--font-heading`) and the established module palettes (e.g. `theme-space` in `victory.css`) so nothing looks out of place.
 - Outfit for headings, Inter for body. Vanilla CSS with tokens in `src/index.css`; no CSS framework.
 - **No visible scrollbars**: page and container scrollbars must never be visible (scroll must still work). Enforced globally in `src/index.css`; don't re-enable scrollbars on any element.
+- **Module Headers**: The top header widget showing Streak & Level/XP (`Flame` & `Star`) must ONLY appear on the root/home page of each module (e.g. `SpaceHome.tsx`). Sub-pages, games, and sub-screens must NOT render this widget in their top navigation header; sub-page headers must only render the back button and title banner.
 
 ## Architecture
 
