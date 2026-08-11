@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "dev": "vite",
+    "pr": "scripts\\create_pr.bat",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
