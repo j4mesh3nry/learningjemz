@@ -68,7 +68,7 @@ const PLANET_CONFIG = {
     { name: 'Triton', size: 0.122, distance: 1.8, speed: -1.2, color: '#b3c2c7' }
   ]},
   Pluto:   { size: 0.107, orbit: 68.0, speed: 0.16, emissive: '#a89f91', emissiveIntensity: 0, rotationSpeed: 0.001, tilt: 2.03, binary: { companionName: 'Charon', companionSize: 0.055, distance: 0.55, speed: 1.2, color: '#888888', massRatio: 0.118 } },
-  Orcus:   { size: 0.041, orbit: 68.0, speed: 0.16, emissive: '#94a3b8', emissiveIntensity: 0, rotationSpeed: 0.002, tilt: 0.36, binary: { companionName: 'Vanth', companionSize: 0.020, distance: 0.45, speed: 1.0, color: '#78869b', massRatio: 0.12 } },
+  Orcus:   { size: 0.041, orbit: 72.0, speed: 0.16, emissive: '#94a3b8', emissiveIntensity: 0, rotationSpeed: 0.002, tilt: 0.36, binary: { companionName: 'Vanth', companionSize: 0.020, distance: 0.45, speed: 1.0, color: '#78869b', massRatio: 0.12 } },
 };
 
 /* ─── Educational badges shown in the Info Panel ─── */
