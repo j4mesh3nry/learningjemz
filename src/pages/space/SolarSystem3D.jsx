@@ -799,14 +799,24 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
 
   return (
     <>
-      {/* Floating Expand Tab when Collapsed */}
+      {/* Floating Expand Tab & Close button when Collapsed */}
       {isCollapsed && (
-        <button
-          onClick={() => setIsCollapsed(false)}
-          className="solar-infopanel-expand-tab"
-        >
-          <ChevronUp size={16} /> SHOW INFO
-        </button>
+        <div className="solar-infopanel-expand-group">
+          <button
+            onClick={() => setIsCollapsed(false)}
+            className="solar-infopanel-expand-btn"
+            title="Expand Info Panel"
+          >
+            <ChevronUp size={16} /> SHOW INFO
+          </button>
+          <button
+            onClick={onClose}
+            className="solar-infopanel-expand-close-btn"
+            title="Close Panel and Return to Space View"
+          >
+            <X size={16} />
+          </button>
+        </div>
       )}
 
       {/* Slideable Info Panel */}

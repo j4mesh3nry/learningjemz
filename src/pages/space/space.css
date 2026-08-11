@@ -3320,13 +3320,19 @@
   box-shadow: 0 2px 0 #1e3a8a;
 }
 
-/* 3D Solar Explorer Info Panel Expand Tab */
-.solar-infopanel-expand-tab {
+/* 3D Solar Explorer Info Panel Expand Tab & Close Button Group */
+.solar-infopanel-expand-group {
   position: fixed;
   bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.solar-infopanel-expand-btn {
   background: #0b0d22;
   border: 2px solid #2d3561;
   box-shadow: 0 4px 0 #07081a;
@@ -3344,10 +3350,37 @@
   transition: background 0.15s, transform 0.15s;
 }
 
-.solar-infopanel-expand-tab:hover {
+.solar-infopanel-expand-btn:hover {
   background: #191c3d;
   color: #ffffff;
 }
+
+.solar-infopanel-expand-close-btn {
+  background: #0b0d22;
+  border: 2px solid #2d3561;
+  box-shadow: 0 4px 0 #07081a;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #a0aec0;
+  transition: background 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.solar-infopanel-expand-close-btn:hover {
+  background: #191c3d;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.solar-infopanel-expand-close-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #07081a;
+}
+
 
 /* Info Panel Action Buttons (Close / Collapse) */
 .solar-infopanel-btn {
