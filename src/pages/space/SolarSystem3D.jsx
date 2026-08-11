@@ -68,7 +68,7 @@ const PLANET_CONFIG = {
     { name: 'Triton', size: 0.122, distance: 1.8, speed: -1.2, color: '#b3c2c7' }
   ]},
   Pluto:   { size: 0.107, orbit: 68.0, speed: 0.16, emissive: '#a89f91', emissiveIntensity: 0, rotationSpeed: 0.001, tilt: 2.03, binary: { companionName: 'Charon', companionSize: 0.055, distance: 0.55, speed: 1.2, color: '#888888', massRatio: 0.118 } },
-  Orcus:   { size: 0.041, orbit: 74.0, speed: 0.14, emissive: '#94a3b8', emissiveIntensity: 0, rotationSpeed: 0.002, tilt: 0.36, binary: { companionName: 'Vanth', companionSize: 0.020, distance: 0.45, speed: 1.0, color: '#78869b', massRatio: 0.12 } },
+  Orcus:   { size: 0.041, orbit: 68.0, speed: 0.16, emissive: '#94a3b8', emissiveIntensity: 0, rotationSpeed: 0.002, tilt: 0.36, phaseOffset: Math.PI, binary: { companionName: 'Vanth', companionSize: 0.020, distance: 0.45, speed: 1.0, color: '#78869b', massRatio: 0.12 } },
 };
 
 /* ─── Educational badges shown in the Info Panel ─── */
@@ -408,7 +408,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTime
 
   useFrame((_, delta) => {
     const t = simTimeRef ? simTimeRef.current : 0;
-    const angle = initialAngle.current + t * config.speed * 0.15;
+    const angle = initialAngle.current + (config.phaseOffset || 0) + t * config.speed * 0.15;
     if (groupRef.current) {
       groupRef.current.position.x = Math.cos(angle) * config.orbit;
       groupRef.current.position.z = Math.sin(angle) * config.orbit;
@@ -538,7 +538,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
   useFrame((_, delta) => {
     const t = simTimeRef ? simTimeRef.current : 0;
     // The whole system orbits the Sun on the primary's orbit path
-    const angle = initialAngle.current + t * config.speed * 0.15;
+    const angle = initialAngle.current + (config.phaseOffset || 0) + t * config.speed * 0.15;
     if (groupRef.current) {
       groupRef.current.position.x = Math.cos(angle) * config.orbit;
       groupRef.current.position.z = Math.sin(angle) * config.orbit;
@@ -1173,36 +1173,41 @@ export default function SolarSystem3D() {
         <Suspense fallback={null}>
           <Sun ref={(el) => planetRefs.current['Sun'] = el} onSelect={setSelected} labelsHidden={!!selected} simTimeRef={simTimeRef} simSpeed={simSpeed} />
           <AsteroidBelt simTimeRef={simTimeRef} />
-          {planets.concat(dwarfPlanets).map((p) => {
-            const cfg = PLANET_CONFIG[p.name];
-            if (!cfg) return null;
-            return (
-              <React.Fragment key={p.id}>
-                <OrbitRing radius={cfg.orbit} />
-                {cfg.binary ? (
-                  <BinarySystem 
-                    ref={(el) => planetRefs.current[p.name] = el}
-                    data={p} 
-                    config={cfg} 
-                    onSelect={setSelected} 
-                    labelsHidden={!!selected}
-                    simTimeRef={simTimeRef}
-                    simSpeed={simSpeed}
-                  />
-                ) : (
-                  <Planet 
-                    ref={(el) => planetRefs.current[p.name] = el}
-                    data={p} 
-                    config={cfg} 
-                    onSelect={setSelected} 
-                    labelsHidden={!!selected}
-                    simTimeRef={simTimeRef}
-                    simSpeed={simSpeed}
-                  />
-                )}
-              </React.Fragment>
-            );
-          })}
+          {(() => {
+            const renderedOrbits = new Set();
+            return planets.concat(dwarfPlanets).map((p) => {
+              const cfg = PLANET_CONFIG[p.name];
+              if (!cfg) return null;
+              const showRing = !renderedOrbits.has(cfg.orbit);
+              if (showRing) renderedOrbits.add(cfg.orbit);
+              return (
+                <React.Fragment key={p.id}>
+                  {showRing && <OrbitRing radius={cfg.orbit} />}
+                  {cfg.binary ? (
+                    <BinarySystem 
+                      ref={(el) => planetRefs.current[p.name] = el}
+                      data={p} 
+                      config={cfg} 
+                      onSelect={setSelected} 
+                      labelsHidden={!!selected}
+                      simTimeRef={simTimeRef}
+                      simSpeed={simSpeed}
+                    />
+                  ) : (
+                    <Planet 
+                      ref={(el) => planetRefs.current[p.name] = el}
+                      data={p} 
+                      config={cfg} 
+                      onSelect={setSelected} 
+                      labelsHidden={!!selected}
+                      simTimeRef={simTimeRef}
+                      simSpeed={simSpeed}
+                    />
+                  )}
+                </React.Fragment>
+              );
+            });
+          })()}
         </Suspense>
         <Preload all />
       </Canvas>
