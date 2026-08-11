@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { SPACE_OBJECTS_BY_SIZE } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
 import VictoryScreen from '../../components/VictoryScreen';
-import { 
-  ArrowLeft, 
-  Timer, 
-  Trophy, 
-  Zap, 
-  Sparkles, 
-  CheckCircle2, 
-  XCircle, 
-  HelpCircle, 
+import {
+  ArrowLeft,
+  Timer,
+  Trophy,
+  Zap,
+  Sparkles,
+  CheckCircle2,
+  XCircle,
+  HelpCircle,
   Award,
   Heart,
   ShieldAlert,
@@ -56,7 +56,7 @@ const MAX_COMBO_KEY = 'cosmic_mystery_max_combo';
 function sanitizeClue(clue: string, target: SpaceObject): string {
   let result = clue;
   const namesToHide = [target.name, ...target.acceptedNames];
-  
+
   namesToHide.forEach(name => {
     if (!name || name.length < 2) return;
     const regex = new RegExp(`\\b${name}\\b`, 'gi');
@@ -82,7 +82,7 @@ function generateSingleQuestion(usedIds: Set<string> = new Set()): Question {
 
   const sameCategoryDistractors = SPACE_OBJECTS_BY_SIZE.filter(
     (obj) => obj.id !== target.id && (
-      obj.astronomicalType === target.astronomicalType || 
+      obj.astronomicalType === target.astronomicalType ||
       obj.type === target.type
     )
   );
@@ -114,7 +114,7 @@ function generateSprintQuestions(): Question[] {
   return selectedTargets.map((target) => {
     const sameCategoryDistractors = SPACE_OBJECTS_BY_SIZE.filter(
       (obj) => obj.id !== target.id && (
-        obj.astronomicalType === target.astronomicalType || 
+        obj.astronomicalType === target.astronomicalType ||
         obj.type === target.type
       )
     );
@@ -469,29 +469,31 @@ export default function CosmicMystery() {
 
   return (
     <div className="space-module-page">
-      {/* Navigation Header - Strict Sub-page header rule: back button + title only (NO streak/level widget) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-        <button 
-          onClick={() => {
-            if (gameState === 'PLAYING') {
-              setGameState('START');
-            } else {
-              navigate('/space?tab=play');
-            }
-          }} 
-          title="Back"
-          aria-label="Back"
-          className="cosmic-back-btn"
-        >
-          <ArrowLeft size={20} strokeWidth={2.5} />
-        </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div className="cosmic-header-icon">
-            <Zap size={18} color="#38bdf8" />
+      {/* Header — same layout as SpaceHome space-nav-header */}
+      <div className="space-nav-header">
+        <div className="space-header-left">
+          <button
+            onClick={() => {
+              if (gameState === 'PLAYING') {
+                setGameState('START');
+              } else {
+                navigate('/space?tab=play');
+              }
+            }}
+            title="Back"
+            aria-label="Back"
+            className="cosmic-back-btn"
+          >
+            <ArrowLeft size={20} strokeWidth={2.5} />
+          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="cosmic-header-icon">
+              <Zap size={18} color="#38bdf8" />
+            </div>
+            <h1 className="space-page-title" style={{ margin: 0, color: '#f1f5f9', fontSize: '1.4rem', fontWeight: 900 }}>
+              Cosmic Mystery
+            </h1>
           </div>
-          <h1 className="space-page-title" style={{ margin: 0, color: '#f1f5f9', fontSize: '1.3rem', fontWeight: 900 }}>
-            Cosmic Mystery
-          </h1>
         </div>
       </div>
 
@@ -508,7 +510,7 @@ export default function CosmicMystery() {
 
             {/* Click catcher full screen overlay for speech bubbles dismissal */}
             {activeInfoBubble && (
-              <div 
+              <div
                 className="cosmic-bubble-catcher"
                 onClick={() => setActiveInfoBubble(null)}
               />
@@ -517,7 +519,7 @@ export default function CosmicMystery() {
             {/* Mode Selection Cards */}
             <div className="cosmic-mode-select-grid">
               {/* Sprint Mode Card */}
-              <div 
+              <div
                 className={`cosmic-mode-card ${mode === 'SPRINT' ? 'active-mode' : ''}`}
                 onClick={() => setMode('SPRINT')}
               >
@@ -571,8 +573,8 @@ export default function CosmicMystery() {
                     <Award size={14} color="#ffb400" />
                   )}
                   <span>
-                    Best Time: {sprintBestTime !== null 
-                      ? `${formatTime(sprintBestTime)}${sprintBestCorrect !== null ? ` (${Math.round((sprintBestCorrect / SPRINT_ROUNDS) * 100)}%)` : ''}` 
+                    Best Time: {sprintBestTime !== null
+                      ? `${formatTime(sprintBestTime)}${sprintBestCorrect !== null ? ` (${Math.round((sprintBestCorrect / SPRINT_ROUNDS) * 100)}%)` : ''}`
                       : '--:--'}
                   </span>
                 </div>
@@ -595,8 +597,8 @@ export default function CosmicMystery() {
                   </div>
                 )}
 
-                <button 
-                  className="cosmic-btn-primary" 
+                <button
+                  className="cosmic-btn-primary"
                   style={{ marginTop: 10, padding: '10px 14px', fontSize: '0.88rem' }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -608,7 +610,7 @@ export default function CosmicMystery() {
               </div>
 
               {/* Survival Mode Card */}
-              <div 
+              <div
                 className={`cosmic-mode-card ${mode === 'SURVIVAL' ? 'active-mode' : ''}`}
                 onClick={() => setMode('SURVIVAL')}
               >
@@ -658,8 +660,8 @@ export default function CosmicMystery() {
                 <div className="mode-record-pill">
                   <Trophy size={14} color="#ffb400" />
                   <span>
-                    High Score: {survivalHighScore !== null 
-                      ? `${survivalHighScore} pts (${survivalHighScore + INITIAL_LIVES} cards, ${Math.round((survivalHighScore / (survivalHighScore + INITIAL_LIVES)) * 100)}% acc)` 
+                    High Score: {survivalHighScore !== null
+                      ? `${survivalHighScore} pts (${survivalHighScore + INITIAL_LIVES} cards, ${Math.round((survivalHighScore / (survivalHighScore + INITIAL_LIVES)) * 100)}% acc)`
                       : '-- pts'}
                   </span>
                 </div>
@@ -688,7 +690,7 @@ export default function CosmicMystery() {
                   </div>
                 )}
 
-                <button 
+                <button
                   className="cosmic-btn-primary"
                   style={{ marginTop: 10, padding: '10px 14px', fontSize: '0.88rem', background: '#e11d48', borderColor: '#fb7185', boxShadow: '0 4px 0 #9f1239' }}
                   onClick={(e) => {
@@ -789,7 +791,7 @@ export default function CosmicMystery() {
                 >
                   <span className="cosmic-option-name">{opt.name}</span>
                   <span className="cosmic-option-sub">{opt.astronomicalType}</span>
-                  
+
                   {isAnswering && isSelected && isTarget && (
                     <CheckCircle2 size={20} color="#ffffff" className="cosmic-option-icon" />
                   )}
@@ -808,8 +810,8 @@ export default function CosmicMystery() {
         isOpen={gameState === 'FINISHED'}
         theme="space"
         title={
-          isNewRecord 
-            ? "New Personal Best!" 
+          isNewRecord
+            ? "New Personal Best!"
             : (mode === 'SPRINT' ? "Sprint Completed!" : "Survival Over!")
         }
         xpGained={earnedXp}

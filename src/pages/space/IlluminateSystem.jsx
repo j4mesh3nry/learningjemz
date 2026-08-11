@@ -43,13 +43,13 @@ function SafeObjectImage({ src, alt, iconType, className, size = 26 }) {
   }
 
   return (
-    <img 
-      src={src} 
-      alt={alt} 
-      className={className} 
+    <img
+      src={src}
+      alt={alt}
+      className={className}
       loading="eager"
       fetchPriority="high"
-      onError={() => setImgError(true)} 
+      onError={() => setImgError(true)}
     />
   );
 }
@@ -65,13 +65,13 @@ export default function IlluminateSystem() {
   }, []);
 
   const personalBests = illuminateStats || {};
-  
+
   const searchParams = new URLSearchParams(location.search);
   const paramLevel = location.state?.level || searchParams.get('level');
   const initialLevel = (paramLevel && DIFFICULTIES[paramLevel]) ? paramLevel : null;
 
   const [level, setLevel] = useState(initialLevel);
-  const [gameData, setGameData] = useState(() => 
+  const [gameData, setGameData] = useState(() =>
     initialLevel ? SPACE_OBJECTS_BY_SIZE.slice(0, DIFFICULTIES[initialLevel].count) : []
   );
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -80,7 +80,7 @@ export default function IlluminateSystem() {
   const [isError, setIsError] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [lives, setLives] = useState(() => 
+  const [lives, setLives] = useState(() =>
     initialLevel ? DIFFICULTIES[initialLevel].maxLives : 3
   );
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -197,7 +197,7 @@ export default function IlluminateSystem() {
 
     const currentObject = gameData[currentIndex];
     const userGuess = guess.trim().toLowerCase();
-    
+
     // Check if guess matches any accepted names
     const isCorrect = currentObject.acceptedNames.some(name => userGuess === name);
 
@@ -215,7 +215,7 @@ export default function IlluminateSystem() {
         // Game complete
         setIsComplete(true);
         setScoreData(prev => ({ ...prev, endTime: Date.now() }));
-        
+
         // Record streak activity & daily played date
         if (recordActivity) {
           recordActivity();
@@ -389,7 +389,7 @@ export default function IlluminateSystem() {
     // Basic scaling: 1.2 to 0.4 based on index out of 35
     const minScale = 0.4;
     const maxScale = 1.2;
-    const ratio = index / 35; 
+    const ratio = index / 35;
     return maxScale - (ratio * (maxScale - minScale));
   };
 
@@ -399,8 +399,8 @@ export default function IlluminateSystem() {
         {/* Navigation Header */}
         <div className="space-nav-header" style={{ marginBottom: 16 }}>
           <div className="space-header-left">
-            <button 
-              onClick={() => navigate('/space/objects-by-size')} 
+            <button
+              onClick={() => navigate('/space/objects-by-size')}
               title="Back"
               aria-label="Back"
               style={{
@@ -444,8 +444,8 @@ export default function IlluminateSystem() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {Object.entries(DIFFICULTIES).map(([key, diff]) => (
-            <div 
-              key={key} 
+            <div
+              key={key}
               className="space-card-item"
               onClick={() => startGame(key)}
               style={{
@@ -496,8 +496,8 @@ export default function IlluminateSystem() {
             {Object.entries(DIFFICULTIES).map(([key, diff]) => {
               const pbTime = personalBests[key];
               return (
-                <div 
-                  key={key} 
+                <div
+                  key={key}
                   style={{
                     background: 'rgba(255, 255, 255, 0.08)',
                     borderRadius: 12,
@@ -529,48 +529,43 @@ export default function IlluminateSystem() {
 
   return (
     <div className="space-module-page ss-dark-theme illum-game-container">
-      {/* Header Container with Separated Back Button & Space Title Banner */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, flexShrink: 0 }}>
-        {/* Separated Back Button */}
-        <button 
-          onClick={() => navigate('/space/objects-by-size')} 
-          title="Back to Objects by Size"
-          aria-label="Back to Objects by Size"
-          style={{
-            background: '#161936',
-            border: '2px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: '0 3px 0 #0b0d1e',
-            borderRadius: 14,
-            width: 44,
-            height: 44,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#ffffff',
-            cursor: 'pointer',
-            flexShrink: 0
-          }}
-        >
-          <ArrowLeft size={22} strokeWidth={2.5} />
-        </button>
-
-        {/* Space Title Banner Rectangle */}
-        <div style={{
-          flex: 1,
-          background: 'linear-gradient(135deg, #161936 0%, #0b0d1e 100%)',
-          borderRadius: 16,
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 4px 0 #0b0d1e',
-          padding: '10px 18px',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <h1 style={{
-            margin: 0, color: '#ffffff', fontSize: '1.2rem',
-            fontFamily: 'var(--font-heading)', fontWeight: 900
-          }}>
-            Illuminate the System
-          </h1>
+      {/* Header — same layout as SpaceHome space-nav-header */}
+      <div className="space-nav-header">
+        <div className="space-header-left">
+          <button
+            onClick={() => navigate('/space/objects-by-size')}
+            title="Back to Objects by Size"
+            aria-label="Back to Objects by Size"
+            style={{
+              background: '#161936',
+              border: '2px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 3px 0 #0b0d1e',
+              borderRadius: 14,
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              cursor: 'pointer',
+              flexShrink: 0
+            }}
+          >
+            <ArrowLeft size={20} strokeWidth={2.5} />
+          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
+              width: 32, height: 32,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: '#161936', borderRadius: 10,
+              boxShadow: '0 2px 0 #0b0d1e'
+            }}>
+              <Lightbulb size={18} color="#ffb74d" />
+            </div>
+            <h1 className="space-page-title" style={{ margin: 0, color: '#ffffff', fontSize: '1.4rem', fontWeight: 900 }}>
+              Illuminate the System
+            </h1>
+          </div>
         </div>
       </div>
 
@@ -588,11 +583,11 @@ export default function IlluminateSystem() {
 
         <div className="illum-stat-item illum-hearts-item">
           {Array.from({ length: DIFFICULTIES[level].maxLives }).map((_, i) => (
-            <Heart 
-              key={i} 
-              size={16} 
-              fill={i < lives ? '#ff4d4d' : 'rgba(255,255,255,0.1)'} 
-              color={i < lives ? '#ff4d4d' : '#555'} 
+            <Heart
+              key={i}
+              size={16}
+              fill={i < lives ? '#ff4d4d' : 'rgba(255,255,255,0.1)'}
+              color={i < lives ? '#ff4d4d' : '#555'}
             />
           ))}
         </div>
@@ -752,7 +747,7 @@ export default function IlluminateSystem() {
             </div>
           )}
 
-          <button 
+          <button
             className={`illum-hint-btn ${hintsLeft <= 0 ? 'used' : ''}`}
             onClick={handleUseHint}
             disabled={isComplete || isGameOver}
@@ -782,8 +777,8 @@ export default function IlluminateSystem() {
             const isFirstRevealed = isRevealed && i === 0 && currentIndex === 1;
 
             return (
-              <div 
-                key={obj.id} 
+              <div
+                key={obj.id}
                 id={`planet-${i}`}
                 className={`illum-circle-wrapper ${isCurrent ? 'illum-current' : ''} ${isRevealed ? 'revealed-item' : 'unrevealed-item'} ${isFirstRevealed ? 'illum-first-revealed' : ''}`}
                 onClick={() => {
@@ -795,16 +790,16 @@ export default function IlluminateSystem() {
                 style={{ cursor: isRevealed ? 'pointer' : 'default' }}
                 title={isRevealed ? `Tap for mini facts about this world` : ''}
               >
-                <div 
+                <div
                   className={`illum-circle ${isRevealed ? glowClass : 'illum-shadow'} ${isRevealed ? 'revealed' : ''}`}
                   style={{ transform: `scale(${scale})` }}
                 >
                   {isRevealed ? (
-                    <SafeObjectImage 
-                      src={obj.img} 
-                      alt={obj.name} 
-                      iconType={obj.iconType} 
-                      className="illum-img" 
+                    <SafeObjectImage
+                      src={obj.img}
+                      alt={obj.name}
+                      iconType={obj.iconType}
+                      className="illum-img"
                     />
                   ) : null}
                 </div>
@@ -841,17 +836,17 @@ export default function IlluminateSystem() {
           {/* Custom On-Screen Touch Keyboard Box */}
           <div className="illum-custom-keyboard">
             <div className="illum-keyboard-row">
-              {['Q','W','E','R','T','Y','U','I','O','P'].map(k => (
+              {['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map(k => (
                 <button key={k} type="button" className="illum-key" onClick={() => handleVirtualKey(k)}>{k}</button>
               ))}
             </div>
             <div className="illum-keyboard-row">
-              {['A','S','D','F','G','H','J','K','L'].map(k => (
+              {['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'].map(k => (
                 <button key={k} type="button" className="illum-key" onClick={() => handleVirtualKey(k)}>{k}</button>
               ))}
             </div>
             <div className="illum-keyboard-row">
-              {['Z','X','C','V','B','N','M'].map(k => (
+              {['Z', 'X', 'C', 'V', 'B', 'N', 'M'].map(k => (
                 <button key={k} type="button" className="illum-key" onClick={() => handleVirtualKey(k)}>{k}</button>
               ))}
               <button type="button" className="illum-key illum-key-backspace" onClick={handleVirtualBackspace}>
@@ -870,9 +865,9 @@ export default function IlluminateSystem() {
       {selectedCard && (
         <div className="illum-popover-overlay" onClick={() => setSelectedCard(null)}>
           <div className="illum-popover-card" onClick={(e) => e.stopPropagation()}>
-            <button 
-              type="button" 
-              className="illum-popover-close-btn" 
+            <button
+              type="button"
+              className="illum-popover-close-btn"
               onClick={() => setSelectedCard(null)}
               title="Close card"
             >
@@ -882,10 +877,10 @@ export default function IlluminateSystem() {
             <div className="illum-fact-card-body">
               <div className="illum-fact-header">
                 <div className="illum-fact-avatar">
-                  <SafeObjectImage 
-                    src={selectedCard.obj.img} 
-                    alt={selectedCard.obj.name} 
-                    iconType={selectedCard.obj.iconType} 
+                  <SafeObjectImage
+                    src={selectedCard.obj.img}
+                    alt={selectedCard.obj.name}
+                    iconType={selectedCard.obj.iconType}
                     size={30}
                   />
                 </div>

@@ -30,48 +30,44 @@ export default function ObjectsBySizeMenu() {
 
   return (
     <div className="space-module-page">
-      {/* Header Container with Separated Back Button & Long Banner */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-        {/* Separated Back Button */}
-        <button 
-          onClick={() => navigate('/space')} 
-          title="Back to Space"
-          aria-label="Back to Space"
-          style={{
-            background: '#161936',
-            border: '2px solid #385e8a',
-            boxShadow: '0 3px 0 #385e8a',
-            borderRadius: 14,
-            width: 44,
-            height: 44,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#38bdf8',
-            cursor: 'pointer',
-            flexShrink: 0
-          }}
-        >
-          <ArrowLeft size={22} strokeWidth={2.5} />
-        </button>
-
-        {/* Long Banner Rectangle */}
-        <div style={{
-          flex: 1,
-          background: 'linear-gradient(135deg, #161936 0%, #0e1126 100%)',
-          borderRadius: 16,
-          border: '2px solid #385e8a',
-          boxShadow: '0 4px 0 #0b0d1e',
-          padding: '10px 18px',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <h1 style={{
-            margin: 0, color: '#ffffff', fontSize: '1.25rem',
-            fontFamily: 'var(--font-heading)', fontWeight: 900
-          }}>
-            Objects by Size
-          </h1>
+      {/* Header — same layout as SpaceHome space-nav-header */}
+      <div className="space-nav-header">
+        <div className="space-header-left">
+          <button
+            onClick={() => navigate('/space')}
+            title="Back to Space"
+            aria-label="Back to Space"
+            style={{
+              background: '#161936',
+              border: '2px solid #385e8a',
+              boxShadow: '0 3px 0 #385e8a',
+              borderRadius: 14,
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#38bdf8',
+              cursor: 'pointer',
+              flexShrink: 0
+            }}
+          >
+            <ArrowLeft size={20} strokeWidth={2.5} />
+          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
+              width: 32, height: 32,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: '#161936', borderRadius: 10,
+              boxShadow: '0 2px 0 #0b0d1e',
+              border: '1.5px solid #385e8a'
+            }}>
+              <Ruler size={18} color="#38bdf8" />
+            </div>
+            <h1 className="space-page-title" style={{ margin: 0, color: '#f1f5f9', fontSize: '1.4rem', fontWeight: 900 }}>
+              Objects by Size
+            </h1>
+          </div>
         </div>
       </div>
 
@@ -112,7 +108,7 @@ export default function ObjectsBySizeMenu() {
           transition: 'all 0.15s ease'
         }}>
           {/* Main Card Header (Click to Expand / Toggle) */}
-          <div 
+          <div
             onClick={() => setShowIlluminateLevels(prev => !prev)}
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
@@ -283,8 +279,8 @@ export default function ObjectsBySizeMenu() {
               const pbTime = personalBests[key];
               const hasRecord = pbTime !== undefined && pbTime !== null && pbTime > 0;
               return (
-                <div 
-                  key={key} 
+                <div
+                  key={key}
                   style={{
                     background: '#0f1226',
                     borderRadius: 14,

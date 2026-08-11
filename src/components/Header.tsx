@@ -47,10 +47,10 @@ export function Header() {
           boxShadow: '0 2px 0 #b0cbaf',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Flame 
-              size={13} 
-              color={hasPlayedToday ? '#e53935' : '#888888'} 
-              fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'} 
+            <Flame
+              size={13}
+              color={hasPlayedToday ? '#e53935' : '#888888'}
+              fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'}
             />
             <span style={{ fontWeight: 800, fontSize: '0.78rem', color: hasPlayedToday ? '#e53935' : '#4e7361' }}>
               {streak ?? 0}
@@ -59,10 +59,10 @@ export function Header() {
 
           <div style={{ width: 1, height: 12, background: '#b0cbaf' }} />
 
-          <div 
-            onClick={() => navigate('/profile')} 
+          <div
+            onClick={() => navigate('/profile')}
             style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}
-            aria-label="Go to Profile" 
+            aria-label="Go to Profile"
             role="button"
           >
             <Star size={13} color="#f57f17" fill="#ffb300" />

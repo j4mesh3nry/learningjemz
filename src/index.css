@@ -7,21 +7,23 @@
   forced-color-adjust: none;
 
   /* Primary palette - Forest & Sage Green */
-  --color-primary: #16653e; 
+  --color-primary: #16653e;
   --color-primary-light: #288456;
   --color-primary-dark: #0e4329;
   --color-primary-forest: #0b3420;
 
   /* Module specific backgrounds */
   --bg-chess: #16653e;
-  --bg-geo: #0066cc;  
+  --bg-geo: #0066cc;
   --bg-reading: #d16f2c;
   --bg-space: #161936;
 
   /* Neutral colors - Medium-Light Sage Green Canvas */
-  --color-bg-page: #d4e8d5; /* Medium-light sage green canvas */
+  --color-bg-page: #d4e8d5;
+  /* Medium-light sage green canvas */
   --color-bg-card: #ffffff;
-  --color-bg: #ffffff; /* Opaque white surface (auth card, form fields) — must NOT be translucent, or the green canvas bleeds through as a "green tint" on white/neutral surfaces */
+  --color-bg: #ffffff;
+  /* Opaque white surface (auth card, form fields) — must NOT be translucent, or the green canvas bleeds through as a "green tint" on white/neutral surfaces */
   --color-bg-dark: #0e4329;
   --color-text: #0f3825;
   --color-muted: #4e7361;
@@ -55,7 +57,10 @@
   margin: 0;
   padding: 0;
 }
-html, body, #root {
+
+html,
+body,
+#root {
   min-height: 100vh;
 }
 
@@ -64,16 +69,21 @@ html, body, #root {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
 *::-webkit-scrollbar {
   display: none;
 }
+
 /* Module specific theme overrides */
-html[data-module-theme="chess"], body[data-module-theme="chess"] {
-  --color-bg-page: #ebe3cf; /* Warm parchment / limestone ivory */
+html[data-module-theme="chess"],
+body[data-module-theme="chess"] {
+  --color-bg-page: #ebe3cf;
+  /* Warm parchment / limestone ivory */
   --bg-pattern: linear-gradient(45deg, rgba(74, 44, 17, 0.05) 25%, transparent 25%, transparent 75%, rgba(74, 44, 17, 0.05) 75%, rgba(74, 44, 17, 0.05)), linear-gradient(45deg, rgba(74, 44, 17, 0.05) 25%, transparent 25%, transparent 75%, rgba(74, 44, 17, 0.05) 75%, rgba(74, 44, 17, 0.05));
   --bg-pattern-size: 64px 64px;
   --bg-pattern-pos: 0 0, 32px 32px;
-  --color-primary: #4a2c11; /* Deep rich mahogany brown */
+  --color-primary: #4a2c11;
+  /* Deep rich mahogany brown */
   --color-primary-light: #6e441f;
   --color-primary-dark: #2f1a08;
   --color-bg-card: #faf6ee;
@@ -83,16 +93,20 @@ html[data-module-theme="chess"], body[data-module-theme="chess"] {
   --color-muted: #6e5843;
 }
 
-html[data-module-theme="space"], body[data-module-theme="space"] {
-  --color-bg-page: #0b0d1e; /* Deep cosmic obsidian space canvas */
+html[data-module-theme="space"],
+body[data-module-theme="space"] {
+  --color-bg-page: #0b0d1e;
+  /* Deep cosmic obsidian space canvas */
   --bg-pattern: radial-gradient(circle at 50% -20%, #161936 0%, transparent 80%);
   --bg-pattern-size: 100% 100vh;
   --bg-pattern-pos: top center;
-  --color-primary: #161936; /* Dark cosmic indigo */
+  --color-primary: #161936;
+  /* Dark cosmic indigo */
   --color-primary-light: #232752;
   --color-primary-dark: #090b17;
   --color-bg-card: #161936;
-  --color-border: #385e8a; /* Cold metallic steel-blue border */
+  --color-border: #385e8a;
+  /* Cold metallic steel-blue border */
   --color-shadow: #05060f;
   --color-text: #f1f5f9;
   --color-muted: #94a3b8;
@@ -111,6 +125,7 @@ html {
   color: var(--color-text);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-bg-page);
@@ -130,11 +145,13 @@ body {
    colors anywhere. `forced-color-adjust: none` is inherited from :root, but the
    universal re-assertion also covers buttons, inputs, SVGs, and pseudo-elements. */
 @media (forced-colors: active) {
+
   *,
   *::before,
   *::after {
     forced-color-adjust: none;
   }
+
   html,
   body {
     background-color: var(--color-bg-page);
@@ -147,6 +164,7 @@ body {
    declares `color-scheme: light`. Re-assert the exact light canvas so the intended
    palette (never a darkened/inverted green) renders identically everywhere. */
 @media (prefers-color-scheme: dark) {
+
   html,
   body {
     background-color: var(--color-bg-page);
@@ -161,7 +179,13 @@ body {
 html {
   color-scheme: light only !important;
 }
-img, picture, video, canvas, iframe, svg {
+
+img,
+picture,
+video,
+canvas,
+iframe,
+svg {
   color-scheme: light only;
 }
 
@@ -207,6 +231,7 @@ img, picture, video, canvas, iframe, svg {
   text-decoration: none;
   transition: top 0.2s ease;
 }
+
 .skip-link:focus {
   top: 8px;
 }
@@ -326,12 +351,29 @@ img, picture, video, canvas, iframe, svg {
   }
 }
 
-.text-center { text-align: center; }
-.text-primary { color: var(--color-primary); }
-.mt-sm { margin-top: var(--spacing-sm); }
-.mt-md { margin-top: var(--spacing-md); }
-.mb-sm { margin-bottom: var(--spacing-sm); }
-.mb-md { margin-bottom: var(--spacing-md); }
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.mt-sm {
+  margin-top: var(--spacing-sm);
+}
+
+.mt-md {
+  margin-top: var(--spacing-md);
+}
+
+.mb-sm {
+  margin-bottom: var(--spacing-sm);
+}
+
+.mb-md {
+  margin-bottom: var(--spacing-md);
+}
 
 button {
   font-family: var(--font-body);
@@ -342,7 +384,10 @@ button {
   cursor: pointer;
   transition: transform 0.1s ease;
 }
-button:active { transform: scale(0.97); }
+
+button:active {
+  transform: scale(0.97);
+}
 
 /* Card component – tactile 3D tiles */
 .card {
@@ -411,7 +456,8 @@ button:active { transform: scale(0.97); }
   flex: 1;
   max-width: 96px;
 }
-.bottom-nav a.active { 
+
+.bottom-nav a.active {
   color: #16653e;
   background: #e1f0e2;
   border: 2px solid #16653e;

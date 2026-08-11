@@ -9,6 +9,10 @@
 }
 
 .chess-nav-header {
+  height: 68px;
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -297,7 +301,7 @@
   background: #ffffff;
   border: 1px solid #d0d7de;
   color: #24292f;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
 }
 
 .color-btn.white:hover {
@@ -309,7 +313,7 @@
   background: #24292f;
   border: 1px solid #1b1f24;
   color: #ffffff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .color-btn.black:hover {
@@ -317,9 +321,17 @@
   transform: translateY(-1px);
 }
 
-.opponent-card.easy .opponent-avatar { background: #e8f5e9; }
-.opponent-card.medium .opponent-avatar { background: #fff3e0; }
-.opponent-card.hard .opponent-avatar { background: #ffebee; }
+.opponent-card.easy .opponent-avatar {
+  background: #e8f5e9;
+}
+
+.opponent-card.medium .opponent-avatar {
+  background: #fff3e0;
+}
+
+.opponent-card.hard .opponent-avatar {
+  background: #ffebee;
+}
 
 .opponent-info h3 {
   margin: 0;
@@ -342,8 +354,13 @@
 }
 
 @keyframes pulse {
-  0% { opacity: 0.5; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 /* --- CHESS BOARD STYLES --- */
@@ -419,7 +436,8 @@
   position: relative;
 }
 
-.chess-board, .board-container {
+.chess-board,
+.board-container {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -459,7 +477,8 @@
   background-color: rgba(245, 246, 130, 0.75) !important;
 }
 
-.piece-img, .piece {
+.piece-img,
+.piece {
   width: 82%;
   height: 82%;
   object-fit: contain;
@@ -467,7 +486,8 @@
   pointer-events: none;
 }
 
-.move-dot, .legal-move-dot {
+.move-dot,
+.legal-move-dot {
   position: absolute;
   width: 28%;
   height: 28%;
@@ -476,7 +496,8 @@
   z-index: 3;
 }
 
-.move-dot.capture, .square:has(.piece) .legal-move-dot {
+.move-dot.capture,
+.square:has(.piece) .legal-move-dot {
   width: 82%;
   height: 82%;
   border-radius: 50%;
@@ -485,7 +506,8 @@
   box-sizing: border-box;
 }
 
-.rank-label, .coord-rank {
+.rank-label,
+.coord-rank {
   position: absolute;
   top: 2px;
   left: 4px;
@@ -495,7 +517,8 @@
   z-index: 1;
 }
 
-.file-label, .coord-file {
+.file-label,
+.coord-file {
   position: absolute;
   bottom: 2px;
   right: 4px;
@@ -536,7 +559,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -551,7 +574,7 @@
   border-radius: 12px;
   width: 85%;
   text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -583,7 +606,7 @@
   padding: 30px 20px;
   text-align: center;
   z-index: 5;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   animation: cinematicIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border-top: 2px solid #ffb74d;
   border-bottom: 2px solid #ffb74d;
@@ -614,7 +637,7 @@
 
 .game-over-overlay.win h2 {
   color: #fff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .game-over-overlay.win p {
@@ -633,7 +656,7 @@
   border-radius: 12px;
   padding: 15px;
   min-width: 100px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -659,18 +682,37 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes cinematicIn {
-  from { opacity: 0; transform: translateY(-50%) scale(0.95); }
-  to { opacity: 1; transform: translateY(-50%) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
 }
 
 /* Ignition Animation Classes */
@@ -683,9 +725,20 @@
 }
 
 @keyframes ignitePulse {
-  0% { transform: scale(1); filter: grayscale(100%) opacity(40%); }
-  50% { transform: scale(1.5); filter: grayscale(0%) opacity(100%); }
-  100% { transform: scale(1); filter: grayscale(0%) opacity(100%); }
+  0% {
+    transform: scale(1);
+    filter: grayscale(100%) opacity(40%);
+  }
+
+  50% {
+    transform: scale(1.5);
+    filter: grayscale(0%) opacity(100%);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: grayscale(0%) opacity(100%);
+  }
 }
 
 .igniting .stat-icon {

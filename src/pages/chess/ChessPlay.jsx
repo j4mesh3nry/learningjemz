@@ -30,7 +30,7 @@ const createChess = (pgn) => {
     const C = typeof ChessJS === 'function' ? ChessJS : (ChessJS?.Chess || ChessJS);
     const g = new C();
     if (pgn) {
-      try { g.loadPgn(pgn); } catch (e) {}
+      try { g.loadPgn(pgn); } catch (e) { }
     }
     return g;
   } catch (e) {
@@ -62,16 +62,16 @@ export default function ChessPlay() {
   const historyScrollRef = React.useRef(null);
 
   const gameContext = useGame() || {};
-  const { 
-    winChessGame = () => 30, 
+  const {
+    winChessGame = () => 30,
     drawChessGame = () => 10,
     lossChessGame = () => 5,
-    recordChessGame = () => {}, 
-    level = 1, 
-    streak = 0, 
-    recordActivity = () => {}, 
-    hasPlayedToday = false, 
-    botStats = {} 
+    recordChessGame = () => { },
+    level = 1,
+    streak = 0,
+    recordActivity = () => { },
+    hasPlayedToday = false,
+    botStats = {}
   } = gameContext;
 
   const authContext = useAuth() || {};
@@ -88,11 +88,11 @@ export default function ChessPlay() {
     }
     return () => {
       if (workerRef.current) {
-        try { workerRef.current.terminate(); } catch (e) {}
+        try { workerRef.current.terminate(); } catch (e) { }
       }
     };
   }, []);
-  
+
   const playerName = user?.user_metadata?.name || 'You';
   const playerAvatar = user?.user_metadata?.avatar || '👤';
 
@@ -112,7 +112,7 @@ export default function ChessPlay() {
       });
     }
 
-    const captured = { w: [], b: [] }; 
+    const captured = { w: [], b: [] };
     let wScore = 0; let bScore = 0;
     const values = { p: 1, n: 3, b: 3, r: 5, q: 9 };
     const sortOrder = { q: 1, r: 2, b: 3, n: 4, p: 5 };
@@ -136,7 +136,7 @@ export default function ChessPlay() {
     captured.w.sort((a, b) => (sortOrder[a] || 5) - (sortOrder[b] || 5));
     captured.b.sort((a, b) => (sortOrder[a] || 5) - (sortOrder[b] || 5));
 
-    return { 
+    return {
       capturedByWhite: captured.b,
       capturedByBlack: captured.w,
       whiteScoreDiff: wScore - bScore,
@@ -157,7 +157,7 @@ export default function ChessPlay() {
     setBoard(newGame.board());
     const moves = newGame.history({ verbose: true });
     setHistory(moves);
-    
+
     if (newGame.isCheckmate()) {
       setGameState('checkmate');
       setShowOverlay(true);
@@ -186,7 +186,7 @@ export default function ChessPlay() {
     if (!game || game.isGameOver() || gameState !== 'playing') return;
 
     setIsThinking(true);
-    
+
     if (difficulty === 'Easy' || !workerRef.current) {
       setTimeout(() => {
         try {
@@ -213,18 +213,18 @@ export default function ChessPlay() {
     try {
       workerRef.current.onmessage = (e) => {
         const message = typeof e.data === 'string' ? e.data : e.data?.data;
-        
+
         if (message && message.startsWith('bestmove')) {
           const moveStr = message.split(' ')[1];
           const newGame = createChess(game.pgn());
-          
+
           const moveMatch = moveStr ? moveStr.match(/^([a-h][1-8])([a-h][1-8])([qrbn])?$/) : null;
           if (moveMatch) {
             newGame.move({ from: moveMatch[1], to: moveMatch[2], promotion: moveMatch[3] });
           } else if (moveStr) {
-            try { newGame.move(moveStr); } catch (err) {}
+            try { newGame.move(moveStr); } catch (err) { }
           }
-          
+
           updateGame(newGame);
           setTimeout(() => {
             if (historyScrollRef.current) {
@@ -265,7 +265,7 @@ export default function ChessPlay() {
       const possibleMoves = legalMoves.filter(m => m.to === square);
       if (possibleMoves.length > 0) {
         const isPromotion = possibleMoves.some(m => m.promotion);
-        
+
         if (isPromotion) {
           setPromotionPending({ from: selectedSquare, to: square });
           return;
@@ -331,7 +331,7 @@ export default function ChessPlay() {
     setDifficulty(diff);
     setSelectedOpponent(null);
     setIsFlipped(color === 'b');
-    
+
     const newGame = createChess();
     updateGame(newGame);
     setSelectedSquare(null);
@@ -374,7 +374,7 @@ export default function ChessPlay() {
       setGameState('playing');
       setVictoryStats(null);
       setIgniting(false);
-      
+
       if (workerRef.current) {
         workerRef.current.onmessage = null;
       }
@@ -391,10 +391,10 @@ export default function ChessPlay() {
     setGameState('resigned');
     setShowOverlay(true);
     recordChessGame(difficulty, false);
-    
+
     const moveCount = history.length;
     const xpGained = lossChessGame(difficulty, moveCount);
-    
+
     setVictoryStats({ streakIncreased: false, xpGained, result: 'resigned' });
     setDisplayedStreak(streak);
     setIgniting(false);
@@ -449,15 +449,15 @@ export default function ChessPlay() {
     }
 
     return (
-      <div 
+      <div
         ref={historyScrollRef}
-        style={{ 
-          maxHeight: 110, 
-          overflowY: 'auto', 
-          padding: '8px 12px', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: 4 
+        style={{
+          maxHeight: 110,
+          overflowY: 'auto',
+          padding: '8px 12px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 4
         }}
       >
         {pairs.map((pair) => {
@@ -494,17 +494,17 @@ export default function ChessPlay() {
   const renderBotProfile = () => (
     <div className="player-profile-banner">
       <div className="player-avatar">
-        {difficulty === 'Easy' ? <Bot size={24} color="var(--color-primary)" /> : 
-         difficulty === 'Medium' ? <BrainCircuit size={24} color="#d97706" /> : 
-         <Cpu size={24} color="#e53935" />}
+        {difficulty === 'Easy' ? <Bot size={24} color="var(--color-primary)" /> :
+          difficulty === 'Medium' ? <BrainCircuit size={24} color="#d97706" /> :
+            <Cpu size={24} color="#e53935" />}
       </div>
       <div className="player-info" style={{ minWidth: 0 }}>
         <div className="player-name" style={{ flexWrap: 'wrap' }}>
           <span style={{ whiteSpace: 'nowrap' }}>
-            {difficulty === 'Easy' ? 'Beginner Bob' : 
-             difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}
+            {difficulty === 'Easy' ? 'Beginner Bob' :
+              difficulty === 'Medium' ? 'Intermediate Ivy' : 'Grandmaster Gary'}
           </span>
-          
+
           {botCapturedPieces.length > 0 && (
             <>
               <span style={{ color: '#aaa', margin: '0 2px' }}>-</span>
@@ -518,8 +518,8 @@ export default function ChessPlay() {
           )}
         </div>
         <div className="player-tagline">
-          {difficulty === 'Easy' ? 'Rating: 400 • Casual' : 
-           difficulty === 'Medium' ? 'Rating: 1200 • Tactical' : 'Rating: 2500 • Stockfish'}
+          {difficulty === 'Easy' ? 'Rating: 400 • Casual' :
+            difficulty === 'Medium' ? 'Rating: 1200 • Tactical' : 'Rating: 2500 • Stockfish'}
           {isThinking && <span style={{ color: 'var(--color-primary)', fontWeight: 'bold', marginLeft: 6 }}>Thinking...</span>}
         </div>
       </div>
@@ -555,48 +555,43 @@ export default function ChessPlay() {
 
   return (
     <div className="chess-module-page">
-      {/* Header Container with Separated Back Button & Long Banner */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-        {/* Separated Back Button */}
-        <button 
-          onClick={handleBackClick} 
-          title="Back"
-          aria-label="Back"
-          style={{
-            background: '#faf6ee',
-            border: '2px solid #b89f80',
-            boxShadow: '0 3px 0 #b89f80',
-            borderRadius: 14,
-            width: 44,
-            height: 44,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#4a2c11',
-            cursor: 'pointer',
-            flexShrink: 0
-          }}
-        >
-          <ArrowLeft size={22} strokeWidth={2.5} />
-        </button>
-
-        {/* Long Banner Rectangle */}
-        <div style={{
-          flex: 1,
-          background: 'linear-gradient(135deg, #4a2c11 0%, #351f0b 100%)',
-          borderRadius: 16,
-          border: '2px solid #6e441f',
-          boxShadow: '0 4px 0 #2f1a08',
-          padding: '10px 18px',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <h1 style={{
-            margin: 0, color: '#ffffff', fontSize: '1.25rem',
-            fontFamily: 'var(--font-heading)', fontWeight: 900
-          }}>
-            Play with Bot
-          </h1>
+      {/* Header — same layout as ChessHome chess-nav-header */}
+      <div className="chess-nav-header">
+        <div className="chess-header-left">
+          <button
+            onClick={handleBackClick}
+            title="Back"
+            aria-label="Back"
+            style={{
+              background: '#faf6ee',
+              border: '2px solid #b89f80',
+              boxShadow: '0 3px 0 #b89f80',
+              borderRadius: 14,
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#4a2c11',
+              cursor: 'pointer',
+              flexShrink: 0
+            }}
+          >
+            <ArrowLeft size={20} strokeWidth={2.5} />
+          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
+              width: 32, height: 32,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: '#4a2c11', borderRadius: 10,
+              boxShadow: '0 2px 0 #2f1a08'
+            }}>
+              <Bot size={18} color="#ffffff" />
+            </div>
+            <h1 style={{ margin: 0, color: '#2c1b0d', fontSize: '1.4rem', fontWeight: 900, fontFamily: 'var(--font-heading)' }}>
+              Play with Bot
+            </h1>
+          </div>
         </div>
       </div>
 
@@ -681,7 +676,7 @@ export default function ChessPlay() {
               )}
             </div>
           </div>
-          
+
           {botStats && (
             <div className="global-stats-box" style={{ marginTop: 28, padding: 16, background: '#faf6ee', borderRadius: 18, border: '2px solid #b89f80', boxShadow: '0 4px 0 #b89f80' }}>
               <h3 style={{ textAlign: 'center', marginBottom: 14, color: '#2c1b0d', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
@@ -710,170 +705,170 @@ export default function ChessPlay() {
         </div>
       ) : (
         <>
-        <div className="chess-play-layout">
-          {topIsBot ? renderBotProfile() : renderUserProfile()}
+          <div className="chess-play-layout">
+            {topIsBot ? renderBotProfile() : renderUserProfile()}
 
-          <div className="board-outer-wrapper">
-            {showBackModal && (
-              <div className="modal-overlay">
-                <div className="restart-modal">
-                  <h3>Leave Game?</h3>
-                  <p>Are you sure you want to leave? This counts as a loss!</p>
-                  <div className="modal-actions">
-                    <button className="btn primary" onClick={() => setShowBackModal(false)}>Cancel</button>
-                    <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmBack}>Leave</button>
+            <div className="board-outer-wrapper">
+              {showBackModal && (
+                <div className="modal-overlay">
+                  <div className="restart-modal">
+                    <h3>Leave Game?</h3>
+                    <p>Are you sure you want to leave? This counts as a loss!</p>
+                    <div className="modal-actions">
+                      <button className="btn primary" onClick={() => setShowBackModal(false)}>Cancel</button>
+                      <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmBack}>Leave</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            
-            {showRestartModal && (
-              <div className="modal-overlay">
-                <div className="restart-modal">
-                  <h3>Restart Match?</h3>
-                  <p>Restarting will count current game as a loss.</p>
-                  <div className="modal-actions">
-                    <button className="btn primary" onClick={() => setShowRestartModal(false)}>Cancel</button>
-                    <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmRestart}>Restart</button>
+              )}
+
+              {showRestartModal && (
+                <div className="modal-overlay">
+                  <div className="restart-modal">
+                    <h3>Restart Match?</h3>
+                    <p>Restarting will count current game as a loss.</p>
+                    <div className="modal-actions">
+                      <button className="btn primary" onClick={() => setShowRestartModal(false)}>Cancel</button>
+                      <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmRestart}>Restart</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {promotionPending && (
-              <div className="modal-overlay" style={{ zIndex: 100 }}>
-                <div className="restart-modal" style={{ maxWidth: 320, padding: 20 }}>
-                  <h3 style={{ marginBottom: 12 }}>Promote Pawn</h3>
-                  <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: 16 }}>Select a piece to promote your pawn:</p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 16 }}>
-                    {['q', 'r', 'b', 'n'].map(type => (
-                      <button
-                        key={type}
-                        onClick={() => handlePromotionSelect(type)}
-                        style={{
-                          background: 'white',
-                          border: '2px solid var(--color-primary)',
-                          borderRadius: 12,
-                          padding: 10,
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          boxShadow: '0 3px 0 var(--color-primary-dark)'
-                        }}
-                      >
-                        <img src={PIECE_IMAGES[playerColor][type]} alt={type} style={{ width: 36, height: 36 }} />
-                      </button>
-                    ))}
+              {promotionPending && (
+                <div className="modal-overlay" style={{ zIndex: 100 }}>
+                  <div className="restart-modal" style={{ maxWidth: 320, padding: 20 }}>
+                    <h3 style={{ marginBottom: 12 }}>Promote Pawn</h3>
+                    <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: 16 }}>Select a piece to promote your pawn:</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 16 }}>
+                      {['q', 'r', 'b', 'n'].map(type => (
+                        <button
+                          key={type}
+                          onClick={() => handlePromotionSelect(type)}
+                          style={{
+                            background: 'white',
+                            border: '2px solid var(--color-primary)',
+                            borderRadius: 12,
+                            padding: 10,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 3px 0 var(--color-primary-dark)'
+                          }}
+                        >
+                          <img src={PIECE_IMAGES[playerColor][type]} alt={type} style={{ width: 36, height: 36 }} />
+                        </button>
+                      ))}
+                    </div>
+                    <button className="btn" onClick={cancelPromotion} style={{ width: '100%', background: '#eee', color: '#333' }}>Cancel</button>
                   </div>
-                  <button className="btn" onClick={cancelPromotion} style={{ width: '100%', background: '#eee', color: '#333' }}>Cancel</button>
                 </div>
+              )}
+
+              <div className="chess-board">
+                {(isFlipped ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7]).map((r, rowIndex) => (
+                  <div key={r} className="board-row">
+                    {(isFlipped ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7]).map((c, colIndex) => {
+                      const squareLabel = getSquareLabel(r, c);
+                      const isDark = (r + c) % 2 === 1;
+                      const piece = game ? game.get(squareLabel) : null;
+                      const isSelected = selectedSquare === squareLabel;
+                      const isLegalMove = legalMoves.some(m => m.to === squareLabel);
+                      const isLastMoveSquare = lastMove && (lastMove.from === squareLabel || lastMove.to === squareLabel);
+
+                      return (
+                        <div
+                          key={c}
+                          className={`square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isLastMoveSquare ? 'last-move' : ''}`}
+                          onClick={() => handleSquareClick(squareLabel)}
+                        >
+                          {colIndex === 0 && <span className="rank-label">{8 - r}</span>}
+                          {rowIndex === 7 && <span className="file-label">{String.fromCharCode(97 + c)}</span>}
+
+                          {piece && (
+                            <img
+                              src={PIECE_IMAGES[piece.color][piece.type]}
+                              alt={`${piece.color} ${piece.type}`}
+                              className="piece-img"
+                            />
+                          )}
+                          {isLegalMove && <div className={`move-dot ${piece ? 'capture' : ''}`} />}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
 
-            <div className="chess-board">
-              {(isFlipped ? [7,6,5,4,3,2,1,0] : [0,1,2,3,4,5,6,7]).map((r, rowIndex) => (
-                <div key={r} className="board-row">
-                  {(isFlipped ? [7,6,5,4,3,2,1,0] : [0,1,2,3,4,5,6,7]).map((c, colIndex) => {
-                    const squareLabel = getSquareLabel(r, c);
-                    const isDark = (r + c) % 2 === 1;
-                    const piece = game ? game.get(squareLabel) : null;
-                    const isSelected = selectedSquare === squareLabel;
-                    const isLegalMove = legalMoves.some(m => m.to === squareLabel);
-                    const isLastMoveSquare = lastMove && (lastMove.from === squareLabel || lastMove.to === squareLabel);
+            {topIsBot ? renderUserProfile() : renderBotProfile()}
 
-                    return (
-                      <div
-                        key={c}
-                        className={`square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isLastMoveSquare ? 'last-move' : ''}`}
-                        onClick={() => handleSquareClick(squareLabel)}
-                      >
-                        {colIndex === 0 && <span className="rank-label">{8 - r}</span>}
-                        {rowIndex === 7 && <span className="file-label">{String.fromCharCode(97 + c)}</span>}
-                        
-                        {piece && (
-                          <img
-                            src={PIECE_IMAGES[piece.color][piece.type]}
-                            alt={`${piece.color} ${piece.type}`}
-                            className="piece-img"
-                          />
-                        )}
-                        {isLegalMove && <div className={`move-dot ${piece ? 'capture' : ''}`} />}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
+            {/* Action Bar with Flip, Restart, Resign */}
+            <div style={{ display: 'flex', gap: 8, padding: 12, width: '100%', background: 'var(--color-bg-card)', borderTop: '1.5px solid var(--color-border)', boxSizing: 'border-box' }}>
+              <button
+                onClick={() => setIsFlipped(prev => !prev)}
+                title="Flip Board"
+                style={{
+                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  padding: '9px 12px', background: 'var(--color-bg-card)', border: '2px solid var(--color-border)',
+                  boxShadow: '0 3px 0 var(--color-border)', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
+                  color: 'var(--color-primary)', cursor: 'pointer'
+                }}
+              >
+                <RefreshCw size={15} /> Flip
+              </button>
+
+              <button
+                onClick={handleRestartClick}
+                title="Restart Match"
+                style={{
+                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  padding: '9px 12px', background: 'var(--color-bg-card)', border: '2px solid var(--color-border)',
+                  boxShadow: '0 3px 0 var(--color-border)', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
+                  color: 'var(--color-primary)', cursor: 'pointer'
+                }}
+              >
+                <RotateCw size={15} /> Restart
+              </button>
+
+              <button
+                onClick={handleResign}
+                title="Resign Match"
+                style={{
+                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  padding: '9px 12px', background: '#fff5f5', border: '2px solid #ffcdd2',
+                  boxShadow: '0 3px 0 #ffcdd2', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
+                  color: '#e53935', cursor: 'pointer'
+                }}
+              >
+                <Flag size={15} /> Resign
+              </button>
+            </div>
+
+            {/* Scrollable Move History Box */}
+            <div style={{ width: '100%', background: 'var(--color-bg-card)', borderTop: '1.5px solid var(--color-border)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 14px', background: 'var(--color-bg-card)', borderBottom: '1px solid var(--color-border)' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <ScrollText size={14} color="var(--color-primary)" /> Game Notation
+                </span>
+              </div>
+              {renderMoveHistoryList()}
             </div>
           </div>
 
-          {topIsBot ? renderUserProfile() : renderBotProfile()}
-
-          {/* Action Bar with Flip, Restart, Resign */}
-          <div style={{ display: 'flex', gap: 8, padding: 12, width: '100%', background: 'var(--color-bg-card)', borderTop: '1.5px solid var(--color-border)', boxSizing: 'border-box' }}>
-            <button 
-              onClick={() => setIsFlipped(prev => !prev)} 
-              title="Flip Board"
-              style={{
-                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                padding: '9px 12px', background: 'var(--color-bg-card)', border: '2px solid var(--color-border)',
-                boxShadow: '0 3px 0 var(--color-border)', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
-                color: 'var(--color-primary)', cursor: 'pointer'
-              }}
-            >
-              <RefreshCw size={15} /> Flip
-            </button>
-
-            <button 
-              onClick={handleRestartClick} 
-              title="Restart Match"
-              style={{
-                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                padding: '9px 12px', background: 'var(--color-bg-card)', border: '2px solid var(--color-border)',
-                boxShadow: '0 3px 0 var(--color-border)', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
-                color: 'var(--color-primary)', cursor: 'pointer'
-              }}
-            >
-              <RotateCw size={15} /> Restart
-            </button>
-
-            <button 
-              onClick={handleResign} 
-              title="Resign Match"
-              style={{
-                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                padding: '9px 12px', background: '#fff5f5', border: '2px solid #ffcdd2',
-                boxShadow: '0 3px 0 #ffcdd2', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
-                color: '#e53935', cursor: 'pointer'
-              }}
-            >
-              <Flag size={15} /> Resign
-            </button>
-          </div>
-
-          {/* Scrollable Move History Box */}
-          <div style={{ width: '100%', background: 'var(--color-bg-card)', borderTop: '1.5px solid var(--color-border)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 14px', background: 'var(--color-bg-card)', borderBottom: '1px solid var(--color-border)' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <ScrollText size={14} color="var(--color-primary)" /> Game Notation
-              </span>
-            </div>
-            {renderMoveHistoryList()}
-          </div>
-        </div>
-
-        <VictoryScreen
-          isOpen={gameState !== 'playing' && showOverlay}
-          theme="chess"
-          title={gameState === 'checkmate' && game && game.turn() !== playerColor ? 'Checkmate! You Won!' : 
-                 gameState === 'checkmate' ? 'Checkmate! Bot Won!' : 
-                 gameState === 'resigned' ? 'Game Resigned' : 'Stalemate / Draw!'}
-          subtitle={gameState === 'checkmate' && game && game.turn() !== playerColor ? 'Great tactical play!' : 'Better luck next match!'}
-          xpGained={victoryStats?.xpGained || 0}
-          onContinue={() => confirmBack()}
-          onPlayAgain={() => resetGame()}
-          continueText="Back to Menu"
-        />
+          <VictoryScreen
+            isOpen={gameState !== 'playing' && showOverlay}
+            theme="chess"
+            title={gameState === 'checkmate' && game && game.turn() !== playerColor ? 'Checkmate! You Won!' :
+              gameState === 'checkmate' ? 'Checkmate! Bot Won!' :
+                gameState === 'resigned' ? 'Game Resigned' : 'Stalemate / Draw!'}
+            subtitle={gameState === 'checkmate' && game && game.turn() !== playerColor ? 'Great tactical play!' : 'Better luck next match!'}
+            xpGained={victoryStats?.xpGained || 0}
+            onContinue={() => confirmBack()}
+            onPlayAgain={() => resetGame()}
+            continueText="Back to Menu"
+          />
         </>
       )}
     </div>

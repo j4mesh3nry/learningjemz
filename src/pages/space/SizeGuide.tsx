@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, BookOpen, Brain, Sparkles, Compass, Search, 
-  ChevronDown, ChevronUp, Sun, Globe, Moon, Check, X, RotateCcw, 
+import {
+  ArrowLeft, BookOpen, Brain, Sparkles, Compass, Search,
+  ChevronDown, ChevronUp, Sun, Globe, Moon, Check, X, RotateCcw,
   HelpCircle, Info, Ruler, ArrowRight, Lightbulb, Target
 } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE, MNEMONIC_WORDS_LIST } from '../../data/space-objects';
@@ -37,9 +37,9 @@ function SafeObjectImage({ src, alt, iconType, className, size = 32 }: { src?: s
 
   if (!src || imgError) {
     return (
-      <div style={{ 
-        width: size + 16, height: size + 16, 
-        borderRadius: 12, background: '#e1f0e2', 
+      <div style={{
+        width: size + 16, height: size + 16,
+        borderRadius: 12, background: '#e1f0e2',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexShrink: 0
       }}>
@@ -49,17 +49,17 @@ function SafeObjectImage({ src, alt, iconType, className, size = 32 }: { src?: s
   }
 
   return (
-    <img 
-      src={src} 
-      alt={alt} 
+    <img
+      src={src}
+      alt={alt}
       className={className}
-      style={{ 
-        width: size + 16, height: size + 16, 
+      style={{
+        width: size + 16, height: size + 16,
         borderRadius: 12, objectFit: 'cover',
         border: '2px solid #b0cbaf',
-        flexShrink: 0 
-      }} 
-      onError={() => setImgError(true)} 
+        flexShrink: 0
+      }}
+      onError={() => setImgError(true)}
     />
   );
 }
@@ -134,8 +134,8 @@ export default function SizeGuide() {
   const searchFilteredObjects = useMemo(() => {
     if (!searchQuery.trim()) return activeDataset;
     const q = searchQuery.toLowerCase();
-    return activeDataset.filter(obj => 
-      obj.name.toLowerCase().includes(q) || 
+    return activeDataset.filter(obj =>
+      obj.name.toLowerCase().includes(q) ||
       obj.type.toLowerCase().includes(q) ||
       obj.diameter.toLowerCase().includes(q)
     );
@@ -177,7 +177,7 @@ export default function SizeGuide() {
         const distractors = ['Silly', 'Jumpy', 'Students', 'Mountain', 'Cabin', 'Hippos', 'Detectives', 'Outside']
           .filter(w => w !== mInfo.word)
           .slice(0, 3);
-        
+
         const allOpts = [mInfo.word, ...distractors].sort(() => 0.5 - Math.random());
 
         questions.push({
@@ -258,46 +258,44 @@ export default function SizeGuide() {
 
   return (
     <div className="space-module-page">
-      {/* Header Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-        <button 
-          onClick={() => navigate('/space')} 
-          title="Back to Space"
-          aria-label="Back to Space"
-          style={{
-            background: '#161936',
-            border: '2px solid #385e8a',
-            boxShadow: '0 3px 0 #385e8a',
-            borderRadius: 14,
-            width: 44,
-            height: 44,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#38bdf8',
-            cursor: 'pointer',
-            flexShrink: 0
-          }}
-        >
-          <ArrowLeft size={22} strokeWidth={2.5} />
-        </button>
-
-        <div style={{
-          flex: 1,
-          background: 'linear-gradient(135deg, #161936 0%, #0e1126 100%)',
-          borderRadius: 16,
-          border: '2px solid #385e8a',
-          boxShadow: '0 4px 0 #0b0d1e',
-          padding: '10px 18px',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <h1 style={{
-            margin: 0, color: '#ffffff', fontSize: '1.25rem',
-            fontFamily: 'var(--font-heading)', fontWeight: 900
-          }}>
-            Objects by Size Guide
-          </h1>
+      {/* Header — same layout as SpaceHome space-nav-header */}
+      <div className="space-nav-header">
+        <div className="space-header-left">
+          <button
+            onClick={() => navigate('/space')}
+            title="Back to Space"
+            aria-label="Back to Space"
+            style={{
+              background: '#161936',
+              border: '2px solid #385e8a',
+              boxShadow: '0 3px 0 #385e8a',
+              borderRadius: 14,
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#38bdf8',
+              cursor: 'pointer',
+              flexShrink: 0
+            }}
+          >
+            <ArrowLeft size={20} strokeWidth={2.5} />
+          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
+              width: 32, height: 32,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: '#161936', borderRadius: 10,
+              boxShadow: '0 2px 0 #0b0d1e',
+              border: '1.5px solid #385e8a'
+            }}>
+              <BookOpen size={18} color="#38bdf8" />
+            </div>
+            <h1 className="space-page-title" style={{ margin: 0, color: '#f1f5f9', fontSize: '1.4rem', fontWeight: 900 }}>
+              Objects by Size Guide
+            </h1>
+          </div>
         </div>
       </div>
 
@@ -407,8 +405,8 @@ export default function SizeGuide() {
             padding: '8px 12px'
           }}>
             <Search size={18} color="#94a3b8" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search by name, type, or diameter..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -423,7 +421,7 @@ export default function SizeGuide() {
               }}
             />
             {searchQuery && (
-              <button 
+              <button
                 onClick={() => setSearchQuery('')}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}
               >
@@ -443,7 +441,7 @@ export default function SizeGuide() {
             const mInfo = getMnemonicForObject(realRank - 1);
 
             return (
-              <div 
+              <div
                 key={obj.id}
                 style={{
                   background: '#161936',
@@ -454,7 +452,7 @@ export default function SizeGuide() {
                   transition: 'all 0.15s ease'
                 }}
               >
-                <div 
+                <div
                   onClick={() => setExpandedId(isExpanded ? null : obj.id)}
                   style={{
                     display: 'flex',
@@ -485,10 +483,10 @@ export default function SizeGuide() {
                       <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: '#f1f5f9' }}>
                         {obj.name}
                       </h3>
-                      <span style={{ 
-                        fontSize: '0.68rem', fontWeight: 800, 
-                        background: '#232752', color: '#38bdf8', 
-                        padding: '2px 6px', borderRadius: 6 
+                      <span style={{
+                        fontSize: '0.68rem', fontWeight: 800,
+                        background: '#232752', color: '#38bdf8',
+                        padding: '2px 6px', borderRadius: 6
                       }}>
                         {obj.type}
                       </span>
@@ -535,7 +533,7 @@ export default function SizeGuide() {
                     }}>
                       <Brain size={16} color="#38bdf8" />
                       <span style={{ fontSize: '0.78rem', fontWeight: 700 }}>
-                        Mnemonic Key: <span style={{ color: '#ffb400', fontWeight: 900 }}>"{mInfo.word}"</span> 
+                        Mnemonic Key: <span style={{ color: '#ffb400', fontWeight: 900 }}>"{mInfo.word}"</span>
                         {mInfo.isGroup && ` [${mInfo.groupName}]`}
                       </span>
                     </div>
@@ -606,17 +604,17 @@ export default function SizeGuide() {
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Full Mnemonic Sentence:
             </span>
-            <div style={{ 
-              fontSize: '0.88rem', 
-              fontWeight: 700, 
-              lineHeight: 1.6, 
+            <div style={{
+              fontSize: '0.88rem',
+              fontWeight: 700,
+              lineHeight: 1.6,
               marginTop: 6,
-              letterSpacing: '0.2px' 
+              letterSpacing: '0.2px'
             }}>
               {MNEMONIC_WORDS_LIST.slice(0, 31).map((word, idx) => {
                 const isGroupWord = word === 'LET' || word === 'PET';
                 return (
-                  <span 
+                  <span
                     key={idx}
                     style={{
                       display: 'inline-block',
@@ -683,9 +681,9 @@ export default function SizeGuide() {
                       padding: '8px 12px'
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ 
-                          fontSize: '0.75rem', fontWeight: 900, 
-                          color: '#38bdf8', width: 26 
+                        <span style={{
+                          fontSize: '0.75rem', fontWeight: 900,
+                          color: '#38bdf8', width: 26
                         }}>
                           #{idx + 1}
                         </span>
@@ -760,7 +758,7 @@ export default function SizeGuide() {
             const mInfo = getMnemonicForObject(realRank - 1);
 
             return (
-              <div 
+              <div
                 onClick={() => setIsFlipped(prev => !prev)}
                 style={{
                   minHeight: 280,

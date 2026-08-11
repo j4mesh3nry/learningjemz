@@ -37,3 +37,15 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 
 - Vitest + React Testing Library. Tests live in `__tests__/` dirs next to code, named `*.test.tsx`. Setup in `src/test/setup.ts` mocks `matchMedia`.
 - Tests mock the contexts (`vi.mock`/`vi.spyOn` on `GameContext`/`AuthContext`) and don't need `.env.local`.
+
+## Group Chat Update Rule
+
+
+## Group Chat Update Template
+
+- **Format**: `🎉 <Feature> – <Brief description>.`  
+- Keep it under 2 sentences.  
+- Use emojis sparingly (👍, 🚀, 🐞) – they are allowed in the message even though UI cannot contain them.
+- Example: `🚀 Added new Cosmic Mystery Sprint mode – players now earn up to 20 XP for perfect runs.`
+
+
