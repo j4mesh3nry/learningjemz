@@ -9,11 +9,10 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 - `npm test` — Vitest (`vitest run`). 7 files / 39 tests; runs to completion and exits. If you see a hang again, run focused files, e.g. `npx vitest run src/pages/__tests__/Home.test.tsx`.
 - `npm run build` — `tsc -b && vite build`. Passes. It's the only typecheck step, so use it after TS changes. No separate typecheck script.
 
-## Git workflow & Windows gotchas
-
-- Active branch for development is `dev` (and feature branches created from `dev`, e.g. `feature/next-session`). 
-- **Workflow Flow**: `dev` → `feature/*` → merge to `dev` → promote to `main` (only when explicitly requested by user).
-- **PRs/Merges**: Feature branches MUST be merged back into `dev` first (never directly to `main`). Once changes are tested on `dev`, they are promoted to `main` upon explicit request.
+- Active branch for development is `dev` (and feature branches created from `dev`). 
+- **Workflow Flow**: `dev` → `feature/*` → develop + test on feature branch (user runs `npm run dev` to verify) → feature PR → merge to `dev` → promote to `main` (only when explicitly requested by user).
+- **PRs/Merges**: Feature branches MUST be merged back into `dev` first (never directly to `main` unless explicitly requested). 
+- **Testing**: The primary testing stage happens on the feature branch where the user tests. When merging to `dev`, the AI can do a quick check on `dev` by itself, but full retesting is not required from scratch since the feature branch was already verified.
 - CI (`.github/workflows/ci.yml`) runs lint + test **only on pushes/PRs to `main`** (plus pushes on `enhance/*`). `dev` has no CI guard — validate locally before pushing.
 - Windows / CRLF: `core.autocrlf=true` makes `git status` show ~70 files as modified even when only a few have real diffs. Check `git diff --ignore-cr-at-eol` first; never `git add -A` blindly.
 - When merging features to `main`, update `GAME_DOCUMENTATION.md` (and `docs/GAME_SYSTEM_DESIGN.md`) to match.
