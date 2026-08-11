@@ -3347,4 +3347,42 @@
 .solar-infopanel-expand-tab:hover {
   background: #191c3d;
   color: #ffffff;
+}
+
+/* Info Panel Action Buttons (Close / Collapse) */
+.solar-infopanel-btn {
+  position: absolute;
+  top: 18px;
+  background: #191c3d;
+  border: 2px solid #2d3561;
+  box-shadow: 0 3px 0 #07081a;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #a0aec0;
+  transition: background 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
+  z-index: 10;
+}
+
+.solar-infopanel-btn:hover {
+  background: #252b59;
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+.solar-infopanel-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #07081a;
+}
+
+.solar-infopanel-btn.collapse-btn {
+  right: 62px;
+}
+
+.solar-infopanel-btn.close-btn {
+  right: 18px;
 }

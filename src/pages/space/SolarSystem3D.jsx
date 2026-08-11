@@ -838,58 +838,24 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
           {/* Collapse Button */}
           <button
             onClick={() => setIsCollapsed(true)}
-            style={{
-              position: 'absolute',
-              top: 16,
-              right: 56,
-              background: '#191c3d',
-              border: '1.5px solid #2d3561',
-              boxShadow: '0 2px 0 #07081a',
-              borderRadius: '50%',
-              width: 32,
-              height: 32,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#fff',
-              transition: 'background 0.2s',
-              zIndex: 10
-            }}
+            className="solar-infopanel-btn collapse-btn"
             title="Collapse Panel"
           >
-            <ChevronDown size={16} />
+            <ChevronDown size={20} />
           </button>
 
           {/* Close Button */}
           <button
             onClick={onClose}
-            style={{
-              position: 'absolute',
-              top: 16,
-              right: 16,
-              background: '#191c3d',
-              border: '1.5px solid #2d3561',
-              boxShadow: '0 2px 0 #07081a',
-              borderRadius: '50%',
-              width: 32,
-              height: 32,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#fff',
-              transition: 'background 0.2s',
-              zIndex: 10
-            }}
+            className="solar-infopanel-btn close-btn"
             title="Close Panel and Return to Space View"
           >
-            <X size={16} />
+            <X size={20} />
           </button>
 
-        {/* Top Header: Avatar + Title (has right padding to clear X button) */}
+        {/* Top Header: Avatar + Title (has right padding to clear action buttons) */}
         {activeTarget.isMoon ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, paddingRight: 44 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, paddingRight: 104 }}>
             <div style={{
               width: 50, height: 50, borderRadius: '50%',
               background: activeTarget.color || '#aaa',
@@ -907,7 +873,7 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
             </div>
           </div>
         ) : (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, paddingRight: 44 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, paddingRight: 104 }}>
             <div style={{
               width: 52, height: 52, borderRadius: '50%',
               backgroundImage: `url(${TEXTURE_PATHS[planet.name] || TEXTURE_PATHS.Earth})`,
