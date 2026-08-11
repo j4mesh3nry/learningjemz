@@ -201,6 +201,88 @@ function AsteroidBelt({ count = 3500, innerRadius = 21.0, outerRadius = 24.0, si
   );
 }
 
+/* ─── Cosmic Nebula (Particle-based space clouds) ─── */
+function CosmicNebula() {
+  const texture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    gradient.addColorStop(0.2, 'rgba(230, 240, 255, 0.6)');
+    gradient.addColorStop(0.5, 'rgba(100, 150, 255, 0.15)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 128, 128);
+    const tex = new THREE.CanvasTexture(canvas);
+    return tex;
+  }, []);
+
+  const [positions, colors] = useMemo(() => {
+    const count = 120;
+    const pos = new Float32Array(count * 3);
+    const cols = new Float32Array(count * 3);
+    
+    const nebulaColors = [
+      new THREE.Color('#3b82f6'),
+      new THREE.Color('#8b5cf6'),
+      new THREE.Color('#ec4899'),
+      new THREE.Color('#14b8a6'),
+      new THREE.Color('#1d4ed8'),
+    ];
+
+    for (let i = 0; i < count; i++) {
+      const radius = 600 + Math.random() * 400;
+      const u = Math.random();
+      const v = Math.random();
+      const theta = u * 2.0 * Math.PI;
+      const phi = Math.acos(2.0 * v - 1.0);
+      
+      const x = radius * Math.sin(phi) * Math.cos(theta);
+      const y = radius * Math.sin(phi) * Math.sin(theta);
+      const z = radius * Math.cos(phi);
+
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y;
+      pos[i * 3 + 2] = z;
+
+      const col = nebulaColors[Math.floor(Math.random() * nebulaColors.length)];
+      cols[i * 3] = col.r;
+      cols[i * 3 + 1] = col.g;
+      cols[i * 3 + 2] = col.b;
+    }
+    return [pos, cols];
+  }, []);
+
+  const pointsRef = useRef();
+
+  useFrame((state) => {
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = state.clock.getElapsedTime() * 0.005;
+      pointsRef.current.rotation.x = state.clock.getElapsedTime() * 0.002;
+    }
+  });
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" array={positions} count={positions.length / 3} itemSize={3} />
+        <bufferAttribute attach="attributes-color" array={colors} count={colors.length / 3} itemSize={3} />
+      </bufferGeometry>
+      <pointsMaterial
+        map={texture}
+        transparent
+        opacity={0.35}
+        size={250}
+        vertexColors
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
 /* ─── Glowing Sun ─── */
 const Sun = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, simSpeed }, ref) => {
   const groupRef = useRef();
@@ -1266,6 +1348,7 @@ export default function SolarSystem3D() {
         <pointLight position={[0, 0, 0]} intensity={3.5} distance={500} decay={0.3} color="#fff8e7" />
 
         <Stars radius={1500} depth={300} count={12000} factor={5} saturation={0.2} fade speed={0.3} />
+        <CosmicNebula />
         <OrbitControls
           ref={controlsRef}
           enableZoom
