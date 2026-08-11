@@ -93,7 +93,7 @@ The application explicitly avoids Dark Mode to maintain a bright, energetic, and
 - **Backgrounds**: White (`#ffffff`) for cards, Off-White (`#f5f5f5`) for main backgrounds.
 
 ### Module-Specific Color Identities
-Each learning module has its own distinct background color to create a sense of place:
+Each learning module has its own distinct background color to create a sense of place. To ensure these backgrounds seamlessly cover the entire viewport and overscroll regions, the `data-module-theme` attribute is dynamically applied to both `document.body` and `document.documentElement` (`html`) (e.g., `data-module-theme="chess"`), syncing the global background variables universally.
 - **Chess Module**: Dark Emerald (`--bg-chess: #0e4d2e`)
 - **Geography Module**: Philippines Teal (`--bg-geo: #0066cc`)
 - **Reading Module**: Warm Amber (`--bg-reading: #d16f2c`)
