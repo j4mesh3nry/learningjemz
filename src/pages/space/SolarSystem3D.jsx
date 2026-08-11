@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Html, useTexture, Preload, useProgress } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap, Circle } from 'lucide-react';
+import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap, Circle, Pause, Play, FastForward, ChevronRight, ChevronLeft } from 'lucide-react';
 import * as THREE from 'three';
 import { planets, sunData, dwarfPlanets, moons } from '../../data/space-data.js';
 import JemzLoader from '../../components/JemzLoader';
@@ -22,10 +22,11 @@ const TEXTURE_PATHS = {
   SaturnRing: '/textures/planets/saturn_ring.png',
   Pluto: '/textures/objects/pluto.jpg',
   Ceres: '/textures/objects/ceres.jpg',
+  Orcus: '/textures/objects/pluto.jpg',
 };
 
 /* Planet & Moon orbital configs
-   Distances: Logarithmically scaled relative orbits (Mercury 10.5 -> Pluto 68.0)
+   Distances: Logarithmically scaled relative orbits (Mercury 10.5 -> Pluto 68.0 -> Orcus 74.0)
               Leaves clean room outside the Sun's grand coronal glow.
    Sizes: True 1:1 proportional comparative scales (relative to Mercury 0.22 = 4,879 km):
           Sun (3.6) >> Jupiter (1.60) > Saturn (1.30) > Uranus (0.85) >= Neptune (0.82)
@@ -38,7 +39,10 @@ const PLANET_CONFIG = {
   Earth:   { size: 0.48, orbit: 15.5, speed: 1.0, emissive: '#2266aa', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.41, moons: [
     { name: 'Luna', size: 0.156, distance: 1.1, speed: 2.0, color: '#dddddd' }
   ]},
-  Mars:    { size: 0.28, orbit: 18.5, speed: 0.8, emissive: '#aa4422', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.44 },
+  Mars:    { size: 0.28, orbit: 18.5, speed: 0.8, emissive: '#aa4422', emissiveIntensity: 0, rotationSpeed: 0.005, tilt: 0.44, moons: [
+    { name: 'Phobos', size: 0.04, distance: 0.65, speed: 3.5, color: '#aa7766' },
+    { name: 'Deimos', size: 0.03, distance: 0.95, speed: 2.2, color: '#bbaa99' }
+  ]},
   Ceres:   { size: 0.042, orbit: 22.5, speed: 0.6, emissive: '#c8c2b8', emissiveIntensity: 0, rotationSpeed: 0.003, tilt: 0.04 },
   Jupiter: { size: 1.60, orbit: 29.5, speed: 0.44, emissive: '#c49a6c', emissiveIntensity: 0, rotationSpeed: 0.012, tilt: 0.05, moons: [
     { name: 'Io', size: 0.164, distance: 2.2, speed: 2.5, color: '#d9a74a' },
@@ -47,6 +51,7 @@ const PLANET_CONFIG = {
     { name: 'Callisto', size: 0.217, distance: 4.5, speed: 0.8, color: '#8a8074' }
   ]},
   Saturn:  { size: 1.30, orbit: 39.0, speed: 0.32, emissive: '#d4c07a', emissiveIntensity: 0, rotationSpeed: 0.011, tilt: 0.47, moons: [
+    { name: 'Enceladus', size: 0.035, distance: 3.1, speed: 2.6, color: '#e6f2ff' },
     { name: 'Tethys', size: 0.048, distance: 3.4, speed: 2.2, color: '#cfc7bd' },
     { name: 'Dione', size: 0.050, distance: 4.0, speed: 1.8, color: '#d0c8be' },
     { name: 'Rhea', size: 0.069, distance: 4.6, speed: 1.4, color: '#c2b6a3' },
@@ -63,6 +68,7 @@ const PLANET_CONFIG = {
     { name: 'Triton', size: 0.122, distance: 1.8, speed: -1.2, color: '#b3c2c7' }
   ]},
   Pluto:   { size: 0.107, orbit: 68.0, speed: 0.16, emissive: '#a89f91', emissiveIntensity: 0, rotationSpeed: 0.001, tilt: 2.03, binary: { companionName: 'Charon', companionSize: 0.055, distance: 0.55, speed: 1.2, color: '#888888', massRatio: 0.118 } },
+  Orcus:   { size: 0.041, orbit: 74.0, speed: 0.14, emissive: '#94a3b8', emissiveIntensity: 0, rotationSpeed: 0.002, tilt: 0.36, binary: { companionName: 'Vanth', companionSize: 0.020, distance: 0.45, speed: 1.0, color: '#78869b', massRatio: 0.12 } },
 };
 
 /* ─── Educational badges shown in the Info Panel ─── */
@@ -110,6 +116,10 @@ const PLANET_BADGES = {
   pluto: {
     icon: Orbit, title: 'Binary Dwarf Planet System', color: '#ffcc66',
     text: "Pluto and Charon orbit a shared center of mass outside Pluto's surface."
+  },
+  orcus: {
+    icon: Orbit, title: 'Anti-Pluto Pair', color: '#94a3b8',
+    text: "Orbits the Sun in a 247-year resonance mirroring Pluto; paired with its massive binary moon Vanth."
   }
 };
 
@@ -136,7 +146,7 @@ function OrbitRing({ radius }) {
 }
 
 /* ─── Asteroid Belt ─── */
-function AsteroidBelt({ count = 3500, innerRadius = 21.0, outerRadius = 24.0 }) {
+function AsteroidBelt({ count = 3500, innerRadius = 21.0, outerRadius = 24.0, simTimeRef }) {
   const points = useMemo(() => {
     const pts = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -151,8 +161,8 @@ function AsteroidBelt({ count = 3500, innerRadius = 21.0, outerRadius = 24.0 }) 
   }, [count, innerRadius, outerRadius]);
 
   const ref = useRef();
-  useFrame(({ clock }) => {
-    if (ref.current) ref.current.rotation.y = clock.getElapsedTime() * 0.015;
+  useFrame(() => {
+    if (ref.current && simTimeRef) ref.current.rotation.y = simTimeRef.current * 0.015;
   });
 
   return (
@@ -166,14 +176,14 @@ function AsteroidBelt({ count = 3500, innerRadius = 21.0, outerRadius = 24.0 }) 
 }
 
 /* ─── Glowing Sun ─── */
-const Sun = React.forwardRef(({ onSelect, labelsHidden }, ref) => {
+const Sun = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, simSpeed }, ref) => {
   const groupRef = useRef();
   React.useImperativeHandle(ref, () => groupRef.current);
   
   const meshRef = useRef();
   const sunTexture = useTexture(TEXTURE_PATHS.Sun);
   useFrame((_, delta) => {
-    if (meshRef.current) meshRef.current.rotation.y += delta * 0.05;
+    if (meshRef.current) meshRef.current.rotation.y += delta * 0.05 * simSpeed;
   });
 
   return (
@@ -231,10 +241,11 @@ function CameraController({ selected, planetRefs, controlsRef }) {
       isRestoring.current = false;
     }
 
-    // Detect transition from selected to unselected: trigger bounded restoration animation!
-    if (!selected && prevSelected.current && savedCamPos.current) {
-      isRestoring.current = true;
-      restoreTime.current = 0;
+    // Detect transition from selected to unselected: keep view as is!
+    if (!selected && prevSelected.current) {
+      isRestoring.current = false;
+      savedCamPos.current = null;
+      savedCamTarget.current = null;
     }
     prevSelected.current = selected;
 
@@ -298,13 +309,13 @@ function CameraController({ selected, planetRefs, controlsRef }) {
 }
 
 /* ─── Moon component ─── */
-function Moon({ config, labelsHidden, onSelect, hostPlanet }) {
+function Moon({ config, labelsHidden, onSelect, hostPlanet, simTimeRef, simSpeed }) {
   const groupRef = useRef();
   const initialAngle = useRef(Math.random() * Math.PI * 2);
   const [hovered, setHovered] = useState(false);
   
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
+  useFrame(() => {
+    const t = simTimeRef ? simTimeRef.current : 0;
     const angle = initialAngle.current + t * config.speed;
     if (groupRef.current) {
       groupRef.current.position.x = Math.cos(angle) * config.distance;
@@ -324,19 +335,32 @@ function Moon({ config, labelsHidden, onSelect, hostPlanet }) {
     };
   }, [config.name, hostPlanet]);
 
+  const selectHandler = (e) => {
+    e.stopPropagation();
+    onSelect({
+      ...moonData,
+      ...config,
+      isMoon: true,
+      hostPlanet,
+      initialAngle: initialAngle.current
+    });
+  };
+
+  const hitRadius = Math.max(config.size * 1.6, 0.45);
+
   return (
     <group ref={groupRef}>
+      {/* Invisible expanded hit sphere for small moons */}
       <mesh
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect({
-            ...moonData,
-            ...config,
-            isMoon: true,
-            hostPlanet,
-            initialAngle: initialAngle.current
-          });
-        }}
+        onClick={selectHandler}
+        onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
+      >
+        <sphereGeometry args={[hitRadius, 16, 16]} />
+        <meshBasicMaterial visible={false} />
+      </mesh>
+      <mesh
+        onClick={selectHandler}
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
         onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
       >
@@ -349,15 +373,18 @@ function Moon({ config, labelsHidden, onSelect, hostPlanet }) {
         />
       </mesh>
       {config.name && (
-        <Html position={[0, -(config.size + 0.25), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
-          <div style={{
-            color: hovered ? '#fff' : 'rgba(255,255,255,0.45)',
-            fontSize: hovered ? '0.62rem' : '0.55rem',
-            fontWeight: 600,
-            userSelect: 'none',
-            letterSpacing: '0.5px',
-            transition: 'all 0.2s ease',
-          }}>
+        <Html position={[0, -(config.size + 0.25), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+          <div
+            onClick={selectHandler}
+            style={{
+              color: hovered ? '#fff' : 'rgba(255,255,255,0.7)',
+              fontSize: hovered ? '0.62rem' : '0.55rem',
+              fontWeight: 600,
+              userSelect: 'none',
+              letterSpacing: '0.5px',
+              transition: 'all 0.2s ease',
+            }}
+          >
             {config.name}
           </div>
         </Html>
@@ -367,7 +394,7 @@ function Moon({ config, labelsHidden, onSelect, hostPlanet }) {
 }
 
 /* ─── Planet component ─── */
-const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) => {
+const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTimeRef, simSpeed }, ref) => {
   const groupRef = useRef();
   
   React.useImperativeHandle(ref, () => groupRef.current);
@@ -379,8 +406,8 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
   const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
   const saturnRingTex = useTexture(TEXTURE_PATHS.SaturnRing);
 
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
+  useFrame((_, delta) => {
+    const t = simTimeRef ? simTimeRef.current : 0;
     const angle = initialAngle.current + t * config.speed * 0.15;
     if (groupRef.current) {
       groupRef.current.position.x = Math.cos(angle) * config.orbit;
@@ -388,7 +415,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
     }
     if (meshRef.current) {
       meshRef.current.rotation.z = config.tilt || 0;
-      meshRef.current.rotation.y += config.rotationSpeed || 0.008;
+      meshRef.current.rotation.y += (config.rotationSpeed || 0.008) * simSpeed;
     }
     if (glowRef.current) {
       const scale = hovered ? 1.4 + Math.sin(t * 4) * 0.1 : 1.3;
@@ -399,9 +426,20 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
 
   const isSaturn = data.name === 'Saturn';
   const isUranus = data.name === 'Uranus';
+  const hitRadius = Math.max(config.size * 1.5, 0.55);
 
   return (
     <group ref={groupRef}>
+      {/* Invisible expanded hit sphere for small planets */}
+      <mesh
+        onClick={(e) => { e.stopPropagation(); onSelect(data); }}
+        onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
+      >
+        <sphereGeometry args={[hitRadius, 16, 16]} />
+        <meshBasicMaterial visible={false} />
+      </mesh>
+
       {/* Glow aura */}
       <mesh ref={glowRef}>
         <sphereGeometry args={[config.size, 32, 32]} />
@@ -442,7 +480,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
 
       {/* Orbiting Moons */}
       {config.moons && config.moons.map((m, i) => (
-        <Moon key={i} config={m} labelsHidden={labelsHidden} onSelect={onSelect} hostPlanet={data} />
+        <Moon key={i} config={m} labelsHidden={labelsHidden} onSelect={onSelect} hostPlanet={data} simTimeRef={simTimeRef} simSpeed={simSpeed} />
       ))}
 
       {/* Uranus thin ring */}
@@ -454,16 +492,19 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
       )}
 
       {/* Label */}
-      <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
-        <div style={{
-          color: hovered ? '#fff' : 'rgba(255,255,255,0.7)',
-          fontSize: hovered ? '0.75rem' : '0.65rem',
-          fontWeight: 700,
-          textShadow: `0 0 8px ${data.color || '#888'}`,
-          transition: 'all 0.2s ease',
-          userSelect: 'none',
-          letterSpacing: '0.5px',
-        }}>
+      <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+        <div
+          onClick={(e) => { e.stopPropagation(); onSelect(data); }}
+          style={{
+            color: hovered ? '#fff' : 'rgba(255,255,255,0.85)',
+            fontSize: hovered ? '0.75rem' : '0.65rem',
+            fontWeight: 700,
+            textShadow: `0 0 8px ${data.color || '#888'}`,
+            transition: 'all 0.2s ease',
+            userSelect: 'none',
+            letterSpacing: '0.5px',
+          }}
+        >
           {data.name}
         </div>
       </Html>
@@ -471,11 +512,11 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) 
   );
 });
 
-/* ─── Binary Dwarf Planet System (Pluto + Charon) ───
+/* ─── Binary Dwarf Planet System (Pluto + Charon, Orcus + Vanth) ───
    Both bodies orbit the group origin, which IS the barycenter (shared center
    of mass). massRatio = companion mass / primary mass; with Charon at 0.118,
    the barycenter lands outside Pluto's surface, just like the real system. */
-const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden }, ref) => {
+const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, simTimeRef, simSpeed }, ref) => {
   const groupRef = useRef();
   React.useImperativeHandle(ref, () => groupRef.current);
 
@@ -494,8 +535,8 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
   const primaryOffset = (D * ratio) / (1 + ratio);
   const companionOffset = D / (1 + ratio);
 
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
+  useFrame((_, delta) => {
+    const t = simTimeRef ? simTimeRef.current : 0;
     // The whole system orbits the Sun on the primary's orbit path
     const angle = initialAngle.current + t * config.speed * 0.15;
     if (groupRef.current) {
@@ -508,12 +549,12 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
       primaryRef.current.position.x = Math.cos(bAngle) * primaryOffset;
       primaryRef.current.position.z = Math.sin(bAngle) * primaryOffset;
       primaryRef.current.rotation.z = config.tilt || 0;
-      primaryRef.current.rotation.y += config.rotationSpeed || 0.008;
+      primaryRef.current.rotation.y += (config.rotationSpeed || 0.008) * simSpeed;
     }
     if (companionRef.current) {
       companionRef.current.position.x = -Math.cos(bAngle) * companionOffset;
       companionRef.current.position.z = -Math.sin(bAngle) * companionOffset;
-      companionRef.current.rotation.y += 0.005;
+      companionRef.current.rotation.y += 0.005 * simSpeed;
     }
     // Glow + labels follow the primary body
     if (glowRef.current && primaryRef.current) {
@@ -530,26 +571,43 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
     }
   });
 
-  const charonData = useMemo(() => {
-    const found = moons.find((m) => m.name.toLowerCase() === 'charon');
+  const companionData = useMemo(() => {
+    const found = moons.find((m) => m.name.toLowerCase() === config.binary.companionName.toLowerCase());
     return found || {
-      name: 'Charon',
-      planet: 'Pluto',
-      diameter: '1,212 km',
-      orbitalPeriod: '6.4 days',
-      funFact: 'So large compared to Pluto that they orbit a shared barycenter outside Pluto.'
+      name: config.binary.companionName,
+      planet: data.name,
+      diameter: '—',
+      orbitalPeriod: '—',
+      funFact: `Binary partner orbiting a shared barycenter outside ${data.name}.`
     };
-  }, []);
+  }, [config.binary.companionName, data.name]);
+
+  const selectCompanionHandler = (e) => {
+    e.stopPropagation();
+    onSelect({
+      ...companionData,
+      name: config.binary.companionName,
+      size: config.binary.companionSize,
+      distance: config.binary.distance,
+      speed: config.binary.speed,
+      color: config.binary.color,
+      isMoon: true,
+      hostPlanet: data
+    });
+  };
+
+  const primaryHitRadius = Math.max(config.size * 1.5, 0.55);
+  const companionHitRadius = Math.max(config.binary.companionSize * 1.8, 0.45);
 
   return (
     <group ref={groupRef}>
-      {/* Glow aura around Pluto */}
+      {/* Glow aura around primary */}
       <mesh ref={glowRef}>
         <sphereGeometry args={[config.size, 32, 32]} />
         <meshBasicMaterial color={config.emissive} transparent opacity={0.1} />
       </mesh>
 
-      {/* Pluto body */}
+      {/* Primary body (Pluto / Orcus) */}
       <mesh
         ref={primaryRef}
         onClick={(e) => { e.stopPropagation(); onSelect(data); }}
@@ -566,22 +624,10 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
         />
       </mesh>
 
-      {/* Charon body */}
+      {/* Companion body (Charon / Vanth) */}
       <mesh
         ref={companionRef}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect({
-            ...charonData,
-            name: 'Charon',
-            size: config.binary.companionSize,
-            distance: config.binary.distance,
-            speed: config.binary.speed,
-            color: config.binary.color,
-            isMoon: true,
-            hostPlanet: data
-          });
-        }}
+        onClick={selectCompanionHandler}
         onPointerOver={(e) => { e.stopPropagation(); setCompanionHovered(true); document.body.style.cursor = 'pointer'; }}
         onPointerOut={() => { setCompanionHovered(false); document.body.style.cursor = 'auto'; }}
       >
@@ -594,34 +640,40 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden },
         />
       </mesh>
 
-      {/* Pluto label */}
+      {/* Primary label */}
       <group ref={labelRef}>
-        <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
-          <div style={{
-            color: hovered ? '#fff' : 'rgba(255,255,255,0.7)',
-            fontSize: hovered ? '0.75rem' : '0.65rem',
-            fontWeight: 700,
-            textShadow: `0 0 8px ${data.color || '#888'}`,
-            transition: 'all 0.2s ease',
-            userSelect: 'none',
-            letterSpacing: '0.5px',
-          }}>
+        <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+          <div
+            onClick={(e) => { e.stopPropagation(); onSelect(data); }}
+            style={{
+              color: hovered ? '#fff' : 'rgba(255,255,255,0.85)',
+              fontSize: hovered ? '0.75rem' : '0.65rem',
+              fontWeight: 700,
+              textShadow: `0 0 8px ${data.color || '#888'}`,
+              transition: 'all 0.2s ease',
+              userSelect: 'none',
+              letterSpacing: '0.5px',
+            }}
+          >
             {data.name}
           </div>
         </Html>
       </group>
 
-      {/* Charon label */}
+      {/* Companion label */}
       <group ref={companionLabelRef}>
-        <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
-          <div style={{
-            color: companionHovered ? '#fff' : 'rgba(255,255,255,0.45)',
-            fontSize: companionHovered ? '0.62rem' : '0.55rem',
-            fontWeight: 600,
-            userSelect: 'none',
-            letterSpacing: '0.5px',
-            transition: 'all 0.2s ease',
-          }}>
+        <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+          <div
+            onClick={selectCompanionHandler}
+            style={{
+              color: companionHovered ? '#fff' : 'rgba(255,255,255,0.7)',
+              fontSize: companionHovered ? '0.62rem' : '0.55rem',
+              fontWeight: 600,
+              userSelect: 'none',
+              letterSpacing: '0.5px',
+              transition: 'all 0.2s ease',
+            }}
+          >
             {config.binary.companionName}
           </div>
         </Html>
@@ -641,6 +693,7 @@ const MOON_BADGES = {
   moon: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only celestial world humans have stepped on." },
   luna: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only celestial world humans have stepped on." },
   charon: { icon: Orbit, title: 'Double Dwarf Partner', color: '#888888', text: 'Tidally locked with Pluto so both worlds forever show the exact same face to each other.' },
+  vanth: { icon: Orbit, title: 'Barycentric Partner', color: '#78869b', text: 'So large relative to Orcus that both bodies orbit a shared center of mass outside Orcus.' },
   phobos: { icon: Gauge, title: 'Ultra-Close Orbit', color: '#aa7766', text: 'Orbits Mars closer than any other moon orbits its planet — completing an orbit in just 7.6 hours.' },
   deimos: { icon: Mountain, title: 'Tiny Outer Satellite', color: '#bbaa99', text: 'Small, potato-shaped outer Martian moon measuring only 12 km across.' },
   enceladus: { icon: Sparkles, title: 'Cryovolcano Geysers', color: '#e6f2ff', text: 'Erupts towering geysers of water ice and organic compounds from warm fracture zones at its south pole.' },
@@ -946,6 +999,14 @@ function InfoPanel({ planet, onSelect, onClose }) {
   );
 }
 
+/* ─── Simulation Clock Updater ─── */
+function TimeUpdater({ simSpeed, simTimeRef }) {
+  useFrame((_, delta) => {
+    simTimeRef.current += delta * simSpeed;
+  });
+  return null;
+}
+
 /* ─── 3D Loading Overlay ─── */
 function SolarLoadingOverlay() {
   const { active, progress } = useProgress();
@@ -983,11 +1044,73 @@ export default function SolarSystem3D() {
   const controlsRef = useRef();
   const planetRefs = useRef({});
   const [selected, setSelected] = useState(null);
+  const [simSpeed, setSimSpeed] = useState(1.0);
+  const [speedPanelOpen, setSpeedPanelOpen] = useState(false);
+  const simTimeRef = useRef(0);
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#07081a', overflow: 'hidden' }}>
       {/* Loading Overlay */}
       <SolarLoadingOverlay />
+
+      {/* Speed Controller Sidebar Drawer Widget */}
+      <div className={`solar-speed-controller ${speedPanelOpen ? 'open' : 'closed'}`}>
+        {/* Toggle Tab Button on side */}
+        <button
+          className="solar-speed-toggle-tab"
+          onClick={() => setSpeedPanelOpen(!speedPanelOpen)}
+          title={speedPanelOpen ? "Hide Speed Panel" : "Show Speed Panel"}
+        >
+          <Gauge size={14} />
+          {speedPanelOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+          <span style={{ fontSize: '0.55rem', fontWeight: 800 }}>
+            {simSpeed === 0 ? 'PAUSE' : `${simSpeed.toFixed(1)}x`}
+          </span>
+        </button>
+
+        <div className="solar-speed-header">
+          <Gauge size={12} /> SPEED
+        </div>
+
+        <button
+          className={`solar-speed-btn freeze-btn ${simSpeed === 0 ? 'active' : ''}`}
+          onClick={() => setSimSpeed(simSpeed === 0 ? 1.0 : 0)}
+          title="Pause/Freeze simulation movement"
+        >
+          {simSpeed === 0 ? <Play size={12} /> : <Pause size={12} />}
+          {simSpeed === 0 ? 'FROZEN' : 'FREEZE'}
+        </button>
+
+        <div className="solar-speed-slider-container">
+          <input
+            type="range"
+            min="0"
+            max="2"
+            step="0.05"
+            value={simSpeed}
+            onChange={(e) => setSimSpeed(parseFloat(e.target.value))}
+            className="solar-speed-slider"
+            title={`Speed: ${simSpeed.toFixed(2)}x`}
+          />
+        </div>
+
+        <div style={{ fontSize: '0.65rem', fontWeight: 800, color: simSpeed === 0 ? '#60a5fa' : '#ffd000' }}>
+          {simSpeed === 0 ? '0.00x' : `${simSpeed.toFixed(2)}x`}
+        </div>
+
+        <div className="solar-speed-preset-group">
+          {[0.25, 0.5, 1.0, 2.0].map((preset) => (
+            <button
+              key={preset}
+              className={`solar-speed-btn ${simSpeed === preset ? 'active' : ''}`}
+              onClick={() => setSimSpeed(preset)}
+            >
+              {preset === 2.0 ? <FastForward size={10} /> : null}
+              {preset}x
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Navigation Bar */}
       <div style={{
@@ -1046,9 +1169,10 @@ export default function SolarSystem3D() {
           minPolarAngle={0.01}
         />
         <CameraController selected={selected} planetRefs={planetRefs} controlsRef={controlsRef} />
+        <TimeUpdater simSpeed={simSpeed} simTimeRef={simTimeRef} />
         <Suspense fallback={null}>
-          <Sun ref={(el) => planetRefs.current['Sun'] = el} onSelect={setSelected} labelsHidden={!!selected} />
-          <AsteroidBelt />
+          <Sun ref={(el) => planetRefs.current['Sun'] = el} onSelect={setSelected} labelsHidden={!!selected} simTimeRef={simTimeRef} simSpeed={simSpeed} />
+          <AsteroidBelt simTimeRef={simTimeRef} />
           {planets.concat(dwarfPlanets).map((p) => {
             const cfg = PLANET_CONFIG[p.name];
             if (!cfg) return null;
@@ -1062,6 +1186,8 @@ export default function SolarSystem3D() {
                     config={cfg} 
                     onSelect={setSelected} 
                     labelsHidden={!!selected}
+                    simTimeRef={simTimeRef}
+                    simSpeed={simSpeed}
                   />
                 ) : (
                   <Planet 
@@ -1070,6 +1196,8 @@ export default function SolarSystem3D() {
                     config={cfg} 
                     onSelect={setSelected} 
                     labelsHidden={!!selected}
+                    simTimeRef={simTimeRef}
+                    simSpeed={simSpeed}
                   />
                 )}
               </React.Fragment>

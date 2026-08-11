@@ -3181,3 +3181,141 @@
   border-color: #22c55e;
   color: #4ade80;
 }
+
+/* 3D Solar Explorer Simulation Speed Controller Drawer Widget */
+.solar-speed-controller {
+  position: absolute;
+  top: 72px;
+  left: 0;
+  z-index: 40;
+  background: #0d0e26;
+  border: 2px solid #2d3561;
+  border-left: none;
+  box-shadow: 4px 4px 0 #07081a;
+  border-radius: 0 16px 16px 0;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  user-select: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.solar-speed-controller.closed {
+  transform: translateX(-100%);
+}
+
+.solar-speed-controller.open {
+  transform: translateX(0);
+}
+
+.solar-speed-toggle-tab {
+  position: absolute;
+  top: 8px;
+  left: 100%;
+  background: #0d0e26;
+  border: 2px solid #2d3561;
+  border-left: none;
+  box-shadow: 4px 4px 0 #07081a;
+  border-radius: 0 12px 12px 0;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: #ffd000;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 800;
+  transition: background 0.15s, color 0.15s;
+}
+
+.solar-speed-toggle-tab:hover {
+  background: #191c3d;
+  color: #ffffff;
+}
+
+.solar-speed-header {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #ffd000;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.solar-speed-slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 120px;
+  position: relative;
+}
+
+.solar-speed-slider {
+  writing-mode: bt-lr; /* Firefox */
+  appearance: slider-vertical; /* WebKit */
+  width: 8px;
+  height: 110px;
+  background: #1e2447;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  accent-color: #ffd000;
+}
+
+.solar-speed-preset-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+.solar-speed-btn {
+  background: #191c3d;
+  border: 1.5px solid #2d3561;
+  box-shadow: 0 2px 0 #07081a;
+  border-radius: 8px;
+  padding: 5px 8px;
+  color: #a0aec0;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.solar-speed-btn:hover {
+  background: #252b59;
+  color: #ffffff;
+}
+
+.solar-speed-btn.active {
+  background: #ffd000;
+  border-color: #e6b800;
+  color: #07081a;
+  box-shadow: 0 2px 0 #997a00;
+}
+
+.solar-speed-btn.freeze-btn {
+  background: #1a233d;
+  border-color: #3b82f6;
+  color: #60a5fa;
+}
+
+.solar-speed-btn.freeze-btn.active {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: #ffffff;
+  box-shadow: 0 2px 0 #1e3a8a;
+}

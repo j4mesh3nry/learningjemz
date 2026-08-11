@@ -190,7 +190,8 @@ export const moons = [
   { id: 'umbriel', name: 'Umbriel', planet: 'Uranus', diameter: '1,169 km', orbitalPeriod: '4.1 days', funFact: 'Umbriel features a mysterious bright ring of ice named Wunda on its summit that shines like a glowing donut in dark terrain.', discoveredBy: 'William Lassell', discoveredYear: '1851' },
   { id: 'ariel', name: 'Ariel', planet: 'Uranus', diameter: '1,158 km', orbitalPeriod: '2.5 days', funFact: 'Ariel\'s surface is crisscrossed by smooth valley floors where ancient flows of icy liquid slush filled in old impact craters.', discoveredBy: 'William Lassell', discoveredYear: '1851' },
   { id: 'triton', name: 'Triton', planet: 'Neptune', diameter: '2,706 km', orbitalPeriod: '5.8 days', funFact: 'Triton is one of the coldest places in the solar system (-235°C) and features active nitrogen ice geysers that spew dark dust 8 km high into space!', discoveredBy: 'William Lassell', discoveredYear: '1846' },
-  { id: 'charon', name: 'Charon', planet: 'Pluto', diameter: '1,212 km', orbitalPeriod: '6.4 days', funFact: 'Because Pluto and Charon orbit a shared center of mass located in open space between them, neither body moves in a simple circle — they dance in tandem!', discoveredBy: 'James Christy', discoveredYear: '1978' }
+  { id: 'charon', name: 'Charon', planet: 'Pluto', diameter: '1,212 km', orbitalPeriod: '6.4 days', funFact: 'Because Pluto and Charon orbit a shared center of mass located in open space between them, neither body moves in a simple circle — they dance in tandem!', discoveredBy: 'James Christy', discoveredYear: '1978' },
+  { id: 'vanth', name: 'Vanth', planet: 'Orcus', diameter: '442 km', orbitalPeriod: '9.5 days', funFact: 'Vanth is so massive relative to Orcus that both bodies orbit a shared center of mass in open space.', discoveredBy: 'Michael Brown & T.-A. Suer', discoveredYear: '2005' }
 ];
 
 export const stars = [
@@ -285,6 +286,26 @@ export const dwarfPlanets = [
       'Bright spots in Occator Crater are salt deposits from briny water that reached the surface.'
     ],
     color: '#c8c2b8',
+    emoji: '🪐'
+  },
+  {
+    id: 'orcus',
+    name: 'Orcus',
+    type: 'Dwarf Planet',
+    distanceFromSun: 5900000000,
+    diameter: 910,
+    mass: '6.4 × 10^20 kg',
+    gravity: '0.27 m/s²',
+    dayLength: '13.2 hours',
+    yearLength: '247 Earth years',
+    moons: 1,
+    atmosphere: 'Transient (thin methane/water ice surface)',
+    temperature: '-230°C',
+    funFacts: [
+      'Orcus is often called the "anti-Pluto" because its 247-year orbit around the Sun is an exact mirror of Pluto\'s orbit!',
+      'Orcus has one large moon, Vanth, which is about half the size of Orcus — making them a binary dwarf planet pair similar to Pluto and Charon.'
+    ],
+    color: '#94a3b8',
     emoji: '🪐'
   }
 ];

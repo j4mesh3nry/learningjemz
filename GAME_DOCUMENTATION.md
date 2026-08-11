@@ -104,8 +104,11 @@
 - **Game Modes**:
   - **3D Solar System Visualizer (`SolarSystem3D.jsx`)**:
     - Full 3D canvas with realistic scale ratios, orbital movement, rings, and stars.
-    - **Natural Satellites & Moon Explorer**: Features 20 natural satellites orbiting their respective host bodies (Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto). Selecting any satellite displays unique educational badges and non-redundant fun facts.
-    - **Host Planet Camera Lock**: Camera focus locks strictly on the host planet to ensure smooth, stable 3D rotation without motion sickness.
+    - **Simulation Speed Controller & Freeze Mode**: Interactive tactile 3D vertical slider bar on the left allowing full speed control from `0.0x` (Frozen / Paused in time for close-up examination) up to `2.0x` speed, featuring preset buttons (`Freeze ⏸`, `0.25x`, `0.5x`, `1.0x`, `2.0x`).
+    - **Camera View Retention**: Closing the Info Panel (via `X` button) preserves the user's current zoomed-in, focused camera perspective instead of resetting or lerping back to the default overview position.
+    - **Enhanced Clickability & Hitboxes**: Expanded invisible raycast hit spheres (`args={[Math.max(size * 1.5, 0.45), 16, 16]}`) and interactive `pointerEvents: 'auto'` HTML 2D text labels for effortless selection of small planets, dwarf planets, and moons.
+    - **Natural Satellites & Moon Explorer**: Features natural satellites orbiting Earth (Luna), Mars (Phobos, Deimos), Jupiter (Io, Europa, Ganymede, Callisto), Saturn (Enceladus, Tethys, Dione, Rhea, Titan, Iapetus), Uranus (Ariel, Umbriel, Titania, Oberon), Neptune (Triton), Pluto (Charon), and Orcus (Vanth).
+    - **Binary Dwarf Systems**: Both Pluto & Charon and Orcus & Vanth orbit their respective shared barycenters in open space outside their primary bodies.
     - **Swipeable Satellite Selector**: Full horizontal touch swipe (`touchAction: 'pan-x'`) and mouse drag-scroll navigation positioned below the top header with zero button overlap.
     - **Dedicated Space 3D Loader (`SolarLoadingOverlay`)**: Renders `<JemzLoader darkTheme={true} />` displaying live 3D texture & orbit downloading progress (`Downloading 2K planet textures & orbits... N%`).
   - **Orbits**: 1 AU = 10 units — true Sun-relative AU ratios (Mercury 3.87, Earth 10, Jupiter 52.03, Saturn 95.37, Uranus 191.91, Neptune 300.7, Pluto 394.8). The asteroid belt sits at its real 2.1–3.3 AU ring (21–33 units), with Ceres (dwarf planet, 2.77 AU) orbiting inside it.
