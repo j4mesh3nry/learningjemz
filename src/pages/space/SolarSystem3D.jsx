@@ -394,21 +394,20 @@ function Moon({ config, labelsHidden, onSelect, hostPlanet, simTimeRef, simSpeed
 }
 
 /* ─── Planet component ─── */
-const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTimeRef, simSpeed }, ref) => {
+const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTimeRef, simSpeed, initialAngle }, ref) => {
   const groupRef = useRef();
   
   React.useImperativeHandle(ref, () => groupRef.current);
 
   const meshRef = useRef();
   const glowRef = useRef();
-  const initialAngle = useRef(Math.random() * Math.PI * 2);
   const [hovered, setHovered] = useState(false);
   const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
   const saturnRingTex = useTexture(TEXTURE_PATHS.SaturnRing);
 
   useFrame((_, delta) => {
     const t = simTimeRef ? simTimeRef.current : 0;
-    const angle = initialAngle.current + (config.phaseOffset || 0) + t * config.speed * 0.15;
+    const angle = initialAngle + (config.phaseOffset || 0) + t * config.speed * 0.15;
     if (groupRef.current) {
       groupRef.current.position.x = Math.cos(angle) * config.orbit;
       groupRef.current.position.z = Math.sin(angle) * config.orbit;
@@ -516,7 +515,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTime
    Both bodies orbit the group origin, which IS the barycenter (shared center
    of mass). massRatio = companion mass / primary mass; with Charon at 0.118,
    the barycenter lands outside Pluto's surface, just like the real system. */
-const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, simTimeRef, simSpeed }, ref) => {
+const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, selected, simTimeRef, simSpeed, initialAngle }, ref) => {
   const groupRef = useRef();
   React.useImperativeHandle(ref, () => groupRef.current);
 
@@ -525,7 +524,6 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
   const glowRef = useRef();
   const labelRef = useRef();
   const companionLabelRef = useRef();
-  const initialAngle = useRef(Math.random() * Math.PI * 2);
   const [hovered, setHovered] = useState(false);
   const [companionHovered, setCompanionHovered] = useState(false);
   const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
@@ -538,7 +536,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
   useFrame((_, delta) => {
     const t = simTimeRef ? simTimeRef.current : 0;
     // The whole system orbits the Sun on the primary's orbit path
-    const angle = initialAngle.current + (config.phaseOffset || 0) + t * config.speed * 0.15;
+    const angle = initialAngle + (config.phaseOffset || 0) + t * config.speed * 0.15;
     if (groupRef.current) {
       groupRef.current.position.x = Math.cos(angle) * config.orbit;
       groupRef.current.position.z = Math.sin(angle) * config.orbit;
@@ -609,6 +607,14 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
 
       {/* Primary body (Pluto / Orcus) */}
       <mesh
+        onClick={(e) => { e.stopPropagation(); onSelect(data); }}
+        onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
+      >
+        <sphereGeometry args={[primaryHitRadius, 16, 16]} />
+        <meshBasicMaterial visible={false} />
+      </mesh>
+      <mesh
         ref={primaryRef}
         onClick={(e) => { e.stopPropagation(); onSelect(data); }}
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
@@ -625,6 +631,14 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
       </mesh>
 
       {/* Companion body (Charon / Vanth) */}
+      <mesh
+        onClick={selectCompanionHandler}
+        onPointerOver={(e) => { e.stopPropagation(); setCompanionHovered(true); document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { setCompanionHovered(false); document.body.style.cursor = 'auto'; }}
+      >
+        <sphereGeometry args={[companionHitRadius, 16, 16]} />
+        <meshBasicMaterial visible={false} />
+      </mesh>
       <mesh
         ref={companionRef}
         onClick={selectCompanionHandler}
@@ -662,7 +676,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
 
       {/* Companion label */}
       <group ref={companionLabelRef}>
-        <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+        <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: (companionHovered || (selected && (selected.name === data.name || selected.name === config.binary.companionName))) ? 1 : 0, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
           <div
             onClick={selectCompanionHandler}
             style={{
@@ -1048,6 +1062,18 @@ export default function SolarSystem3D() {
   const [speedPanelOpen, setSpeedPanelOpen] = useState(false);
   const simTimeRef = useRef(0);
 
+  // Pre-calculate starting angles to ensure absolute orbital mirrors (e.g. Pluto vs Orcus)
+  const initialAngles = useMemo(() => {
+    const angles = {};
+    planets.concat(dwarfPlanets).forEach((p) => {
+      angles[p.name] = Math.random() * Math.PI * 2;
+    });
+    if (angles['Pluto'] !== undefined) {
+      angles['Orcus'] = angles['Pluto'] + Math.PI;
+    }
+    return angles;
+  }, []);
+
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#07081a', overflow: 'hidden' }}>
       {/* Loading Overlay */}
@@ -1190,8 +1216,10 @@ export default function SolarSystem3D() {
                       config={cfg} 
                       onSelect={setSelected} 
                       labelsHidden={!!selected}
+                      selected={selected}
                       simTimeRef={simTimeRef}
                       simSpeed={simSpeed}
+                      initialAngle={initialAngles[p.name]}
                     />
                   ) : (
                     <Planet 
@@ -1202,6 +1230,7 @@ export default function SolarSystem3D() {
                       labelsHidden={!!selected}
                       simTimeRef={simTimeRef}
                       simSpeed={simSpeed}
+                      initialAngle={initialAngles[p.name]}
                     />
                   )}
                 </React.Fragment>
