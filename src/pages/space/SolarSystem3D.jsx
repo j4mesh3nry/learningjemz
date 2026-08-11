@@ -23,6 +23,32 @@ const TEXTURE_PATHS = {
   Pluto: '/textures/objects/pluto.jpg',
   Ceres: '/textures/objects/ceres.jpg',
   Orcus: '/textures/objects/pluto.jpg',
+
+  // Custom Moon/Satellite textures
+  Luna: '/textures/objects/moon.jpg',
+  Moon: '/textures/objects/moon.jpg',
+  Io: '/textures/objects/io.jpg',
+  Europa: '/textures/objects/europa.jpg',
+  Ganymede: '/textures/objects/ganymede.jpg',
+  Callisto: '/textures/objects/callisto.jpg',
+  Titan: '/textures/objects/titan.jpg',
+  Tethys: '/textures/objects/tethys.jpg',
+  Dione: '/textures/objects/dione.jpg',
+  Rhea: '/textures/objects/rhea.jpg',
+  Iapetus: '/textures/objects/iapetus.jpg',
+  Ariel: '/textures/objects/ariel.jpg',
+  Oberon: '/textures/objects/oberon.jpg',
+  Titania: '/textures/objects/titania.jpg',
+  Triton: '/textures/objects/triton.jpg',
+  Charon: '/textures/objects/charon.jpg',
+
+  // Fallbacks for moons/companions without explicit texture files
+  Phobos: '/textures/objects/moon.jpg',
+  Deimos: '/textures/objects/moon.jpg',
+  Enceladus: '/textures/objects/europa.jpg',
+  Mimas: '/textures/objects/moon.jpg',
+  Umbriel: '/textures/objects/moon.jpg',
+  Vanth: '/textures/objects/moon.jpg',
 };
 
 /* Planet & Moon orbital configs
@@ -348,6 +374,8 @@ function Moon({ config, labelsHidden, onSelect, hostPlanet, simTimeRef, simSpeed
 
   const hitRadius = Math.max(config.size * 1.6, 0.45);
 
+  const texture = useTexture(TEXTURE_PATHS[config.name] || TEXTURE_PATHS.Moon);
+
   return (
     <group ref={groupRef}>
       {/* Invisible expanded hit sphere for small moons */}
@@ -364,11 +392,12 @@ function Moon({ config, labelsHidden, onSelect, hostPlanet, simTimeRef, simSpeed
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
         onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
       >
-        <sphereGeometry args={[config.size, 16, 16]} />
+        <sphereGeometry args={[config.size, 32, 32]} />
         <meshStandardMaterial
-          color={config.color}
+          map={texture}
+          color={TEXTURE_PATHS[config.name] ? '#ffffff' : (config.color || '#ffffff')}
           emissive={config.color}
-          emissiveIntensity={hovered ? 0.3 : 0}
+          emissiveIntensity={hovered ? 0.25 : 0}
           roughness={0.8}
         />
       </mesh>
@@ -527,6 +556,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
   const [hovered, setHovered] = useState(false);
   const [companionHovered, setCompanionHovered] = useState(false);
   const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
+  const companionTexture = useTexture(TEXTURE_PATHS[config.binary.companionName] || TEXTURE_PATHS.Moon);
 
   const D = config.binary.distance * 0.6;
   const ratio = config.binary.massRatio;
@@ -647,9 +677,10 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
       >
         <sphereGeometry args={[config.binary.companionSize, 32, 32]} />
         <meshStandardMaterial
-          color={config.binary.color}
+          map={companionTexture}
+          color={TEXTURE_PATHS[config.binary.companionName] ? '#ffffff' : (config.binary.color || '#ffffff')}
           emissive={config.binary.color}
-          emissiveIntensity={companionHovered ? 0.3 : 0}
+          emissiveIntensity={companionHovered ? 0.25 : 0}
           roughness={0.8}
         />
       </mesh>
