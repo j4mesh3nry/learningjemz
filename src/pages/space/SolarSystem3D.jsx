@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Html, useTexture, Preload, useProgress } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap, Circle, Pause, Play, FastForward, ChevronRight, ChevronLeft } from 'lucide-react';
+import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap, Circle, Pause, Play, FastForward, ChevronRight, ChevronLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import * as THREE from 'three';
 import { planets, sunData, dwarfPlanets, moons } from '../../data/space-data.js';
 import JemzLoader from '../../components/JemzLoader';
@@ -723,7 +723,13 @@ const MOON_BADGES = {
 };
 
 /* ─── Info Panel Component ─── */
-function InfoPanel({ planet, onSelect, onClose }) {
+function InfoPanel({ planet, onSelect, onClose, selected }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
+    setIsCollapsed(false);
+  }, [planet?.name]);
+
   if (!planet) return null;
 
   // Mouse drag-scroll handlers for Satellite Explorer strip
@@ -792,27 +798,94 @@ function InfoPanel({ planet, onSelect, onClose }) {
   }, [hostPlanet]);
 
   return (
-    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, padding: '0 12px 16px', animation: 'slideUp 0.3s ease' }}>
-      <div style={{
-        maxWidth: 420, margin: '0 auto',
-        maxHeight: '52vh', overflowY: 'auto',
-        background: 'rgba(11,13,34,0.92)',
-        backdropFilter: 'blur(18px)',
-        borderRadius: '20px 20px 16px 16px',
-        padding: '18px 20px 16px', color: '#fff',
-        border: '1.5px solid rgba(255,255,255,0.1)',
-        boxShadow: '0 6px 0 #07081a',
-      }}>
-        {/* Close Button - dedicated top-right position */}
-        <button onClick={onClose} style={{
-          position: 'absolute', top: 16, right: 16,
-          background: 'rgba(255,255,255,0.1)', border: '1.5px solid rgba(255,255,255,0.15)',
-          borderRadius: '50%', width: 32, height: 32,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', color: '#fff', transition: 'background 0.2s', zIndex: 10
-        }}>
-          <X size={16} />
+    <>
+      {/* Floating Expand Tab when Collapsed */}
+      {isCollapsed && (
+        <button
+          onClick={() => setIsCollapsed(false)}
+          className="solar-infopanel-expand-tab"
+        >
+          <ChevronUp size={16} /> SHOW INFO
         </button>
+      )}
+
+      {/* Slideable Info Panel */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        padding: '0 12px 16px',
+        transform: isCollapsed ? 'translateY(110%)' : 'translateY(0)',
+        opacity: isCollapsed ? 0 : 1,
+        pointerEvents: isCollapsed ? 'none' : 'auto',
+        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+      }}>
+        <div style={{
+          maxWidth: 420,
+          margin: '0 auto',
+          maxHeight: '52vh',
+          overflowY: 'auto',
+          background: '#0b0d22',
+          borderRadius: '20px 20px 16px 16px',
+          padding: '18px 20px 16px',
+          color: '#fff',
+          border: '2px solid #2d3561',
+          boxShadow: '0 6px 0 #07081a',
+          position: 'relative',
+        }}>
+          {/* Collapse Button */}
+          <button
+            onClick={() => setIsCollapsed(true)}
+            style={{
+              position: 'absolute',
+              top: 16,
+              right: 56,
+              background: '#191c3d',
+              border: '1.5px solid #2d3561',
+              boxShadow: '0 2px 0 #07081a',
+              borderRadius: '50%',
+              width: 32,
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#fff',
+              transition: 'background 0.2s',
+              zIndex: 10
+            }}
+            title="Collapse Panel"
+          >
+            <ChevronDown size={16} />
+          </button>
+
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            style={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+              background: '#191c3d',
+              border: '1.5px solid #2d3561',
+              boxShadow: '0 2px 0 #07081a',
+              borderRadius: '50%',
+              width: 32,
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#fff',
+              transition: 'background 0.2s',
+              zIndex: 10
+            }}
+            title="Close Panel and Return to Space View"
+          >
+            <X size={16} />
+          </button>
 
         {/* Top Header: Avatar + Title (has right padding to clear X button) */}
         {activeTarget.isMoon ? (
@@ -1010,7 +1083,8 @@ function InfoPanel({ planet, onSelect, onClose }) {
         )}
       </div>
     </div>
-  );
+  </>
+);
 }
 
 /* ─── Simulation Clock Updater ─── */
@@ -1241,7 +1315,7 @@ export default function SolarSystem3D() {
         <Preload all />
       </Canvas>
 
-      <InfoPanel planet={selected} onSelect={setSelected} onClose={() => setSelected(null)} />
+      <InfoPanel planet={selected} onSelect={setSelected} onClose={() => setSelected(null)} selected={selected} />
 
       <style>{`@keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`}</style>
     </div>

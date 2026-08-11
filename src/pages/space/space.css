@@ -3318,4 +3318,33 @@
   border-color: #1d4ed8;
   color: #ffffff;
   box-shadow: 0 2px 0 #1e3a8a;
+}
+
+/* 3D Solar Explorer Info Panel Expand Tab */
+.solar-infopanel-expand-tab {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 55;
+  background: #0b0d22;
+  border: 2px solid #2d3561;
+  box-shadow: 0 4px 0 #07081a;
+  border-radius: 20px;
+  padding: 8px 16px;
+  color: #ffd000;
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.solar-infopanel-expand-tab:hover {
+  background: #191c3d;
+  color: #ffffff;
 }
