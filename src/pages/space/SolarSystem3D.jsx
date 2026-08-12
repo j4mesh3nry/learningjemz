@@ -230,14 +230,7 @@ const Sun = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, simSpeed }, 
         <sphereGeometry args={[3.6, 64, 64]} />
         <meshBasicMaterial map={sunTexture} />
       </mesh>
-      <mesh>
-        <sphereGeometry args={[4.4, 32, 32]} />
-        <meshBasicMaterial color="#FDB813" transparent opacity={0.15} />
-      </mesh>
-      <mesh>
-        <sphereGeometry args={[5.2, 32, 32]} />
-        <meshBasicMaterial color="#ff9900" transparent opacity={0.06} />
-      </mesh>
+
       <pointLight color="#FDB813" intensity={400} distance={400} decay={1} />
       {!labelsHidden && (
         <Html position={[0, -4.8, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[5, 0]}>
@@ -482,7 +475,6 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTime
   React.useImperativeHandle(ref, () => groupRef.current);
 
   const meshRef = useRef();
-  const glowRef = useRef();
   const [hovered, setHovered] = useState(false);
   const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
   const saturnRingTex = useTexture(TEXTURE_PATHS.SaturnRing);
@@ -498,11 +490,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTime
       meshRef.current.rotation.z = config.tilt || 0;
       meshRef.current.rotation.y += (config.rotationSpeed || 0.008) * simSpeed;
     }
-    if (glowRef.current) {
-      const scale = hovered ? 1.4 + Math.sin(t * 4) * 0.1 : 1.3;
-      glowRef.current.scale.setScalar(scale);
-      glowRef.current.material.opacity = hovered ? 0.25 : 0.1;
-    }
+
   });
 
   const isSaturn = data.name === 'Saturn';
@@ -521,11 +509,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTime
         <meshBasicMaterial visible={false} />
       </mesh>
 
-      {/* Glow aura */}
-      <mesh ref={glowRef}>
-        <sphereGeometry args={[config.size, 32, 32]} />
-        <meshBasicMaterial color={config.emissive} transparent opacity={0.1} />
-      </mesh>
+
 
       {/* Planet body */}
       <mesh
@@ -605,7 +589,6 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
 
   const primaryRef = useRef();
   const companionRef = useRef();
-  const glowRef = useRef();
   const labelRef = useRef();
   const companionLabelRef = useRef();
   const [hovered, setHovered] = useState(false);
@@ -640,13 +623,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
       companionRef.current.position.z = -Math.sin(bAngle) * companionOffset;
       companionRef.current.rotation.y += 0.005 * simSpeed;
     }
-    // Glow + labels follow the primary body
-    if (glowRef.current && primaryRef.current) {
-      glowRef.current.position.copy(primaryRef.current.position);
-      const scale = hovered ? 1.4 + Math.sin(t * 4) * 0.1 : 1.3;
-      glowRef.current.scale.setScalar(scale);
-      glowRef.current.material.opacity = hovered ? 0.25 : 0.1;
-    }
+
     if (labelRef.current && primaryRef.current) {
       labelRef.current.position.copy(primaryRef.current.position);
     }
@@ -685,11 +662,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
 
   return (
     <group ref={groupRef}>
-      {/* Glow aura around primary */}
-      <mesh ref={glowRef}>
-        <sphereGeometry args={[config.size, 32, 32]} />
-        <meshBasicMaterial color={config.emissive} transparent opacity={0.1} />
-      </mesh>
+
 
       {/* Primary body (Pluto / Orcus) */}
       <mesh
