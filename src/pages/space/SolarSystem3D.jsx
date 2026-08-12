@@ -334,7 +334,7 @@ function CameraController({ selected, planetRefs, controlsRef }) {
 
         if (isTransitioning.current) {
           targetZoom = defaultZoomDist;
-          const verticalOffset = cameraUp.clone().multiplyScalar(-targetZoom * 0.14);
+          const verticalOffset = cameraUp.clone().multiplyScalar(-targetZoom * 0.34);
           desiredTarget.copy(planetPos).add(verticalOffset);
           desiredCamPos.copy(planetPos).add(camDir.multiplyScalar(targetZoom)).add(verticalOffset);
 
@@ -351,7 +351,7 @@ function CameraController({ selected, planetRefs, controlsRef }) {
           }
           targetZoom = currentZoomDist.current;
 
-          const verticalOffset = cameraUp.clone().multiplyScalar(-targetZoom * 0.14);
+          const verticalOffset = cameraUp.clone().multiplyScalar(-targetZoom * 0.34);
           desiredTarget.copy(planetPos).add(verticalOffset);
           desiredCamPos.copy(planetPos).add(camDir.multiplyScalar(targetZoom)).add(verticalOffset);
         }
@@ -1146,7 +1146,7 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
           maxWidth: 420,
           width: '100%',
           pointerEvents: 'auto',
-          maxHeight: '52vh',
+          maxHeight: '40vh',
           overflowY: 'auto',
           background: '#0b0d22',
           borderRadius: '20px 20px 16px 16px',
