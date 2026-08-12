@@ -239,14 +239,16 @@ const Sun = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, simSpeed }, 
         <meshBasicMaterial color="#ff9900" transparent opacity={0.06} />
       </mesh>
       <pointLight color="#FDB813" intensity={400} distance={400} decay={1} />
-      <Html position={[0, -4.8, 0]} center style={{ pointerEvents: 'none', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease' }} zIndexRange={[5, 0]}>
-        <div style={{
-          color: '#FDB813', fontSize: '0.75rem', fontWeight: 700,
-          textShadow: '0 0 10px rgba(253,184,19,0.8)', userSelect: 'none', letterSpacing: '1px',
-        }}>
-          SUN
-        </div>
-      </Html>
+      {!labelsHidden && (
+        <Html position={[0, -4.8, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[5, 0]}>
+          <div style={{
+            color: '#FDB813', fontSize: '0.75rem', fontWeight: 700,
+            textShadow: '0 0 10px rgba(253,184,19,0.8)', userSelect: 'none', letterSpacing: '1px',
+          }}>
+            SUN
+          </div>
+        </Html>
+      )}
     </group>
   );
 });
@@ -452,8 +454,8 @@ function Moon({ config, labelsHidden, onSelect, hostPlanet, hostPlanetSize, simT
           roughness={0.8}
         />
       </mesh>
-      {config.name && (
-        <Html position={[0, -(config.size + 0.25), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+      {config.name && !labelsHidden && (
+        <Html position={[0, -(config.size + 0.25), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', cursor: 'pointer' }} zIndexRange={[5, 0]}>
           <div
             onClick={selectHandler}
             style={{
@@ -571,22 +573,24 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTime
       )}
 
       {/* Label */}
-      <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
-        <div
-          onClick={(e) => { e.stopPropagation(); onSelect(data); }}
-          style={{
-            color: hovered ? '#fff' : 'rgba(255,255,255,0.85)',
-            fontSize: hovered ? '0.75rem' : '0.65rem',
-            fontWeight: 700,
-            textShadow: `0 0 8px ${data.color || '#888'}`,
-            transition: 'all 0.2s ease',
-            userSelect: 'none',
-            letterSpacing: '0.5px',
-          }}
-        >
-          {data.name}
-        </div>
-      </Html>
+      {!labelsHidden && (
+        <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+          <div
+            onClick={(e) => { e.stopPropagation(); onSelect(data); }}
+            style={{
+              color: hovered ? '#fff' : 'rgba(255,255,255,0.85)',
+              fontSize: hovered ? '0.75rem' : '0.65rem',
+              fontWeight: 700,
+              textShadow: `0 0 8px ${data.color || '#888'}`,
+              transition: 'all 0.2s ease',
+              userSelect: 'none',
+              letterSpacing: '0.5px',
+            }}
+          >
+            {data.name}
+          </div>
+        </Html>
+      )}
     </group>
   );
 });
@@ -739,41 +743,45 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
 
       {/* Primary label */}
       <group ref={labelRef}>
-        <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
-          <div
-            onClick={(e) => { e.stopPropagation(); onSelect(data); }}
-            style={{
-              color: hovered ? '#fff' : 'rgba(255,255,255,0.85)',
-              fontSize: hovered ? '0.75rem' : '0.65rem',
-              fontWeight: 700,
-              textShadow: `0 0 8px ${data.color || '#888'}`,
-              transition: 'all 0.2s ease',
-              userSelect: 'none',
-              letterSpacing: '0.5px',
-            }}
-          >
-            {data.name}
-          </div>
-        </Html>
+        {!labelsHidden && (
+          <Html position={[0, -(config.size + 0.4), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+            <div
+              onClick={(e) => { e.stopPropagation(); onSelect(data); }}
+              style={{
+                color: hovered ? '#fff' : 'rgba(255,255,255,0.85)',
+                fontSize: hovered ? '0.75rem' : '0.65rem',
+                fontWeight: 700,
+                textShadow: `0 0 8px ${data.color || '#888'}`,
+                transition: 'all 0.2s ease',
+                userSelect: 'none',
+                letterSpacing: '0.5px',
+              }}
+            >
+              {data.name}
+            </div>
+          </Html>
+        )}
       </group>
 
       {/* Companion label */}
       <group ref={companionLabelRef}>
-        <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : (companionHovered ? 1 : 0.7), transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
-          <div
-            onClick={selectCompanionHandler}
-            style={{
-              color: companionHovered ? '#fff' : 'rgba(255,255,255,0.7)',
-              fontSize: companionHovered ? '0.62rem' : '0.55rem',
-              fontWeight: 600,
-              userSelect: 'none',
-              letterSpacing: '0.5px',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            {config.binary.companionName}
-          </div>
-        </Html>
+        {!labelsHidden && (
+          <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+            <div
+              onClick={selectCompanionHandler}
+              style={{
+                color: companionHovered ? '#fff' : 'rgba(255,255,255,0.7)',
+                fontSize: companionHovered ? '0.62rem' : '0.55rem',
+                fontWeight: 600,
+                userSelect: 'none',
+                letterSpacing: '0.5px',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {config.binary.companionName}
+            </div>
+          </Html>
+        )}
       </group>
     </group>
   );
@@ -975,21 +983,23 @@ const ParkerProbe = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, simS
         </group>
 
         {/* Label */}
-        <Html position={[0, -(PARKER_CONFIG.size + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
-          <div
-            onClick={(e) => { e.stopPropagation(); onSelect(parkerSolarProbe); }}
-            style={{
-              color: hovered ? '#fff' : 'rgba(255,255,255,0.75)',
-              fontSize: hovered ? '0.65rem' : '0.55rem',
-              fontWeight: 700,
-              userSelect: 'none',
-              letterSpacing: '0.5px',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            Parker Solar Probe
-          </div>
-        </Html>
+        {!labelsHidden && (
+          <Html position={[0, -(PARKER_CONFIG.size + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+            <div
+              onClick={(e) => { e.stopPropagation(); onSelect(parkerSolarProbe); }}
+              style={{
+                color: hovered ? '#fff' : 'rgba(255,255,255,0.75)',
+                fontSize: hovered ? '0.65rem' : '0.55rem',
+                fontWeight: 700,
+                userSelect: 'none',
+                letterSpacing: '0.5px',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              Parker Solar Probe
+            </div>
+          </Html>
+        )}
       </group>
 
       {/* Orbital trail rendered in absolute world coordinates */}
