@@ -364,3 +364,24 @@ export const sunData = {
   color: '#FDB813',
   emoji: '☀️'
 };
+
+export const parkerSolarProbe = {
+  id: 'parker-solar-probe',
+  name: 'Parker Solar Probe',
+  type: 'Spacecraft',
+  distanceFromSun: '6.2 million km (perihelion)',
+  diameter: '~1 m (bus) + 2.3 m shield',
+  mass: '685 kg',
+  gravity: 'N/A',
+  dayLength: 'N/A',
+  yearLength: '88 days',
+  moons: 0,
+  atmosphere: 'N/A',
+  temperature: '~1,370°C (shield) / ~30°C (instruments)',
+  funFacts: [
+    'At perihelion, the Parker Solar Probe reaches roughly 690,000 km/h (192 km/s), making it the fastest human-made object in history.',
+    'Its heat shield endures 1,370°C on the sun-facing side while keeping instruments at room temperature just centimeters behind it.',
+    'Launched in 2018, it uses seven Venus gravity assists to gradually shrink its orbit down to just 6.2 million km from the Sun\'s surface.'
+  ],
+  color: '#c0c0c0',
+};

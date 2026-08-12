@@ -462,19 +462,19 @@
 }
 
 .square.light {
-  background-color: #eeeed2;
+  background-color: #faf6ee;
 }
 
 .square.dark {
-  background-color: #769656;
+  background-color: #b89f80;
 }
 
 .square.selected {
-  background-color: #baca44 !important;
+  background-color: #d9a74a !important;
 }
 
 .square.last-move {
-  background-color: rgba(245, 246, 130, 0.75) !important;
+  background-color: rgba(74, 44, 17, 0.25) !important;
 }
 
 .piece-img,
