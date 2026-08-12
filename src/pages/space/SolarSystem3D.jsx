@@ -1112,33 +1112,24 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
       {/* Slideable Info Panel */}
       <div style={{
         position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
+        bottom: 16,
+        left: '50%',
+        transform: isCollapsed ? 'translate(-50%, 110%)' : 'translate(-50%, 0)',
+        maxWidth: 420,
+        width: 'calc(100% - 24px)',
+        maxHeight: '40vh',
+        overflowY: 'auto',
         zIndex: 50,
-        padding: '0 12px 16px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-        pointerEvents: 'none',
+        pointerEvents: 'auto',
+        background: '#0b0d22',
+        borderRadius: '20px',
+        padding: '18px 20px 16px',
+        color: '#fff',
+        border: '2px solid #2d3561',
+        boxShadow: '0 6px 0 #07081a',
+        opacity: isCollapsed ? 0 : 1,
+        transition: 'transform 0.3s ease, opacity 0.3s ease',
       }}>
-        <div style={{
-          maxWidth: 420,
-          width: '100%',
-          pointerEvents: 'auto',
-          maxHeight: '40vh',
-          overflowY: 'auto',
-          background: '#0b0d22',
-          borderRadius: '20px 20px 16px 16px',
-          padding: '18px 20px 16px',
-          color: '#fff',
-          border: '2px solid #2d3561',
-          boxShadow: '0 6px 0 #07081a',
-          position: 'relative',
-          transform: isCollapsed ? 'translateY(110%)' : 'translateY(0)',
-          opacity: isCollapsed ? 0 : 1,
-          transition: 'transform 0.3s ease, opacity 0.3s ease',
-        }}>
           {/* Collapse Button */}
           <button
             onClick={() => setIsCollapsed(true)}
@@ -1394,9 +1385,8 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
           </div>
         )}
       </div>
-    </div>
-  </>
-);
+    </>
+  );
 }
 
 /* ─── Simulation Clock Updater ─── */
