@@ -71,11 +71,19 @@ export function getLocalState(userId) {
     const raw = localStorage.getItem(key);
     if (!raw) return defaultState;
     const parsed = { ...defaultState, ...JSON.parse(raw) };
-    parsed.playedDates = pruneFuturePlayedDates(
-      backfillPlayedDates(parsed.streak, parsed.lastVisit, parsed.playedDates),
-      toLocalDateString(parsed.lastVisit)
+
+    const todayStr = getLocalDateString(new Date());
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = getLocalDateString(yesterday);
+
+    const rolledState = applyDayRollover(parsed, todayStr, yesterdayStr);
+
+    rolledState.playedDates = pruneFuturePlayedDates(
+      backfillPlayedDates(rolledState.streak, rolledState.lastVisit, rolledState.playedDates),
+      toLocalDateString(rolledState.lastVisit)
     );
-    return parsed;
+    return rolledState;
   } catch {
     return defaultState;
   }
@@ -269,6 +277,12 @@ export function GameProvider({ children }) {
           achievements: achievementsData.map(a => ({ id: a.achievement_id, unlockedAt: a.unlocked_at }))
         };
 
+        const todayStr = getLocalDateString(new Date());
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = getLocalDateString(yesterday);
+        const rolledRemoteState = applyDayRollover(remoteState, todayStr, yesterdayStr);
+
         // Local progress written offline (or after a failed sync) can be newer
         // than the server row — restore it so XP/streak gains are never lost.
         // The server row carries its own write timestamp (updated_at): it is the
@@ -279,12 +293,12 @@ export function GameProvider({ children }) {
         // offline fallback — discard it instead of overriding the fetched row.
         const pending = getPendingSync(userId);
         if (pending && hasUnsyncedChanges(userId)) {
-          if (isPristineDefaultState(pending.state) && !isPristineDefaultState(remoteState)) {
+          if (isPristineDefaultState(pending.state) && !isPristineDefaultState(rolledRemoteState)) {
             clearPendingSync(userId);
           } else {
             const serverUpdatedAt = data.updated_at ? new Date(data.updated_at).getTime() : 0;
             if (pending.savedAt > serverUpdatedAt) {
-              const merged = { ...remoteState, ...pending.state };
+              const merged = { ...rolledRemoteState, ...pending.state };
               setState(merged);
               localStorage.setItem(getStorageKey(userId), JSON.stringify(merged));
               isInitialized.current = true;
@@ -300,8 +314,8 @@ export function GameProvider({ children }) {
           }
         }
 
-        setState(remoteState);
-        localStorage.setItem(getStorageKey(userId), JSON.stringify(remoteState));
+        setState(rolledRemoteState);
+        localStorage.setItem(getStorageKey(userId), JSON.stringify(rolledRemoteState));
       } else if (error && error.code === 'PGRST116') {
         // No row exists on the server. A pending snapshot holding REAL progress
         // (e.g. the row was deleted, or the account was recreated while this

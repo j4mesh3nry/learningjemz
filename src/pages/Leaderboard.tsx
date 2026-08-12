@@ -10,10 +10,16 @@ import { JemzLoader } from '../components/JemzLoader';
 import { toLocalDateString } from '../utils/dateUtils';
 import '../index.css';
 
-// Streaks are ranked by their REAL stored value. Missing a day does not remove a
-// player — the streak only drops off the board when it is actually 0 (which the
-// app enforces at the next local midnight after a missed day).
-const getRawStreak = (item: any) => Number(item?.streak) || 0;
+// Streaks are ranked by their active value. If a user is inactive for more than 1 day,
+// their streak is considered broken (0) and is filtered off the board.
+const getActiveStreak = (item: any) => {
+  const raw = Number(item?.streak) || 0;
+  if (raw <= 0) return 0;
+  if (getStreakDaysInactive(item) > 1) {
+    return 0;
+  }
+  return raw;
+};
 
 // Whole days since the player's last recorded visit (0 = today, 1 = yesterday).
 const getStreakDaysInactive = (item: any) => {
@@ -24,6 +30,14 @@ const getStreakDaysInactive = (item: any) => {
   const now = new Date();
   const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   return Math.max(0, Math.round((todayMidnight.getTime() - last.getTime()) / 86400000));
+};
+
+const formatXP = (val: number) => {
+  if (val >= 1000) {
+    const kVal = val / 1000;
+    return kVal.toFixed(1).replace(/\.0$/, '') + 'k';
+  }
+  return String(val);
 };
 
 // The user's own entry is ranked/displayed with LIVE app values: the server row
@@ -46,14 +60,14 @@ export default function Leaderboard() {
     const merged = withLiveUserValues(data, user, xp, streak, level);
     const qualified = merged.filter(item => {
       if (type === 'streak') {
-        return getRawStreak(item) > 0;
+        return getActiveStreak(item) > 0;
       }
       return (Number(item.xp) || 0) > 0;
     });
 
     return qualified.sort((a, b) => {
-      const valA = type === 'streak' ? getRawStreak(a) : (Number(a.xp) || 0);
-      const valB = type === 'streak' ? getRawStreak(b) : (Number(b.xp) || 0);
+      const valA = type === 'streak' ? getActiveStreak(a) : (Number(a.xp) || 0);
+      const valB = type === 'streak' ? getActiveStreak(b) : (Number(b.xp) || 0);
       if (valB !== valA) return valB - valA;
       return (Number(b.xp) || 0) - (Number(a.xp) || 0);
     });
@@ -140,7 +154,7 @@ export default function Leaderboard() {
     if (!isUserInTop20) {
       const rank20Item = top20Leaders[19];
       if (rank20Item) {
-        const targetVal = sortBy === 'streak' ? getRawStreak(rank20Item) : Number(rank20Item.xp);
+        const targetVal = sortBy === 'streak' ? getActiveStreak(rank20Item) : Number(rank20Item.xp);
         const myVal = sortBy === 'streak' ? streak : xp;
         const needed = Math.max(1, targetVal - myVal + 1);
 
@@ -157,7 +171,7 @@ export default function Leaderboard() {
 
     const playerAhead = top20Leaders[fullUserRankIndex - 1];
     if (playerAhead) {
-      const aheadVal = sortBy === 'streak' ? getRawStreak(playerAhead) : Number(playerAhead.xp);
+      const aheadVal = sortBy === 'streak' ? getActiveStreak(playerAhead) : Number(playerAhead.xp);
       const myVal = sortBy === 'streak' ? streak : xp;
       const needed = Math.max(1, aheadVal - myVal + 1);
 
@@ -264,8 +278,8 @@ export default function Leaderboard() {
                 <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#0f3825', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {top2?.name || 'Player'}
                 </div>
-                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#16653e', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-                  {sortBy === 'xp' ? `${top2?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getRawStreak(top2)}</>}
+                <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#16653e', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                  {sortBy === 'xp' ? `Lv.${top2?.level || 1} · ${formatXP(top2?.xp || 0)}` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getActiveStreak(top2)}</>}
                 </div>
               </div>
 
@@ -282,8 +296,8 @@ export default function Leaderboard() {
                 <div style={{ fontWeight: 900, fontSize: '0.92rem', color: '#78350f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {top1?.name || 'Champion'}
                 </div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#d97706', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-                  {sortBy === 'xp' ? `${top1?.xp || 0} XP` : <><Flame size={14} color="#ff4d4d" fill="#ff4d4d" /> {getRawStreak(top1)}</>}
+                <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#d97706', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                  {sortBy === 'xp' ? `Lv.${top1?.level || 1} · ${formatXP(top1?.xp || 0)}` : <><Flame size={14} color="#ff4d4d" fill="#ff4d4d" /> {getActiveStreak(top1)}</>}
                 </div>
               </div>
 
@@ -298,8 +312,8 @@ export default function Leaderboard() {
                 <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#4a2c1d', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {top3?.name || 'Player'}
                 </div>
-                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#b45309', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-                  {sortBy === 'xp' ? `${top3?.xp || 0} XP` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getRawStreak(top3)}</>}
+                <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#b45309', marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                  {sortBy === 'xp' ? `Lv.${top3?.level || 1} · ${formatXP(top3?.xp || 0)}` : <><Flame size={13} color="#ff4d4d" fill="#ff4d4d" /> {getActiveStreak(top3)}</>}
                 </div>
               </div>
             </div>
@@ -366,14 +380,11 @@ export default function Leaderboard() {
                         <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f3825' }}>
                           {item.name || 'Learner'} {isMe && <span style={{ color: '#16653e', fontSize: '0.75rem' }}>(You)</span>}
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: '#4e7361', fontWeight: 600 }}>
-                          {sortBy === 'streak' && inactiveDays > 0 ? `Inactive · last played ${inactiveDays === 1 ? 'yesterday' : `${inactiveDays} days ago`}` : `Level ${item.level || 1}`}
-                        </div>
                       </div>
                     </div>
 
-                    <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.9rem', color: '#16653e', display: 'flex', alignItems: 'center', gap: 4 }}>
-                      {sortBy === 'xp' ? `${item.xp || 0} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {getRawStreak(item)}</>}
+                    <div style={{ textAlign: 'right', fontWeight: 800, fontSize: '0.8rem', color: '#16653e', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      {sortBy === 'xp' ? `Lv.${item.level || 1} · ${formatXP(item.xp || 0)}` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {getActiveStreak(item)}</>}
                     </div>
                   </div>
                 );
@@ -416,8 +427,8 @@ export default function Leaderboard() {
               <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>Your Rank</div>
             </div>
 
-            <div style={{ fontWeight: 900, fontSize: '0.88rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: 4 }}>
-              {sortBy === 'xp' ? `${xp} XP` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {streak}</>}
+            <div style={{ fontWeight: 900, fontSize: '0.82rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: 4 }}>
+              {sortBy === 'xp' ? `Lv.${level} · ${formatXP(xp)}` : <><Flame size={15} color="#ff4d4d" fill="#ff4d4d" /> {streak}</>}
             </div>
           </div>
 

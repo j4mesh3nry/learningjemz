@@ -321,6 +321,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     diameter: '1,230 km',
     orbitalOrder: 'Scattered Disc',
     funFact: 'Reddish dwarf planet named after a Chinese water god with a serpentine tail.',
+    img: '/textures/objects/gonggong.jpg',
     acceptedNames: ['gonggong', '225088 gonggong']
   },
   {
@@ -346,6 +347,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     diameter: '1,169 km',
     orbitalOrder: 'Orbits Uranus',
     funFact: 'The darkest major moon of Uranus, reflecting very little incident sunlight.',
+    img: '/textures/objects/umbriel.jpg',
     acceptedNames: ['umbriel']
   },
   {
@@ -384,6 +386,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     diameter: '1,110 km',
     orbitalOrder: 'Kuiper Belt',
     funFact: 'Dwarf planet encircled by a rare ring system located far beyond its Roche limit.',
+    img: '/textures/objects/quaoar.jpg',
     acceptedNames: ['quaoar', '50000 quaoar']
   },
   {
@@ -422,6 +425,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     diameter: '910 km',
     orbitalOrder: 'Kuiper Belt',
     funFact: 'Often called the "anti-Pluto" because its orbit around the Sun is an exact mirror of Pluto\'s.',
+    img: '/textures/objects/orcus.jpg',
     acceptedNames: ['orcus', '90482 orcus']
   },
   {
@@ -434,6 +438,7 @@ export const SPACE_OBJECTS_BY_SIZE = [
     diameter: '995 km',
     orbitalOrder: 'Detached Trans-Neptunian',
     funFact: 'Has an extremely elongated 11,400-year orbit taking it to the distant Oort Cloud.',
+    img: '/textures/objects/sedna.jpg',
     acceptedNames: ['sedna', '90377 sedna']
   },
   {

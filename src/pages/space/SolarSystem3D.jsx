@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Html, useTexture, Preload, useProgress } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap, Circle, Pause, Play, FastForward, ChevronRight, ChevronLeft, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap, Circle, Pause, Play, FastForward, ChevronRight, ChevronLeft, ChevronDown, ChevronUp, Rocket } from 'lucide-react';
 import * as THREE from 'three';
-import { planets, sunData, dwarfPlanets, moons } from '../../data/space-data.js';
+import { planets, sunData, dwarfPlanets, moons, parkerSolarProbe } from '../../data/space-data.js';
 import JemzLoader from '../../components/JemzLoader';
 import './space.css';
 
@@ -22,7 +22,7 @@ const TEXTURE_PATHS = {
   SaturnRing: '/textures/planets/saturn_ring.png',
   Pluto: '/textures/objects/pluto.jpg',
   Ceres: '/textures/objects/ceres.jpg',
-  Orcus: '/textures/objects/pluto.jpg',
+  Orcus: '/textures/objects/orcus.jpg',
 
   // Custom Moon/Satellite textures
   Luna: '/textures/objects/moon.jpg',
@@ -49,6 +49,7 @@ const TEXTURE_PATHS = {
   Mimas: '/textures/objects/moon.jpg',
   Umbriel: '/textures/objects/moon.jpg',
   Vanth: '/textures/objects/moon.jpg',
+  'Parker Solar Probe': '/textures/objects/parker_solar_probe.png',
 };
 
 /* Planet & Moon orbital configs
@@ -100,8 +101,8 @@ const PLANET_CONFIG = {
 /* ─── Educational badges shown in the Info Panel ─── */
 const PLANET_BADGES = {
   sun: {
-    icon: Zap, title: 'Giver of Light', color: '#FDB813',
-    text: "Contains 99.86% of all mass in the solar system — powers every planet with nuclear light and heat."
+    icon: Zap, title: 'Galactic Voyager', color: '#FDB813',
+    text: "The Sun orbits the center of the Milky Way at roughly 230 km/s (about 828,000 km/h), taking approximately 225\u2013250 million years to complete a single galactic orbit."
   },
   mercury: {
     icon: Gauge, title: 'Fastest Planet', color: '#b8b8b8',
@@ -112,20 +113,20 @@ const PLANET_BADGES = {
     text: 'A runaway greenhouse effect pushes surface temperatures to a scorching 462°C.'
   },
   earth: {
-    icon: Leaf, title: 'Only Known Life', color: '#2b82c9',
-    text: 'The only world known to harbor life, with liquid oceans covering 71% of its surface.'
+    icon: Globe, title: 'Densest Planet', color: '#2b82c9',
+    text: 'With an average density of 5.51 g/cm\u00b3, Earth is the densest planet in the Solar System \u2014 compressed by its massive iron-nickel core deep beneath the surface.'
   },
   mars: {
     icon: Mountain, title: 'Red Planet', color: '#c1440e',
     text: 'Covered in rusty iron oxide dust, creating its signature crimson surface and pinkish sky.'
   },
   jupiter: {
-    icon: Globe, title: 'Largest Planet', color: '#d39c7e',
-    text: 'The Great Red Spot storm has raged for centuries, and 1,300 Earths could fit inside.'
+    icon: Globe, title: 'Sun Wobbler', color: '#d39c7e',
+    text: 'Jupiter is so massive that the Sun-Jupiter barycenter \u2014 their shared center of mass \u2014 sits about 46,000 km above the Sun\u2019s surface, making the Sun visibly wobble.'
   },
   saturn: {
-    icon: Sparkles, title: 'Ringed Giant', color: '#ead6b8',
-    text: 'Famous for its magnificent ring system spanning 282,000 km across, composed of billions of icy particles.'
+    icon: Sparkles, title: 'Lighter Than Water', color: '#ead6b8',
+    text: 'Saturn\u2019s average density is just 0.687 g/cm\u00b3 \u2014 lower than liquid water. In a hypothetical ocean large enough, Saturn would float.'
   },
   uranus: {
     icon: RefreshCcw, title: 'Sideways Rotation', color: '#4b70dd',
@@ -140,8 +141,12 @@ const PLANET_BADGES = {
     text: 'The largest object in the asteroid belt and the only dwarf planet living there.'
   },
   pluto: {
-    icon: Orbit, title: 'Binary Dwarf Planet System', color: '#ffcc66',
-    text: "Pluto and Charon orbit a shared center of mass outside Pluto's surface."
+    icon: Orbit, title: 'Barycenter Pair', color: '#ffcc66',
+    text: "Every orbiting pair shares a barycenter \u2014 a gravitational balance point. Pluto\u2019s barycenter with Charon lies in open space between them, making both bodies visibly orbit each other."
+  },
+  'parker-solar-probe': {
+    icon: Rocket, title: 'Gravity Assist Pioneer', color: '#c0c0c0',
+    text: 'Uses repeated Venus flybys to shed orbital energy and fall closer to the Sun \u2014 a technique called a gravity assist, where a spacecraft borrows or surrenders speed by flying near a planet\u2019s gravitational field.'
   },
   orcus: {
     icon: Orbit, title: 'Anti-Pluto Pair', color: '#94a3b8',
@@ -258,15 +263,35 @@ function CameraController({ selected, planetRefs, controlsRef }) {
   const prevSelected = useRef(null);
   const isRestoring = useRef(false);
   const restoreTime = useRef(0);
+  
+  const currentZoomDist = useRef(7.0);
+  const isTransitioning = useRef(false);
 
   useFrame(({ camera, clock }, delta) => {
     if (!controlsRef.current) return;
 
     // Detect transition from unselected to selected: save pre-click view state!
-    if (selected && !prevSelected.current) {
+    if (selected && (!prevSelected.current || prevSelected.current.name !== selected.name)) {
       savedCamPos.current = camera.position.clone();
       savedCamTarget.current = controlsRef.current.target.clone();
       isRestoring.current = false;
+      isTransitioning.current = true;
+
+      // Compute defaultZoomDist immediately to initialize currentZoomDist
+      const targetObj = selected.isMoon ? selected.hostPlanet : selected;
+      const cfg = PLANET_CONFIG[targetObj.name];
+      let defaultZoomDist = 7.0;
+      if (targetObj.id === 'sun') {
+        defaultZoomDist = 15.0;
+      } else if (targetObj.id === 'parker-solar-probe') {
+        defaultZoomDist = 3.0;
+      } else if (cfg) {
+        if (cfg.size >= 1.3) defaultZoomDist = 9.5;
+        else if (cfg.size >= 0.8) defaultZoomDist = 6.2;
+        else if (cfg.size >= 0.25) defaultZoomDist = 4.2;
+        else defaultZoomDist = 3.2;
+      }
+      currentZoomDist.current = defaultZoomDist;
     }
 
     // Detect transition from selected to unselected: keep view as is!
@@ -274,6 +299,7 @@ function CameraController({ selected, planetRefs, controlsRef }) {
       isRestoring.current = false;
       savedCamPos.current = null;
       savedCamTarget.current = null;
+      isTransitioning.current = false;
     }
     prevSelected.current = selected;
 
@@ -285,14 +311,16 @@ function CameraController({ selected, planetRefs, controlsRef }) {
 
         // Tailored close-up zoom distance based on host planet size
         const cfg = PLANET_CONFIG[targetObj.name];
-        let zoomDist = 7.0;
+        let defaultZoomDist = 7.0;
         if (targetObj.id === 'sun') {
-          zoomDist = 15.0;
+          defaultZoomDist = 15.0;
+        } else if (targetObj.id === 'parker-solar-probe') {
+          defaultZoomDist = 3.0;
         } else if (cfg) {
-          if (cfg.size >= 1.3) zoomDist = 9.5;       // Jupiter, Saturn
-          else if (cfg.size >= 0.8) zoomDist = 6.2;   // Uranus, Neptune
-          else if (cfg.size >= 0.25) zoomDist = 4.2;  // Earth, Venus, Mars
-          else zoomDist = 3.2;                         // Mercury, Pluto, Ceres
+          if (cfg.size >= 1.3) defaultZoomDist = 9.5;       // Jupiter, Saturn
+          else if (cfg.size >= 0.8) defaultZoomDist = 6.2;   // Uranus, Neptune
+          else if (cfg.size >= 0.25) defaultZoomDist = 4.2;  // Earth, Venus, Mars
+          else defaultZoomDist = 3.2;                         // Mercury, Pluto, Ceres
         }
 
         // Camera view direction
@@ -301,13 +329,32 @@ function CameraController({ selected, planetRefs, controlsRef }) {
           .normalize();
         if (camDir.lengthSq() === 0) camDir.set(0, 0.5, 1).normalize();
 
-        // Compute vertical offset so target sits gently below host planet,
-        // positioning it in the open upper-middle viewport above InfoPanel!
+        let targetZoom = currentZoomDist.current;
         const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
-        const verticalOffset = cameraUp.clone().multiplyScalar(-zoomDist * 0.14);
 
-        desiredTarget.copy(planetPos).add(verticalOffset);
-        desiredCamPos.copy(planetPos).add(camDir.multiplyScalar(zoomDist)).add(verticalOffset);
+        if (isTransitioning.current) {
+          targetZoom = defaultZoomDist;
+          const verticalOffset = cameraUp.clone().multiplyScalar(-targetZoom * 0.14);
+          desiredTarget.copy(planetPos).add(verticalOffset);
+          desiredCamPos.copy(planetPos).add(camDir.multiplyScalar(targetZoom)).add(verticalOffset);
+
+          const distToDesired = camera.position.distanceTo(desiredCamPos);
+          if (distToDesired < 0.25) {
+            isTransitioning.current = false;
+            currentZoomDist.current = defaultZoomDist;
+          }
+        } else {
+          // Transition complete: track manual zoom actions from OrbitControls
+          const actualDist = camera.position.distanceTo(controlsRef.current.target);
+          if (Math.abs(actualDist - currentZoomDist.current) > 0.01) {
+            currentZoomDist.current = actualDist;
+          }
+          targetZoom = currentZoomDist.current;
+
+          const verticalOffset = cameraUp.clone().multiplyScalar(-targetZoom * 0.14);
+          desiredTarget.copy(planetPos).add(verticalOffset);
+          desiredCamPos.copy(planetPos).add(camDir.multiplyScalar(targetZoom)).add(verticalOffset);
+        }
 
         controlsRef.current.target.lerp(desiredTarget, 0.08);
         camera.position.lerp(desiredCamPos, 0.08);
@@ -712,7 +759,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
 
       {/* Companion label */}
       <group ref={companionLabelRef}>
-        <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: (companionHovered || (selected && (selected.name === data.name || selected.name === config.binary.companionName))) ? 1 : 0, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+        <Html position={[0, -(config.binary.companionSize + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : (companionHovered ? 1 : 0.7), transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
           <div
             onClick={selectCompanionHandler}
             style={{
@@ -732,6 +779,230 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
   );
 });
 
+/* ─── Parker Solar Probe Config ─── */
+const ORBIT_PHASES = [
+  { a: 12.5, e: 0.05 }, // Phase 1: Near Venus, almost circular
+  { a: 11.8, e: 0.13 }, // Phase 2: First assist
+  { a: 11.0, e: 0.22 }, // Phase 3: Second assist
+  { a: 10.2, e: 0.31 }, // Phase 4: Third assist
+  { a: 9.5,  e: 0.41 }, // Phase 5: Fourth assist
+  { a: 8.8,  e: 0.51 }, // Phase 6: Fifth assist
+  { a: 8.4,  e: 0.55 }, // Phase 7: Final science orbit close to Sun
+];
+
+const PARKER_CONFIG = {
+  speed: 1.8,            // fast orbital period
+  size: 0.06,            // tiny — smaller than any moon
+};
+
+/* ─── Parker Solar Probe Component ─── */
+const ParkerProbe = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, simSpeed, venusInitialAngle }, ref) => {
+  const groupRef = useRef();
+  React.useImperativeHandle(ref, () => groupRef.current);
+
+  const meshRef = useRef();
+  const trailRef = useRef();
+  const [hovered, setHovered] = useState(false);
+  const initialAngle = useRef(Math.random() * Math.PI * 2);
+
+  // Gravity Assist simulation states
+  const [phaseIndex, setPhaseIndex] = useState(0);
+  const [assistActive, setAssistActive] = useState(false);
+  const assistTimeRef = useRef(0);
+  const hasPassedVenus = useRef(false);
+
+  // Store trail positions (last 150 frames)
+  const trailPositions = useRef(new Float32Array(150 * 3).fill(0));
+  const trailIndex = useRef(0);
+  const trailCount = useRef(0);
+
+  // Kepler solver: mean anomaly → eccentric anomaly via Newton's method
+  const solveKepler = (M, e, iterations = 8) => {
+    let E = M;
+    for (let i = 0; i < iterations; i++) {
+      E = E - (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+    }
+    return E;
+  };
+
+  useFrame(({ clock }) => {
+    const t = simTimeRef ? simTimeRef.current : 0;
+    const { speed } = PARKER_CONFIG;
+    const { a, e } = ORBIT_PHASES[phaseIndex];
+
+    // Mean anomaly progresses with time
+    const M = initialAngle.current + t * speed * 0.15;
+    const E = solveKepler(M % (Math.PI * 2), e);
+
+    // True anomaly → position on ellipse
+    const x = a * (Math.cos(E) - e);
+    const z = a * Math.sqrt(1 - e * e) * Math.sin(E);
+
+    if (groupRef.current) {
+      groupRef.current.position.x = x;
+      groupRef.current.position.z = z;
+      // Force spacecraft to always point its heat shield (+Z) at the Sun (0, 0, 0)
+      groupRef.current.lookAt(0, 0, 0);
+    }
+
+    // Dynamic Gravity Assist logic: check distance to Venus in real time
+    if (venusInitialAngle !== undefined) {
+      const venusR = 13.0; // PLANET_CONFIG.Venus.orbit
+      const venusAngle = venusInitialAngle + t * 1.17 * 0.15; // 1.17 matches Venus speed
+      const venusX = Math.cos(venusAngle) * venusR;
+      const venusZ = Math.sin(venusAngle) * venusR;
+
+      const dx = x - venusX;
+      const dz = z - venusZ;
+      const dist = Math.sqrt(dx * dx + dz * dz);
+
+      // If probe enters Venus gravity well, trigger phase shift & alert banner
+      if (dist < 1.6 && !hasPassedVenus.current) {
+        hasPassedVenus.current = true;
+        const nextPhase = (phaseIndex + 1) % 7;
+        setPhaseIndex(nextPhase);
+        setAssistActive(true);
+        assistTimeRef.current = clock.getElapsedTime();
+      } else if (dist > 2.5) {
+        hasPassedVenus.current = false;
+      }
+    }
+
+    // Hide gravity assist banner after 3 seconds
+    if (assistActive && clock.getElapsedTime() - assistTimeRef.current > 3.0) {
+      setAssistActive(false);
+    }
+
+    // Update trail ring buffer
+    const idx = trailIndex.current % 150;
+    trailPositions.current[idx * 3] = x;
+    trailPositions.current[idx * 3 + 1] = 0;
+    trailPositions.current[idx * 3 + 2] = z;
+    trailIndex.current++;
+    trailCount.current = Math.min(trailCount.current + 1, 150);
+
+    // Update trail geometry
+    if (trailRef.current && trailCount.current > 2) {
+      const geo = trailRef.current.geometry;
+      const ordered = new Float32Array(trailCount.current * 3);
+      const total = trailCount.current;
+      const start = trailIndex.current % 150;
+      for (let i = 0; i < total; i++) {
+        const srcIdx = ((start - total + i + 150) % 150) * 3;
+        ordered[i * 3] = trailPositions.current[srcIdx];
+        ordered[i * 3 + 1] = trailPositions.current[srcIdx + 1];
+        ordered[i * 3 + 2] = trailPositions.current[srcIdx + 2];
+      }
+      geo.setAttribute('position', new THREE.BufferAttribute(ordered, 3));
+      geo.setDrawRange(0, total);
+      geo.attributes.position.needsUpdate = true;
+    }
+  });
+
+  const hitRadius = 0.5; // generous hit area for tiny probe
+
+  return (
+    <>
+      <group ref={groupRef}>
+        {/* Invisible expanded hit sphere */}
+        <mesh
+          onClick={(e) => { e.stopPropagation(); onSelect(parkerSolarProbe); }}
+          onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
+          onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
+        >
+          <sphereGeometry args={[hitRadius, 8, 8]} />
+          <meshBasicMaterial visible={false} />
+        </mesh>
+
+        {/* Floating Gravity Assist Alert Banner */}
+        {assistActive && (
+          <Html position={[0, 0.4, 0]} center style={{ pointerEvents: 'none' }}>
+            <div style={{
+              background: '#0b0d22',
+              border: '1.5px solid #FDB813',
+              color: '#fff',
+              padding: '4px 8px',
+              borderRadius: '8px',
+              fontSize: '0.55rem',
+              fontWeight: 700,
+              whiteSpace: 'nowrap',
+              boxShadow: '0 2px 0 #07081a',
+              fontFamily: 'var(--font-heading, sans-serif)',
+              letterSpacing: '0.5px',
+            }}>
+              🚀 Gravity Assist (Phase {phaseIndex + 1}/7)
+            </div>
+          </Html>
+        )}
+
+        {/* Spacecraft Assembly */}
+        <group
+          onClick={(e) => { e.stopPropagation(); onSelect(parkerSolarProbe); }}
+          onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
+          onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
+        >
+          {/* 1. Thermal Protection System (TPS) Heat Shield: Hexagonal shape, white color, situated at the front (+Z) facing the Sun */}
+          <mesh position={[0, 0, 0.05]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.06, 0.06, 0.012, 6]} />
+            <meshStandardMaterial color="#eeeeee" roughness={0.6} metalness={0.1} />
+          </mesh>
+
+          {/* 2. Spacecraft Bus: main body, directly behind the shield along -Z, gold foil color */}
+          <mesh position={[0, 0, 0.01]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.03, 0.03, 0.07, 6]} />
+            <meshStandardMaterial color="#d4af37" roughness={0.2} metalness={0.8} />
+          </mesh>
+
+          {/* 3. Solar Panel Arrays: extend on the sides (+X and -X) behind the shield, blue/dark panels */}
+          <mesh position={[0.08, 0, -0.015]} rotation={[0, -0.2, 0]}>
+            <boxGeometry args={[0.08, 0.015, 0.003]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.1} metalness={0.9} emissive="#111827" />
+          </mesh>
+          <mesh position={[-0.08, 0, -0.015]} rotation={[0, 0.2, 0]}>
+            <boxGeometry args={[0.08, 0.015, 0.003]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.1} metalness={0.9} emissive="#111827" />
+          </mesh>
+
+          {/* 4. High-Gain Antenna (HGA): sticking out from the back (-Z) */}
+          <mesh position={[0, -0.015, -0.045]} rotation={[0.3, 0, 0]}>
+            <cylinderGeometry args={[0.003, 0.003, 0.025, 4]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
+          </mesh>
+          <mesh position={[0, -0.015, -0.058]}>
+            <cylinderGeometry args={[0.01, 0, 0.004, 8]} />
+            <meshStandardMaterial color="#ffffff" metalness={0.1} roughness={0.5} />
+          </mesh>
+        </group>
+
+        {/* Label */}
+        <Html position={[0, -(PARKER_CONFIG.size + 0.3), 0]} center style={{ pointerEvents: 'auto', whiteSpace: 'nowrap', opacity: labelsHidden ? 0 : 1, transition: 'opacity 0.2s ease', cursor: 'pointer' }} zIndexRange={[5, 0]}>
+          <div
+            onClick={(e) => { e.stopPropagation(); onSelect(parkerSolarProbe); }}
+            style={{
+              color: hovered ? '#fff' : 'rgba(255,255,255,0.75)',
+              fontSize: hovered ? '0.65rem' : '0.55rem',
+              fontWeight: 700,
+              userSelect: 'none',
+              letterSpacing: '0.5px',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            Parker Solar Probe
+          </div>
+        </Html>
+      </group>
+
+      {/* Orbital trail rendered in absolute world coordinates */}
+      <line ref={trailRef}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" array={new Float32Array(150 * 3)} count={0} itemSize={3} />
+        </bufferGeometry>
+        <lineBasicMaterial color="#ffffff" transparent opacity={0.25} />
+      </line>
+    </>
+  );
+});
+
 /* ─── Educational Badges for Moons ─── */
 const MOON_BADGES = {
   ganymede: { icon: Globe, title: 'Largest Moon in Solar System', color: '#b5a48e', text: 'Bigger than the planet Mercury and dwarf planet Pluto.' },
@@ -740,8 +1011,8 @@ const MOON_BADGES = {
   europa: { icon: Sparkles, title: 'Subsurface Water Ocean', color: '#e6dfd1', text: "Conceals a global liquid ocean beneath its icy shell holding twice as much water as Earth's oceans combined." },
   callisto: { icon: Mountain, title: 'Cratered Veteran', color: '#8a8074', text: 'The most heavily cratered surface in the solar system, virtually unchanged for 4 billion years.' },
   triton: { icon: RefreshCcw, title: 'Retrograde Orbit', color: '#b3c2c7', text: "Orbits Neptune backwards relative to the planet's rotation — a captured Kuiper Belt object." },
-  moon: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only celestial world humans have stepped on." },
-  luna: { icon: Sparkles, title: "Earth's Partner", color: '#dddddd', text: "Stabilizes Earth's axial tilt and drives ocean tides; the only celestial world humans have stepped on." },
+  moon: { icon: Sparkles, title: "Earth's Companion", color: '#dddddd', text: "The Moon's mass is only about 1.2% of Earth's, yet its diameter spans 27% of Earth's \u2014 roughly one-quarter its size \u2014 making it one of the largest moons relative to its parent planet." },
+  luna: { icon: Sparkles, title: "Earth's Companion", color: '#dddddd', text: "The Moon's mass is only about 1.2% of Earth's, yet its diameter spans 27% of Earth's \u2014 roughly one-quarter its size \u2014 making it one of the largest moons relative to its parent planet." },
   charon: { icon: Orbit, title: 'Double Dwarf Partner', color: '#888888', text: 'Tidally locked with Pluto so both worlds forever show the exact same face to each other.' },
   vanth: { icon: Orbit, title: 'Barycentric Partner', color: '#78869b', text: 'So large relative to Orcus that both bodies orbit a shared center of mass outside Orcus.' },
   phobos: { icon: Gauge, title: 'Ultra-Close Orbit', color: '#aa7766', text: 'Orbits Mars closer than any other moon orbits its planet — completing an orbit in just 7.6 hours.' },
@@ -1000,8 +1271,50 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
           </div>
         )}
 
-        {/* Content Card Details (Moon vs Planet) */}
-        {activeTarget.isMoon ? (
+        {/* Content Card Details (Spacecraft vs Moon vs Planet) */}
+        {planet.type === 'Spacecraft' ? (
+          <div>
+            {PLANET_BADGES[planet.id] && (() => {
+              const badge = PLANET_BADGES[planet.id];
+              const BadgeIcon = badge.icon;
+              return (
+                <div style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1.5px solid rgba(255,255,255,0.1)',
+                  borderRadius: 12, padding: '10px 12px',
+                  marginBottom: 12,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, fontWeight: 800, color: badge.color, textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '0.5px' }}>
+                    <BadgeIcon size={12} /> {badge.title}
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.78rem', lineHeight: 1.5, color: 'rgba(255,255,255,0.85)' }}>{badge.text}</p>
+                </div>
+              );
+            })()}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: 16 }}>
+              {[{ label: 'Mass', value: planet.mass || '—' },
+                { label: 'Orbital Period', value: planet.yearLength || '—' },
+                { label: 'Perihelion', value: planet.distanceFromSun || '—' },
+                { label: 'Shield Temp', value: planet.temperature?.split('/')[0]?.trim() || '—' }].map((stat) => (
+                <div key={stat.label} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: '10px 12px', border: '1.5px solid rgba(255,255,255,0.08)' }}>
+                  <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{stat.label}</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{stat.value}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{
+              background: 'rgba(255,255,255,0.05)',
+              borderRadius: 12, padding: '12px 16px',
+              border: '1.5px solid rgba(255,255,255,0.08)', marginBottom: 14,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                <Info size={13} style={{ color: planet.color, opacity: 0.8 }} />
+                <span style={{ fontSize: '0.7rem', fontWeight: 700, color: planet.color, opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Mission Fact</span>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.82rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.85)' }}>{planet.funFacts?.[0] || 'No fact available.'}</p>
+            </div>
+          </div>
+        ) : activeTarget.isMoon ? (
           <div>
             {/* Moon Educational Badge */}
             {MOON_BADGES[activeTarget.name.toLowerCase()] && (() => {
@@ -1070,7 +1383,7 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
               );
             })()}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: 16 }}>
-              {[{ label: 'Moons', value: planet.moons },
+              {[planet.id === 'sun' ? { label: 'Planets', value: '8' } : { label: 'Moons', value: planet.moons },
                 { label: 'Temperature', value: planet.temperature?.split(' ')[0] || '—' },
                 { label: 'Year Length', value: planet.yearLength },
                 { label: 'Gravity', value: planet.gravity }].map((stat) => (
@@ -1264,7 +1577,8 @@ export default function SolarSystem3D() {
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
       >
         <color attach="background" args={['#050614']} />
-        <ambientLight intensity={0.4} />
+        <ambientLight intensity={0.55} />
+        <hemisphereLight args={['#b0c4de', '#080810', 0.15]} />
         <pointLight position={[0, 0, 0]} intensity={3.5} distance={500} decay={0.3} color="#fff8e7" />
 
         {/* Distant tiny background stars */}
@@ -1288,6 +1602,14 @@ export default function SolarSystem3D() {
         <Suspense fallback={null}>
           <Sun ref={(el) => planetRefs.current['Sun'] = el} onSelect={setSelected} labelsHidden={!!selected} simTimeRef={simTimeRef} simSpeed={simSpeed} />
           <AsteroidBelt simTimeRef={simTimeRef} />
+          <ParkerProbe 
+            ref={(el) => planetRefs.current['Parker Solar Probe'] = el} 
+            onSelect={setSelected} 
+            labelsHidden={!!selected} 
+            simTimeRef={simTimeRef} 
+            simSpeed={simSpeed}
+            venusInitialAngle={initialAngles['Venus']}
+          />
           {(() => {
             const renderedOrbits = new Set();
             return planets.concat(dwarfPlanets).map((p) => {
