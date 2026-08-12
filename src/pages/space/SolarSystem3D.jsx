@@ -1111,7 +1111,7 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
 
       {/* Slideable Info Panel */}
       <div style={{
-        position: 'fixed',
+        position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
@@ -1137,7 +1137,7 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
           position: 'relative',
           transform: isCollapsed ? 'translateY(110%)' : 'translateY(0)',
           opacity: isCollapsed ? 0 : 1,
-          transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+          transition: 'transform 0.3s ease, opacity 0.3s ease',
         }}>
           {/* Collapse Button */}
           <button
