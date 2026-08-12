@@ -1148,9 +1148,6 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
         justifyContent: 'center',
         alignItems: 'flex-end',
         pointerEvents: 'none',
-        transform: isCollapsed ? 'translateY(110%)' : 'translateY(0)',
-        opacity: isCollapsed ? 0 : 1,
-        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
       }}>
         <div style={{
           maxWidth: 420,
@@ -1165,6 +1162,9 @@ function InfoPanel({ planet, onSelect, onClose, selected }) {
           border: '2px solid #2d3561',
           boxShadow: '0 6px 0 #07081a',
           position: 'relative',
+          transform: isCollapsed ? 'translateY(110%)' : 'translateY(0)',
+          opacity: isCollapsed ? 0 : 1,
+          transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
         }}>
           {/* Collapse Button */}
           <button
