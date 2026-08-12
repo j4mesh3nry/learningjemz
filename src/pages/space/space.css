@@ -3418,4 +3418,10 @@
 
 .solar-infopanel-btn.close-btn {
   right: 18px;
+}
+
+/* Force Drei HTML portal container to be transparent to bypass Brave browser black box rendering bugs */
+.solar-canvas-container > div {
+  background: transparent !important;
+  background-color: transparent !important;
 }

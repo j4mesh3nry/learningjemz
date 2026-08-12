@@ -1584,87 +1584,89 @@ export default function SolarSystem3D() {
         </div>
       </div>
 
-      {/* 3D Canvas */}
-      <Canvas
-        camera={{ position: [20, 45, 75], fov: 45, near: 0.1, far: 2500 }}
-        style={{ width: '100%', height: '100%' }}
-        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-      >
-        <color attach="background" args={['#050614']} />
-        <ambientLight intensity={0.55} />
-        <hemisphereLight args={['#b0c4de', '#080810', 0.15]} />
-        <pointLight position={[0, 0, 0]} intensity={3.5} distance={500} decay={0.3} color="#fff8e7" />
+      {/* 3D Canvas Container */}
+      <div className="solar-canvas-container" style={{ width: '100%', height: '100%' }}>
+        <Canvas
+          camera={{ position: [20, 45, 75], fov: 45, near: 0.1, far: 2500 }}
+          style={{ width: '100%', height: '100%' }}
+          gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+        >
+          <color attach="background" args={['#050614']} />
+          <ambientLight intensity={0.55} />
+          <hemisphereLight args={['#b0c4de', '#080810', 0.15]} />
+          <pointLight position={[0, 0, 0]} intensity={3.5} distance={500} decay={0.3} color="#fff8e7" />
 
-        {/* Distant tiny background stars */}
-        <Stars radius={1800} depth={200} count={16000} factor={2.5} saturation={0} fade speed={0.03} />
-        {/* Colorful near/medium star clusters for rich visual variety */}
-        <Stars radius={1200} depth={400} count={4000} factor={5.5} saturation={0.7} fade speed={0.08} />
-        <OrbitControls
-          ref={controlsRef}
-          enableZoom
-          enablePan
-          screenSpacePanning={true}
-          minDistance={3}
-          maxDistance={1200}
-          autoRotate={!selected && simSpeed > 0}
-          autoRotateSpeed={0.08}
-          maxPolarAngle={Math.PI - 0.05}
-          minPolarAngle={0.01}
-        />
-        <CameraController selected={selected} planetRefs={planetRefs} controlsRef={controlsRef} />
-        <TimeUpdater simSpeed={simSpeed} simTimeRef={simTimeRef} />
-        <Suspense fallback={null}>
-          <Sun ref={(el) => planetRefs.current['Sun'] = el} onSelect={setSelected} labelsHidden={!!selected} simTimeRef={simTimeRef} simSpeed={simSpeed} />
-          <AsteroidBelt simTimeRef={simTimeRef} />
-          <ParkerProbe 
-            ref={(el) => planetRefs.current['Parker Solar Probe'] = el} 
-            onSelect={setSelected} 
-            labelsHidden={!!selected} 
-            simTimeRef={simTimeRef} 
-            simSpeed={simSpeed}
-            venusInitialAngle={initialAngles['Venus']}
+          {/* Distant tiny background stars */}
+          <Stars radius={1800} depth={200} count={16000} factor={2.5} saturation={0} fade speed={0.03} />
+          {/* Colorful near/medium star clusters for rich visual variety */}
+          <Stars radius={1200} depth={400} count={4000} factor={5.5} saturation={0.7} fade speed={0.08} />
+          <OrbitControls
+            ref={controlsRef}
+            enableZoom
+            enablePan
+            screenSpacePanning={true}
+            minDistance={3}
+            maxDistance={1200}
+            autoRotate={!selected && simSpeed > 0}
+            autoRotateSpeed={0.08}
+            maxPolarAngle={Math.PI - 0.05}
+            minPolarAngle={0.01}
           />
-          {(() => {
-            const renderedOrbits = new Set();
-            return planets.concat(dwarfPlanets).map((p) => {
-              const cfg = PLANET_CONFIG[p.name];
-              if (!cfg) return null;
-              const showRing = !renderedOrbits.has(cfg.orbit);
-              if (showRing) renderedOrbits.add(cfg.orbit);
-              return (
-                <React.Fragment key={p.id}>
-                  {showRing && <OrbitRing radius={cfg.orbit} />}
-                  {cfg.binary ? (
-                    <BinarySystem 
-                      ref={(el) => planetRefs.current[p.name] = el}
-                      data={p} 
-                      config={cfg} 
-                      onSelect={setSelected} 
-                      labelsHidden={!!selected}
-                      selected={selected}
-                      simTimeRef={simTimeRef}
-                      simSpeed={simSpeed}
-                      initialAngle={initialAngles[p.name]}
-                    />
-                  ) : (
-                    <Planet 
-                      ref={(el) => planetRefs.current[p.name] = el}
-                      data={p} 
-                      config={cfg} 
-                      onSelect={setSelected} 
-                      labelsHidden={!!selected}
-                      simTimeRef={simTimeRef}
-                      simSpeed={simSpeed}
-                      initialAngle={initialAngles[p.name]}
-                    />
-                  )}
-                </React.Fragment>
-              );
-            });
-          })()}
-        </Suspense>
-        <Preload all />
-      </Canvas>
+          <CameraController selected={selected} planetRefs={planetRefs} controlsRef={controlsRef} />
+          <TimeUpdater simSpeed={simSpeed} simTimeRef={simTimeRef} />
+          <Suspense fallback={null}>
+            <Sun ref={(el) => planetRefs.current['Sun'] = el} onSelect={setSelected} labelsHidden={!!selected} simTimeRef={simTimeRef} simSpeed={simSpeed} />
+            <AsteroidBelt simTimeRef={simTimeRef} />
+            <ParkerProbe 
+              ref={(el) => planetRefs.current['Parker Solar Probe'] = el} 
+              onSelect={setSelected} 
+              labelsHidden={!!selected} 
+              simTimeRef={simTimeRef} 
+              simSpeed={simSpeed}
+              venusInitialAngle={initialAngles['Venus']}
+            />
+            {(() => {
+              const renderedOrbits = new Set();
+              return planets.concat(dwarfPlanets).map((p) => {
+                const cfg = PLANET_CONFIG[p.name];
+                if (!cfg) return null;
+                const showRing = !renderedOrbits.has(cfg.orbit);
+                if (showRing) renderedOrbits.add(cfg.orbit);
+                return (
+                  <React.Fragment key={p.id}>
+                    {showRing && <OrbitRing radius={cfg.orbit} />}
+                    {cfg.binary ? (
+                      <BinarySystem 
+                        ref={(el) => planetRefs.current[p.name] = el}
+                        data={p} 
+                        config={cfg} 
+                        onSelect={setSelected} 
+                        labelsHidden={!!selected}
+                        selected={selected}
+                        simTimeRef={simTimeRef}
+                        simSpeed={simSpeed}
+                        initialAngle={initialAngles[p.name]}
+                      />
+                    ) : (
+                      <Planet 
+                        ref={(el) => planetRefs.current[p.name] = el}
+                        data={p} 
+                        config={cfg} 
+                        onSelect={setSelected} 
+                        labelsHidden={!!selected}
+                        simTimeRef={simTimeRef}
+                        simSpeed={simSpeed}
+                        initialAngle={initialAngles[p.name]}
+                      />
+                    )}
+                  </React.Fragment>
+                );
+              });
+            })()}
+          </Suspense>
+          <Preload all />
+        </Canvas>
+      </div>
 
       <InfoPanel planet={selected} onSelect={setSelected} onClose={() => setSelected(null)} selected={selected} />
 
