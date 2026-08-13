@@ -625,6 +625,112 @@ if (user) {
     });
   }, []);
 
+  const recordPuzzleSolved = useCallback((modeOrDiff = 'SURVIVAL', difficulty = 'Easy', currentSessionScoreOrStreak = 1) => {
+    let mode = 'SURVIVAL';
+    let diff = 'Easy';
+    let count = 1;
+
+    if (typeof modeOrDiff === 'string' && (modeOrDiff.toUpperCase() === 'SURVIVAL' || modeOrDiff.toUpperCase() === 'BLITZ')) {
+      mode = modeOrDiff.toUpperCase();
+      diff = difficulty || 'Easy';
+      count = typeof currentSessionScoreOrStreak === 'number' ? currentSessionScoreOrStreak : 1;
+    } else {
+      // Legacy signature fallback: recordPuzzleSolved(difficulty, cleanSolve, sessionStreak)
+      diff = modeOrDiff || 'Easy';
+      count = typeof currentSessionScoreOrStreak === 'number' ? currentSessionScoreOrStreak : 1;
+    }
+
+    const diffLower = (diff || '').toLowerCase();
+    const baseXP = diffLower.includes('hard') ? 15 : diffLower.includes('medium') ? 10 : 6;
+    
+    // Milestone bonus in Survival mode: +10 XP at streak 5, +20 XP at streak 10, +30 XP at streak 20
+    let milestoneBonus = 0;
+    if (mode === 'SURVIVAL') {
+      if (count === 5) milestoneBonus = 10;
+      else if (count === 10) milestoneBonus = 20;
+      else if (count === 20) milestoneBonus = 30;
+    }
+
+    const totalXPGained = baseXP + milestoneBonus;
+
+    addXP(totalXPGained);
+    recordActivity();
+
+    setState(prev => {
+      const currentStats = prev.botStats?.puzzleStats || {
+        solved: 0,
+        survivalHighScore: 0,
+        blitzHighScore: 0,
+        highStreak: 0,
+        easySolved: 0,
+        mediumSolved: 0,
+        hardSolved: 0,
+        easyHighStreak: 0,
+        mediumHighStreak: 0,
+        hardHighStreak: 0
+      };
+
+      const prevSurvivalBest = currentStats.survivalHighScore || currentStats.highStreak || 0;
+      const prevBlitzBest = currentStats.blitzHighScore || 0;
+
+      const newSurvivalBest = mode === 'SURVIVAL' ? Math.max(prevSurvivalBest, count) : prevSurvivalBest;
+      const newBlitzBest = mode === 'BLITZ' ? Math.max(prevBlitzBest, count) : prevBlitzBest;
+
+      const isHard = diffLower.includes('hard');
+      const isMedium = diffLower.includes('medium');
+      const diffKey = isHard ? 'hardSolved' : isMedium ? 'mediumSolved' : 'easySolved';
+
+      return {
+        ...prev,
+        puzzlesSolved: (prev.puzzlesSolved || 0) + 1,
+        botStats: {
+          ...(prev.botStats || {}),
+          puzzleStats: {
+            ...currentStats,
+            solved: (currentStats.solved || 0) + 1,
+            survivalHighScore: newSurvivalBest,
+            blitzHighScore: newBlitzBest,
+            highStreak: newSurvivalBest,
+            [diffKey]: (currentStats[diffKey] || 0) + 1
+          }
+        }
+      };
+    });
+
+    return totalXPGained;
+  }, [addXP, recordActivity]);
+
+  const recordPuzzleRunEnd = useCallback((mode = 'SURVIVAL', finalScoreOrStreak = 0) => {
+    const isSurvival = mode.toUpperCase() === 'SURVIVAL';
+    setState(prev => {
+      const currentStats = prev.botStats?.puzzleStats || {
+        solved: 0,
+        survivalHighScore: 0,
+        blitzHighScore: 0,
+        highStreak: 0
+      };
+
+      const prevSurvivalBest = currentStats.survivalHighScore || currentStats.highStreak || 0;
+      const prevBlitzBest = currentStats.blitzHighScore || 0;
+
+      const newSurvivalBest = isSurvival ? Math.max(prevSurvivalBest, finalScoreOrStreak) : prevSurvivalBest;
+      const newBlitzBest = !isSurvival ? Math.max(prevBlitzBest, finalScoreOrStreak) : prevBlitzBest;
+
+      return {
+        ...prev,
+        botStats: {
+          ...(prev.botStats || {}),
+          puzzleStats: {
+            ...currentStats,
+            survivalHighScore: newSurvivalBest,
+            blitzHighScore: newBlitzBest,
+            highStreak: newSurvivalBest
+          }
+        }
+      };
+    });
+  }, []);
+
   const recordIlluminateTime = useCallback((difficulty, timeInSeconds) => {
     let isNewBest = false;
     setState(prev => {
@@ -746,6 +852,8 @@ if (user) {
       drawChessGame,
       lossChessGame,
       recordChessGame,
+      recordPuzzleSolved,
+      recordPuzzleRunEnd,
       recordIlluminateTime,
       recordCosmicMysteryRun,
       resetProgress,
