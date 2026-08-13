@@ -19,7 +19,7 @@ const DEFAULT_PALETTE = {
 const ICON_PALETTES: Record<string, typeof DEFAULT_PALETTE> = {
   default: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4500', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
   space:   { gem: '#e8ecf8', sparkles: '#aa5f5a', flameActive: '#e8805a', flameInactive: '#8f94b0', flameInactiveFill: '#a6aac4', trophy: '#a5923f', trophyFill: '#d3bd7a' },
-  chess:   { gem: '#e8f5e9', sparkles: '#5fb88a', flameActive: '#ff4500', flameInactive: '#5fb88a', flameInactiveFill: '#7cb894', trophy: '#a5923f', trophyFill: '#d3bd7a' },
+  chess:   { gem: '#faf6ee', sparkles: '#b89f80', flameActive: '#ff4500', flameInactive: '#b89f80', flameInactiveFill: '#ebe3cf', trophy: '#a5923f', trophyFill: '#d3bd7a' },
   geo:     { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4500', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
   reading: { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4500', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },
   dark:    { gem: '#ffffff', sparkles: '#ffe066', flameActive: '#ff4500', flameInactive: '#9196ab', flameInactiveFill: '#a3a8bd', trophy: '#b8860b', trophyFill: '#ffb300' },

@@ -165,24 +165,24 @@
 }
 
 
-/* --- CHESS THEME (`theme-chess`) — deep forest green, mirrors space structure --- */
+/* --- CHESS THEME (`theme-chess`) — warm dark wood & cream palette --- */
 .victory-modal-clean.theme-chess {
-  background: #0b3420;
-  border: 2px solid #1c7c54;
-  box-shadow: 0 6px 0 #072618;
+  background: #2c1b0d;
+  border: 2px solid #5c3a1e;
+  box-shadow: 0 6px 0 #180d05;
   border-radius: 20px;
   padding: 26px 20px 20px;
   max-width: 340px;
-  color: #e8f5e9;
+  color: #faf6ee;
 }
 
 .theme-chess .victory-logo-bg {
   width: 54px;
   height: 54px;
   border-radius: 16px;
-  background: #16653e;
-  border: 2px solid #1c7c54;
-  box-shadow: 0 3px 0 #072618;
+  background: #4a2c11;
+  border: 2px solid #784e27;
+  box-shadow: 0 3px 0 #180d05;
   margin-bottom: 14px;
 }
 
@@ -191,102 +191,102 @@
 }
 
 .theme-chess .victory-clean-title {
-  color: #e8f5e9;
+  color: #faf6ee;
   font-size: 1.45rem;
   margin: 0 0 4px 0;
 }
 
 .theme-chess .victory-clean-subtitle {
-  color: #7cb894;
+  color: #d7c4b0;
   font-size: 0.82rem;
   margin-bottom: 20px;
 }
 
 .theme-chess .victory-clean-children {
-  color: #a7d6b8;
+  color: #e5d4c0;
 }
 
 .theme-chess .streak-box,
 .theme-chess .xp-box {
-  background: #0e4329;
-  border: 2px solid #1c7c54;
+  background: #3b2310;
+  border: 2px solid #5c3a1e;
   box-shadow: none;
   border-radius: 12px;
   padding: 10px 6px;
 }
 
 .theme-chess .streak-box.active-streak {
-  background: #0e4329;
-  border: 2px solid #1c7c54;
+  background: #3b2310;
+  border: 2px solid #5c3a1e;
   box-shadow: none;
 }
 
 .theme-chess .streak-box.active-streak .reward-val {
-  color: #d9a2a2;
+  color: #ffb300;
 }
 
 .theme-chess .xp-box .reward-val {
-  color: #d9c58f;
+  color: #fbbf24;
 }
 
 .theme-chess .reward-val {
   font-size: 1.1rem;
-  color: #e8f5e9;
+  color: #faf6ee;
 }
 
 .theme-chess .reward-lbl {
-  color: #5fb88a;
+  color: #bfa085;
   font-size: 0.62rem;
   letter-spacing: 0.5px;
 }
 
 .theme-chess .victory-btn-primary {
-  background: #16653e;
-  color: #e8f5e9;
-  border: 2px solid #22c55e;
-  box-shadow: 0 4px 0 #072618;
+  background: #4a2c11;
+  color: #faf6ee;
+  border: 2px solid #784e27;
+  box-shadow: 0 4px 0 #180d05;
   border-radius: 14px;
   padding: 13px;
 }
 
 .theme-chess .victory-btn-primary:hover {
-  background: #1c7c54;
+  background: #5c3a1e;
 }
 
 .theme-chess .victory-btn-primary:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #072618;
+  box-shadow: 0 2px 0 #180d05;
 }
 
 .theme-chess .victory-btn-secondary {
-  background: #0e4329;
-  color: #a7d6b8;
-  border: 2px solid #1c7c54;
+  background: #3b2310;
+  color: #d7c4b0;
+  border: 2px solid #5c3a1e;
   box-shadow: none;
   border-radius: 12px;
   padding: 10px;
 }
 
 .theme-chess .victory-btn-secondary:hover {
-  background: #16653e;
+  background: #4a2c11;
 }
 
 .theme-chess .victory-btn-secondary:active {
   transform: translateY(2px);
-  box-shadow: 0 0 0 #072618;
+  box-shadow: 0 0 0 #180d05;
 }
 
 .theme-chess .victory-btn-view {
   background: transparent;
-  color: #5fb88a;
-  border: 2px solid #1c7c54;
+  color: #bfa085;
+  border: 2px solid #5c3a1e;
   border-radius: 12px;
   padding: 9px;
 }
 
 .theme-chess .victory-btn-view:hover {
-  background: #0e4329;
-  color: #a7d6b8;
+  background: #3b2310;
+  color: #faf6ee;
 }
 
 
@@ -578,10 +578,10 @@
 }
 
 .victory-minimized-dock.theme-chess {
-  background: #0b3420;
-  border: 2px solid #1c7c54;
-  box-shadow: 0 5px 0 #072618;
-  color: #e8f5e9;
+  background: #2c1b0d;
+  border: 2px solid #5c3a1e;
+  box-shadow: 0 5px 0 #180d05;
+  color: #faf6ee;
 }
 
 .victory-minimized-dock.theme-geo {
@@ -615,9 +615,9 @@
 }
 
 .theme-chess .victory-btn-restore {
-  background: #16653e;
-  border: 2px solid #22c55e;
-  box-shadow: 0 3px 0 #072618;
+  background: #4a2c11;
+  border: 2px solid #784e27;
+  box-shadow: 0 3px 0 #180d05;
 }
 
 .victory-btn-restore:active {
@@ -647,10 +647,10 @@
 }
 
 .theme-chess .victory-btn-primary-mini {
-  background: #0e4329;
-  color: #a7d6b8;
-  border: 2px solid #1c7c54;
-  box-shadow: 0 2px 0 #072618;
+  background: #3b2310;
+  color: #d7c4b0;
+  border: 2px solid #5c3a1e;
+  box-shadow: 0 2px 0 #180d05;
 }
 
 .victory-btn-secondary-mini {
