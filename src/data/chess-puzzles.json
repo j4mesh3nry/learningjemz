@@ -1,170 +1,2465 @@
 [
   {
     "id": 1,
-    "fen": "8/8/8/8/8/1k6/p7/K7 w - - 0 1",
-    "solution": "Stalemate",
-    "theme": "stalemate",
     "difficulty": 1,
-    "description": "White to move - Avoid Stalemate (Wait, no, this is puzzle, let's do real ones)"
-  },
-  {
-    "id": 1,
-    "fen": "6k1/5ppp/8/8/8/8/8/3R2K1 w - - 0 1",
-    "solution": "Rd8#",
-    "theme": "checkmate",
-    "difficulty": 1,
-    "description": "White to move - Back rank mate in 1"
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Scholar's mate in 1",
+    "moves": [
+      "Qxf7#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Attack the weak f7 square with your Queen."
   },
   {
     "id": 2,
-    "fen": "8/8/8/8/3Q4/6K1/8/7k w - - 0 1",
-    "solution": "Qh4#",
-    "theme": "checkmate",
     "difficulty": 1,
-    "description": "White to move - Mate in 1"
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Scholar's mate on f7",
+    "moves": [
+      "Qxf7#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Strike the undefended f7 pawn with the Queen."
   },
   {
     "id": 3,
-    "fen": "4R3/2p2pkp/1p4p1/8/2P2P2/p6P/1q4P1/5R1K w - - 0 1",
-    "solution": "Ree1",
-    "theme": "defense",
-    "difficulty": 2,
-    "description": "White to move - Not a real mate, let's provide real ones"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "rnbqkbnr/ppppp2p/5p2/6p1/4P3/3P4/PPP2PPP/RNBQKBNR w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Fool's mate diagonal",
+    "moves": [
+      "Qh5#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Exploit the open diagonal to deliver mate on h5."
   },
   {
     "id": 4,
-    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 0 1",
-    "solution": "Qxf7#",
-    "theme": "checkmate",
     "difficulty": 1,
-    "description": "White to move - Mate in 1 (Scholar's mate)"
+    "difficultyLabel": "Easy",
+    "fen": "rnbqkbnr/pppp1ppp/8/4p3/5PP1/8/PPPPP2P/RNBQKBNR b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Quick diagonal mate",
+    "moves": [
+      "Qh4#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Deliver mate on h4 taking advantage of the weakened diagonal."
   },
   {
     "id": 5,
-    "fen": "rnb1kbnr/pppp1ppp/8/4p3/5P1q/8/PPPPP1PP/RNBQKBNR w KQkq - 0 1",
-    "solution": "g3",
-    "theme": "defense",
     "difficulty": 1,
-    "description": "White to move - Block the check"
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5Q2/PPPP1PPP/RNB1KBNR w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queen strike on f7",
+    "moves": [
+      "Qxf7#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Capture on f7 for an immediate checkmate."
   },
   {
     "id": 6,
-    "fen": "r4rk1/pp3ppp/2p5/3p4/3P4/2N1R3/PPP2PPP/6K1 w - - 0 1",
-    "solution": "Re7",
-    "theme": "activity",
-    "difficulty": 2,
-    "description": "White to move - Improve rook position"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Back rank mate on a8",
+    "moves": [
+      "Ra8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Slide your Rook to the 8th rank on a8."
   },
   {
     "id": 7,
-    "fen": "r1bqk2r/pppp1ppp/2n5/4P3/1bB1n3/2N2N2/PPP2PPP/R1BQK2R w KQkq - 0 1",
-    "solution": "O-O",
-    "theme": "development",
-    "difficulty": 2,
-    "description": "White to move - Develop and protect"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/1R4K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Back rank mate on b8",
+    "moves": [
+      "Rb8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Rook to b8 checks the trapped King."
   },
   {
     "id": 8,
-    "fen": "3r2k1/5ppp/8/8/8/4Q3/5PPP/6K1 w - - 0 1",
-    "solution": "Qe1",
-    "theme": "defense",
-    "difficulty": 2,
-    "description": "White to move - Prevent back rank mate"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/2R3K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Back rank mate on c8",
+    "moves": [
+      "Rc8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Infiltrate the 8th rank on c8."
   },
   {
     "id": 9,
-    "fen": "r1bq1rk1/pppp1ppp/2n2n2/2b1p3/2B1P3/2N2N2/PPPP1PPP/R1BQ1RK1 w - - 0 1",
-    "solution": "d3",
-    "theme": "development",
-    "difficulty": 2,
-    "description": "White to move - Solidify center"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Back rank mate on d8",
+    "moves": [
+      "Rd8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Drop your Rook to d8 for mate."
   },
   {
     "id": 10,
-    "fen": "8/p7/1p6/8/8/1P6/P7/1K2k3 w - - 0 1",
-    "solution": "b4",
-    "theme": "endgame",
-    "difficulty": 2,
-    "description": "White to move - Pawn push"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Back rank mate on e8",
+    "moves": [
+      "Re8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Rook e8 delivers back rank mate."
   },
   {
     "id": 11,
-    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1",
-    "solution": "Bb5",
-    "theme": "opening",
-    "difficulty": 2,
-    "description": "White to move - Ruy Lopez"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "3r2k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture rook & checkmate",
+    "moves": [
+      "Rxd8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Capture the enemy rook on d8 for mate."
   },
   {
     "id": 12,
-    "fen": "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1",
-    "solution": "a6",
-    "theme": "opening",
-    "difficulty": 2,
-    "description": "Black to move - Morphy Defense"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "2r3k1/5ppp/8/8/8/8/5PPP/2R3K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture on c8 with mate",
+    "moves": [
+      "Rxc8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Trade on c8 with checkmate."
   },
   {
     "id": 13,
-    "fen": "r2qk2r/ppp1bppp/2np1n2/4p3/4P1b1/2NP1N2/PPP1BPPP/R1BQ1RK1 w kq - 0 1",
-    "solution": "h3",
-    "theme": "development",
-    "difficulty": 3,
-    "description": "White to move - Question the bishop"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "4r1k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture on e8 with mate",
+    "moves": [
+      "Rxe8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Take the rook on e8 to mate."
   },
   {
     "id": 14,
-    "fen": "4r1k1/5ppp/8/8/2Q5/8/5PPP/6K1 w - - 0 1",
-    "solution": "Kf1",
-    "theme": "defense",
-    "difficulty": 3,
-    "description": "White to move - Avoid mate"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "6k1/3R1ppp/8/8/8/8/5PPP/6K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — 7th rank to 8th rank mate",
+    "moves": [
+      "Rd8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Push the d7 rook to d8."
   },
   {
     "id": 15,
-    "fen": "8/8/8/8/4Q3/8/5K2/7k b - - 0 1",
-    "solution": "Kh2",
-    "theme": "endgame",
-    "difficulty": 3,
-    "description": "Black to move - Only move"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/2Q3K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queen back rank mate",
+    "moves": [
+      "Qc8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Move Queen to c8."
   },
   {
     "id": 16,
-    "fen": "8/8/8/8/4Q3/8/5K1k/8 w - - 0 1",
-    "solution": "Qh4#",
-    "theme": "checkmate",
-    "difficulty": 3,
-    "description": "White to move - Mate in 1"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/3Q2K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queen to d8 mate",
+    "moves": [
+      "Qd8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Queen d8 delivers mate."
   },
   {
     "id": 17,
-    "fen": "4rrk1/ppp2ppp/2n5/3p4/3P2n1/P3P1Pq/1P1N1P1P/R1BQR1K1 w - - 0 1",
-    "solution": "Nf1",
-    "theme": "defense",
-    "difficulty": 4,
-    "description": "White to move - Defend h2"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/4Q1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queen to e8 mate",
+    "moves": [
+      "Qe8#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Queen e8 delivers mate."
   },
   {
     "id": 18,
-    "fen": "r2q1rk1/pppbbppp/2np1n2/4p3/4P3/2NP1N2/PPP1BPPP/R1BQR1K1 w - - 0 1",
-    "solution": "d4",
-    "theme": "development",
-    "difficulty": 4,
-    "description": "White to move - Strike in center"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "1r4k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Rook to b1 mate",
+    "moves": [
+      "Rb1#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Rook to b1 delivers back rank mate."
   },
   {
     "id": 19,
-    "fen": "8/8/8/8/8/1k6/p7/1K6 w - - 0 1",
-    "solution": "Ka1",
-    "theme": "endgame",
-    "difficulty": 5,
-    "description": "White to move - Only move"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "2r3k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Rook to c1 mate",
+    "moves": [
+      "Rc1#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Rook to c1 mates the trapped King."
   },
   {
     "id": 20,
-    "fen": "8/8/8/8/8/1k6/8/K7 w - - 0 1",
-    "solution": "Kb1",
-    "theme": "endgame",
-    "difficulty": 5,
-    "description": "White to move - Keep opposition"
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "3r2k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Rook to d1 mate",
+    "moves": [
+      "Rd1#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Drop your Rook to d1."
+  },
+  {
+    "id": 21,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "4r1k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Rook to e1 mate",
+    "moves": [
+      "Re1#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Rook to e1 delivers mate."
+  },
+  {
+    "id": 22,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "3q2k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Queen to d1 mate",
+    "moves": [
+      "Qd1#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Slide Queen to d1 for checkmate."
+  },
+  {
+    "id": 23,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "4q1k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Queen to e1 mate",
+    "moves": [
+      "Qe1#"
+    ],
+    "theme": "Back Rank Mate",
+    "hint": "Queen to e1 delivers checkmate."
+  },
+  {
+    "id": 24,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "7k/5K2/6Q1/8/8/8/8/8 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Kiss of death mate",
+    "moves": [
+      "Qg7#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Move Queen right next to the King on g7."
+  },
+  {
+    "id": 25,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k7/2K5/1Q6/8/8/8/8/8 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Mate on b7",
+    "moves": [
+      "Qb7#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Queen to b7 finishes the game."
+  },
+  {
+    "id": 26,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k7/8/1K6/8/8/8/8/7Q w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Back rank Queen mate",
+    "moves": [
+      "Qh8#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Queen to h8 with King support."
+  },
+  {
+    "id": 27,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "8/8/8/8/8/5K2/6Q1/7k w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Corner mate on h3",
+    "moves": [
+      "Qh3#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Queen to h3 corners the King."
+  },
+  {
+    "id": 28,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "8/8/8/8/8/5K1k/6Q1/8 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queen mate on g4",
+    "moves": [
+      "Qg4#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Queen to g4 seals the position."
+  },
+  {
+    "id": 29,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "8/8/8/8/3Q4/6K1/8/6k1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queen mate in 1",
+    "moves": [
+      "Qf2#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Place Queen on f2 right next to the King."
+  },
+  {
+    "id": 30,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "8/8/8/8/8/4K3/5Q2/7k w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queen mate on f1",
+    "moves": [
+      "Qf1#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Move Queen to f1."
+  },
+  {
+    "id": 31,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "8/8/8/8/8/5K2/6Q1/6k1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queen mate on g1",
+    "moves": [
+      "Qg1#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Drop Queen to g1."
+  },
+  {
+    "id": 32,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k7/R6R/8/8/8/1K6/8/8 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Blind swine rook mate",
+    "moves": [
+      "Rh8#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Rook to h8 mates."
+  },
+  {
+    "id": 33,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k7/8/1K6/8/8/8/8/2R5 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Rook mate on c8",
+    "moves": [
+      "Rc8#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Move Rook to c8."
+  },
+  {
+    "id": 34,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k7/8/1K6/8/8/8/8/3R4 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Rook mate on d8",
+    "moves": [
+      "Rd8#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Move Rook to d8."
+  },
+  {
+    "id": 35,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k7/8/1K6/8/8/8/8/4R3 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Rook mate on e8",
+    "moves": [
+      "Re8#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Move Rook to e8."
+  },
+  {
+    "id": 36,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k7/8/1K6/8/8/8/8/5R2 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Rook mate on f8",
+    "moves": [
+      "Rf8#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Move Rook to f8."
+  },
+  {
+    "id": 37,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k7/8/1K6/8/8/8/8/6R1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Rook mate on g8",
+    "moves": [
+      "Rg8#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Move Rook to g8."
+  },
+  {
+    "id": 38,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k7/8/1K6/8/8/8/8/7R w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Rook mate on h8",
+    "moves": [
+      "Rh8#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Move Rook to h8."
+  },
+  {
+    "id": 39,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/3P4/5N2/PPP1PPPP/RNBQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Win free central pawn",
+    "moves": [
+      "dxe5"
+    ],
+    "theme": "Capture",
+    "hint": "Capture the e5 pawn with your d-pawn."
+  },
+  {
+    "id": 40,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n5/4p3/1b2n3/2NP1N2/PPP1PPPP/R1BQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture undefended knight",
+    "moves": [
+      "dxe4"
+    ],
+    "theme": "Capture",
+    "hint": "Take the knight on e4 with your d-pawn."
+  },
+  {
+    "id": 41,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkbnr/pppp1ppp/8/4p3/4P3/5n2/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Take checking knight",
+    "moves": [
+      "Nxf3"
+    ],
+    "theme": "Capture",
+    "hint": "Recapture the knight with your g1 knight."
+  },
+  {
+    "id": 42,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1nPP/RNBQKBNR w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture attacking knight",
+    "moves": [
+      "Kxf2"
+    ],
+    "theme": "Capture",
+    "hint": "Take the f2 knight with your King."
+  },
+  {
+    "id": 43,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture e5 pawn",
+    "moves": [
+      "Nxe5"
+    ],
+    "theme": "Capture",
+    "hint": "Take the e5 pawn with your knight."
+  },
+  {
+    "id": 44,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "k6R/R7/8/8/8/1K6/8/8 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Capture attacking Rook",
+    "moves": [
+      "Kxa7"
+    ],
+    "theme": "Capture",
+    "hint": "Take the a7 rook with your King."
+  },
+  {
+    "id": 45,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkb1r/pppp1ppp/2n5/4p3/2B1n3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Win free knight on e4",
+    "moves": [
+      "dxe4"
+    ],
+    "theme": "Capture",
+    "hint": "Take the knight with dxe4."
+  },
+  {
+    "id": 46,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkb1r/pppp1ppp/8/4n3/4P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture undefended knight",
+    "moves": [
+      "Nxe5"
+    ],
+    "theme": "Capture",
+    "hint": "Capture the e5 knight."
+  },
+  {
+    "id": 47,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n5/4p3/2B1n3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Win the e4 Knight",
+    "moves": [
+      "dxe4"
+    ],
+    "theme": "Capture",
+    "hint": "Capture the e4 knight with d-pawn."
+  },
+  {
+    "id": 48,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4N3/2B1P3/8/PPPP1PPP/RNBQK2R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Capture knight on e5",
+    "moves": [
+      "Nxe5"
+    ],
+    "theme": "Capture",
+    "hint": "Take the e5 knight with your c6 knight."
+  },
+  {
+    "id": 49,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1b1k2r/pppp1ppp/2n5/4p3/2B1n2q/2NP1N2/PPP2PPP/R1BQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture enemy Queen on h4",
+    "moves": [
+      "Nxh4"
+    ],
+    "theme": "Capture",
+    "hint": "Take the queen with your knight."
+  },
+  {
+    "id": 50,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1b1k2r/pppp1ppp/2n5/4p3/2B1P1nq/2NP1N2/PPP2PPP/R1BQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture the hanging Queen",
+    "moves": [
+      "Nxh4"
+    ],
+    "theme": "Capture",
+    "hint": "Knight captures Queen on h4."
+  },
+  {
+    "id": 51,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n5/2b1p3/2B1n3/3P1N2/PPP2PPP/RNBQ1RK1 w kq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Take knight on e4",
+    "moves": [
+      "dxe4"
+    ],
+    "theme": "Capture",
+    "hint": "Pawn takes knight."
+  },
+  {
+    "id": 52,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1b1k2r/pppp1ppp/2n5/4p3/4q3/2P2N2/PP1P1PPP/RNBQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Block Queen check",
+    "moves": [
+      "Be2"
+    ],
+    "theme": "Defense",
+    "hint": "Develop your Bishop to e2 to block check."
+  },
+  {
+    "id": 53,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkb1r/pppp1ppp/2n5/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Defend against f7 mate",
+    "moves": [
+      "g6"
+    ],
+    "theme": "Defense",
+    "hint": "Push g6 to block the Queen."
+  },
+  {
+    "id": 54,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bq1rk1/pppp1ppp/2n5/4p3/2B1P1n1/2NP1N2/PPP2bPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Step King to safety on f1",
+    "moves": [
+      "Kf1"
+    ],
+    "theme": "King Move",
+    "hint": "King to f1 avoids check."
+  },
+  {
+    "id": 55,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n5/2b1p3/2B1P1n1/2NP1N2/PPP2PPP/R1BQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Castle for safety",
+    "moves": [
+      "O-O"
+    ],
+    "theme": "King Safety",
+    "hint": "Castle Kingside to protect f2."
+  },
+  {
+    "id": 56,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n5/2b1p3/2B1P1n1/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Castle to protect f2",
+    "moves": [
+      "O-O"
+    ],
+    "theme": "Castling",
+    "hint": "Castle Kingside."
+  },
+  {
+    "id": 57,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Castle Kingside",
+    "moves": [
+      "O-O"
+    ],
+    "theme": "King Safety",
+    "hint": "Castle Kingside."
+  },
+  {
+    "id": 58,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQK2R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Castle Kingside",
+    "moves": [
+      "O-O"
+    ],
+    "theme": "King Safety",
+    "hint": "Castle your King to safety."
+  },
+  {
+    "id": 59,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkb1r/ppp2ppp/2n5/3np3/2B5/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Castle before striking",
+    "moves": [
+      "O-O"
+    ],
+    "theme": "King Safety",
+    "hint": "Castle Kingside to activate your rook."
+  },
+  {
+    "id": 60,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/ppp2ppp/2n5/3np3/1bB5/2NP1N2/PPP2PPP/R1BQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Castle to unpin",
+    "moves": [
+      "O-O"
+    ],
+    "theme": "King Safety",
+    "hint": "Castle Kingside to break the pin."
+  },
+  {
+    "id": 61,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bq1rk1/pppp1ppp/2n2n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQR1K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Open diagonal for Bishop",
+    "moves": [
+      "d6"
+    ],
+    "theme": "Development",
+    "hint": "Push d6 to activate your light-square Bishop."
+  },
+  {
+    "id": 62,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bq1rk1/ppp2ppp/2np4/2b1p1B1/2B1P3/2NP1N2/PPP2PPP/R2Q1RK1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Unpin the Queen",
+    "moves": [
+      "Qd7"
+    ],
+    "theme": "Defense",
+    "hint": "Step Queen to d7 out of the pin."
+  },
+  {
+    "id": 63,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkb1r/pppp1ppp/2n5/3QP3/2B1n3/5N2/PPP2PPP/RNB1K2R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Defend against Qxf7#",
+    "moves": [
+      "Qe7"
+    ],
+    "theme": "Defense",
+    "hint": "Queen to e7 defends f7."
+  },
+  {
+    "id": 64,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Develop dark-square Bishop",
+    "moves": [
+      "Bc5"
+    ],
+    "theme": "Development",
+    "hint": "Develop your bishop to c5."
+  },
+  {
+    "id": 65,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p1B1/1b2P3/2NP3P/PPP2PP1/R2QKBNR b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Question the Bishop",
+    "moves": [
+      "h6"
+    ],
+    "theme": "Tactic",
+    "hint": "Push h6 to challenge the pinned Bishop."
+  },
+  {
+    "id": 66,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqkb1r/pppp1p1p/2n2np1/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Solidify center",
+    "moves": [
+      "d3"
+    ],
+    "theme": "Development",
+    "hint": "Push d3 to support the center."
+  },
+  {
+    "id": 67,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Prepare d4 push with c3",
+    "moves": [
+      "c3"
+    ],
+    "theme": "Preparation",
+    "hint": "Pawn to c3 prepares center expansion."
+  },
+  {
+    "id": 68,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bqk2r/pppp1ppp/2n5/2b1p3/2B1P3/2P2N2/PP1P1PPP/RNBQK2R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Solidify center with d6",
+    "moves": [
+      "d6"
+    ],
+    "theme": "Solidify",
+    "hint": "Pawn to d6 supports e5."
+  },
+  {
+    "id": 69,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p1B1/2B1P3/2PP1N2/PP3PPP/RN1Q1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Prevent g4 jump with h3",
+    "moves": [
+      "h3"
+    ],
+    "theme": "Quiet Move",
+    "hint": "Pawn to h3 controls g4."
+  },
+  {
+    "id": 70,
+    "difficulty": 1,
+    "difficultyLabel": "Easy",
+    "fen": "r1bq1rk1/ppp2pp1/2np1n1p/2b1p1B1/2B1P3/2PP1N1P/PP3PP1/RN1Q1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Maintain pin with Bh4",
+    "moves": [
+      "Bh4"
+    ],
+    "theme": "Retreat",
+    "hint": "Retreat Bishop to h4."
+  },
+  {
+    "id": 71,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "8/8/8/8/8/4K3/5Q2/6k1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — 2-move Queen mate",
+    "moves": [
+      "Qg3+",
+      "Kh1",
+      "Qg2#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Force the King to the corner with Qg3+."
+  },
+  {
+    "id": 72,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "7k/8/5K2/8/8/8/8/7R w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Discovered checkmate combo",
+    "moves": [
+      "Kg6+",
+      "Kg8",
+      "Rh8#"
+    ],
+    "theme": "Discovered Check",
+    "hint": "Step King to g6 with discovered check."
+  },
+  {
+    "id": 73,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/pppp1ppp/2n5/4P3/1bB1n3/2N2N2/PPP2PPP/R1BQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Bishop sacrifice fork",
+    "moves": [
+      "Bxf7+",
+      "Kxf7",
+      "Qd5+"
+    ],
+    "theme": "Fork",
+    "hint": "Sacrifice Bishop on f7 then fork King and Knight with Qd5."
+  },
+  {
+    "id": 74,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/pppp1ppp/2n5/4p3/2B1n3/2NP1N2/PPP2PPP/R1BQK2R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Win space with center fork",
+    "moves": [
+      "Nxc3",
+      "bxc3",
+      "d5"
+    ],
+    "theme": "Fork",
+    "hint": "Trade on c3 and push d5 to fork Bishop and center."
+  },
+  {
+    "id": 75,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Center fork trick",
+    "moves": [
+      "Nxe5",
+      "Nxe5",
+      "d4"
+    ],
+    "theme": "Center Fork Trick",
+    "hint": "Capture e5 with Knight, then fork with d4."
+  },
+  {
+    "id": 76,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Open the center with d4",
+    "moves": [
+      "d4",
+      "exd4",
+      "Nxd4"
+    ],
+    "theme": "Center Open",
+    "hint": "Strike in the center with d4."
+  },
+  {
+    "id": 77,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqkb1r/pppp1ppp/2n5/4p3/3Pn3/2N2N2/PPP1PPPP/R1BQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Take free knight on e4",
+    "moves": [
+      "Nxe4",
+      "d5",
+      "Nc3"
+    ],
+    "theme": "Piece Play",
+    "hint": "Take the knight on e4."
+  },
+  {
+    "id": 78,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1b2rk1/pp3ppp/8/8/1B6/8/PPP2PPP/3R2K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Win Rook and dominate 8th rank",
+    "moves": [
+      "Bxf8",
+      "Kxf8",
+      "Rd8+"
+    ],
+    "theme": "Combination",
+    "hint": "Trade on f8 and invade with your Rook."
+  },
+  {
+    "id": 79,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r2q1rk1/ppp2ppp/2n5/3p4/3P4/2N1RB2/PPP2PPP/R2Q2K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Win free central pawn",
+    "moves": [
+      "Bxd5"
+    ],
+    "theme": "Tactic",
+    "hint": "Capture the undefended d5 pawn with your Bishop."
+  },
+  {
+    "id": 80,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "3r2k1/5ppp/8/8/8/4Q3/5PPP/6K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Defend back rank",
+    "moves": [
+      "Qe1"
+    ],
+    "theme": "Defense",
+    "hint": "Retreat the Queen to e1 to stop Black's back rank mate."
+  },
+  {
+    "id": 81,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "2r3k1/5ppp/8/8/8/8/5PPP/1R4K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Infiltrate the 7th rank",
+    "moves": [
+      "Rb7"
+    ],
+    "theme": "7th Rank Pig",
+    "hint": "Place your rook on the 7th rank to target pawns."
+  },
+  {
+    "id": 82,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r4rk1/ppp2ppp/8/8/8/8/PPP2PPP/3RR1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Invade 7th rank",
+    "moves": [
+      "Rd7"
+    ],
+    "theme": "7th Rank",
+    "hint": "Rook to d7."
+  },
+  {
+    "id": 83,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r2qk2r/ppp1bppp/2np1n2/4p3/2B1P1b1/2NP1N2/PPP1BPPP/R1BQ1RK1 w kq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Question and push Bishop",
+    "moves": [
+      "h3",
+      "Bh5",
+      "g4"
+    ],
+    "theme": "Space Advantage",
+    "hint": "Play h3 then g4 to gain kingside space."
+  },
+  {
+    "id": 84,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/pppp1ppp/2n2n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Pin the f6 Knight",
+    "moves": [
+      "Bg5",
+      "h6",
+      "Bh4"
+    ],
+    "theme": "Pin",
+    "hint": "Bishop to g5 creates an annoying pin."
+  },
+  {
+    "id": 85,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1b2rk1/ppp2ppp/2n2q2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Jump Knight into d5 outpost",
+    "moves": [
+      "Nd5",
+      "Qd8",
+      "Bg5"
+    ],
+    "theme": "Outpost / Initiative",
+    "hint": "Place your Knight on the dominant d5 square."
+  },
+  {
+    "id": 86,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1b1k2r/ppp2ppp/2n2q2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Centralize knight on d5",
+    "moves": [
+      "Nd5",
+      "Qd8",
+      "Bg5"
+    ],
+    "theme": "Outpost",
+    "hint": "Knight to d5 attacks the Queen with tempo."
+  },
+  {
+    "id": 87,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2NP1N2/PPP2PPP/R1BQK2R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Strike in the center with d5",
+    "moves": [
+      "d5",
+      "exd5",
+      "Nxd5"
+    ],
+    "theme": "Center Break",
+    "hint": "Push d5 to open diagonals."
+  },
+  {
+    "id": 88,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p1B1/2B1P3/2PP1N2/PP3PPP/RN1Q1RK1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Break the pin with h6 and g5",
+    "moves": [
+      "h6",
+      "Bh4",
+      "g5"
+    ],
+    "theme": "Break Pin",
+    "hint": "Push h6 then g5 to break the pin."
+  },
+  {
+    "id": 89,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2p2/2np1n1p/2b1p1p1/2B1P2B/2PP1N1P/PP3PP1/RN1Q1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Knight sacrifice for pawns & attack",
+    "moves": [
+      "Nxg5",
+      "hxg5",
+      "Bxg5"
+    ],
+    "theme": "Sacrifice",
+    "hint": "Nxg5 opens Black's King position."
+  },
+  {
+    "id": 90,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqkb1r/pppp1ppp/2n5/4P3/2B1n3/5N2/PPP2PPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Double attack on f7 and e4",
+    "moves": [
+      "Qd5"
+    ],
+    "theme": "Double Attack",
+    "hint": "Queen to d5 attacks both the knight and f7 checkmate."
+  },
+  {
+    "id": 91,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1b1kb1r/pppp1ppp/5n2/4q3/4P3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Defend e4 pawn",
+    "moves": [
+      "Bd3"
+    ],
+    "theme": "Defense",
+    "hint": "Develop Bishop to d3 to protect e4."
+  },
+  {
+    "id": 92,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqkb1r/pppp1ppp/2n5/4p3/2B1n3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Pin the e4 Knight",
+    "moves": [
+      "Re1"
+    ],
+    "theme": "Pin",
+    "hint": "Place your Rook on the open e-file."
+  },
+  {
+    "id": 93,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqkb1r/pppp1ppp/2n5/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Threaten mate on f7",
+    "moves": [
+      "Qh5"
+    ],
+    "theme": "Attack",
+    "hint": "Move Queen to h5 to create a mating battery."
+  },
+  {
+    "id": 94,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqkb1r/pppp1p1p/2n3p1/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Renew f7 mating threat",
+    "moves": [
+      "Qf3"
+    ],
+    "theme": "Attack",
+    "hint": "Retreat Queen to f3 to threaten mate again."
+  },
+  {
+    "id": 95,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Pin the f6 Knight",
+    "moves": [
+      "Bg5"
+    ],
+    "theme": "Pin",
+    "hint": "Bishop to g5 creates a strong pin."
+  },
+  {
+    "id": 96,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1b2rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Pin knight to Queen",
+    "moves": [
+      "Bg5"
+    ],
+    "theme": "Pin",
+    "hint": "Bishop to g5 pins the knight."
+  },
+  {
+    "id": 97,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "k7/8/1K6/8/8/8/8/R7 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Rook maneuver to corner King",
+    "moves": [
+      "Ra7",
+      "Kb8",
+      "Rh7"
+    ],
+    "theme": "Endgame Technique",
+    "hint": "Rook to a7 controls the rank."
+  },
+  {
+    "id": 98,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/pppp1ppp/2n2n2/4p3/1b2P3/2NP1N2/PPP1BPPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Castle and pin",
+    "moves": [
+      "O-O",
+      "d6",
+      "Bg5"
+    ],
+    "theme": "Development",
+    "hint": "Castle safely then pin with Bg5."
+  },
+  {
+    "id": 99,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2ppp/2np1n2/4p3/1bB1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Trade on d5 outpost",
+    "moves": [
+      "Nd5",
+      "Nxd5",
+      "Bxd5"
+    ],
+    "theme": "Outpost",
+    "hint": "Jump Knight to d5."
+  },
+  {
+    "id": 100,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/1bB1P3/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Unpin on d2",
+    "moves": [
+      "exd5",
+      "Nxd5",
+      "Bd2"
+    ],
+    "theme": "Tactic",
+    "hint": "Capture d5 then develop Bd2."
+  },
+  {
+    "id": 101,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1bPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Take sacrifice bishop",
+    "moves": [
+      "Kxf2"
+    ],
+    "theme": "King Safety",
+    "hint": "Take the bishop on f2."
+  },
+  {
+    "id": 102,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Pin knight with Bb4",
+    "moves": [
+      "exd4",
+      "Nxd4",
+      "Bb4"
+    ],
+    "theme": "Opening Pin",
+    "hint": "Capture d4 and pin c3."
+  },
+  {
+    "id": 103,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/ppp2ppp/2n5/3pp3/1b1PP3/2N2N2/PPP1BPPP/R1BQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Castle and maintain center",
+    "moves": [
+      "O-O",
+      "Bxc3",
+      "bxc3"
+    ],
+    "theme": "Solid Center",
+    "hint": "Castle Kingside."
+  },
+  {
+    "id": 104,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/ppp2ppp/2n5/3P4/1b2P3/5N2/PP1B1PPP/R2QKB1R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Trade Bishops",
+    "moves": [
+      "Bxd2+",
+      "Qxd2",
+      "Ne7"
+    ],
+    "theme": "Simplification",
+    "hint": "Exchange on d2 and retreat knight."
+  },
+  {
+    "id": 105,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/pppp1ppp/2n5/4p3/1b1PP3/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Push d5 and kick Bishop",
+    "moves": [
+      "d5",
+      "Ne7",
+      "a3"
+    ],
+    "theme": "Space Gain",
+    "hint": "Push d5 then play a3."
+  },
+  {
+    "id": 106,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/pppp1ppp/2n2n2/2b1p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Quiet development and pin",
+    "moves": [
+      "d3",
+      "d6",
+      "Bg5"
+    ],
+    "theme": "Pin Setup",
+    "hint": "Play d3 followed by Bg5 pin."
+  },
+  {
+    "id": 107,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/2b1p3/2B1P3/2NP1N2/PPP3PP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Italian game pin",
+    "moves": [
+      "Bg5",
+      "h6",
+      "Bh4"
+    ],
+    "theme": "Italian Pin",
+    "hint": "Develop Bg5 and preserve diagonal."
+  },
+  {
+    "id": 108,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2ppp/2np4/2b1p1N1/2B1P1n1/2NP4/PPP2PPP/R1BQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Repel Black's Knight",
+    "moves": [
+      "h3",
+      "Nf6",
+      "Nf3"
+    ],
+    "theme": "Defense",
+    "hint": "Push h3 to dislodge the knight."
+  },
+  {
+    "id": 109,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2ppp/2np4/2b1p3/2B1P1n1/2NP1N1P/PPP2PP1/R1BQ1RK1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Reposition knight to f6",
+    "moves": [
+      "Nf6",
+      "Bg5",
+      "h6"
+    ],
+    "theme": "Repositioning",
+    "hint": "Retreat knight to safety."
+  },
+  {
+    "id": 110,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2pp1/2np3p/2b1p1N1/2B1P3/2NP3P/PPP2PP1/R1BQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Trade Bishops on e6",
+    "moves": [
+      "Nf3",
+      "Be6",
+      "Bxe6"
+    ],
+    "theme": "Exchange",
+    "hint": "Trade on e6 to weaken Black's pawns."
+  },
+  {
+    "id": 111,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2pp1/2np3p/3Np3/2B1P3/2PP1N2/PP3PPP/R2Q1RK1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Hunt White's light Bishop",
+    "moves": [
+      "Na5",
+      "Bb3",
+      "Nxb3"
+    ],
+    "theme": "Bishop Hunt",
+    "hint": "Knight to a5 to trade off Bishop."
+  },
+  {
+    "id": 112,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2pp1/3p3p/n2Np3/4P3/1BPP1N2/PP3PPP/R2Q1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Preserve light Bishop",
+    "moves": [
+      "Bc2",
+      "c6",
+      "Ne3"
+    ],
+    "theme": "Bishop Retreat",
+    "hint": "Retreat Bishop to c2."
+  },
+  {
+    "id": 113,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2pp1/2np3p/4p3/4P3/2PP1N2/PP1N1PPP/R2Q1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Knight activation",
+    "moves": [
+      "Nc4",
+      "f5",
+      "exf5"
+    ],
+    "theme": "Knight Tour",
+    "hint": "Reroute Knight to c4."
+  },
+  {
+    "id": 114,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1b2rk1/ppp2ppp/8/4N3/2B5/8/PPP2PPP/3R2K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Sacrificial checkmate combo (3 moves)",
+    "moves": [
+      "Bxf7+",
+      "Rxf7",
+      "Rd8+",
+      "Rf8",
+      "Rxf8#"
+    ],
+    "theme": "Sacrifice Mate",
+    "hint": "Sacrifice the Bishop on f7 to open up the enemy King."
+  },
+  {
+    "id": 115,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "4rrk1/ppp2ppp/2n5/3p4/3P2n1/P3P1Pq/1P1N1P1P/R1BQR1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Defend against mate on h2",
+    "moves": [
+      "Nf1"
+    ],
+    "theme": "Defense",
+    "hint": "Reroute your d2 Knight to f1 to defend the critical h2 square."
+  },
+  {
+    "id": 116,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "8/8/8/8/4Q3/8/5K1k/8 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Corner checkmate",
+    "moves": [
+      "Qh4#"
+    ],
+    "theme": "Checkmate",
+    "hint": "Move Queen to h4 to seal off all escape squares."
+  },
+  {
+    "id": 117,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bqk2r/pppp1ppp/2n5/4p3/2B1n3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Pin the e4 knight with Qe2",
+    "moves": [
+      "Qe2",
+      "d5",
+      "d3"
+    ],
+    "theme": "Pin & Win",
+    "hint": "Play Qe2 to pin the knight along the e-file."
+  },
+  {
+    "id": 118,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/pppp1ppp/2n5/4p3/1bB1P3/5N2/PPPP1PPP/RNBQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Expand in the center with c3 and d4",
+    "moves": [
+      "c3",
+      "Bc5",
+      "d4"
+    ],
+    "theme": "Center Domination",
+    "hint": "Push c3 then d4 to claim the entire center."
+  },
+  {
+    "id": 119,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/pppp1ppp/2n5/2b1p3/2B1P3/2P2N2/PP1P1PPP/RNBQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Establish classical pawn duo",
+    "moves": [
+      "d4",
+      "exd4",
+      "cxd4"
+    ],
+    "theme": "Pawn Center",
+    "hint": "Play d4 and recapture with c-pawn."
+  },
+  {
+    "id": 120,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/1Bbp4/3NP3/2P5/PP3PPP/RNBQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Win pawn and damage pawn structure",
+    "moves": [
+      "Nxc6",
+      "bxc6",
+      "Bxc6"
+    ],
+    "theme": "Combination",
+    "hint": "Trade on c6 then take with Bishop."
+  },
+  {
+    "id": 121,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/p1p2ppp/2B5/2bp4/4P3/8/PPP2PPP/RNBQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Capture the trapped Rook on a8",
+    "moves": [
+      "Bxa8"
+    ],
+    "theme": "Material Gain",
+    "hint": "Bishop captures rook on a8."
+  },
+  {
+    "id": 122,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1b2rk1/pp3ppp/8/3p4/4P3/8/PPP2PPP/RNBQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Create an isolated passed pawn",
+    "moves": [
+      "exd5"
+    ],
+    "theme": "Passed Pawn",
+    "hint": "Capture on d5 to create a strong passed pawn."
+  },
+  {
+    "id": 123,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/3np3/1bB5/2NP1N2/PPP2PPP/R1BQR1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Exchange sacrifice for pieces",
+    "moves": [
+      "Nxd5",
+      "Bxe1",
+      "Qxe1"
+    ],
+    "theme": "Combination",
+    "hint": "Take knight on d5."
+  },
+  {
+    "id": 124,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/3Np3/1bB5/3P1N2/PPP2PPP/R1BQR1K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Win exchange with Bxe1",
+    "moves": [
+      "Bxe1",
+      "Qxe1",
+      "Be6"
+    ],
+    "theme": "Tactical Gain",
+    "hint": "Take the rook on e1."
+  },
+  {
+    "id": 125,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r2q1rk1/ppp1bppp/2np1n2/4p3/4P1b1/2NP1N2/PPP1BPPP/R1BQR1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Knight discovered attack tactic",
+    "moves": [
+      "h3",
+      "Bh5",
+      "Nxe5",
+      "Bxe2",
+      "Nxc6"
+    ],
+    "theme": "Discovery",
+    "hint": "Play h3 then Nxe5 winning a pawn."
+  },
+  {
+    "id": 126,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQ1RK1 w kq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queenside expansion attack",
+    "moves": [
+      "c3",
+      "d6",
+      "b4",
+      "Bb6",
+      "a4"
+    ],
+    "theme": "Pawn Storm",
+    "hint": "Push c3, b4, and a4 to trap the bishop."
+  },
+  {
+    "id": 127,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2NP1N2/PPP2PPP/R1BQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Build overwhelming pressure on f6",
+    "moves": [
+      "O-O",
+      "O-O",
+      "Bg5",
+      "d6",
+      "Nd5"
+    ],
+    "theme": "Attack",
+    "hint": "Castle, pin with Bg5, and jump Nd5."
+  },
+  {
+    "id": 128,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/pppp1ppp/2n2n2/4p3/1bB1P3/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Accept doubled pawns for open lines",
+    "moves": [
+      "O-O",
+      "Bxc3",
+      "bxc3",
+      "d6",
+      "Bg5"
+    ],
+    "theme": "Positional Play",
+    "hint": "Castle, recapture on c3, and pin."
+  },
+  {
+    "id": 129,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Spanish/Italian knight rerouting to g3",
+    "moves": [
+      "Nbd2",
+      "a6",
+      "Re1",
+      "Ba7",
+      "Nf1"
+    ],
+    "theme": "Maneuver",
+    "hint": "Nbd2 to f1 to g3."
+  },
+  {
+    "id": 130,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1NN1/PP3PPP/R1BQK2R b KQ - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Challenge White's powerful bishop",
+    "moves": [
+      "Be6",
+      "Bb3",
+      "Bxb3",
+      "axb3"
+    ],
+    "theme": "Piece Exchange",
+    "hint": "Play Be6 to trade bishops."
+  },
+  {
+    "id": 131,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2np1n2/4p3/2B1P3/2PP1N2/PP1N1PPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Recapture with knight on c4",
+    "moves": [
+      "O-O",
+      "Be6",
+      "Re1",
+      "Bxc4",
+      "Nxc4"
+    ],
+    "theme": "Outpost Recapture",
+    "hint": "Recapture with Knight to establish outpost."
+  },
+  {
+    "id": 132,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/3np3/1bB5/2PP1N2/PP3PPP/RNBQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Win piece on b4",
+    "moves": [
+      "cxb4",
+      "Ndxb4",
+      "O-O"
+    ],
+    "theme": "Material Gain",
+    "hint": "Take bishop on b4 with pawn."
+  },
+  {
+    "id": 133,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/pppn1ppp/3p1n2/4p3/2B1P3/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Restrain Black's queenside expansion",
+    "moves": [
+      "O-O",
+      "c6",
+      "a4",
+      "a5",
+      "Re1"
+    ],
+    "theme": "Prophylaxis",
+    "hint": "Push a4 to stop b5."
+  },
+  {
+    "id": 134,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2np4/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Launch central assault",
+    "moves": [
+      "Bg5",
+      "Qd7",
+      "Nd5",
+      "Kh8",
+      "c3"
+    ],
+    "theme": "Initiative",
+    "hint": "Combine Bg5, Nd5 and c3."
+  },
+  {
+    "id": 135,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQR1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Trade dark-square bishops",
+    "moves": [
+      "Be3",
+      "Bxe3",
+      "Rxe3"
+    ],
+    "theme": "Piece Trading",
+    "hint": "Recapture with rook on e3."
+  },
+  {
+    "id": 136,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/3np3/2B5/3P1N2/PPP2PPP/RNBQR1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Win central pawn with tactical trade",
+    "moves": [
+      "Nxe5",
+      "Nxe5",
+      "Rxe5"
+    ],
+    "theme": "Pawn Snatch",
+    "hint": "Take on e5 then recapture with Rook."
+  },
+  {
+    "id": 137,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/3nR3/2B5/3P1N2/PPP2PPP/RNBQ2K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Trade Rook for Knight and develop",
+    "moves": [
+      "Nxe5",
+      "Nxe5",
+      "Be6"
+    ],
+    "theme": "Exchange",
+    "hint": "Take rook on e5 and play Be6."
+  },
+  {
+    "id": 138,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/4p3/2B5/3P1N2/PPP2PPP/RNBQR1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Cement dominant central rook",
+    "moves": [
+      "Nxe5",
+      "Nxe5",
+      "Rxe5",
+      "c6",
+      "d4"
+    ],
+    "theme": "Central Dominance",
+    "hint": "Win pawn on e5 and support with d4."
+  },
+  {
+    "id": 139,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1b1k2r/ppppqppp/2n5/4p3/2B1n3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Regain piece with tempo",
+    "moves": [
+      "dxe4",
+      "Qb4+",
+      "c3",
+      "Qxc4",
+      "Nbd2"
+    ],
+    "theme": "Tactic",
+    "hint": "Take knight on e4 and block check with c3."
+  },
+  {
+    "id": 140,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/pppp1ppp/2n5/4p3/2B1n3/2PP1N2/PP3PPP/RNBQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queen capture on d5",
+    "moves": [
+      "dxe4",
+      "d5",
+      "exd5",
+      "Qxd5",
+      "Bxd5"
+    ],
+    "theme": "Tactical Liquidation",
+    "hint": "Liquidate center and win material."
+  },
+  {
+    "id": 141,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/pppp1ppp/2n5/4p3/1bB1P3/2PP1N2/PP3PPP/RNBQK2R b KQ - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Solid defense and trade bishops",
+    "moves": [
+      "Be7",
+      "O-O",
+      "d6",
+      "h3",
+      "Be6"
+    ],
+    "theme": "Positional Defense",
+    "hint": "Retreat to e7 and challenge white bishop."
+  },
+  {
+    "id": 142,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/3P1N2/PPP1NPPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Solid castle and open a-file",
+    "moves": [
+      "O-O",
+      "Be6",
+      "Bb3",
+      "Bxb3",
+      "axb3"
+    ],
+    "theme": "Pawn Structure",
+    "hint": "Castle and recapture on b3 with a-pawn."
+  },
+  {
+    "id": 143,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/2b1p3/4P3/2PP1N2/PP2BPPP/RNBQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Queenside expansion with b4",
+    "moves": [
+      "O-O",
+      "Bg4",
+      "Nbd2",
+      "Qe7",
+      "b4"
+    ],
+    "theme": "Expansion",
+    "hint": "Expand on queenside with b4."
+  },
+  {
+    "id": 144,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/4P3/2PP1N2/PP1NBPPP/R2QK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Harmonious development",
+    "moves": [
+      "O-O",
+      "Be6",
+      "Re1",
+      "h6",
+      "Qc2"
+    ],
+    "theme": "Strategy",
+    "hint": "Castle, place Rook on e1, Queen on c2."
+  },
+  {
+    "id": 145,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/3PP3/2P2N2/PP1NBPPP/R2QK2R b KQ - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Counter-strike in center",
+    "moves": [
+      "dxe4",
+      "Nxe5",
+      "Nxe5",
+      "dxe5",
+      "Nd7"
+    ],
+    "theme": "Center Counter",
+    "hint": "Take on e4 and reposition knight."
+  },
+  {
+    "id": 146,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/3PP3/2P1BN2/PP1N1PPP/R2QKB1R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Pin setup on h4",
+    "moves": [
+      "exd5",
+      "Nxd5",
+      "Bg5",
+      "f6",
+      "Bh4"
+    ],
+    "theme": "Pin Tactics",
+    "hint": "Open center and maintain bishop diagonal."
+  },
+  {
+    "id": 147,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/4p3/3Pp3/2P1BN2/PP1N1PPP/R2QKB1R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Dynamic central tactical exchange",
+    "moves": [
+      "dxe5",
+      "exf3",
+      "exf6",
+      "Qxf6",
+      "Nxf3"
+    ],
+    "theme": "Sharp Tactics",
+    "hint": "Trade pawns and knights with active pieces."
+  },
+  {
+    "id": 148,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP2NPPP/R1BQK2R b KQ - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Harmonious bishop swap",
+    "moves": [
+      "Be6",
+      "Bb3",
+      "Bxb3",
+      "Qxb3",
+      "Bb6"
+    ],
+    "theme": "Positional Balance",
+    "hint": "Trade bishops on b3 and tuck remaining bishop on b6."
+  },
+  {
+    "id": 149,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/1bPP4/2N1PN2/PP1B1PPP/R2QKB1R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Central liquidation into comfortable game",
+    "moves": [
+      "cxd5",
+      "Nxd5",
+      "Nxd5",
+      "Bxd2+",
+      "Qxd2"
+    ],
+    "theme": "Liquidation",
+    "hint": "Trade pawns and bishops on d2."
+  },
+  {
+    "id": 150,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/1bPP4/2N1PN2/PP1B1PPP/R2QKB1R b KQ - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Seize e-file with Re8+",
+    "moves": [
+      "exd4",
+      "Nxd4",
+      "Nxd4",
+      "exd4",
+      "Re8+"
+    ],
+    "theme": "E-file Control",
+    "hint": "Capture on d4 and check on e-file."
+  },
+  {
+    "id": 151,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/1bPP4/4PN2/PP1B1PPP/RN1QKB1R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Win bishop pair with tempo",
+    "moves": [
+      "Bxb4",
+      "Nxb4",
+      "a3",
+      "Nc6",
+      "cxd5"
+    ],
+    "theme": "Bishop Pair",
+    "hint": "Take bishop on b4 and kick knight."
+  },
+  {
+    "id": 152,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/2PP4/P3PN2/1P1B1PPP/RN1QKB1R b KQ - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Push e4 fork space advantage",
+    "moves": [
+      "e4",
+      "Ne5",
+      "Nxe5",
+      "dxe5",
+      "Ng4"
+    ],
+    "theme": "Space Advantage",
+    "hint": "Advance e4 and target e5 pawn."
+  },
+  {
+    "id": 153,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Pin and trade on c6",
+    "moves": [
+      "exd4",
+      "Nxd4",
+      "Bb4",
+      "Nxc6",
+      "bxc6"
+    ],
+    "theme": "Scotch Pin",
+    "hint": "Pin c3 knight with Bb4."
+  },
+  {
+    "id": 154,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 0 1",
+    "turn": "w",
+    "goal": "White to move — Four knights opening development",
+    "moves": [
+      "O-O",
+      "O-O",
+      "d3",
+      "d6",
+      "Bg5"
+    ],
+    "theme": "Four Knights",
+    "hint": "Castle and pin f6 knight."
+  },
+  {
+    "id": 155,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bqk2r/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP1N1PPP/R1BQK2R b KQkq - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Central counter with d5",
+    "moves": [
+      "O-O",
+      "Nf1",
+      "d5",
+      "exd5",
+      "Nxd5"
+    ],
+    "theme": "Center Counter",
+    "hint": "Strike in the center with d5."
+  },
+  {
+    "id": 156,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/1bPP4/2N1PN2/PP1B1PPP/R2QKB1R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Bishop pair and outpost on e5",
+    "moves": [
+      "a3",
+      "Bxc3",
+      "Bxc3",
+      "e4",
+      "Ne5"
+    ],
+    "theme": "Outpost Strategy",
+    "hint": "Kick bishop with a3 and anchor knight on e5."
+  },
+  {
+    "id": 157,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/1bPP4/2N2N2/PP1BPPPP/R2QKB1R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Center pawn pawn majority",
+    "moves": [
+      "cxd5",
+      "Nxd5",
+      "e4",
+      "Nxc3",
+      "bxc3"
+    ],
+    "theme": "Center Pawn Wave",
+    "hint": "Push e4 to gain big central space."
+  },
+  {
+    "id": 158,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/3pp3/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Classical bishop activation",
+    "moves": [
+      "cxd5",
+      "Nxd5",
+      "Bc4",
+      "Nxc3",
+      "bxc3"
+    ],
+    "theme": "Active Pieces",
+    "hint": "Activate bishop to c4 and recapture c3."
+  },
+  {
+    "id": 159,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/3np3/1bB5/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Sharp tactical liquidation",
+    "moves": [
+      "Nxd5",
+      "Be6",
+      "Nxb4",
+      "Bxc4",
+      "Nxc6"
+    ],
+    "theme": "Sharp Tactic",
+    "hint": "Trade knights and remove the bishop."
+  },
+  {
+    "id": 160,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/2bpp3/4P3/2PP1N2/PP2BPPP/RNBQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Solid closed center maneuver",
+    "moves": [
+      "Nbd2",
+      "a5",
+      "O-O",
+      "Re8",
+      "Qc2"
+    ],
+    "theme": "Classical Maneuver",
+    "hint": "Nbd2, castle, and organize the pieces."
+  },
+  {
+    "id": 161,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/ppp2ppp/2n2n2/2bpp3/4P3/2PP1N2/PP1NBPPP/R1BQK2R b KQ - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Control queen side light squares",
+    "moves": [
+      "dxe4",
+      "dxe4",
+      "a5",
+      "O-O",
+      "Qe7"
+    ],
+    "theme": "Center Equalizer",
+    "hint": "Liquidate center and play a5/Qe7."
+  },
+  {
+    "id": 162,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Spanish quiet maneuvering",
+    "moves": [
+      "Bb3",
+      "Ba7",
+      "h3",
+      "h6",
+      "Nbd2"
+    ],
+    "theme": "Quiet Spanish",
+    "hint": "Tuck bishop to b3, h3, and Nbd2."
+  },
+  {
+    "id": 163,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/1pp2ppp/p1np1n2/4p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Trade bishop and stake claim on c5",
+    "moves": [
+      "Na5",
+      "Bb3",
+      "Nxb3",
+      "axb3",
+      "c5"
+    ],
+    "theme": "Space Claim",
+    "hint": "Swap white's bishop and play c5."
+  },
+  {
+    "id": 164,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/3np3/2B5/3P1N2/PPP1NPPP/R1BQK2R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Defuse Kingside pin with c3",
+    "moves": [
+      "O-O",
+      "Bg4",
+      "Ng3",
+      "Nd4",
+      "c3"
+    ],
+    "theme": "Defusing Pins",
+    "hint": "Castle, Ng3, and kick knight with c3."
+  },
+  {
+    "id": 165,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/3np3/2B5/2PP1N2/PP3PPP/RNBQK2R b KQ - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Target d3 pawn with active pieces",
+    "moves": [
+      "Nb6",
+      "Bb3",
+      "Bg4",
+      "O-O",
+      "Qd7"
+    ],
+    "theme": "Pawn Pressure",
+    "hint": "Play Nb6, Bg4, and coordinate on d3."
+  },
+  {
+    "id": 166,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/pp1n1ppp/2p1pn2/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 0 1",
+    "turn": "w",
+    "goal": "White to move — Central pawn strike e4",
+    "moves": [
+      "Bd3",
+      "b6",
+      "O-O",
+      "Bb7",
+      "e4"
+    ],
+    "theme": "Queen's Gambit Style",
+    "hint": "Develop Bd3 and push e4."
+  },
+  {
+    "id": 167,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/pp1n1ppp/2p1pn2/3p4/2PP4/2N1PN2/PP1B1PPP/R2QKB1R b KQ - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Break open center with e5",
+    "moves": [
+      "Re8",
+      "Bd3",
+      "e5",
+      "dxe5",
+      "Nxe5"
+    ],
+    "theme": "Central Breakout",
+    "hint": "Push e5 and recapture with knight."
+  },
+  {
+    "id": 168,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/pp1nbppp/2p1pn2/3p4/2PP4/2N1PN2/PP2BPPP/R1BQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Fianchetto setup on b2",
+    "moves": [
+      "b3",
+      "b6",
+      "Bb2",
+      "Bb7",
+      "Qc2"
+    ],
+    "theme": "Fianchetto Structure",
+    "hint": "Play b3, Bb2, and coordinate the queens."
+  },
+  {
+    "id": 169,
+    "difficulty": 2,
+    "difficultyLabel": "Medium",
+    "fen": "r1bq1rk1/pp1nbppp/2p1pn2/3p4/2PP4/1PN1PN2/P3BPPP/R1BQ1RK1 b - - 0 1",
+    "turn": "b",
+    "goal": "Black to move — Symmetric harmonic setup",
+    "moves": [
+      "b6",
+      "Bb2",
+      "Bb7",
+      "Rc1",
+      "Rc8"
+    ],
+    "theme": "Symmetric Play",
+    "hint": "Mirror white's development on c8."
+  },
+  {
+    "id": 170,
+    "difficulty": 3,
+    "difficultyLabel": "Hard",
+    "fen": "r1bq1rk1/pp2bppp/2n1pn2/2pp4/2PP4/2N1PN2/PP2BPPP/R1BQ1RK1 w - - 0 1",
+    "turn": "w",
+    "goal": "White to move — Create isolated queen pawn (IQP) structure",
+    "moves": [
+      "cxd5",
+      "exd5",
+      "dxc5",
+      "Bxc5",
+      "b3"
+    ],
+    "theme": "IQP Strategy",
+    "hint": "Trade on d5 and c5 to isolate d5."
   }
 ]
