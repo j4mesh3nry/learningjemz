@@ -108,10 +108,10 @@
   gap: 14px;
   text-decoration: none;
   color: #ffffff;
-  background: linear-gradient(135deg, #0e4d2e 0%, #1c7c54 100%);
+  background: linear-gradient(135deg, #4a2c11 0%, #351f0b 100%);
   border-radius: 16px;
   padding: 16px;
-  box-shadow: 0 4px 12px rgba(14, 77, 46, 0.2);
+  box-shadow: 0 4px 0 #2f1a08;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: pointer;
   border: none;
@@ -122,7 +122,7 @@
 
 .chess-card-item:hover {
   transform: scale(1.02);
-  box-shadow: 0 6px 16px rgba(14, 77, 46, 0.3);
+  box-shadow: 0 6px 0 #2f1a08;
 }
 
 .chess-card-icon {
@@ -373,8 +373,8 @@
   margin: 0 auto;
   background: #ffffff;
   border-radius: 18px;
-  box-shadow: 0 4px 0 #b0cbaf;
-  border: 2px solid #b0cbaf;
+  box-shadow: 0 4px 0 #b89f80;
+  border: 2px solid #b89f80;
   overflow: hidden;
 }
 
@@ -384,14 +384,14 @@
   gap: 12px;
   width: 100%;
   padding: 12px 16px;
-  background: #e1f0e2;
-  border-bottom: 1.5px solid #b0cbaf;
+  background: #faf6ee;
+  border-bottom: 1.5px solid #b89f80;
   box-sizing: border-box;
 }
 
 .player-profile-banner.bottom {
   border-bottom: none;
-  border-top: 1.5px solid #b0cbaf;
+  border-top: 1.5px solid #b89f80;
   background: #ffffff;
 }
 
@@ -399,8 +399,8 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: #ffffff;
-  border: 1.5px solid #b0cbaf;
+  background: #ebe3cf;
+  border: 1.5px solid #b89f80;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -416,7 +416,7 @@
 
 .player-name {
   font-weight: 800;
-  color: #0f3825;
+  color: #2c1b0d;
   font-size: 0.95rem;
   display: flex;
   align-items: center;
@@ -425,7 +425,7 @@
 
 .player-tagline {
   font-size: 0.8rem;
-  color: #4e7361;
+  color: #6e5843;
   font-weight: 600;
 }
 
@@ -629,10 +629,10 @@
 }
 
 .game-over-overlay.win {
-  background: rgba(28, 124, 84, 0.9);
-  border-top: 2px solid #a5d6a7;
-  border-bottom: 2px solid #a5d6a7;
-  box-shadow: 0 8px 32px rgba(28, 124, 84, 0.4);
+  background: rgba(44, 27, 13, 0.95);
+  border-top: 2px solid #b89f80;
+  border-bottom: 2px solid #b89f80;
+  box-shadow: 0 8px 32px rgba(44, 27, 13, 0.4);
 }
 
 .game-over-overlay.win h2 {
@@ -641,7 +641,7 @@
 }
 
 .game-over-overlay.win p {
-  color: #a5d6a7;
+  color: #fbbf24;
 }
 
 .victory-stats-container {
@@ -772,12 +772,13 @@
 }
 
 .game-controls .btn.primary {
-  background: #1c7c54;
+  background: #4a2c11;
   color: white;
+  box-shadow: 0 3px 0 #2f1a08;
 }
 
 .game-controls .btn.primary:hover {
-  background: #156040;
+  background: #5c3a1e;
 }
 
 .game-controls .btn.danger {
@@ -795,3 +796,165 @@
   font-family: monospace;
   font-size: 0.9rem;
 }
+
+@keyframes shakeHoriz {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.shake-anim {
+  animation: shakeHoriz 0.4s ease-in-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- CHESS PUZZLE MODE SELECTION & BLITZ TIMER STYLES --- */
+.puzzle-mode-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #faf6ee;
+  border: 2px solid #b89f80;
+  box-shadow: 0 4px 0 #b89f80;
+  border-radius: 16px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.puzzle-mode-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #b89f80;
+}
+
+.puzzle-mode-card:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #b89f80;
+}
+
+.puzzle-mode-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid #b89f80;
+  box-shadow: 0 2.5px 0 #b89f80;
+}
+
+.puzzle-mode-avatar.survival {
+  background: #4a2c11;
+  border-color: #2f1a08;
+  box-shadow: 0 2.5px 0 #2f1a08;
+  color: #ff9800;
+}
+
+.puzzle-mode-avatar.blitz {
+  background: #fef3c7;
+  border-color: #d97706;
+  box-shadow: 0 2.5px 0 #d97706;
+  color: #d97706;
+}
+
+.puzzle-mode-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.puzzle-mode-info h3 {
+  margin: 0 0 3px 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #2c1b0d;
+  font-family: var(--font-heading);
+}
+
+.puzzle-mode-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #6e5843;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+/* Blitz Timer Chip */
+.blitz-timer-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #4a2c11;
+  color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #b89f80;
+  font-weight: 900;
+  font-size: 0.95rem;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.blitz-timer-chip.urgent {
+  background: #7f1d1d;
+  color: #fee2e2;
+  border-color: #e53935;
+  animation: pulseUrgent 0.6s infinite alternate;
+}
+
+@keyframes pulseUrgent {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+/* Floating Time Modifiers */
+.time-modifier-popup {
+  position: absolute;
+  top: -24px;
+  right: 0;
+  font-weight: 900;
+  font-size: 0.9rem;
+  font-family: var(--font-heading);
+  animation: floatUpFade 0.8s ease-out forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.time-modifier-popup.plus {
+  color: #16a34a;
+}
+
+.time-modifier-popup.minus {
+  color: #dc2626;
+}
+
+@keyframes floatUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-22px) scale(0.9);
+  }
+}
