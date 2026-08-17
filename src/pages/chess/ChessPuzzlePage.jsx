@@ -596,7 +596,11 @@ export default function ChessPuzzlePage() {
               <div className="puzzle-header-objective-row">
                 <div className="puzzle-objective-left">
                   <div className={`puzzle-turn-indicator ${game?.turn() === 'w' ? 'white' : 'black'}`}>
-                    {game?.turn() === 'w' ? '♔' : '♚'}
+                    <img 
+                      src={game?.turn() === 'w' ? PIECE_IMAGES.w.k : PIECE_IMAGES.b.k} 
+                      alt={`${game?.turn() === 'w' ? 'White' : 'Black'} King`} 
+                      style={{ width: '85%', height: '85%', objectFit: 'contain' }}
+                    />
                   </div>
                   <div className="puzzle-objective-text">
                     {(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}

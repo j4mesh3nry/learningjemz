@@ -1069,20 +1069,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 900;
-  font-size: 1.2rem;
   flex-shrink: 0;
+  box-sizing: border-box;
+  padding: 2px;
 }
 
 .puzzle-turn-indicator.white {
   background: #ffffff;
-  color: #2c1b0d;
 }
 
 .puzzle-turn-indicator.black {
   background: #2c1b0d;
-  color: #ffffff;
 }
+
 
 /* Puzzle Theme Tag in Header */
 .puzzle-theme-tag {
@@ -1346,8 +1345,8 @@
 }
 
 .puzzle-objective-text {
-  font-size: 0.95rem;
-  font-weight: 900;
+  font-size: 0.85rem;
+  font-weight: 800;
   color: #2c1b0d;
   line-height: 1.3;
 }
