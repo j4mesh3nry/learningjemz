@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess as ChessJS } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText, Sparkles, Target } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText, Sparkles, Target, LogOut } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -697,12 +697,15 @@ export default function ChessPlay() {
             <div className="board-outer-wrapper">
               {showBackModal && (
                 <div className="modal-overlay">
-                  <div className="restart-modal">
-                    <h3>Leave Game?</h3>
-                    <p>Are you sure you want to leave? This counts as a loss!</p>
-                    <div className="modal-actions">
-                      <button className="btn primary" onClick={() => setShowBackModal(false)}>Cancel</button>
-                      <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmBack}>Leave</button>
+                  <div className="tactile-exit-modal">
+                    <div className="tactile-exit-icon">
+                      <LogOut size={24} />
+                    </div>
+                    <h3 className="tactile-exit-title">Leave Game?</h3>
+                    <p className="tactile-exit-desc">Are you sure you want to leave? Leaving the match will count as a loss.</p>
+                    <div className="tactile-modal-actions">
+                      <button type="button" className="tactile-modal-btn cancel" onClick={() => setShowBackModal(false)}>Cancel</button>
+                      <button type="button" className="tactile-modal-btn confirm-danger" onClick={confirmBack}>Leave Game</button>
                     </div>
                   </div>
                 </div>
@@ -710,12 +713,15 @@ export default function ChessPlay() {
 
               {showRestartModal && (
                 <div className="modal-overlay">
-                  <div className="restart-modal">
-                    <h3>Restart Match?</h3>
-                    <p>Restarting will count current game as a loss.</p>
-                    <div className="modal-actions">
-                      <button className="btn primary" onClick={() => setShowRestartModal(false)}>Cancel</button>
-                      <button className="btn" style={{ background: '#e53935', color: 'white' }} onClick={confirmRestart}>Restart</button>
+                  <div className="tactile-exit-modal">
+                    <div className="tactile-exit-icon">
+                      <RotateCw size={24} />
+                    </div>
+                    <h3 className="tactile-exit-title">Restart Match?</h3>
+                    <p className="tactile-exit-desc">Restarting the match will record current game as a loss.</p>
+                    <div className="tactile-modal-actions">
+                      <button type="button" className="tactile-modal-btn cancel" onClick={() => setShowRestartModal(false)}>Cancel</button>
+                      <button type="button" className="tactile-modal-btn confirm-danger" onClick={confirmRestart}>Restart</button>
                     </div>
                   </div>
                 </div>

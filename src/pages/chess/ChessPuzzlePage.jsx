@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { 
   Puzzle, ArrowLeft, RotateCw, CheckCircle2, XCircle, 
   Trophy, Flame, Clock, Zap, RefreshCw, Timer,
-  Lightbulb, User, Sparkles, BookOpen, Eye
+  Lightbulb, User, Sparkles, BookOpen, Eye, LogOut
 } from 'lucide-react';
 import VictoryScreen from '../../components/VictoryScreen';
 import rawPuzzleData from '../../data/chess-puzzles.json';
@@ -125,6 +125,7 @@ export default function ChessPuzzlePage() {
   const [mistakeSquare, setMistakeSquare] = useState(null);
   const [lastXPGained, setLastXPGained] = useState(0);
   const [isReviewing, setIsReviewing] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
 
   // Time Attack Blitz Timer State (180s = 3 minutes)
   const [timeLeft, setTimeLeft] = useState(180);
@@ -463,6 +464,8 @@ export default function ChessPuzzlePage() {
               if (isReviewing) {
                 setIsReviewing(false);
                 setShowVictory(true);
+              } else if (gameMode && status === 'playing') {
+                setShowExitModal(true);
               } else if (gameMode) {
                 setGameMode(null);
                 setShowVictory(false);
@@ -632,6 +635,28 @@ export default function ChessPuzzlePage() {
 
             {/* Chess Board Grid */}
             <div className="board-outer-wrapper">
+              {showExitModal && (
+                <div className="modal-overlay">
+                  <div className="tactile-exit-modal">
+                    <div className="tactile-exit-icon">
+                      <LogOut size={24} />
+                    </div>
+                    <h3 className="tactile-exit-title">Quit Puzzle Run?</h3>
+                    <p className="tactile-exit-desc">Are you sure you want to quit? Exiting now will end your active streak and return to the menu.</p>
+                    <div className="tactile-modal-actions">
+                      <button type="button" className="tactile-modal-btn cancel" onClick={() => setShowExitModal(false)}>Keep Playing</button>
+                      <button type="button" className="tactile-modal-btn confirm-danger" onClick={() => {
+                        recordPuzzleRunEnd(gameMode, gameMode === 'SURVIVAL' ? sessionStreak : sessionSolvedCount);
+                        setShowExitModal(false);
+                        setGameMode(null);
+                        setShowVictory(false);
+                        setIsReviewing(false);
+                      }}>Quit Run</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className={`chess-board ${shake ? 'shake-anim' : ''}`}>
                 {(isFlipped ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7]).map((r, rowIndex) => (
                   <div key={r} className="board-row">
