@@ -49,9 +49,8 @@ describe('ChessPuzzlePage', () => {
     expect(screen.getByText('Chess Puzzles')).toBeInTheDocument();
     expect(screen.getByText('Sudden Death Survival')).toBeInTheDocument();
     expect(screen.getByText('Time Attack Blitz')).toBeInTheDocument();
-    expect(screen.getByText('SURVIVAL')).toBeInTheDocument();
-    expect(screen.getByText('BLITZ')).toBeInTheDocument();
-    expect(screen.getByText('ALL-TIME')).toBeInTheDocument();
+    expect(screen.getByText('SURVIVAL STREAK')).toBeInTheDocument();
+    expect(screen.getByText('BLITZ HIGH SCORE')).toBeInTheDocument();
     expect(screen.getByText('14')).toBeInTheDocument(); // survival best
     expect(screen.getByText('18')).toBeInTheDocument(); // blitz best
     expect(screen.getByText('25')).toBeInTheDocument(); // total solved

@@ -136,6 +136,15 @@ export default function ChessPuzzlePage() {
   const loadPuzzle = useCallback((puzzle) => {
     setCurrentPuzzle(puzzle);
     const g = createChess(puzzle.fen);
+    // Use chess.js as source of truth for side to move
+    const actualTurn = g.turn();
+    // Dev-only validation
+    if (puzzle.turn !== actualTurn) {
+      console.warn(`Puzzle ${puzzle.id}: turn field (${puzzle.turn}) != FEN turn (${actualTurn}) — using chess.js`);
+    }
+    if (g.inCheck()) {
+      console.error(`Puzzle ${puzzle.id}: INVALID — side to move (${actualTurn}) is in check!`);
+    }
     setGame(g);
     setBoard(g.board());
     setSelectedSquare(null);
@@ -144,7 +153,7 @@ export default function ChessPuzzlePage() {
     setStatus('playing');
     setFeedbackMsg('');
     setShake(false);
-    setIsFlipped(puzzle.turn === 'b');
+    setIsFlipped(actualTurn === 'b');
   }, []);
 
   // Start Mode
@@ -333,7 +342,7 @@ export default function ChessPuzzlePage() {
 
     // Select piece
     const piece = game.get(square);
-    if (piece && piece.color === game.turn() && piece.color === currentPuzzle.turn) {
+    if (piece && piece.color === game.turn()) {
       setSelectedSquare(square);
       const moves = game.moves({ square, verbose: true });
       setLegalMoves(moves);
@@ -351,6 +360,7 @@ export default function ChessPuzzlePage() {
       setSelectedSquare(null);
       setLegalMoves([]);
       setMoveStepIndex(0);
+      setIsFlipped(g.turn() === 'b');
     }
   };
 
@@ -428,15 +438,7 @@ export default function ChessPuzzlePage() {
                 <Flame size={24} />
               </div>
               <div className="puzzle-mode-info">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                  <h3>Sudden Death Survival</h3>
-                  <span style={{ 
-                    background: '#4a2c11', color: '#ffb300', fontSize: '0.72rem', 
-                    padding: '2px 8px', borderRadius: 8, fontWeight: 900, display: 'flex', alignItems: 'center', gap: 3
-                  }}>
-                    <Flame size={11} fill="#ffb300" /> Best: {survivalBest}
-                  </span>
-                </div>
+                <h3>Sudden Death Survival</h3>
                 <p>1 mistake ends the run! Difficulty dynamically ramps up as your streak grows.</p>
               </div>
             </div>
@@ -450,64 +452,48 @@ export default function ChessPuzzlePage() {
                 <Clock size={24} />
               </div>
               <div className="puzzle-mode-info">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                  <h3>Time Attack Blitz</h3>
-                  <span style={{ 
-                    background: '#fef3c7', color: '#b45309', border: '1px solid #d97706', fontSize: '0.72rem', 
-                    padding: '2px 8px', borderRadius: 8, fontWeight: 900, display: 'flex', alignItems: 'center', gap: 3
-                  }}>
-                    <Timer size={11} /> Best: {blitzBest}
-                  </span>
-                </div>
+                <h3>Time Attack Blitz</h3>
                 <p>3 minutes on the clock! Solve fast: +5s for correct moves, -10s for mistakes.</p>
               </div>
             </div>
           </div>
 
-          {/* Remodeled 3-Column Career Stats Dashboard */}
+          {/* Remodeled 2-Card Career Stats Showcase */}
           <div className="global-stats-box" style={{ padding: 14, background: '#faf6ee', borderRadius: 18, border: '2px solid #b89f80', boxShadow: '0 4px 0 #b89f80' }}>
             <h3 style={{ textAlign: 'center', marginBottom: 12, color: '#2c1b0d', fontSize: '1.05rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
               <Trophy size={18} color="#d97706" /> Puzzle Career Stats
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, textAlign: 'center' }}>
-              {/* Survival Best */}
-              <div style={{ background: '#ebe3cf', padding: '10px 4px', borderRadius: 12, border: '1.5px solid #b89f80', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#6e5843', borderBottom: '1px solid #b89f80', paddingBottom: 3, letterSpacing: '0.5px' }}>
-                  SURVIVAL
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, textAlign: 'center', marginBottom: 10 }}>
+              {/* Survival Best Card */}
+              <div style={{ background: '#ebe3cf', padding: '12px 8px', borderRadius: 14, border: '1.5px solid #b89f80', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#4a2c11', letterSpacing: '0.5px', borderBottom: '1px solid #b89f80', width: '100%', paddingBottom: 4 }}>
+                  SURVIVAL STREAK
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#6e5843' }}>BEST STREAK</span>
-                  <span style={{ color: '#d97706', fontWeight: 900, fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                    <Flame size={13} fill="#ffb300" color="#f57f17" /> {survivalBest}
-                  </span>
-                </div>
+                <span style={{ color: '#d97706', fontWeight: 900, fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                  <Flame size={18} fill="#ffb300" color="#f57f17" /> {survivalBest}
+                </span>
               </div>
 
-              {/* Blitz Best */}
-              <div style={{ background: '#ebe3cf', padding: '10px 4px', borderRadius: 12, border: '1.5px solid #b89f80', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#6e5843', borderBottom: '1px solid #b89f80', paddingBottom: 3, letterSpacing: '0.5px' }}>
-                  BLITZ
+              {/* Blitz Best Card */}
+              <div style={{ background: '#ebe3cf', padding: '12px 8px', borderRadius: 14, border: '1.5px solid #b89f80', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#4a2c11', letterSpacing: '0.5px', borderBottom: '1px solid #b89f80', width: '100%', paddingBottom: 4 }}>
+                  BLITZ HIGH SCORE
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#6e5843' }}>HIGH SCORE</span>
-                  <span style={{ color: '#b45309', fontWeight: 900, fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                    <Timer size={13} /> {blitzBest}
-                  </span>
-                </div>
+                <span style={{ color: '#b45309', fontWeight: 900, fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                  <Timer size={18} color="#b45309" /> {blitzBest}
+                </span>
               </div>
+            </div>
 
-              {/* Total Career Solved */}
-              <div style={{ background: '#ebe3cf', padding: '10px 4px', borderRadius: 12, border: '1.5px solid #b89f80', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#6e5843', borderBottom: '1px solid #b89f80', paddingBottom: 3, letterSpacing: '0.5px' }}>
-                  ALL-TIME
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#6e5843' }}>TOTAL SOLVED</span>
-                  <span style={{ color: '#4a2c11', fontWeight: 900, fontSize: '1.2rem' }}>
-                    {totalSolved}
-                  </span>
-                </div>
-              </div>
+            {/* Total Solved Bottom Accent Pill */}
+            <div style={{
+              background: '#ebe3cf', border: '1.5px solid #b89f80', borderRadius: 10,
+              padding: '6px 12px', fontSize: '0.8rem', fontWeight: 800, color: '#4a2c11',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
+            }}>
+              <span>Total Puzzles Solved:</span>
+              <span style={{ fontWeight: 900, color: '#2c1b0d', fontSize: '0.9rem' }}>{totalSolved}</span>
             </div>
           </div>
         </div>
@@ -519,18 +505,18 @@ export default function ChessPuzzlePage() {
             <div className="player-profile-banner">
               <div style={{
                 width: 38, height: 38, borderRadius: 10,
-                background: currentPuzzle?.turn === 'w' ? '#ffffff' : '#2c1b0d',
-                color: currentPuzzle?.turn === 'w' ? '#2c1b0d' : '#ffffff',
+                background: game?.turn() === 'w' ? '#ffffff' : '#2c1b0d',
+                color: game?.turn() === 'w' ? '#2c1b0d' : '#ffffff',
                 border: '1.5px solid #b89f80',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontWeight: 900, fontSize: '1.2rem', flexShrink: 0
               }}>
-                {currentPuzzle?.turn === 'w' ? '♔' : '♚'}
+                {game?.turn() === 'w' ? '♔' : '♚'}
               </div>
 
               <div className="player-info" style={{ flex: 1, minWidth: 0 }}>
                 <div className="player-name" style={{ fontSize: '0.92rem', fontWeight: 800, color: '#2c1b0d', lineHeight: 1.2 }}>
-                  {currentPuzzle?.goal || `${currentPuzzle?.turn === 'w' ? 'White' : 'Black'} to move`}
+                  {(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}
                 </div>
                 <div className="player-tagline" style={{ fontSize: '0.75rem', color: '#6e5843', fontWeight: 600 }}>
                   {gameMode === 'SURVIVAL' ? `Survival • ${getCurrentDifficultyTier()}` : `Blitz • Score: ${sessionSolvedCount}`}
