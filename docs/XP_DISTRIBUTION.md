@@ -31,7 +31,7 @@ This spelling challenge awards XP based on the chosen difficulty level, hint avo
 
 ## ♟️ Chess Module (`/chess`)
 
-### Play vs Stockfish AI Bot
+### 1. Play vs Stockfish AI Bot
 XP is awarded upon game termination based on the bot's difficulty level, move count, and the game outcome.
 
 | Game Outcome | Bot Level / Name | Move Constraint | XP Awarded |
@@ -46,6 +46,18 @@ XP is awarded upon game termination based on the bot's difficulty level, move co
 | **Loss** (Effort Reward) | Medium (Intermediate Ivy ~1200 Elo) | $\ge$ 10 moves | `+10 XP` |
 | **Loss** (Effort Reward) | Hard (Grandmaster Gary ~2500 Elo) | $\ge$ 10 moves | `+15 XP` |
 | **Loss** | Any Bot Level | < 10 moves | `0 XP` |
+
+### 2. Chess Tactics Puzzles
+XP is awarded immediately upon solving each puzzle based on difficulty tier and Survival mode streak milestones.
+
+| Puzzle Activity / Tier | Condition / Milestone | XP Awarded |
+| :--- | :--- | :---: |
+| **Easy Puzzle** | Solved | `+6 XP` |
+| **Medium Puzzle** | Solved | `+10 XP` |
+| **Hard Puzzle** | Solved | `+15 XP` |
+| **Survival Milestone** | 5 Streak Milestone | `+10 XP` Bonus |
+| **Survival Milestone** | 10 Streak Milestone | `+20 XP` Bonus |
+| **Survival Milestone** | 20 Streak Milestone | `+30 XP` Bonus |
 
 ---
 

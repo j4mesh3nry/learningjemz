@@ -79,6 +79,9 @@
     - **Easy (Beginner Bob ~400 Elo)**: +15 XP Win | +8 XP Draw | +5 XP Effort Loss (>= 10 moves)
     - **Medium (Intermediate Ivy ~1200 Elo)**: +30 XP Win | +16 XP Draw | +10 XP Effort Loss (>= 10 moves)
     - **Hard (Grandmaster Gary ~2500 Elo)**: +45 XP Win | +22 XP Draw | +15 XP Effort Loss (>= 10 moves)
+  - **♟️ Chess Tactics Puzzles**:
+    - **Base Puzzle Solved**: +6 XP (Easy), +10 XP (Medium), +15 XP (Hard)
+    - **Survival Streak Milestones**: +10 XP Bonus (5 Streak), +20 XP Bonus (10 Streak), +30 XP Bonus (20 Streak)
 
 
 ### Victory Screen & Module Theme System
