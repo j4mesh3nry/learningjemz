@@ -548,7 +548,7 @@ export default function ChessPlay() {
             </>
           )}
         </div>
-        <div className="player-tagline">Lv.{level} • 🔥 {streak} Streak</div>
+        <div className="player-tagline">Lv.{level}</div>
       </div>
     </div>
   );
