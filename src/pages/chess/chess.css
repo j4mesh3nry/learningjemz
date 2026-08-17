@@ -617,6 +617,8 @@
   font-size: 0.88rem;
   font-weight: 600;
   line-height: 1.4;
+  text-align: left;
+  width: 100%;
 }
 
 .tactile-modal-actions {
