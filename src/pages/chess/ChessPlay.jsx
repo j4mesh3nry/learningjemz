@@ -344,12 +344,21 @@ export default function ChessPlay() {
     setPromotionPending(null);
   };
 
+  const hasPlayerMoved = () => {
+    const historyLen = game ? game.history().length : 0;
+    if (playerColor === 'w') {
+      return historyLen > 0;
+    } else {
+      return historyLen > 1;
+    }
+  };
+
   const handleRestartClick = () => {
     setShowRestartModal(true);
   };
 
   const confirmRestart = () => {
-    if (game.history().length > 0 && gameState === 'playing') {
+    if (hasPlayerMoved() && gameState === 'playing') {
       recordChessGame(difficulty, false);
     }
     setShowRestartModal(false);
@@ -357,7 +366,7 @@ export default function ChessPlay() {
   };
 
   const handleBackClick = () => {
-    if (difficulty && gameState === 'playing' && game.history().length > 0) {
+    if (difficulty && gameState === 'playing' && hasPlayerMoved()) {
       setShowBackModal(true);
     } else {
       confirmBack();
@@ -367,7 +376,7 @@ export default function ChessPlay() {
   const confirmBack = () => {
     setShowBackModal(false);
     if (difficulty) {
-      if (game.history().length > 0 && gameState === 'playing') {
+      if (hasPlayerMoved() && gameState === 'playing') {
         recordChessGame(difficulty, false);
       }
       setDifficulty(null);
