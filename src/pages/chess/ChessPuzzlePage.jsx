@@ -5,7 +5,8 @@ import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { 
   Puzzle, ArrowLeft, RotateCw, CheckCircle2, XCircle, 
-  Trophy, Flame, Clock, Zap, ChevronRight, RefreshCw, Timer
+  Trophy, Flame, Clock, Zap, ChevronRight, RefreshCw, Timer,
+  Lightbulb, User, HelpCircle
 } from 'lucide-react';
 import VictoryScreen from '../../components/VictoryScreen';
 import rawPuzzleData from '../../data/chess-puzzles.json';
@@ -43,6 +44,20 @@ const createChess = (fen) => {
   }
 };
 
+const getMoveSquares = (fen, sanMove) => {
+  if (!fen || !sanMove) return null;
+  try {
+    const temp = createChess(fen);
+    const res = temp.move(sanMove);
+    if (res) {
+      return { from: res.from, to: res.to, san: res.san };
+    }
+  } catch (e) {
+    // Ignore parse error
+  }
+  return null;
+};
+
 export default function ChessPuzzlePage() {
   const navigate = useNavigate();
   const gameContext = useGame() || {};
@@ -57,7 +72,6 @@ export default function ChessPuzzlePage() {
   const authContext = useAuth() || {};
   const user = authContext.user;
   const playerName = user?.user_metadata?.name || 'You';
-  const playerAvatar = user?.user_metadata?.avatar || '👤';
 
   const puzzleStats = botStats.puzzleStats || { 
     solved: 0, 
@@ -85,6 +99,11 @@ export default function ChessPuzzlePage() {
   const [status, setStatus] = useState('playing'); // 'playing', 'correct', 'incorrect', 'ended'
   const [feedbackMsg, setFeedbackMsg] = useState('');
   const [shake, setShake] = useState(false);
+
+  // Hints and Solution Highlighting State
+  const [showHint, setShowHint] = useState(false);
+  const [solutionSquares, setSolutionSquares] = useState([]);
+  const [mistakeSquare, setMistakeSquare] = useState(null);
 
   // Time Attack Blitz Timer State (180s = 3 minutes)
   const [timeLeft, setTimeLeft] = useState(180);
@@ -136,15 +155,8 @@ export default function ChessPuzzlePage() {
   const loadPuzzle = useCallback((puzzle) => {
     setCurrentPuzzle(puzzle);
     const g = createChess(puzzle.fen);
-    // Use chess.js as source of truth for side to move
     const actualTurn = g.turn();
-    // Dev-only validation
-    if (puzzle.turn !== actualTurn) {
-      console.warn(`Puzzle ${puzzle.id}: turn field (${puzzle.turn}) != FEN turn (${actualTurn}) — using chess.js`);
-    }
-    if (g.inCheck()) {
-      console.error(`Puzzle ${puzzle.id}: INVALID — side to move (${actualTurn}) is in check!`);
-    }
+    
     setGame(g);
     setBoard(g.board());
     setSelectedSquare(null);
@@ -153,6 +165,9 @@ export default function ChessPuzzlePage() {
     setStatus('playing');
     setFeedbackMsg('');
     setShake(false);
+    setShowHint(false);
+    setSolutionSquares([]);
+    setMistakeSquare(null);
     setIsFlipped(actualTurn === 'b');
   }, []);
 
@@ -165,6 +180,9 @@ export default function ChessPuzzlePage() {
     setSessionXPEarned(0);
     setShowVictory(false);
     setStatus('playing');
+    setShowHint(false);
+    setSolutionSquares([]);
+    setMistakeSquare(null);
 
     if (mode === 'BLITZ') {
       setTimeLeft(180);
@@ -251,6 +269,9 @@ export default function ChessPuzzlePage() {
         if (isMatch) {
           // Correct move!
           updateBoardState(newGame);
+          setShowHint(false);
+          setSolutionSquares([]);
+          setMistakeSquare(null);
 
           const nextIndex = moveStepIndex + 1;
           const isFinished = isCheckmateSolve || nextIndex >= currentPuzzle.moves.length;
@@ -258,7 +279,7 @@ export default function ChessPuzzlePage() {
           if (!isFinished) {
             // Multi-move puzzle: Bot responds
             setMoveStepIndex(nextIndex);
-            setFeedbackMsg('Good move! Bot responding...');
+            setFeedbackMsg('Good move! Opponent responding...');
             setSelectedSquare(null);
             setLegalMoves([]);
 
@@ -269,7 +290,7 @@ export default function ChessPuzzlePage() {
                 afterBotGame.move(autoSan);
                 updateBoardState(afterBotGame);
                 setMoveStepIndex(nextIndex + 1);
-                setFeedbackMsg('Bot responded! Make your winning move.');
+                setFeedbackMsg('Opponent moved! Find the follow-up.');
               } catch (e) {
                 console.error('Bot auto move error:', e);
               }
@@ -301,13 +322,13 @@ export default function ChessPuzzlePage() {
               // Smoothly proceed to next puzzle
               setTimeout(() => {
                 handleNextPuzzle();
-              }, 450);
+              }, 550);
             } else {
               setFeedbackMsg(`Puzzle Solved! +${xpGained} XP`);
-              // Survival auto-loads or lets user proceed
+              // Survival auto-loads next puzzle
               setTimeout(() => {
                 handleNextPuzzle();
-              }, 500);
+              }, 600);
             }
           }
         } else {
@@ -317,23 +338,31 @@ export default function ChessPuzzlePage() {
           setLegalMoves([]);
           setTimeout(() => setShake(false), 450);
 
+          // Highlight the mistake and the correct solution move
+          const sol = getMoveSquares(game.fen(), expectedSan);
+          if (sol) {
+            setSolutionSquares([sol.from, sol.to]);
+          }
+          setMistakeSquare(chosenMove.to);
+
           if (gameMode === 'SURVIVAL') {
-            // Sudden Death Ends Immediately!
-            setStatus('ended');
-            setFeedbackMsg('Wrong move! Sudden Death Ended.');
-            recordPuzzleRunEnd('SURVIVAL', sessionStreak);
+            // Sudden Death - Show solution clearly before ending run
+            setStatus('incorrect');
+            setFeedbackMsg(`Mistake! The winning move was: ${expectedSan}`);
             setTimeout(() => {
+              setStatus('ended');
+              recordPuzzleRunEnd('SURVIVAL', sessionStreak);
               setShowVictory(true);
-            }, 550);
+            }, 1800);
           } else if (gameMode === 'BLITZ') {
-            // Blitz 10s Time Penalty & Skip
+            // Blitz - Show solution briefly, deduct 10s & continue
             setTimeLeft(t => Math.max(0, t - 10));
             triggerTimeModifier('-10s', 'minus');
             setStatus('incorrect');
-            setFeedbackMsg('Mistake! -10s Penalty.');
+            setFeedbackMsg(`Mistake! Winning move: ${expectedSan} (-10s)`);
             setTimeout(() => {
               handleNextPuzzle();
-            }, 500);
+            }, 1300);
           }
         }
         return;
@@ -353,13 +382,18 @@ export default function ChessPuzzlePage() {
   };
 
   const handleRetry = () => {
-    if (currentPuzzle && status === 'playing') {
+    if (currentPuzzle) {
       const g = createChess(currentPuzzle.fen);
       setGame(g);
       setBoard(g.board());
       setSelectedSquare(null);
       setLegalMoves([]);
       setMoveStepIndex(0);
+      setStatus('playing');
+      setFeedbackMsg('');
+      setShowHint(false);
+      setSolutionSquares([]);
+      setMistakeSquare(null);
       setIsFlipped(g.turn() === 'b');
     }
   };
@@ -369,6 +403,14 @@ export default function ChessPuzzlePage() {
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
+
+  // Check hint piece square
+  const hintPieceSquare = useMemo(() => {
+    if (!showHint || !currentPuzzle || !game) return null;
+    const expectedSan = currentPuzzle.moves[moveStepIndex];
+    const sol = getMoveSquares(game.fen(), expectedSan);
+    return sol ? sol.from : null;
+  }, [showHint, currentPuzzle, game, moveStepIndex]);
 
   return (
     <div className="chess-module-page">
@@ -515,10 +557,13 @@ export default function ChessPuzzlePage() {
               </div>
 
               <div className="player-info" style={{ flex: 1, minWidth: 0 }}>
-                <div className="player-name" style={{ fontSize: '0.92rem', fontWeight: 800, color: '#2c1b0d', lineHeight: 1.2 }}>
-                  {(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}
+                <div className="player-name" style={{ fontSize: '0.92rem', fontWeight: 800, color: '#2c1b0d', lineHeight: 1.2, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                  <span>{(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}</span>
+                  {currentPuzzle?.theme && (
+                    <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
+                  )}
                 </div>
-                <div className="player-tagline" style={{ fontSize: '0.75rem', color: '#6e5843', fontWeight: 600 }}>
+                <div className="player-tagline" style={{ fontSize: '0.75rem', color: '#6e5843', fontWeight: 600, marginTop: 2 }}>
                   {gameMode === 'SURVIVAL' ? `Survival • ${getCurrentDifficultyTier()}` : `Blitz • Score: ${sessionSolvedCount}`}
                 </div>
               </div>
@@ -556,11 +601,23 @@ export default function ChessPuzzlePage() {
                       const piece = game ? game.get(squareLabel) : null;
                       const isSelected = selectedSquare === squareLabel;
                       const isLegalMove = legalMoves.some(m => m.to === squareLabel);
+                      const isSolution = solutionSquares.includes(squareLabel);
+                      const isMistake = mistakeSquare === squareLabel;
+                      const isHintSquare = hintPieceSquare === squareLabel;
+
+                      const squareClasses = [
+                        'square',
+                        isDark ? 'dark' : 'light',
+                        isSelected ? 'selected' : '',
+                        isSolution ? 'solution-square' : '',
+                        isMistake ? 'mistake-square' : '',
+                        isHintSquare ? 'hint-piece' : ''
+                      ].filter(Boolean).join(' ');
 
                       return (
                         <div
                           key={c}
-                          className={`square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''}`}
+                          className={squareClasses}
                           onClick={() => handleSquareClick(squareLabel)}
                         >
                           {colIndex === 0 && <span className="rank-label">{8 - r}</span>}
@@ -584,8 +641,12 @@ export default function ChessPuzzlePage() {
 
             {/* Bottom Player Profile Banner */}
             <div className="player-profile-banner bottom">
-              <div className="player-avatar" style={{ background: '#ebe3cf', fontSize: '1.2rem' }}>
-                {playerAvatar}
+              <div className="player-avatar" style={{ background: '#ebe3cf' }}>
+                {user?.user_metadata?.avatar && typeof user.user_metadata.avatar === 'string' && user.user_metadata.avatar.startsWith('http') ? (
+                  <img src={user.user_metadata.avatar} alt={playerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <User size={20} color="#4a2c11" strokeWidth={2.5} />
+                )}
               </div>
               <div className="player-info" style={{ minWidth: 0 }}>
                 <div className="player-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -596,35 +657,48 @@ export default function ChessPuzzlePage() {
             </div>
 
             {/* Action Bar / Controls */}
-            <div style={{ display: 'flex', gap: 8, padding: 12, width: '100%', background: 'var(--color-bg-card)', borderTop: '1.5px solid var(--color-border)', boxSizing: 'border-box' }}>
+            <div className="puzzle-actions-bar">
               <button
+                type="button"
+                className="puzzle-action-btn"
                 onClick={() => setIsFlipped(prev => !prev)}
                 title="Flip Board"
-                style={{
-                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                  padding: '9px 12px', background: '#faf6ee', border: '2px solid #b89f80',
-                  boxShadow: '0 3px 0 #b89f80', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
-                  color: '#4a2c11', cursor: 'pointer'
-                }}
               >
                 <RefreshCw size={15} /> Flip
               </button>
 
               <button
+                type="button"
+                className={`puzzle-action-btn ${showHint ? 'hint-active' : ''}`}
+                onClick={() => setShowHint(prev => !prev)}
+                disabled={status !== 'playing' || !currentPuzzle?.hint}
+                title="Tactical Hint"
+              >
+                <Lightbulb size={15} /> Hint
+              </button>
+
+              <button
+                type="button"
+                className="puzzle-action-btn"
                 onClick={handleRetry}
-                disabled={status !== 'playing'}
+                disabled={!currentPuzzle}
                 title="Reset Position"
-                style={{
-                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                  padding: '9px 12px', background: '#faf6ee', border: '2px solid #b89f80',
-                  boxShadow: '0 3px 0 #b89f80', borderRadius: 12, fontWeight: 700, fontSize: '0.85rem',
-                  color: '#4a2c11', cursor: status !== 'playing' ? 'not-allowed' : 'pointer'
-                }}
               >
                 <RotateCw size={15} /> Reset
               </button>
             </div>
           </div>
+
+          {/* Tactical Hint Box */}
+          {showHint && currentPuzzle?.hint && (
+            <div className="puzzle-hint-box">
+              <Lightbulb size={16} color="#ca8a04" style={{ flexShrink: 0, marginTop: 2 }} />
+              <div>
+                <span style={{ fontWeight: 800, color: '#854d0e', marginRight: 4 }}>Hint:</span>
+                <span>{currentPuzzle.hint}</span>
+              </div>
+            </div>
+          )}
 
           {/* Feedback Card */}
           {feedbackMsg && (
@@ -676,3 +750,4 @@ export default function ChessPuzzlePage() {
     </div>
   );
 }
+

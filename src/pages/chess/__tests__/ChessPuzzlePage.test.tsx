@@ -79,7 +79,13 @@ describe('ChessPuzzlePage', () => {
     // Should now show chess board & controls in Survival mode
     expect(screen.getByText(/Survival • Easy/i)).toBeInTheDocument();
     expect(screen.getByText(/Flip/i)).toBeInTheDocument();
+    expect(screen.getByText(/Hint/i)).toBeInTheDocument();
     expect(screen.getByText(/Reset/i)).toBeInTheDocument();
+
+    // Clicking Hint should display the tactical hint box
+    const hintBtn = screen.getByRole('button', { name: /Hint/i });
+    await user.click(hintBtn);
+    expect(screen.getByText(/Tactical Hint:|Hint:/i)).toBeInTheDocument();
   });
 
   it('starts Time Attack Blitz mode when card is clicked', async () => {
@@ -105,5 +111,7 @@ describe('ChessPuzzlePage', () => {
     // Should now show chess board & 3:00 timer in Blitz mode
     expect(screen.getByText(/Blitz • Score:/i)).toBeInTheDocument();
     expect(screen.getByText('3:00')).toBeInTheDocument();
+    expect(screen.getByText(/Hint/i)).toBeInTheDocument();
   });
 });
+

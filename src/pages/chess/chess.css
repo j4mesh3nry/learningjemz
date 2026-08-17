@@ -957,4 +957,108 @@
     opacity: 0;
     transform: translateY(-22px) scale(0.9);
   }
-}
+}
+
+/* Puzzle Board Highlights */
+.square.solution-square {
+  background-color: #86efac !important;
+}
+
+.square.mistake-square {
+  background-color: #fca5a5 !important;
+}
+
+.square.hint-piece {
+  background-color: #fef08a !important;
+}
+
+/* Puzzle Theme Tag in Header */
+.puzzle-theme-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ebe3cf;
+  border: 1.5px solid #b89f80;
+  color: #4a2c11;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 8px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+/* Puzzle Action Controls */
+.puzzle-actions-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  width: 100%;
+  background: #faf6ee;
+  border-top: 1.5px solid #b89f80;
+  box-sizing: border-box;
+}
+
+.puzzle-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 10px;
+  background: #ffffff;
+  border: 2px solid #b89f80;
+  box-shadow: 0 3px 0 #b89f80;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #4a2c11;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  user-select: none;
+}
+
+.puzzle-action-btn:hover:not(:disabled) {
+  background: #fdfbf7;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #b89f80;
+}
+
+.puzzle-action-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #b89f80;
+}
+
+.puzzle-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 0 #b89f80;
+}
+
+.puzzle-action-btn.hint-active {
+  background: #fef08a;
+  border-color: #ca8a04;
+  box-shadow: 0 3px 0 #ca8a04;
+  color: #854d0e;
+}
+
+/* Puzzle Hint Box */
+.puzzle-hint-box {
+  width: 100%;
+  max-width: 500px;
+  background: #fefce8;
+  border: 2px solid #ca8a04;
+  box-shadow: 0 3px 0 #ca8a04;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #713f12;
+  font-weight: 700;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  box-sizing: border-box;
+  animation: slideUp 0.2s ease-out;
+}
+
