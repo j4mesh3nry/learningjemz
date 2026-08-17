@@ -556,7 +556,7 @@ export default function ChessPuzzlePage() {
 
           <div className="chess-play-layout">
             {/* Top Puzzle Objective Banner */}
-            <div className="player-profile-banner">
+            <div className="puzzle-header-banner">
               {/* Row 1: Mode, Difficulty, Progress, Theme & Timer/Streak */}
               <div className="puzzle-header-meta-row">
                 <div className="puzzle-header-mode-info">
