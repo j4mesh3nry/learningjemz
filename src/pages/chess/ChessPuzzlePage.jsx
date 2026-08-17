@@ -557,42 +557,55 @@ export default function ChessPuzzlePage() {
           <div className="chess-play-layout">
             {/* Top Puzzle Objective Banner */}
             <div className="player-profile-banner">
-              <div className={`puzzle-turn-indicator ${game?.turn() === 'w' ? 'white' : 'black'}`}>
-                {game?.turn() === 'w' ? '♔' : '♚'}
+              {/* Row 1: Mode, Difficulty, Progress & Timer/Streak */}
+              <div className="puzzle-header-meta-row">
+                <div className="puzzle-header-mode-info">
+                  <span className="puzzle-mode-label">
+                    {gameMode === 'SURVIVAL' ? 'Sudden Death Survival' : 'Time Attack Blitz'}
+                  </span>
+                  <span className="puzzle-difficulty-badge">
+                    {getCurrentDifficultyTier()}
+                  </span>
+                  <span className="puzzle-progress-label">
+                    Puzzle #{sessionAttemptedCount}
+                  </span>
+                </div>
+
+                {gameMode === 'SURVIVAL' ? (
+                  <div className="puzzle-survival-streak-chip" style={{
+                    background: '#4a2c11', color: '#ffffff',
+                    padding: '4px 8px', borderRadius: 8, fontSize: '0.8rem', fontWeight: 800,
+                    display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, border: '1.5px solid #b89f80'
+                  }}>
+                    <Flame size={14} fill="#ff4d4d" color="#ff4d4d" /> {sessionStreak}
+                  </div>
+                ) : (
+                  <div className={`blitz-timer-chip ${timeLeft <= 30 ? 'urgent' : ''}`}>
+                    <Clock size={15} />
+                    <span>{formatTimer(timeLeft)}</span>
+                    {timeModifier && (
+                      <div className={`time-modifier-popup ${timeModifier.type}`}>
+                        {timeModifier.text}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
-              <div className="player-info" style={{ minWidth: 0 }}>
-                <div className="player-name" style={{ fontSize: '0.92rem', lineHeight: 1.2, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                  <span>{(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}</span>
-                  {currentPuzzle?.theme && (
-                    <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
-                  )}
+              {/* Row 2: Turn Indicator, Objective, Theme Badge */}
+              <div className="puzzle-header-objective-row">
+                <div className="puzzle-objective-left">
+                  <div className={`puzzle-turn-indicator ${game?.turn() === 'w' ? 'white' : 'black'}`}>
+                    {game?.turn() === 'w' ? '♔' : '♚'}
+                  </div>
+                  <div className="puzzle-objective-text">
+                    {(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}
+                  </div>
                 </div>
-                <div className="player-tagline" style={{ marginTop: 2 }}>
-                  <span>Puzzle #{sessionAttemptedCount} • {gameMode === 'SURVIVAL' ? `Survival • ${getCurrentDifficultyTier()}` : `Blitz • Score: ${sessionSolvedCount} • ${getCurrentDifficultyTier()}`}</span>
-                </div>
+                {currentPuzzle?.theme && (
+                  <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
+                )}
               </div>
-
-              {/* Mode-Specific Header Display */}
-              {gameMode === 'SURVIVAL' ? (
-                <div style={{
-                  background: '#4a2c11', color: '#ffffff',
-                  padding: '5px 10px', borderRadius: 10, fontSize: '0.8rem', fontWeight: 800,
-                  display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0
-                }}>
-                  <Flame size={14} fill="#ff4d4d" color="#ff4d4d" /> {sessionStreak}
-                </div>
-              ) : (
-                <div className={`blitz-timer-chip ${timeLeft <= 30 ? 'urgent' : ''}`}>
-                  <Clock size={15} />
-                  <span>{formatTimer(timeLeft)}</span>
-                  {timeModifier && (
-                    <div className={`time-modifier-popup ${timeModifier.type}`}>
-                      {timeModifier.text}
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
             {/* Chess Board Grid */}
@@ -646,12 +659,27 @@ export default function ChessPuzzlePage() {
 
             {/* Bottom Player Profile Banner */}
             <div className="player-profile-banner bottom">
-              <div className="player-avatar">
-                {user?.user_metadata?.avatar && typeof user.user_metadata.avatar === 'string' && user.user_metadata.avatar.startsWith('http') ? (
-                  <img src={user.user_metadata.avatar} alt={playerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                  <User size={20} color="#4a2c11" strokeWidth={2.5} />
-                )}
+              <div className="player-avatar" style={{
+                background: '#ebe3cf',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                border: '1.5px solid #b89f80',
+                overflow: 'hidden'
+              }}>
+                {(() => {
+                  const av = user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar');
+                  if (av) {
+                    if (typeof av === 'string' && av.startsWith('http')) {
+                      return <img src={av} alt={playerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />;
+                    }
+                    return <span style={{ fontSize: '1.35rem', lineHeight: 1 }}>{av}</span>;
+                  }
+                  return <User size={20} color="#4a2c11" strokeWidth={2.5} />;
+                })()}
               </div>
               <div className="player-info" style={{ minWidth: 0 }}>
                 <div className="player-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', gap: 6 }}>

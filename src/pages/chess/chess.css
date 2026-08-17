@@ -1274,4 +1274,86 @@
   border-radius: 8px;
   padding: 6px 10px;
 }
+
+/* Top Puzzle Objective Banner Overhaul */
+.player-profile-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px !important;
+  width: 100%;
+  padding: 14px 16px !important;
+  background: #faf6ee;
+  border-bottom: 1.5px solid #b89f80;
+  box-sizing: border-box;
+}
+
+.puzzle-header-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1.5px solid #ebe3cf;
+  padding-bottom: 8px;
+}
+
+.puzzle-header-mode-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.puzzle-mode-label {
+  font-weight: 900;
+  font-size: 0.8rem;
+  color: #4a2c11;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.puzzle-difficulty-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #d97706;
+  background: #fff8e1;
+  border: 1.5px solid #ffe082;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.puzzle-progress-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #6e5843;
+}
+
+.puzzle-header-objective-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-top: 4px;
+  gap: 12px;
+}
+
+.puzzle-objective-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.puzzle-objective-text {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #2c1b0d;
+  line-height: 1.3;
+}
+
+.puzzle-avatar img {
+  border-radius: 8px;
+}
+
 
