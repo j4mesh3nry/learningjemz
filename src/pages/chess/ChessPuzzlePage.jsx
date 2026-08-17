@@ -596,9 +596,6 @@ export default function ChessPuzzlePage() {
                   {currentPuzzle?.theme && (
                     <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
                   )}
-                  <span className="puzzle-progress-label">
-                    Puzzle #{sessionAttemptedCount}
-                  </span>
                 </div>
 
                 {gameMode === 'SURVIVAL' ? (
@@ -630,6 +627,13 @@ export default function ChessPuzzlePage() {
                     {(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Puzzle Progress / Number Header Row */}
+            <div className="puzzle-board-header-row">
+              <div className="puzzle-number-badge">
+                Puzzle #{sessionAttemptedCount}
               </div>
             </div>
 
