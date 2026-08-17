@@ -44,6 +44,11 @@ const createChess = (fen) => {
   }
 };
 
+const normalizeSan = (san) => {
+  if (!san) return '';
+  return san.replace(/[+#=]/g, '').toUpperCase();
+};
+
 const getMoveSquares = (fen, sanMove) => {
   if (!fen || !sanMove) return null;
   try {
@@ -52,8 +57,22 @@ const getMoveSquares = (fen, sanMove) => {
     if (res) {
       return { from: res.from, to: res.to, san: res.san };
     }
+    const normTarget = normalizeSan(sanMove);
+    const allMoves = temp.moves({ verbose: true });
+    const match = allMoves.find(m => normalizeSan(m.san) === normTarget);
+    if (match) {
+      return { from: match.from, to: match.to, san: match.san };
+    }
   } catch (e) {
-    // Ignore parse error
+    try {
+      const temp = createChess(fen);
+      const normTarget = normalizeSan(sanMove);
+      const allMoves = temp.moves({ verbose: true });
+      const match = allMoves.find(m => normalizeSan(m.san) === normTarget);
+      if (match) {
+        return { from: match.from, to: match.to, san: match.san };
+      }
+    } catch (err) {}
   }
   return null;
 };
@@ -225,18 +244,19 @@ export default function ChessPuzzlePage() {
 
   // Handle Blitz Time Up
   useEffect(() => {
-    if (gameMode === 'BLITZ' && timeLeft === 0 && !showVictory && currentPuzzle) {
+    if (gameMode === 'BLITZ' && timeLeft <= 0 && status === 'playing') {
       setStatus('ended');
       recordPuzzleRunEnd('BLITZ', sessionSolvedCount);
       setShowVictory(true);
     }
-  }, [gameMode, timeLeft, showVictory, currentPuzzle, recordPuzzleRunEnd, sessionSolvedCount]);
+  }, [gameMode, timeLeft, status, recordPuzzleRunEnd, sessionSolvedCount]);
 
   const triggerTimeModifier = (text, type) => {
-    setTimeModifier({ text, type, id: Date.now() });
+    const id = Date.now();
+    setTimeModifier({ text, type, id });
     setTimeout(() => {
-      setTimeModifier(null);
-    }, 850);
+      setTimeModifier(prev => (prev?.id === id ? null : prev));
+    }, 800);
   };
 
   const handleNextPuzzle = () => {
@@ -261,16 +281,23 @@ export default function ChessPuzzlePage() {
     if (status !== 'playing' || !game || !currentPuzzle || isReviewing) return;
 
     if (selectedSquare) {
-      const chosenMove = legalMoves.find(m => m.to === square);
+      const candidateMoves = legalMoves.filter(m => m.to === square);
 
-      if (chosenMove) {
+      if (candidateMoves.length > 0) {
+        const expectedSan = currentPuzzle.moves[moveStepIndex];
+        const normExpected = normalizeSan(expectedSan);
+
+        // Match candidate move by normalized SAN to support pawn promotions and notation variations
+        let chosenMove = candidateMoves.find(m => normalizeSan(m.san) === normExpected);
+        if (!chosenMove) {
+          chosenMove = candidateMoves[0];
+        }
+
         const newGame = createChess(game.fen());
         newGame.move(chosenMove.san);
 
-        const expectedSan = currentPuzzle.moves[moveStepIndex];
-        const normChosen = chosenMove.san.replace(/[+#]/g, '');
-        const normExpected = expectedSan.replace(/[+#]/g, '');
-        const isExactMatch = normChosen === normExpected || chosenMove.san === expectedSan;
+        const normChosen = normalizeSan(chosenMove.san);
+        const isExactMatch = normChosen === normExpected;
         
         const isCheckmateSolve = (expectedSan.includes('#') || (currentPuzzle.goal || '').toLowerCase().includes('mate')) && newGame.isCheckmate();
         const isMatch = isExactMatch || isCheckmateSolve;
