@@ -557,15 +557,18 @@ export default function ChessPuzzlePage() {
           <div className="chess-play-layout">
             {/* Top Puzzle Objective Banner */}
             <div className="player-profile-banner">
-              {/* Row 1: Mode, Difficulty, Progress & Timer/Streak */}
+              {/* Row 1: Mode, Difficulty, Progress, Theme & Timer/Streak */}
               <div className="puzzle-header-meta-row">
                 <div className="puzzle-header-mode-info">
                   <span className="puzzle-mode-label">
-                    {gameMode === 'SURVIVAL' ? 'Sudden Death Survival' : 'Time Attack Blitz'}
+                    {gameMode === 'SURVIVAL' ? 'Survival' : 'Blitz'}
                   </span>
                   <span className="puzzle-difficulty-badge">
                     {getCurrentDifficultyTier()}
                   </span>
+                  {currentPuzzle?.theme && (
+                    <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
+                  )}
                   <span className="puzzle-progress-label">
                     Puzzle #{sessionAttemptedCount}
                   </span>
@@ -592,23 +595,14 @@ export default function ChessPuzzlePage() {
                 )}
               </div>
 
-              {/* Row 2: Turn Indicator, Objective, Theme Badge */}
+              {/* Row 2: Turn Indicator Dot & Objective Text */}
               <div className="puzzle-header-objective-row">
                 <div className="puzzle-objective-left">
-                  <div className={`puzzle-turn-indicator ${game?.turn() === 'w' ? 'white' : 'black'}`}>
-                    <img 
-                      src={game?.turn() === 'w' ? PIECE_IMAGES.w.k : PIECE_IMAGES.b.k} 
-                      alt={`${game?.turn() === 'w' ? 'White' : 'Black'} King`} 
-                      style={{ width: '85%', height: '85%', objectFit: 'contain' }}
-                    />
-                  </div>
+                  <div className={`puzzle-turn-indicator ${game?.turn() === 'w' ? 'white' : 'black'}`} />
                   <div className="puzzle-objective-text">
                     {(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}
                   </div>
                 </div>
-                {currentPuzzle?.theme && (
-                  <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
-                )}
               </div>
             </div>
 

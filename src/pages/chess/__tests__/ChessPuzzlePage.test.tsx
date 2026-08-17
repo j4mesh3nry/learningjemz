@@ -77,7 +77,7 @@ describe('ChessPuzzlePage', () => {
     await user.click(survivalCard);
 
     // Should now show chess board & controls in Survival mode
-    expect(screen.getByText(/Sudden Death Survival/i)).toBeInTheDocument();
+    expect(screen.getByText(/Survival/i)).toBeInTheDocument();
     expect(screen.getByText(/Easy/i)).toBeInTheDocument();
     expect(screen.getByText(/Flip/i)).toBeInTheDocument();
     expect(screen.getByText(/Hint/i)).toBeInTheDocument();
@@ -110,7 +110,7 @@ describe('ChessPuzzlePage', () => {
     await user.click(blitzCard);
 
     // Should now show chess board & 3:00 timer in Blitz mode
-    expect(screen.getByText(/Time Attack Blitz/i)).toBeInTheDocument();
+    expect(screen.getByText(/Blitz/i)).toBeInTheDocument();
     expect(screen.getByText('3:00')).toBeInTheDocument();
     expect(screen.getByText(/Hint/i)).toBeInTheDocument();
   });
