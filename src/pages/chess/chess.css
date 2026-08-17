@@ -1320,26 +1320,10 @@
   border-radius: 6px;
 }
 
-.puzzle-board-header-row {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  padding: 10px 16px 2px 16px;
-  box-sizing: border-box;
-}
-
-.puzzle-number-badge {
-  font-size: 0.85rem;
-  font-weight: 850;
-  color: #4a2c11;
-  background: #ebe3cf;
-  border: 1.5px solid #b89f80;
-  padding: 4px 12px;
-  border-radius: 8px;
-  box-shadow: 0 2.5px 0 #b89f80;
-  display: inline-flex;
-  align-items: center;
+.puzzle-progress-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #6e5843;
 }
 
 .puzzle-header-objective-row {

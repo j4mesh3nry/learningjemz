@@ -630,13 +630,6 @@ export default function ChessPuzzlePage() {
               </div>
             </div>
 
-            {/* Puzzle Progress / Number Header Row */}
-            <div className="puzzle-board-header-row">
-              <div className="puzzle-number-badge">
-                Puzzle #{sessionAttemptedCount}
-              </div>
-            </div>
-
             {/* Chess Board Grid */}
             <div className="board-outer-wrapper">
               <div className={`chess-board ${shake ? 'shake-anim' : ''}`}>
@@ -711,13 +704,10 @@ export default function ChessPuzzlePage() {
                 })()}
               </div>
               <div className="player-info" style={{ minWidth: 0 }}>
-                <div className="player-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div className="player-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   <span>{playerName}</span>
-                  <span className={`orientation-tag ${isFlipped ? 'black' : 'white'}`}>
-                    Playing as {isFlipped ? 'Black' : 'White'}
-                  </span>
                 </div>
-                <div className="player-tagline">Lv.{level}</div>
+                <div className="player-tagline">Lv.{level} • Puzzle #{sessionAttemptedCount}</div>
               </div>
             </div>
 
