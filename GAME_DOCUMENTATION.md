@@ -91,8 +91,15 @@
 ## 5. Module Specifications
 
 ### ♟️ Chess Module (`/chess`)
-- **Components**: `ChessHome.tsx`, `ChessPlay.jsx`, `chess.css`.
-- **Game Modes**: Play vs Stockfish AI Bot, Tactics Puzzles, Speed Blitz.
+- **Components**: `ChessHome.tsx`, `ChessPlay.jsx`, `ChessPuzzlePage.jsx`, `chess.css`.
+- **Game Modes**:
+  - **Play vs Stockfish AI Bot (`ChessPlay.jsx`)**: Challenge Beginner Bob (~400 Elo), Intermediate Ivy (~1200 Elo), and Grandmaster Gary (~2500 Elo).
+    - **Tactile 3D Confirmation Modals**: Features dedicated tactile dialogs for Leaving, Restarting, and Resigning.
+    - **Fair Exit Rules**: Backing out or restarting *before* the player makes their first move (whether White on turn 0 or Black on turn 1 after the Bot's first move) does not prompt an exit modal or record a loss.
+  - **Chess Tactics Puzzles (`ChessPuzzlePage.jsx`)**:
+    - **Sudden Death Survival**: Solve escalating difficulty tactical puzzles with a single life.
+    - **Time Attack Blitz**: 3-minute timed mode with +5s rewards for correct moves and -10s penalties for blunders.
+    - **Tactile Solution Review & Safe Exit**: Features interactive board review mode upon completion and back navigation confirmation modals that protect active streaks.
 - **Board Grid**: 8x8 standard flex layout.
   - **Rank Labels (1–8 / 8–1)**: Strictly anchored on the **left edge** (`colIndex === 0`).
   - **File Labels (a–h / h–a)**: Strictly anchored on the **bottom edge** (`rowIndex === 7`).

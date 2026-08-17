@@ -114,15 +114,19 @@ Stored in module CSS files (like `chess.css`), we utilize keyframes to make the 
 ### A. Chess Module (`/chess`)
 The most robust module in the application.
 - **Logic Engine**: Uses the open-source `chess.js` library for move validation, FEN/PGN parsing, and checkmate detection.
-- **AI Opponents**: Powered by a custom `chessEngine.js` utilizing a Minimax algorithm with Alpha-Beta pruning and standard piece-square tables to evaluate positions.
-  - **Beginner Bob (Easy)**: Depth 2, randomizes moves slightly for lower difficulty.
-  - **Intermediate Ivy (Medium)**: Depth 3, standard tactical play.
-  - **Grandmaster Gary (Hard)**: Depth 4, aggressive and highly calculating.
+- **AI Opponents**: Powered by Stockfish 10 running as a Web Worker (with an automatic local JS fallback).
+  - **Beginner Bob (Easy)**: ~400 Elo, randomizes moves for accessible introductory play.
+  - **Intermediate Ivy (Medium)**: ~1200 Elo, solid tactical play.
+  - **Grandmaster Gary (Hard)**: ~2500 Elo, aggressive and highly calculating.
+- **Chess Tactics Puzzles**:
+  - **Sudden Death Survival & Time Attack Blitz**: Dynamic tactical challenge modes with progressive difficulty scaling.
+  - **Tactile Solution Review**: Interactive board review displaying expected solution moves on failed attempts.
 - **Board Rendering**: A custom CSS Grid implementation (`grid-template-columns: repeat(8, 1fr)`) that renders the 64 squares.
-- **Assets**: Uses the standard Lichess `cburnett` SVG piece set (downloaded locally via script) for a professional, universally recognizable look.
+- **Assets**: Uses standard SVG piece sets for a clean, universally recognizable look.
 - **Mechanics**:
-  - **3D Board Flip**: Clicking "Flip" applies `transform: rotate(180deg)` to the entire board container. To prevent the pieces from being upside down, a counter-rotation (`transform: rotate(-180deg)`) is simultaneously applied to every piece. Player profile banners are swapped instantly using CSS Flexbox `order`.
-  - **Victory Cards**: When checkmate occurs, a cinematic overlay drops down displaying two beautiful, rounded white stat cards with drop shadows—one showing the Streak gained, and one showing the XP gained.
+  - **3D Board Flip**: Flips the board perspective smoothly while maintaining correct piece orientation.
+  - **Tactile 3D Confirmation Modals**: Features dedicated tactile dialogs for Leaving, Restarting, and Resigning, with fair exit mechanics before first player moves.
+  - **Victory Cards**: When a game or puzzle run concludes, a cinematic overlay displays streak and XP rewards.
 
 ### B. Geography Module (`/geo`)
 Focused currently on Philippine geography.
