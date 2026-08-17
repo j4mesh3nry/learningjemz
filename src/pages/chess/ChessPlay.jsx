@@ -51,6 +51,7 @@ export default function ChessPlay() {
   const [gameState, setGameState] = useState('playing'); // 'playing', 'resigned', 'checkmate', 'draw'
   const [showRestartModal, setShowRestartModal] = useState(false);
   const [showBackModal, setShowBackModal] = useState(false);
+  const [showResignModal, setShowResignModal] = useState(false);
   const [showOverlay, setShowOverlay] = useState(true);
   const [promotionPending, setPromotionPending] = useState(null);
   const [victoryStats, setVictoryStats] = useState(null);
@@ -736,6 +737,22 @@ export default function ChessPlay() {
                 </div>
               )}
 
+              {showResignModal && (
+                <div className="modal-overlay">
+                  <div className="tactile-exit-modal">
+                    <div className="tactile-exit-icon" style={{ background: '#fff5f5', border: '2px solid #ffcdd2', color: '#e53935' }}>
+                      <Flag size={24} />
+                    </div>
+                    <h3 className="tactile-exit-title">Resign Match?</h3>
+                    <p className="tactile-exit-desc">Are you sure you want to resign the match? This will count as a loss.</p>
+                    <div className="tactile-modal-actions">
+                      <button type="button" className="tactile-modal-btn cancel" onClick={() => setShowResignModal(false)}>Cancel</button>
+                      <button type="button" className="tactile-modal-btn confirm-danger" style={{ background: '#e53935', borderColor: '#c62828' }} onClick={() => { setShowResignModal(false); handleResign(); }}>Resign</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {promotionPending && (
                 <div className="modal-overlay" style={{ zIndex: 100 }}>
                   <div className="restart-modal" style={{ maxWidth: 320, padding: 20 }}>
@@ -834,7 +851,7 @@ export default function ChessPlay() {
               </button>
 
               <button
-                onClick={handleResign}
+                onClick={() => setShowResignModal(true)}
                 title="Resign Match"
                 style={{
                   flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
