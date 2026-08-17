@@ -597,21 +597,7 @@ export default function ChessPlay() {
 
       {!difficulty ? (
         <div className="opponent-selection-screen">
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            background: '#faf6ee',
-            border: '2px solid #b89f80',
-            boxShadow: '0 2.5px 0 #b89f80',
-            borderRadius: 12,
-            padding: '6px 14px',
-            marginBottom: 16,
-            fontSize: '0.82rem',
-            color: '#2c1b0d',
-            fontWeight: 700,
-            width: 'fit-content'
-          }}>
+          <div className="puzzle-prompt-chip">
             <Target size={14} color="#4a2c11" /> Choose an opponent difficulty below
           </div>
           <div className="opponent-cards">
