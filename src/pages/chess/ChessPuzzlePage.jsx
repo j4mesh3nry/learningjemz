@@ -5,8 +5,8 @@ import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { 
   Puzzle, ArrowLeft, RotateCw, CheckCircle2, XCircle, 
-  Trophy, Flame, Clock, Zap, ChevronRight, RefreshCw, Timer,
-  Lightbulb, User, HelpCircle
+  Trophy, Flame, Clock, Zap, RefreshCw, Timer,
+  Lightbulb, User, Sparkles, BookOpen, Eye
 } from 'lucide-react';
 import VictoryScreen from '../../components/VictoryScreen';
 import rawPuzzleData from '../../data/chess-puzzles.json';
@@ -100,10 +100,12 @@ export default function ChessPuzzlePage() {
   const [feedbackMsg, setFeedbackMsg] = useState('');
   const [shake, setShake] = useState(false);
 
-  // Hints and Solution Highlighting State
+  // Hints, Solution Highlighting & Review Mode State
   const [showHint, setShowHint] = useState(false);
   const [solutionSquares, setSolutionSquares] = useState([]);
   const [mistakeSquare, setMistakeSquare] = useState(null);
+  const [lastXPGained, setLastXPGained] = useState(0);
+  const [isReviewing, setIsReviewing] = useState(false);
 
   // Time Attack Blitz Timer State (180s = 3 minutes)
   const [timeLeft, setTimeLeft] = useState(180);
@@ -114,6 +116,7 @@ export default function ChessPuzzlePage() {
   const [sessionSolvedCount, setSessionSolvedCount] = useState(0);
   const [sessionStreak, setSessionStreak] = useState(0);
   const [sessionMaxStreak, setSessionMaxStreak] = useState(0);
+  const [sessionAttemptedCount, setSessionAttemptedCount] = useState(1);
   const [sessionXPEarned, setSessionXPEarned] = useState(0);
   const [showVictory, setShowVictory] = useState(false);
 
@@ -168,6 +171,8 @@ export default function ChessPuzzlePage() {
     setShowHint(false);
     setSolutionSquares([]);
     setMistakeSquare(null);
+    setLastXPGained(0);
+    setIsReviewing(false);
     setIsFlipped(actualTurn === 'b');
   }, []);
 
@@ -177,12 +182,15 @@ export default function ChessPuzzlePage() {
     setSessionSolvedCount(0);
     setSessionStreak(0);
     setSessionMaxStreak(0);
+    setSessionAttemptedCount(1);
     setSessionXPEarned(0);
+    setLastXPGained(0);
     setShowVictory(false);
     setStatus('playing');
     setShowHint(false);
     setSolutionSquares([]);
     setMistakeSquare(null);
+    setIsReviewing(false);
 
     if (mode === 'BLITZ') {
       setTimeLeft(180);
@@ -195,7 +203,7 @@ export default function ChessPuzzlePage() {
 
   // Blitz Countdown Timer Effect
   useEffect(() => {
-    if (gameMode !== 'BLITZ' || showVictory) {
+    if (gameMode !== 'BLITZ' || showVictory || isReviewing) {
       if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
@@ -213,7 +221,7 @@ export default function ChessPuzzlePage() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [gameMode, showVictory]);
+  }, [gameMode, showVictory, isReviewing]);
 
   // Handle Blitz Time Up
   useEffect(() => {
@@ -233,6 +241,7 @@ export default function ChessPuzzlePage() {
 
   const handleNextPuzzle = () => {
     if (!gameMode) return;
+    setSessionAttemptedCount(prev => prev + 1);
     const nextPuzzle = pickRandomPuzzle();
     loadPuzzle(nextPuzzle);
   };
@@ -249,7 +258,7 @@ export default function ChessPuzzlePage() {
   };
 
   const handleSquareClick = (square) => {
-    if (status !== 'playing' || !game || !currentPuzzle) return;
+    if (status !== 'playing' || !game || !currentPuzzle || isReviewing) return;
 
     if (selectedSquare) {
       const chosenMove = legalMoves.find(m => m.to === square);
@@ -308,6 +317,7 @@ export default function ChessPuzzlePage() {
               gameMode === 'SURVIVAL' ? newStreak : newSolvedCount
             );
 
+            setLastXPGained(xpGained);
             setSessionSolvedCount(newSolvedCount);
             setSessionStreak(newStreak);
             setSessionMaxStreak(prev => Math.max(prev, newStreak));
@@ -336,6 +346,7 @@ export default function ChessPuzzlePage() {
           setShake(true);
           setSelectedSquare(null);
           setLegalMoves([]);
+          setLastXPGained(0);
           setTimeout(() => setShake(false), 450);
 
           // Highlight the mistake and the correct solution move
@@ -394,6 +405,8 @@ export default function ChessPuzzlePage() {
       setShowHint(false);
       setSolutionSquares([]);
       setMistakeSquare(null);
+      setLastXPGained(0);
+      setIsReviewing(false);
       setIsFlipped(g.turn() === 'b');
     }
   };
@@ -420,9 +433,13 @@ export default function ChessPuzzlePage() {
           <button 
             className="chess-back-btn"
             onClick={() => {
-              if (gameMode) {
+              if (isReviewing) {
+                setIsReviewing(false);
+                setShowVictory(true);
+              } else if (gameMode) {
                 setGameMode(null);
                 setShowVictory(false);
+                setIsReviewing(false);
               } else {
                 navigate('/chess');
               }
@@ -432,16 +449,11 @@ export default function ChessPuzzlePage() {
           >
             <ArrowLeft size={20} strokeWidth={2.5} />
           </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: 32, height: 32,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: '#4a2c11', borderRadius: 10,
-              boxShadow: '0 2px 0 #2f1a08'
-            }}>
+          <div className="chess-badges">
+            <div className="puzzle-mode-avatar survival" style={{ width: 32, height: 32, borderRadius: 10 }}>
               <Puzzle size={18} color="#ffffff" />
             </div>
-            <h1 className="chess-page-title" style={{ margin: 0, color: '#2c1b0d', fontSize: '1.4rem', fontWeight: 900 }}>
+            <h1 className="chess-page-title">
               Chess Puzzles
             </h1>
           </div>
@@ -451,26 +463,12 @@ export default function ChessPuzzlePage() {
       {/* Hub / Game Mode Selection View */}
       {!gameMode ? (
         <div>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            background: '#faf6ee',
-            border: '2px solid #b89f80',
-            boxShadow: '0 2.5px 0 #b89f80',
-            borderRadius: 12,
-            padding: '6px 12px',
-            marginBottom: 14,
-            fontSize: '0.82rem',
-            color: '#2c1b0d',
-            fontWeight: 700,
-            width: 'fit-content'
-          }}>
+          <div className="puzzle-prompt-chip">
             <Zap size={14} color="#4a2c11" /> Choose your tactical challenge mode
           </div>
 
           {/* Mode Cards */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', marginBottom: 14 }}>
+          <div className="puzzle-mode-cards-container">
             {/* Sudden Death Mode Card */}
             <div 
               className="puzzle-mode-card"
@@ -500,71 +498,78 @@ export default function ChessPuzzlePage() {
             </div>
           </div>
 
-          {/* Remodeled 2-Card Career Stats Showcase */}
-          <div className="global-stats-box" style={{ padding: 14, background: '#faf6ee', borderRadius: 18, border: '2px solid #b89f80', boxShadow: '0 4px 0 #b89f80' }}>
-            <h3 style={{ textAlign: 'center', marginBottom: 12, color: '#2c1b0d', fontSize: '1.05rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          {/* 2-Card Career Stats Showcase */}
+          <div className="puzzle-career-stats-card">
+            <h3 className="puzzle-stats-heading">
               <Trophy size={18} color="#d97706" /> Puzzle Career Stats
             </h3>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, textAlign: 'center', marginBottom: 10 }}>
+            <div className="puzzle-stats-grid">
               {/* Survival Best Card */}
-              <div style={{ background: '#ebe3cf', padding: '12px 8px', borderRadius: 14, border: '1.5px solid #b89f80', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#4a2c11', letterSpacing: '0.5px', borderBottom: '1px solid #b89f80', width: '100%', paddingBottom: 4 }}>
+              <div className="puzzle-stat-box">
+                <div className="puzzle-stat-box-title">
                   SURVIVAL STREAK
                 </div>
-                <span style={{ color: '#d97706', fontWeight: 900, fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                <span className="puzzle-stat-box-val">
                   <Flame size={18} fill="#ffb300" color="#f57f17" /> {survivalBest}
                 </span>
               </div>
 
               {/* Blitz Best Card */}
-              <div style={{ background: '#ebe3cf', padding: '12px 8px', borderRadius: 14, border: '1.5px solid #b89f80', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#4a2c11', letterSpacing: '0.5px', borderBottom: '1px solid #b89f80', width: '100%', paddingBottom: 4 }}>
+              <div className="puzzle-stat-box">
+                <div className="puzzle-stat-box-title">
                   BLITZ HIGH SCORE
                 </div>
-                <span style={{ color: '#b45309', fontWeight: 900, fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                <span className="puzzle-stat-box-val blitz-val">
                   <Timer size={18} color="#b45309" /> {blitzBest}
                 </span>
               </div>
             </div>
 
             {/* Total Solved Bottom Accent Pill */}
-            <div style={{
-              background: '#ebe3cf', border: '1.5px solid #b89f80', borderRadius: 10,
-              padding: '6px 12px', fontSize: '0.8rem', fontWeight: 800, color: '#4a2c11',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
-            }}>
+            <div className="puzzle-total-solved-banner">
               <span>Total Puzzles Solved:</span>
-              <span style={{ fontWeight: 900, color: '#2c1b0d', fontSize: '0.9rem' }}>{totalSolved}</span>
+              <strong style={{ color: '#2c1b0d', fontSize: '0.9rem' }}>{totalSolved}</strong>
             </div>
           </div>
         </div>
       ) : (
         /* Puzzle Play Game View */
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', alignItems: 'center' }}>
+          
+          {/* Review Mode Banner */}
+          {isReviewing && currentPuzzle && (
+            <div className="puzzle-review-callout">
+              <div className="puzzle-review-header">
+                <span className="puzzle-review-title">
+                  <BookOpen size={16} color="#4a2c11" /> Reviewing Solution
+                </span>
+                {currentPuzzle.theme && (
+                  <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
+                )}
+              </div>
+              <div className="puzzle-review-moves">
+                <strong>Solution:</strong> {currentPuzzle.moves.join(' ')}
+              </div>
+            </div>
+          )}
+
           <div className="chess-play-layout">
             {/* Top Puzzle Objective Banner */}
             <div className="player-profile-banner">
-              <div style={{
-                width: 38, height: 38, borderRadius: 10,
-                background: game?.turn() === 'w' ? '#ffffff' : '#2c1b0d',
-                color: game?.turn() === 'w' ? '#2c1b0d' : '#ffffff',
-                border: '1.5px solid #b89f80',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 900, fontSize: '1.2rem', flexShrink: 0
-              }}>
+              <div className={`puzzle-turn-indicator ${game?.turn() === 'w' ? 'white' : 'black'}`}>
                 {game?.turn() === 'w' ? '♔' : '♚'}
               </div>
 
-              <div className="player-info" style={{ flex: 1, minWidth: 0 }}>
-                <div className="player-name" style={{ fontSize: '0.92rem', fontWeight: 800, color: '#2c1b0d', lineHeight: 1.2, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+              <div className="player-info" style={{ minWidth: 0 }}>
+                <div className="player-name" style={{ fontSize: '0.92rem', lineHeight: 1.2, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                   <span>{(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}</span>
                   {currentPuzzle?.theme && (
                     <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
                   )}
                 </div>
-                <div className="player-tagline" style={{ fontSize: '0.75rem', color: '#6e5843', fontWeight: 600, marginTop: 2 }}>
-                  {gameMode === 'SURVIVAL' ? `Survival • ${getCurrentDifficultyTier()}` : `Blitz • Score: ${sessionSolvedCount}`}
+                <div className="player-tagline" style={{ marginTop: 2 }}>
+                  <span>Puzzle #{sessionAttemptedCount} • {gameMode === 'SURVIVAL' ? `Survival • ${getCurrentDifficultyTier()}` : `Blitz • Score: ${sessionSolvedCount} • ${getCurrentDifficultyTier()}`}</span>
                 </div>
               </div>
 
@@ -641,7 +646,7 @@ export default function ChessPuzzlePage() {
 
             {/* Bottom Player Profile Banner */}
             <div className="player-profile-banner bottom">
-              <div className="player-avatar" style={{ background: '#ebe3cf' }}>
+              <div className="player-avatar">
                 {user?.user_metadata?.avatar && typeof user.user_metadata.avatar === 'string' && user.user_metadata.avatar.startsWith('http') ? (
                   <img src={user.user_metadata.avatar} alt={playerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
@@ -649,8 +654,11 @@ export default function ChessPuzzlePage() {
                 )}
               </div>
               <div className="player-info" style={{ minWidth: 0 }}>
-                <div className="player-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {playerName}
+                <div className="player-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span>{playerName}</span>
+                  <span className={`orientation-tag ${isFlipped ? 'black' : 'white'}`}>
+                    Playing as {isFlipped ? 'Black' : 'White'}
+                  </span>
                 </div>
                 <div className="player-tagline">Lv.{level}</div>
               </div>
@@ -667,30 +675,46 @@ export default function ChessPuzzlePage() {
                 <RefreshCw size={15} /> Flip
               </button>
 
-              <button
-                type="button"
-                className={`puzzle-action-btn ${showHint ? 'hint-active' : ''}`}
-                onClick={() => setShowHint(prev => !prev)}
-                disabled={status !== 'playing' || !currentPuzzle?.hint}
-                title="Tactical Hint"
-              >
-                <Lightbulb size={15} /> Hint
-              </button>
+              {!isReviewing ? (
+                <>
+                  <button
+                    type="button"
+                    className={`puzzle-action-btn ${showHint ? 'hint-active' : ''}`}
+                    onClick={() => setShowHint(prev => !prev)}
+                    disabled={status !== 'playing' || !currentPuzzle?.hint}
+                    title="Tactical Hint"
+                  >
+                    <Lightbulb size={15} /> Hint
+                  </button>
 
-              <button
-                type="button"
-                className="puzzle-action-btn"
-                onClick={handleRetry}
-                disabled={!currentPuzzle}
-                title="Reset Position"
-              >
-                <RotateCw size={15} /> Reset
-              </button>
+                  <button
+                    type="button"
+                    className="puzzle-action-btn"
+                    onClick={handleRetry}
+                    disabled={!currentPuzzle}
+                    title="Reset Position"
+                  >
+                    <RotateCw size={15} /> Reset
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className="puzzle-action-btn primary"
+                  onClick={() => {
+                    setIsReviewing(false);
+                    startMode(gameMode || 'SURVIVAL');
+                  }}
+                  title="Play Again"
+                >
+                  Play Again
+                </button>
+              )}
             </div>
           </div>
 
           {/* Tactical Hint Box */}
-          {showHint && currentPuzzle?.hint && (
+          {showHint && currentPuzzle?.hint && !isReviewing && (
             <div className="puzzle-hint-box">
               <Lightbulb size={16} color="#ca8a04" style={{ flexShrink: 0, marginTop: 2 }} />
               <div>
@@ -701,14 +725,9 @@ export default function ChessPuzzlePage() {
           )}
 
           {/* Feedback Card */}
-          {feedbackMsg && (
-            <div style={{
-              width: '100%', maxWidth: 500, background: '#faf6ee', border: '2px solid #b89f80',
-              boxShadow: '0 3px 0 #b89f80', borderRadius: 14, padding: '10px 14px', fontSize: '0.85rem',
-              color: '#2c1b0d', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              boxSizing: 'border-box', animation: 'slideUp 0.2s ease-out'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {feedbackMsg && !isReviewing && (
+            <div className="puzzle-feedback-card">
+              <div className="puzzle-feedback-content">
                 {status === 'correct' ? (
                   <CheckCircle2 size={20} color="#4a2c11" />
                 ) : status === 'incorrect' || status === 'ended' ? (
@@ -718,9 +737,11 @@ export default function ChessPuzzlePage() {
                 )}
                 <span>{feedbackMsg}</span>
               </div>
-              <div style={{ background: '#ebe3cf', border: '1px solid #b89f80', color: '#4a2c11', padding: '3px 8px', borderRadius: 8, fontSize: '0.75rem', fontWeight: 900 }}>
-                +{sessionXPEarned} XP
-              </div>
+              {status === 'correct' && lastXPGained > 0 && (
+                <div className="puzzle-feedback-xp-pill">
+                  +{lastXPGained} XP
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -740,14 +761,43 @@ export default function ChessPuzzlePage() {
         onContinue={() => {
           setShowVictory(false);
           setGameMode(null);
+          setIsReviewing(false);
         }}
         onPlayAgain={() => {
           setShowVictory(false);
           startMode(gameMode || 'SURVIVAL');
         }}
         continueText="Back to Menu"
-      />
+      >
+        {currentPuzzle && (
+          <div className="puzzle-review-callout" style={{ margin: '10px 0', textAlign: 'left' }}>
+            <div className="puzzle-review-header">
+              <span className="puzzle-review-title">
+                <Sparkles size={16} color="#d97706" /> Last Puzzle Solution
+              </span>
+              {currentPuzzle.theme && (
+                <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
+              )}
+            </div>
+            <div className="puzzle-review-moves">
+              <strong>Line:</strong> {currentPuzzle.moves.join(' ')}
+            </div>
+            <button
+              type="button"
+              className="puzzle-action-btn"
+              onClick={() => {
+                setShowVictory(false);
+                setIsReviewing(true);
+              }}
+              style={{ width: '100%', marginTop: 4 }}
+            >
+              <Eye size={15} /> Inspect Solution on Board
+            </button>
+          </div>
+        )}
+      </VictoryScreen>
     </div>
   );
 }
+
 

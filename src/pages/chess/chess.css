@@ -47,10 +47,8 @@
 .chess-page-title {
   font-family: var(--font-heading, sans-serif);
   font-size: 1.6rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #2c1b0d 0%, #5c3a21 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  color: #2c1b0d;
   margin: 0;
 }
 
@@ -108,13 +106,13 @@
   gap: 14px;
   text-decoration: none;
   color: #ffffff;
-  background: linear-gradient(135deg, #4a2c11 0%, #351f0b 100%);
+  background: #4a2c11;
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 4px 0 #2f1a08;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: pointer;
-  border: none;
+  border: 2px solid #b89f80;
   width: 100%;
   text-align: left;
   box-sizing: border-box;
@@ -132,10 +130,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.18);
+  background: #5c3a21;
+  border: 1.5px solid #b89f80;
   border-radius: 14px;
   flex-shrink: 0;
 }
+
 
 .chess-card-info {
   flex: 1;
@@ -474,7 +474,7 @@
 }
 
 .square.last-move {
-  background-color: rgba(74, 44, 17, 0.25) !important;
+  background-color: #d4c5a9 !important;
 }
 
 .piece-img,
@@ -492,7 +492,7 @@
   width: 28%;
   height: 28%;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.22);
+  background-color: #78624d;
   z-index: 3;
 }
 
@@ -502,7 +502,7 @@
   height: 82%;
   border-radius: 50%;
   background-color: transparent;
-  border: 5px solid rgba(0, 0, 0, 0.22);
+  border: 4px solid #78624d;
   box-sizing: border-box;
 }
 
@@ -559,7 +559,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: #2c1b0d;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -569,24 +569,25 @@
 }
 
 .restart-modal {
-  background: white;
+  background: #faf6ee;
+  border: 2px solid #b89f80;
   padding: 24px;
-  border-radius: 12px;
+  border-radius: 16px;
   width: 85%;
   text-align: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 6px 0 #b89f80;
+  animation: slideUp 0.25s ease-out;
 }
 
 .restart-modal h3 {
   margin: 0 0 12px;
   font-family: var(--font-heading);
-  color: #333;
+  color: #2c1b0d;
 }
 
 .restart-modal p {
   margin: 0 0 20px;
-  color: #666;
+  color: #6e5843;
   font-size: 0.95rem;
 }
 
@@ -601,43 +602,42 @@
   left: 0;
   right: 0;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.85);
-  color: white;
+  background: #2c1b0d;
+  color: #ffffff;
   padding: 30px 20px;
   text-align: center;
   z-index: 5;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  animation: cinematicIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border-top: 2px solid #ffb74d;
-  border-bottom: 2px solid #ffb74d;
+  box-shadow: 0 6px 0 #1b1108;
+  border-top: 2px solid #b89f80;
+  border-bottom: 2px solid #b89f80;
+  animation: cinematicIn 0.4s ease-out;
 }
 
 .game-over-overlay h2 {
   margin: 0 0 8px;
   font-size: 1.6rem;
   font-family: var(--font-heading);
-  color: #fff;
+  color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .game-over-overlay p {
   margin: 0;
-  color: #ffb74d;
+  color: #fbbf24;
   font-weight: 700;
   font-size: 1.1rem;
 }
 
 .game-over-overlay.win {
-  background: rgba(44, 27, 13, 0.95);
+  background: #2c1b0d;
   border-top: 2px solid #b89f80;
   border-bottom: 2px solid #b89f80;
-  box-shadow: 0 8px 32px rgba(44, 27, 13, 0.4);
+  box-shadow: 0 6px 0 #1b1108;
 }
 
 .game-over-overlay.win h2 {
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
 }
 
 .game-over-overlay.win p {
@@ -652,16 +652,17 @@
 }
 
 .victory-stat-card {
-  background: white;
-  border-radius: 12px;
+  background: #faf6ee;
+  border: 2px solid #b89f80;
+  border-radius: 14px;
   padding: 15px;
   min-width: 100px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 0 #b89f80;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: slideUp 0.3s ease-out;
   animation-fill-mode: both;
 }
 
@@ -672,12 +673,12 @@
 .victory-stat-card .stat-value {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #333;
+  color: #2c1b0d;
 }
 
 .victory-stat-card .stat-label {
   font-size: 0.8rem;
-  color: #777;
+  color: #6e5843;
   font-weight: 600;
 }
 
@@ -685,7 +686,6 @@
   from {
     opacity: 0;
   }
-
   to {
     opacity: 1;
   }
@@ -694,9 +694,8 @@
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -708,7 +707,6 @@
     opacity: 0;
     transform: translateY(-50%) scale(0.95);
   }
-
   to {
     opacity: 1;
     transform: translateY(-50%) scale(1);
@@ -729,12 +727,10 @@
     transform: scale(1);
     filter: grayscale(100%) opacity(40%);
   }
-
   50% {
     transform: scale(1.5);
     filter: grayscale(0%) opacity(100%);
   }
-
   100% {
     transform: scale(1);
     filter: grayscale(0%) opacity(100%);
@@ -758,22 +754,22 @@
   gap: 6px;
   padding: 14px 10px;
   border-radius: 8px;
-  border: none;
-  background: #f1f3f5;
-  color: #333;
+  border: 2px solid #b89f80;
+  background: #faf6ee;
+  color: #2c1b0d;
   font-weight: 700;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
 }
 
 .game-controls .btn:hover {
-  background: #e9ecef;
+  background: #ebe3cf;
 }
 
 .game-controls .btn.primary {
   background: #4a2c11;
-  color: white;
+  color: #ffffff;
   box-shadow: 0 3px 0 #2f1a08;
 }
 
@@ -807,18 +803,31 @@
   animation: shakeHoriz 0.4s ease-in-out;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* --- CHESS PUZZLE MODE SELECTION & BLITZ TIMER STYLES --- */
+.puzzle-prompt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #faf6ee;
+  border: 2px solid #b89f80;
+  box-shadow: 0 2.5px 0 #b89f80;
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  color: #2c1b0d;
+  font-weight: 700;
+  width: fit-content;
 }
 
-/* --- CHESS PUZZLE MODE SELECTION & BLITZ TIMER STYLES --- */
+.puzzle-mode-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
 .puzzle-mode-card {
   display: flex;
   align-items: center;
@@ -891,6 +900,85 @@
   color: #6e5843;
   line-height: 1.35;
   font-weight: 600;
+}
+
+/* Career Stats Box */
+.puzzle-career-stats-card {
+  padding: 14px;
+  background: #faf6ee;
+  border-radius: 18px;
+  border: 2px solid #b89f80;
+  box-shadow: 0 4px 0 #b89f80;
+}
+
+.puzzle-stats-heading {
+  text-align: center;
+  margin: 0 0 12px 0;
+  color: #2c1b0d;
+  font-size: 1.05rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+}
+
+.puzzle-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.puzzle-stat-box {
+  background: #ebe3cf;
+  padding: 12px 8px;
+  border-radius: 14px;
+  border: 1.5px solid #b89f80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.puzzle-stat-box-title {
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #4a2c11;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #b89f80;
+  width: 100%;
+  padding-bottom: 4px;
+}
+
+.puzzle-stat-box-val {
+  color: #d97706;
+  font-weight: 900;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.puzzle-stat-box-val.blitz-val {
+  color: #b45309;
+}
+
+.puzzle-total-solved-banner {
+  background: #ebe3cf;
+  border: 1.5px solid #b89f80;
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #4a2c11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 /* Blitz Timer Chip */
@@ -972,6 +1060,30 @@
   background-color: #fef08a !important;
 }
 
+/* Puzzle Turn Indicator */
+.puzzle-turn-indicator {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1.5px solid #b89f80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.puzzle-turn-indicator.white {
+  background: #ffffff;
+  color: #2c1b0d;
+}
+
+.puzzle-turn-indicator.black {
+  background: #2c1b0d;
+  color: #ffffff;
+}
+
 /* Puzzle Theme Tag in Header */
 .puzzle-theme-tag {
   display: inline-flex;
@@ -986,6 +1098,30 @@
   border-radius: 8px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
+}
+
+/* Orientation Indicator Badge */
+.orientation-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.orientation-tag.white {
+  background: #ffffff;
+  border: 1.5px solid #b89f80;
+  color: #2c1b0d;
+}
+
+.orientation-tag.black {
+  background: #2c1b0d;
+  border: 1.5px solid #b89f80;
+  color: #ffffff;
 }
 
 /* Puzzle Action Controls */
@@ -1060,5 +1196,82 @@
   gap: 8px;
   box-sizing: border-box;
   animation: slideUp 0.2s ease-out;
+}
+
+/* Puzzle Feedback Card */
+.puzzle-feedback-card {
+  width: 100%;
+  max-width: 500px;
+  background: #faf6ee;
+  border: 2px solid #b89f80;
+  box-shadow: 0 3px 0 #b89f80;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #2c1b0d;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  animation: slideUp 0.2s ease-out;
+}
+
+.puzzle-feedback-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.puzzle-feedback-xp-pill {
+  background: #ebe3cf;
+  border: 1px solid #b89f80;
+  color: #4a2c11;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+/* Puzzle Review Callout */
+.puzzle-review-callout {
+  width: 100%;
+  max-width: 500px;
+  background: #ebe3cf;
+  border: 2px solid #b89f80;
+  box-shadow: 0 3px 0 #b89f80;
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: slideUp 0.2s ease-out;
+}
+
+.puzzle-review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.puzzle-review-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #2c1b0d;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.puzzle-review-moves {
+  font-family: monospace;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #4a2c11;
+  background: #faf6ee;
+  border: 1.5px solid #b89f80;
+  border-radius: 8px;
+  padding: 6px 10px;
 }
 
