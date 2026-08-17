@@ -5,6 +5,7 @@ import { RefreshCw, AlertTriangle, Gem } from 'lucide-react';
 interface Props {
   children: ReactNode;
   fallbackTitle?: string;
+  fallbackDescription?: string;
 }
 
 interface State {
@@ -141,7 +142,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 margin: '0 0 24px 0',
               }}
             >
-              A new update might have deployed or a resource was temporarily interrupted. Tap refresh to load the app cleanly!
+              {this.props.fallbackDescription || 'An unexpected error occurred. Tap refresh to reload the application!'}
             </p>
 
             {/* Refresh Button */}
