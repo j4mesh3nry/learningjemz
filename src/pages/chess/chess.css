@@ -205,6 +205,9 @@
   flex-direction: column;
   flex: 1;
   padding: 10px 0;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .opponent-cards {
