@@ -501,16 +501,16 @@ export default function ChessPuzzlePage() {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
-  // Calculate total player moves required and current move step
+  // Calculate total player moves required and current move step counter (e.g. 0/2, 1/2, 2/2)
   const requiredPlayerMoves = useMemo(() => {
     if (!currentPuzzle?.moves) return 1;
     return Math.max(1, Math.ceil(currentPuzzle.moves.length / 2));
   }, [currentPuzzle]);
 
-  const currentPlayerMoveStep = useMemo(() => {
-    if (!requiredPlayerMoves) return 1;
-    return Math.min(requiredPlayerMoves, Math.floor(moveStepIndex / 2) + 1);
-  }, [moveStepIndex, requiredPlayerMoves]);
+  const completedPlayerMoves = useMemo(() => {
+    if (status === 'correct') return requiredPlayerMoves;
+    return Math.min(requiredPlayerMoves, Math.floor(moveStepIndex / 2));
+  }, [status, requiredPlayerMoves, moveStepIndex]);
 
   // Check hint piece square
   const hintPieceSquare = useMemo(() => {
@@ -657,7 +657,7 @@ export default function ChessPuzzlePage() {
           <div className="chess-play-layout">
             {/* Top Puzzle Objective Banner */}
             <div className="puzzle-header-banner">
-              {/* Row 1: Mode, Difficulty, Theme, Moves & Timer/Streak */}
+              {/* Row 1: Mode, Difficulty & Timer/Streak */}
               <div className="puzzle-header-meta-row">
                 <div className="puzzle-header-mode-info">
                   <span className="puzzle-mode-label">
@@ -665,12 +665,6 @@ export default function ChessPuzzlePage() {
                   </span>
                   <span className={`puzzle-difficulty-badge puzzle-difficulty-badge--${getCurrentDifficultyTier().toLowerCase()}`}>
                     {getCurrentDifficultyTier()}
-                  </span>
-                  {currentPuzzle?.theme && (
-                    <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
-                  )}
-                  <span className="puzzle-moves-badge">
-                    {requiredPlayerMoves} {requiredPlayerMoves === 1 ? 'MOVE' : 'MOVES'}
                   </span>
                 </div>
 
@@ -695,18 +689,16 @@ export default function ChessPuzzlePage() {
                 )}
               </div>
 
-              {/* Row 2: Turn Indicator Dot & Objective Text */}
+              {/* Row 2: Turn Indicator Dot & Objective Text + Far Right Step Counter (e.g. 0/2) */}
               <div className="puzzle-header-objective-row">
                 <div className="puzzle-objective-left">
                   <div className={`puzzle-turn-indicator ${game?.turn() === 'w' ? 'white' : 'black'}`} />
                   <div className="puzzle-objective-text">
                     {(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}
-                    {requiredPlayerMoves > 1 && (
-                      <span style={{ marginLeft: 6, opacity: 0.85, fontWeight: 700 }}>
-                        (Move {currentPlayerMoveStep} of {requiredPlayerMoves})
-                      </span>
-                    )}
                   </div>
+                </div>
+                <div className="puzzle-step-counter">
+                  {completedPlayerMoves}/{requiredPlayerMoves}
                 </div>
               </div>
             </div>
@@ -784,34 +776,40 @@ export default function ChessPuzzlePage() {
 
             {/* Bottom Player Profile Banner */}
             <div className="player-profile-banner bottom">
-              <div className="player-avatar" style={{
-                background: '#ebe3cf',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 38,
-                height: 38,
-                borderRadius: 10,
-                border: '1.5px solid #b89f80',
-                overflow: 'hidden'
-              }}>
-                {(() => {
-                  const av = user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar');
-                  if (av) {
-                    if (typeof av === 'string' && av.startsWith('http')) {
-                      return <img src={av} alt={playerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />;
+              <div className="player-profile-left">
+                <div className="player-avatar" style={{
+                  background: '#ebe3cf',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 38,
+                  height: 38,
+                  borderRadius: 10,
+                  border: '1.5px solid #b89f80',
+                  overflow: 'hidden'
+                }}>
+                  {(() => {
+                    const av = user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar');
+                    if (av) {
+                      if (typeof av === 'string' && av.startsWith('http')) {
+                        return <img src={av} alt={playerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />;
+                      }
+                      return <span style={{ fontSize: '1.35rem', lineHeight: 1 }}>{av}</span>;
                     }
-                    return <span style={{ fontSize: '1.35rem', lineHeight: 1 }}>{av}</span>;
-                  }
-                  return <User size={20} color="#4a2c11" strokeWidth={2.5} />;
-                })()}
-              </div>
-              <div className="player-info" style={{ minWidth: 0 }}>
-                <div className="player-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  <span>{playerName}</span>
+                    return <User size={20} color="#4a2c11" strokeWidth={2.5} />;
+                  })()}
                 </div>
-                <div className="player-tagline">Lv.{level} • Puzzle #{sessionAttemptedCount}</div>
+                <div className="player-info" style={{ minWidth: 0 }}>
+                  <div className="player-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <span>{playerName}</span>
+                  </div>
+                  <div className="player-tagline">Lv.{level} • Puzzle #{sessionAttemptedCount}</div>
+                </div>
               </div>
+
+              {currentPuzzle?.theme && (
+                <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
+              )}
             </div>
 
             {/* Action Bar / Controls */}

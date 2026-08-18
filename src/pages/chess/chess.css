@@ -1405,10 +1405,10 @@
   letter-spacing: 0.5px;
 }
 
-/* Unified Design System for Header Chips */
+/* Solid Tactile Chip System (No Translucent / Pastel Colors) */
 .puzzle-difficulty-badge {
   font-size: 0.68rem;
-  font-weight: 800;
+  font-weight: 900;
   padding: 3px 8px;
   border-radius: 6px;
   text-transform: uppercase;
@@ -1419,29 +1419,29 @@
 }
 
 .puzzle-difficulty-badge--easy {
-  color: #16653e;
-  background: #e6f4ea;
-  border: 1.5px solid #b0cbaf;
+  color: #ffffff;
+  background: #2d4a34;
+  border: 1.5px solid #4a7a53;
 }
 
 .puzzle-difficulty-badge--medium {
-  color: #b45309;
-  background: #fff8e1;
-  border: 1.5px solid #fde68a;
+  color: #fbbf24;
+  background: #5c3a10;
+  border: 1.5px solid #855618;
 }
 
 .puzzle-difficulty-badge--hard {
-  color: #991b1b;
-  background: #fef2f2;
-  border: 1.5px solid #fecaca;
+  color: #f87171;
+  background: #5a1a1a;
+  border: 1.5px solid #852b2b;
 }
 
 .puzzle-theme-tag {
   font-size: 0.68rem;
-  font-weight: 800;
-  color: #4a2c11;
-  background: #ebe3cf;
-  border: 1.5px solid #b89f80;
+  font-weight: 900;
+  color: #faf6ee;
+  background: #3b2310;
+  border: 1.5px solid #5c3a1e;
   padding: 3px 8px;
   border-radius: 6px;
   text-transform: uppercase;
@@ -1449,21 +1449,36 @@
   display: inline-flex;
   align-items: center;
   line-height: 1;
+  flex-shrink: 0;
 }
 
-.puzzle-moves-badge {
-  font-size: 0.68rem;
-  font-weight: 800;
-  color: #3730a3;
-  background: #e0e7ff;
-  border: 1.5px solid #c7d2fe;
+.puzzle-step-counter {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #faf6ee;
+  background: #4a2c11;
+  border: 1.5px solid #784e27;
   padding: 3px 8px;
   border-radius: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   display: inline-flex;
   align-items: center;
   line-height: 1;
+  flex-shrink: 0;
+}
+
+.player-profile-banner.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.player-profile-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 .puzzle-progress-label {
