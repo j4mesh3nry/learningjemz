@@ -106,8 +106,28 @@ export default function ChessPuzzlePage() {
   // Selected Mode: null = Hub, 'SURVIVAL', 'BLITZ'
   const [gameMode, setGameMode] = useState(null);
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
-  const [recentPuzzleIds, setRecentPuzzleIds] = useState([]);
-  
+  const [recentPuzzleIds, setRecentPuzzleIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem('learningjemz_recent_puzzles');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  // Sync recent puzzle IDs array changes to localStorage
+  const updateRecentPuzzleIds = (newId) => {
+    setRecentPuzzleIds(prev => {
+      const next = [...prev.slice(-49), newId];
+      try {
+        localStorage.setItem('learningjemz_recent_puzzles', JSON.stringify(next));
+      } catch (e) {
+        console.error('Failed to save recent puzzle IDs to localStorage:', e);
+      }
+      return next;
+    });
+  };
+
   const [game, setGame] = useState(() => createChess());
   const [board, setBoard] = useState(() => game.board());
   const [selectedSquare, setSelectedSquare] = useState(null);
@@ -178,7 +198,7 @@ export default function ChessPuzzlePage() {
     const candidatePool = available.length > 0 ? available : pool;
     const chosen = candidatePool[Math.floor(Math.random() * candidatePool.length)];
 
-    setRecentPuzzleIds(prev => [...prev.slice(-8), chosen.id]);
+    updateRecentPuzzleIds(chosen.id);
     return chosen;
   }, [getCurrentDifficultyTier, getPuzzlesByDifficulty, recentPuzzleIds]);
 
