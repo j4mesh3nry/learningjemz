@@ -119,49 +119,64 @@
   background: #2c3261;
   color: #f4f6fc;
   border: 2px solid #39406c;
-  box-shadow: 0 4px 0 #0b0d22;
+  box-shadow: 0 3px 0 #0b0d22;
   border-radius: 14px;
-  padding: 13px;
+  padding: 12px;
+  font-size: 0.95rem;
 }
 
 .theme-space .victory-btn-primary:hover {
   background: #333b72;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #0b0d22;
 }
 
 .theme-space .victory-btn-primary:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #0b0d22;
+  box-shadow: 0 1px 0 #0b0d22;
 }
 
 .theme-space .victory-btn-secondary {
   background: #1d2040;
   color: #c6cbe4;
   border: 2px solid #3a4461;
-  box-shadow: none;
-  border-radius: 12px;
-  padding: 10px;
+  box-shadow: 0 3px 0 #0b0d22;
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 0.95rem;
 }
 
 .theme-space .victory-btn-secondary:hover {
   background: #262a52;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #0b0d22;
 }
 
 .theme-space .victory-btn-secondary:active {
   transform: translateY(2px);
-  box-shadow: 0 0 0 #0b0d22;
+  box-shadow: 0 1px 0 #0b0d22;
 }
 
 .theme-space .victory-btn-view {
   background: transparent;
   color: #8d93b4;
   border: 2px solid #3a4461;
-  border-radius: 12px;
-  padding: 9px;
+  box-shadow: 0 3px 0 #0b0d22;
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 0.95rem;
 }
 
 .theme-space .victory-btn-view:hover {
   background: #1d2040;
   color: #c6cbe4;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #0b0d22;
+}
+
+.theme-space .victory-btn-view:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #0b0d22;
 }
 
 
@@ -244,49 +259,64 @@
   background: #4a2c11;
   color: #faf6ee;
   border: 2px solid #784e27;
-  box-shadow: 0 4px 0 #180d05;
+  box-shadow: 0 3px 0 #180d05;
   border-radius: 14px;
-  padding: 13px;
+  padding: 12px;
+  font-size: 0.95rem;
 }
 
 .theme-chess .victory-btn-primary:hover {
   background: #5c3a1e;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #180d05;
 }
 
 .theme-chess .victory-btn-primary:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #180d05;
+  box-shadow: 0 1px 0 #180d05;
 }
 
 .theme-chess .victory-btn-secondary {
   background: #3b2310;
   color: #d7c4b0;
   border: 2px solid #5c3a1e;
-  box-shadow: none;
-  border-radius: 12px;
-  padding: 10px;
+  box-shadow: 0 3px 0 #180d05;
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 0.95rem;
 }
 
 .theme-chess .victory-btn-secondary:hover {
   background: #4a2c11;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #180d05;
 }
 
 .theme-chess .victory-btn-secondary:active {
   transform: translateY(2px);
-  box-shadow: 0 0 0 #180d05;
+  box-shadow: 0 1px 0 #180d05;
 }
 
 .theme-chess .victory-btn-view {
   background: transparent;
   color: #bfa085;
   border: 2px solid #5c3a1e;
-  border-radius: 12px;
-  padding: 9px;
+  box-shadow: 0 3px 0 #180d05;
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 0.95rem;
 }
 
 .theme-chess .victory-btn-view:hover {
   background: #3b2310;
   color: #faf6ee;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #180d05;
+}
+
+.theme-chess .victory-btn-view:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #180d05;
 }
 
 
@@ -312,11 +342,21 @@
   background: #15803d;
   color: #ffffff;
   border: 2px solid #22c55e;
-  box-shadow: 0 4px 0 #14532d;
+  box-shadow: 0 3px 0 #14532d;
+  border-radius: 16px;
+  padding: 12px;
+  font-size: 0.95rem;
 }
 
 .theme-geo .victory-btn-primary:hover {
   background: #16653e;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #14532d;
+}
+
+.theme-geo .victory-btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #14532d;
 }
 
 .theme-geo .victory-btn-secondary {
@@ -324,12 +364,41 @@
   color: #15803d;
   border: 2px solid #b0cbaf;
   box-shadow: 0 3px 0 #b0cbaf;
+  border-radius: 16px;
+  padding: 12px;
+  font-size: 0.95rem;
+}
+
+.theme-geo .victory-btn-secondary:hover {
+  background: #f1f5f9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #b0cbaf;
+}
+
+.theme-geo .victory-btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #b0cbaf;
 }
 
 .theme-geo .victory-btn-view {
   background: #ffffff;
   color: #15803d;
   border: 2px solid #15803d;
+  box-shadow: 0 3px 0 #15803d;
+  border-radius: 16px;
+  padding: 12px;
+  font-size: 0.95rem;
+}
+
+.theme-geo .victory-btn-view:hover {
+  background: #e1f0e2;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #15803d;
+}
+
+.theme-geo .victory-btn-view:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #15803d;
 }
 
 
@@ -472,13 +541,13 @@
   background: #16653e;
   color: #ffffff;
   border: 2px solid #22c55e;
-  padding: 14px;
+  padding: 12px;
   border-radius: 16px;
   font-family: var(--font-heading);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 0 #0e4329;
+  box-shadow: 0 3px 0 #0e4329;
   transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
   box-sizing: border-box;
 }
@@ -486,12 +555,12 @@
 .victory-btn-primary:hover {
   background: #0f3825;
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 #0e4329;
+  box-shadow: 0 5px 0 #0e4329;
 }
 
 .victory-btn-primary:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #0e4329;
+  box-shadow: 0 1px 0 #0e4329;
 }
 
 .victory-btn-secondary {
@@ -502,7 +571,7 @@
   padding: 12px;
   border-radius: 16px;
   font-family: var(--font-heading);
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 3px 0 #b0cbaf;
@@ -526,27 +595,30 @@
   background: #ffffff;
   color: #16653e;
   border: 2px solid #16653e;
-  padding: 10px;
-  border-radius: 14px;
+  padding: 12px;
+  border-radius: 16px;
   font-family: var(--font-heading);
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: transform 0.1s ease, background 0.15s ease;
+  box-shadow: 0 3px 0 #16653e;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
   box-sizing: border-box;
 }
 
 .victory-btn-view:hover {
   background: #e1f0e2;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #16653e;
 }
 
 .victory-btn-view:active {
-  transform: translateY(1px);
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #16653e;
 }
 
 /* Floating Bottom Restore Dock Bar (Minimized Result Screen View) */
