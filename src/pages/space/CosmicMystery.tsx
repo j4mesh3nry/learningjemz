@@ -521,7 +521,12 @@ export default function CosmicMystery() {
               {/* Sprint Mode Card */}
               <div
                 className={`cosmic-mode-card ${mode === 'SPRINT' ? 'active-mode' : ''}`}
-                onClick={() => setMode('SPRINT')}
+                onClick={(e) => {
+                  if (e.target.closest('.mode-info-btn') || e.target.closest('.cosmic-info-bubble')) {
+                    return;
+                  }
+                  setMode('SPRINT');
+                }}
               >
                 <button
                   className="mode-info-btn"
@@ -612,7 +617,12 @@ export default function CosmicMystery() {
               {/* Survival Mode Card */}
               <div
                 className={`cosmic-mode-card ${mode === 'SURVIVAL' ? 'active-mode' : ''}`}
-                onClick={() => setMode('SURVIVAL')}
+                onClick={(e) => {
+                  if (e.target.closest('.mode-info-btn') || e.target.closest('.cosmic-info-bubble')) {
+                    return;
+                  }
+                  setMode('SURVIVAL');
+                }}
               >
                 <button
                   className="mode-info-btn"
