@@ -111,7 +111,12 @@ export default function ObjectsBySizeMenu() {
         }}>
           {/* Main Card Header (Click to Expand / Toggle) */}
           <div
-            onClick={() => setShowIlluminateLevels(prev => !prev)}
+            onClick={(e) => {
+              if (e.target.closest('.mode-info-btn') || e.target.closest('.cosmic-info-bubble')) {
+                return;
+              }
+              setShowIlluminateLevels(prev => !prev);
+            }}
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
               padding: '14px 16px', cursor: 'pointer',
