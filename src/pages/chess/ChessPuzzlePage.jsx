@@ -552,7 +552,12 @@ export default function ChessPuzzlePage() {
             <ArrowLeft size={20} strokeWidth={2.5} />
           </button>
           <div className="chess-badges">
-            <div className="puzzle-mode-avatar survival" style={{ width: 32, height: 32, borderRadius: 10 }}>
+            <div style={{
+              width: 32, height: 32,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: '#4a2c11', borderRadius: 10,
+              boxShadow: '0 2px 0 #2f1a08'
+            }}>
               <Puzzle size={18} color="#ffffff" />
             </div>
             <h1 className="chess-page-title">
