@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess as ChessJS } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText, Sparkles, Target, LogOut } from 'lucide-react';
+import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText, Sparkles, Target, LogOut, Zap, Star } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -45,6 +45,7 @@ export default function ChessPlay() {
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [legalMoves, setLegalMoves] = useState([]);
   const [difficulty, setDifficulty] = useState(null); // null means in selection screen
+  const [activeInfoBubble, setActiveInfoBubble] = useState(null);
   const [isFlipped, setIsFlipped] = useState(false);
   const [history, setHistory] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
@@ -610,13 +611,50 @@ export default function ChessPlay() {
           <div className="puzzle-prompt-chip">
             <Target size={14} color="#4a2c11" /> Choose an opponent difficulty below
           </div>
+
+          {/* Backdrop Catcher to dismiss active info bubble */}
+          {activeInfoBubble && (
+            <div className="chess-bubble-catcher" onClick={() => setActiveInfoBubble(null)} />
+          )}
+
           <div className="opponent-cards">
+            {/* Beginner Bob (Easy) */}
             <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')}>
+              <button
+                type="button"
+                className="chess-mode-info-btn"
+                title="Beginner Bob Rules & XP"
+                aria-label="Beginner Bob Rules & XP"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveInfoBubble(prev => prev === 'Easy' ? null : 'Easy');
+                }}
+              >
+                <span className="chess-info-icon-text">i</span>
+              </button>
+
+              {activeInfoBubble === 'Easy' && (
+                <div className="chess-info-bubble" onClick={(e) => e.stopPropagation()}>
+                  <div className="chess-bubble-arrow" />
+                  <div className="chess-bubble-title">Beginner Bob Rules</div>
+                  <div className="chess-bubble-list">
+                    <div className="chess-bubble-item">
+                      <Bot size={14} color="#4a2c11" className="flex-shrink-0" />
+                      <span>Casual AI designed for beginners with frequent blunders</span>
+                    </div>
+                    <div className="chess-bubble-item">
+                      <Trophy size={14} color="#d97706" className="flex-shrink-0" />
+                      <span>Win: +30 XP • Draw: +10 XP • Loss: +5 XP</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="opponent-card-header">
                 <div className="opponent-avatar"><Bot size={36} color="#4a2c11" /></div>
                 <div className="opponent-info">
                   <h3>Beginner Bob</h3>
-                  <p>Easy • High blunder rate</p>
+                  <p>Rating 400 • Casual play</p>
                 </div>
               </div>
               {selectedOpponent === 'Easy' && (
@@ -631,12 +669,44 @@ export default function ChessPlay() {
                 </div>
               )}
             </div>
+
+            {/* Intermediate Ivy (Medium) */}
             <div className={`opponent-card medium ${selectedOpponent === 'Medium' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Medium' ? null : 'Medium')}>
+              <button
+                type="button"
+                className="chess-mode-info-btn"
+                title="Intermediate Ivy Rules & XP"
+                aria-label="Intermediate Ivy Rules & XP"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveInfoBubble(prev => prev === 'Medium' ? null : 'Medium');
+                }}
+              >
+                <span className="chess-info-icon-text">i</span>
+              </button>
+
+              {activeInfoBubble === 'Medium' && (
+                <div className="chess-info-bubble" onClick={(e) => e.stopPropagation()}>
+                  <div className="chess-bubble-arrow" />
+                  <div className="chess-bubble-title">Intermediate Ivy Rules</div>
+                  <div className="chess-bubble-list">
+                    <div className="chess-bubble-item">
+                      <BrainCircuit size={14} color="#d97706" className="flex-shrink-0" />
+                      <span>Tactical bot actively seeking captures, forks, and pins</span>
+                    </div>
+                    <div className="chess-bubble-item">
+                      <Trophy size={14} color="#d97706" className="flex-shrink-0" />
+                      <span>Win: +30 XP • Draw: +10 XP • Loss: +5 XP</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="opponent-card-header">
                 <div className="opponent-avatar"><BrainCircuit size={36} color="#d97706" /></div>
                 <div className="opponent-info">
                   <h3>Intermediate Ivy</h3>
-                  <p>Medium • Looks for captures</p>
+                  <p>Rating 1200 • Tactical drills</p>
                 </div>
               </div>
               {selectedOpponent === 'Medium' && (
@@ -651,12 +721,44 @@ export default function ChessPlay() {
                 </div>
               )}
             </div>
+
+            {/* Grandmaster Gary (Hard) */}
             <div className={`opponent-card hard ${selectedOpponent === 'Hard' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Hard' ? null : 'Hard')}>
+              <button
+                type="button"
+                className="chess-mode-info-btn"
+                title="Grandmaster Gary Rules & XP"
+                aria-label="Grandmaster Gary Rules & XP"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveInfoBubble(prev => prev === 'Hard' ? null : 'Hard');
+                }}
+              >
+                <span className="chess-info-icon-text">i</span>
+              </button>
+
+              {activeInfoBubble === 'Hard' && (
+                <div className="chess-info-bubble" onClick={(e) => e.stopPropagation()}>
+                  <div className="chess-bubble-arrow" />
+                  <div className="chess-bubble-title">Grandmaster Gary Rules</div>
+                  <div className="chess-bubble-list">
+                    <div className="chess-bubble-item">
+                      <Cpu size={14} color="#dc2626" className="flex-shrink-0" />
+                      <span>Deep calculation engine powered by full Stockfish AI</span>
+                    </div>
+                    <div className="chess-bubble-item">
+                      <Trophy size={14} color="#d97706" className="flex-shrink-0" />
+                      <span>Win: +30 XP • Draw: +10 XP • Loss: +5 XP</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="opponent-card-header">
                 <div className="opponent-avatar"><Cpu size={36} color="#e53935" /></div>
                 <div className="opponent-info">
                   <h3>Grandmaster Gary</h3>
-                  <p>Hard • Calculates deeply</p>
+                  <p>Rating 2500 • Full Stockfish</p>
                 </div>
               </div>
               {selectedOpponent === 'Hard' && (

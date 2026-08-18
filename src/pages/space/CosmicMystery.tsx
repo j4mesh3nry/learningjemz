@@ -551,7 +551,7 @@ export default function CosmicMystery() {
                       </div>
                       <div className="cosmic-bubble-item">
                         <Zap size={14} color="#22c55e" className="flex-shrink-0" />
-                        <span>Earn XP for speed and perfect accuracy</span>
+                        <span>Earn up to 20 XP (+10 base, +5 perfect, +5 sub-30s)</span>
                       </div>
                     </div>
                   </div>
@@ -642,7 +642,7 @@ export default function CosmicMystery() {
                       </div>
                       <div className="cosmic-bubble-item">
                         <Zap size={14} color="#22c55e" className="flex-shrink-0" />
-                        <span>Earn bonus XP for high scores (10+ & 20+ pts)</span>
+                        <span>Earn 1 XP/card + tier bonuses (+5 at 10+, +10 at 20+)</span>
                       </div>
                     </div>
                   </div>

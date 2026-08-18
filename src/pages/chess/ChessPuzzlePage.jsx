@@ -6,7 +6,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { 
   Puzzle, ArrowLeft, RotateCw, CheckCircle2, XCircle, 
   Trophy, Flame, Clock, Zap, RefreshCw, Timer,
-  Lightbulb, User, Sparkles, BookOpen, Eye, LogOut, SkipForward, List
+  Lightbulb, User, Sparkles, BookOpen, Eye, LogOut, SkipForward, List,
+  ShieldAlert, Star
 } from 'lucide-react';
 import VictoryScreen from '../../components/VictoryScreen';
 import rawPuzzleData from '../../data/chess-puzzles.json';
@@ -105,6 +106,7 @@ export default function ChessPuzzlePage() {
 
   // Selected Mode: null = Hub, 'SURVIVAL', 'BLITZ'
   const [gameMode, setGameMode] = useState(null);
+  const [activeInfoBubble, setActiveInfoBubble] = useState(null);
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
   const [recentPuzzleIds, setRecentPuzzleIds] = useState(() => {
     try {
@@ -567,6 +569,11 @@ export default function ChessPuzzlePage() {
             <Zap size={14} color="#4a2c11" /> Choose your tactical challenge mode
           </div>
 
+          {/* Backdrop Catcher to dismiss active info bubble */}
+          {activeInfoBubble && (
+            <div className="chess-bubble-catcher" onClick={() => setActiveInfoBubble(null)} />
+          )}
+
           {/* Mode Cards */}
           <div className="puzzle-mode-cards-container">
             {/* Sudden Death Mode Card */}
@@ -574,12 +581,50 @@ export default function ChessPuzzlePage() {
               className="puzzle-mode-card"
               onClick={() => startMode('SURVIVAL')}
             >
+              <button
+                type="button"
+                className="chess-mode-info-btn"
+                title="Sudden Death Rules & XP"
+                aria-label="Sudden Death Rules & XP"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveInfoBubble(prev => prev === 'SURVIVAL' ? null : 'SURVIVAL');
+                }}
+              >
+                <span className="chess-info-icon-text">i</span>
+              </button>
+
+              {activeInfoBubble === 'SURVIVAL' && (
+                <div className="chess-info-bubble" onClick={(e) => e.stopPropagation()}>
+                  <div className="chess-bubble-arrow" />
+                  <div className="chess-bubble-title">Sudden Death Rules</div>
+                  <div className="chess-bubble-list">
+                    <div className="chess-bubble-item">
+                      <Flame size={14} color="#ff4d4d" className="flex-shrink-0" />
+                      <span>1 mistake immediately ends your run</span>
+                    </div>
+                    <div className="chess-bubble-item">
+                      <Trophy size={14} color="#d97706" className="flex-shrink-0" />
+                      <span>Difficulty ramps up as your streak grows</span>
+                    </div>
+                    <div className="chess-bubble-item">
+                      <Zap size={14} color="#16653e" className="flex-shrink-0" />
+                      <span>Earn 6-15 XP/puzzle (Easy: 6, Med: 10, Hard: 15)</span>
+                    </div>
+                    <div className="chess-bubble-item">
+                      <Star size={14} color="#d97706" className="flex-shrink-0" />
+                      <span>Streak bonuses: +10 XP at 5, +20 at 10, +30 at 20</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="puzzle-mode-avatar survival">
                 <Flame size={24} />
               </div>
               <div className="puzzle-mode-info">
                 <h3>Sudden Death Survival</h3>
-                <p>1 mistake ends the run! Difficulty dynamically ramps up as your streak grows.</p>
+                <p>1 mistake ends run • Dynamic difficulty</p>
               </div>
             </div>
 
@@ -588,12 +633,46 @@ export default function ChessPuzzlePage() {
               className="puzzle-mode-card"
               onClick={() => startMode('BLITZ')}
             >
+              <button
+                type="button"
+                className="chess-mode-info-btn"
+                title="Time Attack Blitz Rules & XP"
+                aria-label="Time Attack Blitz Rules & XP"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveInfoBubble(prev => prev === 'BLITZ' ? null : 'BLITZ');
+                }}
+              >
+                <span className="chess-info-icon-text">i</span>
+              </button>
+
+              {activeInfoBubble === 'BLITZ' && (
+                <div className="chess-info-bubble" onClick={(e) => e.stopPropagation()}>
+                  <div className="chess-bubble-arrow" />
+                  <div className="chess-bubble-title">Time Attack Blitz Rules</div>
+                  <div className="chess-bubble-list">
+                    <div className="chess-bubble-item">
+                      <Clock size={14} color="#d97706" className="flex-shrink-0" />
+                      <span>Solve as many puzzles as possible in 3:00</span>
+                    </div>
+                    <div className="chess-bubble-item">
+                      <Timer size={14} color="#b45309" className="flex-shrink-0" />
+                      <span>+5s on solve • -10s on mistake • Skip (-15s)</span>
+                    </div>
+                    <div className="chess-bubble-item">
+                      <Zap size={14} color="#16653e" className="flex-shrink-0" />
+                      <span>Earn 6-15 XP per solved puzzle</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="puzzle-mode-avatar blitz">
                 <Clock size={24} />
               </div>
               <div className="puzzle-mode-info">
                 <h3>Time Attack Blitz</h3>
-                <p>3 minutes on the clock! Solve fast: +5s for correct moves, -10s for mistakes.</p>
+                <p>3:00 speedrun • Rapid fire tactics</p>
               </div>
             </div>
           </div>

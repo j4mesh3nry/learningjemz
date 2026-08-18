@@ -2995,10 +2995,10 @@
   position: absolute;
   top: 48px;
   right: 8px;
-  width: 260px;
-  background: rgba(22, 25, 54, 0.95);
+  width: 275px;
+  background: #161936;
   border: 2px solid #385e8a;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 4px 0 #0b0d1e;
   border-radius: 14px;
   padding: 12px 14px;
   z-index: 10;

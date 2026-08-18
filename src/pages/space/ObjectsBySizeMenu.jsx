@@ -14,6 +14,7 @@ export default function ObjectsBySizeMenu() {
   const navigate = useNavigate();
   const { illuminateStats } = useGame();
   const [showIlluminateLevels, setShowIlluminateLevels] = useState(false);
+  const [showInfoBubble, setShowInfoBubble] = useState(false);
 
   const personalBests = illuminateStats || {};
 
@@ -100,11 +101,12 @@ export default function ObjectsBySizeMenu() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {/* Game 1: Illuminate the System Collapsible Card */}
         <div style={{
+          position: 'relative',
           background: '#161936',
           borderRadius: 18,
           border: '2px solid #385e8a',
           boxShadow: '0 4px 0 #0b0d1e',
-          overflow: 'hidden',
+          overflow: 'visible',
           transition: 'all 0.15s ease'
         }}>
           {/* Main Card Header (Click to Expand / Toggle) */}
@@ -113,7 +115,8 @@ export default function ObjectsBySizeMenu() {
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
               padding: '14px 16px', cursor: 'pointer',
-              background: '#161936'
+              background: '#161936',
+              borderRadius: 16
             }}
           >
             <div style={{
@@ -124,24 +127,62 @@ export default function ObjectsBySizeMenu() {
             }}>
               <Lightbulb size={22} color="#38bdf8" />
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ flex: 1, minWidth: 0, paddingRight: 40 }}>
               <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#f1f5f9', lineHeight: 1.2 }}>
                 Illuminate the System
               </h3>
               <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600, lineHeight: 1.2 }}>
-                Type the names in order
+                Type names in size order
               </p>
             </div>
+
+            <button
+              type="button"
+              className="mode-info-btn"
+              title="Illuminate the System Rules & XP"
+              aria-label="Illuminate the System Rules & XP"
+              style={{ position: 'static', flexShrink: 0 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowInfoBubble(prev => !prev);
+              }}
+            >
+              <span className="mode-info-icon-text">i</span>
+            </button>
+
             <div style={{
               width: 32, height: 32, borderRadius: 10,
               background: showIlluminateLevels ? '#385e8a' : '#232752',
               color: showIlluminateLevels ? '#ffffff' : '#38bdf8',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'all 0.15s ease'
+              transition: 'all 0.15s ease',
+              flexShrink: 0
             }}>
               {showIlluminateLevels ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </div>
           </div>
+
+          {/* Inline Speech Bubble */}
+          {showInfoBubble && (
+            <div className="cosmic-info-bubble" style={{ top: 56, right: 12 }} onClick={(e) => e.stopPropagation()}>
+              <div className="cosmic-bubble-arrow" />
+              <div className="cosmic-bubble-title">Illuminate Rules</div>
+              <div className="cosmic-bubble-list">
+                <div className="cosmic-bubble-item">
+                  <Target size={14} color="#38bdf8" className="flex-shrink-0" />
+                  <span>Type 8, 15, or 35 solar objects from largest to smallest</span>
+                </div>
+                <div className="cosmic-bubble-item">
+                  <Heart size={14} color="#ef4444" fill="#ef4444" className="flex-shrink-0" />
+                  <span>Limited lives (3-5) depending on selected difficulty</span>
+                </div>
+                <div className="cosmic-bubble-item">
+                  <Zap size={14} color="#22c55e" className="flex-shrink-0" />
+                  <span>Earn +15 to +35 XP based on difficulty completed</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Level Options Expandable Sub-bar */}
           {showIlluminateLevels && (
