@@ -667,7 +667,7 @@
   background: #16653e;
   color: #ffffff;
   border: 2px solid #22c55e;
-  padding: 6px 14px;
+  padding: 7px 14px;
   border-radius: 10px;
   font-family: var(--font-heading);
   font-size: 0.75rem;
@@ -678,30 +678,51 @@
   justify-content: center;
   box-shadow: 0 2px 0 #0e4329;
   white-space: nowrap;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.12s ease;
+}
+
+.victory-btn-restore:hover {
+  background: #0f3825;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 #0e4329;
+}
+
+.victory-btn-restore:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #0e4329;
 }
 
 .theme-space .victory-btn-restore {
   background: #2c3261;
   border: 2px solid #39406c;
+  box-shadow: 0 2px 0 #0b0d22;
+}
+.theme-space .victory-btn-restore:hover {
+  background: #333b72;
   box-shadow: 0 3px 0 #0b0d22;
+}
+.theme-space .victory-btn-restore:active {
+  box-shadow: 0 1px 0 #0b0d22;
 }
 
 .theme-chess .victory-btn-restore {
   background: #4a2c11;
   border: 2px solid #784e27;
+  box-shadow: 0 2px 0 #180d05;
+}
+.theme-chess .victory-btn-restore:hover {
+  background: #5c3a1e;
   box-shadow: 0 3px 0 #180d05;
 }
-
-.victory-btn-restore:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 currentColor;
+.theme-chess .victory-btn-restore:active {
+  box-shadow: 0 1px 0 #180d05;
 }
 
 .victory-btn-primary-mini {
   background: #ffffff;
   color: #0f3825;
   border: 2px solid #b0cbaf;
-  padding: 6px 11px;
+  padding: 7px 14px;
   border-radius: 10px;
   font-family: var(--font-heading);
   font-size: 0.75rem;
@@ -709,6 +730,18 @@
   cursor: pointer;
   box-shadow: 0 2px 0 #b0cbaf;
   white-space: nowrap;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.12s ease;
+}
+
+.victory-btn-primary-mini:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 #b0cbaf;
+}
+
+.victory-btn-primary-mini:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #b0cbaf;
 }
 
 .theme-space .victory-btn-primary-mini {
@@ -717,6 +750,13 @@
   border: 2px solid #3a4461;
   box-shadow: 0 2px 0 #0b0d22;
 }
+.theme-space .victory-btn-primary-mini:hover {
+  background: #262a52;
+  box-shadow: 0 3px 0 #0b0d22;
+}
+.theme-space .victory-btn-primary-mini:active {
+  box-shadow: 0 1px 0 #0b0d22;
+}
 
 .theme-chess .victory-btn-primary-mini {
   background: #3b2310;
@@ -724,19 +764,66 @@
   border: 2px solid #5c3a1e;
   box-shadow: 0 2px 0 #180d05;
 }
+.theme-chess .victory-btn-primary-mini:hover {
+  background: #4a2c11;
+  box-shadow: 0 3px 0 #180d05;
+}
+.theme-chess .victory-btn-primary-mini:active {
+  box-shadow: 0 1px 0 #180d05;
+}
 
 .victory-btn-secondary-mini {
-  background: transparent;
-  color: inherit;
-  border: 1.5px solid currentColor;
-  padding: 6px 11px;
+  background: #ffffff;
+  color: #16653e;
+  border: 2px solid #22c55e;
+  padding: 7px 14px;
   border-radius: 10px;
   font-family: var(--font-heading);
   font-size: 0.75rem;
   font-weight: 800;
   cursor: pointer;
+  box-shadow: 0 2px 0 #16653e;
   white-space: nowrap;
-  opacity: 0.9;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.12s ease;
+}
+
+.victory-btn-secondary-mini:hover {
+  background: #e1f0e2;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 #16653e;
+}
+
+.victory-btn-secondary-mini:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #16653e;
+}
+
+.theme-space .victory-btn-secondary-mini {
+  background: transparent;
+  color: #f4f6fc;
+  border: 2px solid #3a4461;
+  box-shadow: 0 2px 0 #0b0d22;
+}
+.theme-space .victory-btn-secondary-mini:hover {
+  background: #1d2040;
+  box-shadow: 0 3px 0 #0b0d22;
+}
+.theme-space .victory-btn-secondary-mini:active {
+  box-shadow: 0 1px 0 #0b0d22;
+}
+
+.theme-chess .victory-btn-secondary-mini {
+  background: transparent;
+  color: #faf6ee;
+  border: 2px solid #5c3a1e;
+  box-shadow: 0 2px 0 #180d05;
+}
+.theme-chess .victory-btn-secondary-mini:hover {
+  background: #3b2310;
+  box-shadow: 0 3px 0 #180d05;
+}
+.theme-chess .victory-btn-secondary-mini:active {
+  box-shadow: 0 1px 0 #180d05;
 }
 
 @keyframes fadeIn {
