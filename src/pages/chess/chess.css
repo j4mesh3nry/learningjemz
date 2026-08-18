@@ -969,10 +969,10 @@
 }
 
 .puzzle-mode-avatar.survival {
-  background: #4a2c11;
-  border-color: #2f1a08;
-  box-shadow: 0 2.5px 0 #2f1a08;
-  color: #ff9800;
+  background: #fee2e2;
+  border-color: #ef4444;
+  box-shadow: 0 2.5px 0 #ef4444;
+  color: #ef4444;
 }
 
 .puzzle-mode-avatar.blitz {
