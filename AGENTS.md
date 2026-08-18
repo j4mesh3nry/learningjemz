@@ -41,6 +41,10 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 
 ## Group Chat Update Rule
 
+- **Rule**: Whenever the user requests to merge/promote a feature to `main`, the agent MUST automatically perform the following two actions before concluding:
+  1. Update `GAME_DOCUMENTATION.md` and `docs/GAME_SYSTEM_DESIGN.md` with descriptions of the new system features.
+  2. Generate and output a Group Chat Update following the template below in the final response.
+  *This workflow must execute automatically without requiring a user reminder.*
 
 ## Group Chat Update Template
 
