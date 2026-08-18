@@ -244,40 +244,6 @@ export default function ObjectsBySizeMenu() {
           )}
         </div>
 
-        {/* Blurred Locked Card */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 14,
-          background: '#161936', borderRadius: 18,
-          border: '2px solid #385e8a', boxShadow: '0 4px 0 #0b0d1e',
-          padding: '12px 16px', position: 'relative', overflow: 'hidden',
-          cursor: 'not-allowed'
-        }}>
-          <div style={{
-            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-            zIndex: 10, background: '#385e8a', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800,
-            padding: '6px 12px', borderRadius: 12, border: '1.5px solid #1e3a8a', boxShadow: '0 3px 0 #1e3a8a',
-            display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
-          }}>
-            <Lock size={12} color="#ffffff" /> Locked
-          </div>
-
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 14, width: '100%',
-            filter: 'blur(7px)', opacity: 0.35, pointerEvents: 'none', userSelect: 'none'
-          }}>
-            <div style={{
-              fontSize: '1.6rem', width: 44, height: 44,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: '#232752', borderRadius: 12, flexShrink: 0
-            }}>
-              <Ruler size={24} color="#38bdf8" />
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#f1f5f9', lineHeight: 1.2 }}>Size Stack Challenge</h3>
-              <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#94a3b8', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Drag and order planets</p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Organized Best Time Records Hub */}
@@ -355,25 +321,6 @@ export default function ObjectsBySizeMenu() {
               );
             })}
           </div>
-        </div>
-
-        {/* Game 2: Size Stack Challenge Records (Future Placeholder) */}
-        <div style={{
-          background: '#0f1226',
-          borderRadius: 14,
-          border: '1.5px dashed #385e8a',
-          padding: '10px 14px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          opacity: 0.85
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', fontWeight: 800, color: '#94a3b8' }}>
-            <Ruler size={16} color="#94a3b8" /> <span style={{ filter: 'blur(6px)', userSelect: 'none' }}>Size Stack Challenge</span>
-          </div>
-          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', background: '#232752', padding: '2px 8px', borderRadius: 6 }}>
-            Locked
-          </span>
         </div>
       </div>
     </div>
