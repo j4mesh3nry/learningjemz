@@ -301,26 +301,38 @@
 
 .color-btn.white {
   background: #ffffff;
-  border: 1px solid #d0d7de;
+  border: 2px solid #b89f80;
   color: #24292f;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 3px 0 #b89f80;
 }
 
 .color-btn.white:hover {
-  background: #f6f8fa;
+  background: #fdfbf7;
   transform: translateY(-1px);
+  box-shadow: 0 4px 0 #b89f80;
+}
+
+.color-btn.white:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #b89f80;
 }
 
 .color-btn.black {
   background: #24292f;
-  border: 1px solid #1b1f24;
+  border: 2px solid #1b1f24;
   color: #ffffff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 0 #1b1f24;
 }
 
 .color-btn.black:hover {
   background: #1b1f24;
   transform: translateY(-1px);
+  box-shadow: 0 4px 0 #1b1f24;
+}
+
+.color-btn.black:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1b1f24;
 }
 
 .opponent-card.easy .opponent-avatar {
@@ -1437,4 +1449,147 @@
   border-radius: 8px;
 }
 
-
+/* ============================================================
+   Puzzle History List (inside Victory Modal children slot)
+   ============================================================ */
+
+.puzzle-history-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.puzzle-history-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #b89f80;
+  padding: 0 2px 2px;
+}
+
+.puzzle-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 186px;
+  overflow-y: scroll;
+}
+
+/* Hide scrollbar per design rules */
+.puzzle-history-list::-webkit-scrollbar { display: none; }
+.puzzle-history-list { scrollbar-width: none; -ms-overflow-style: none; }
+
+.puzzle-history-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: #3b2310;
+  border: 1.5px solid #5c3a1e;
+  border-radius: 10px;
+  padding: 7px 10px;
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+  transition: background 0.12s ease, transform 0.1s ease;
+  font-family: var(--font-body);
+}
+
+.puzzle-history-row:hover {
+  background: #4a2c11;
+  transform: translateY(-1px);
+}
+
+.puzzle-history-row:active {
+  transform: translateY(1px);
+  background: #2c1b0d;
+}
+
+/* Incorrect row: subtle red tint on border */
+.puzzle-history-row--incorrect {
+  border-color: #7c3030;
+}
+
+/* Skipped row: faded */
+.puzzle-history-row--skipped {
+  opacity: 0.72;
+}
+
+.puzzle-history-num {
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: #b89f80;
+  min-width: 24px;
+  flex-shrink: 0;
+}
+
+.puzzle-history-status-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.puzzle-history-theme {
+  flex: 1;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #faf6ee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.puzzle-history-diff {
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.puzzle-history-diff--easy {
+  background: #1a3a1f;
+  color: #4ade80;
+  border: 1px solid #2d5c34;
+}
+
+.puzzle-history-diff--medium {
+  background: #3a2a0a;
+  color: #fbbf24;
+  border: 1px solid #5c4216;
+}
+
+.puzzle-history-diff--hard {
+  background: #3a100a;
+  color: #f87171;
+  border: 1px solid #7c2020;
+}
+
+.puzzle-history-xp {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Skip Button (Blitz-only, inside action bar)
+   ============================================================ */
+
+.puzzle-skip-btn {
+  color: #b89f80;
+  border-color: #b89f80;
+}
+
+.puzzle-skip-btn:hover {
+  color: #4a2c11;
+  background: #ebe3cf;
+}

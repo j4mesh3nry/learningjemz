@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { 
   Puzzle, ArrowLeft, RotateCw, CheckCircle2, XCircle, 
   Trophy, Flame, Clock, Zap, RefreshCw, Timer,
-  Lightbulb, User, Sparkles, BookOpen, Eye, LogOut
+  Lightbulb, User, Sparkles, BookOpen, Eye, LogOut, SkipForward, List
 } from 'lucide-react';
 import VictoryScreen from '../../components/VictoryScreen';
 import rawPuzzleData from '../../data/chess-puzzles.json';
@@ -140,6 +140,13 @@ export default function ChessPuzzlePage() {
   const [sessionXPEarned, setSessionXPEarned] = useState(0);
   const [showVictory, setShowVictory] = useState(false);
 
+  // Puzzle History — array of all attempts for this run
+  // Each entry: { puzzle, result: 'correct'|'incorrect'|'skipped', xpGained }
+  const [sessionHistory, setSessionHistory] = useState([]);
+  // When reviewing a history puzzle, store the puzzle object so back-btn restores victory
+  const [reviewingHistoryPuzzle, setReviewingHistoryPuzzle] = useState(null);
+
+
   // Determine current puzzle difficulty dynamically
   const getCurrentDifficultyTier = useCallback(() => {
     if (gameMode === 'SURVIVAL') {
@@ -211,6 +218,8 @@ export default function ChessPuzzlePage() {
     setSolutionSquares([]);
     setMistakeSquare(null);
     setIsReviewing(false);
+    setSessionHistory([]);
+    setReviewingHistoryPuzzle(null);
 
     if (mode === 'BLITZ') {
       setTimeLeft(180);
@@ -265,6 +274,19 @@ export default function ChessPuzzlePage() {
     setSessionAttemptedCount(prev => prev + 1);
     const nextPuzzle = pickRandomPuzzle();
     loadPuzzle(nextPuzzle);
+  };
+
+  const handleSkipPuzzle = () => {
+    if (gameMode !== 'BLITZ' || status !== 'playing' || !currentPuzzle) return;
+    setTimeLeft(t => Math.max(0, t - 15));
+    triggerTimeModifier('-15s', 'minus');
+    setSessionStreak(0);
+    setSessionHistory(prev => [...prev, {
+      puzzle: currentPuzzle,
+      result: 'skipped',
+      xpGained: 0,
+    }]);
+    handleNextPuzzle();
   };
 
   const updateBoardState = useCallback((newGame) => {
@@ -353,6 +375,13 @@ export default function ChessPuzzlePage() {
             setSelectedSquare(null);
             setLegalMoves([]);
 
+            // Record correct solve in history
+            setSessionHistory(prev => [...prev, {
+              puzzle: currentPuzzle,
+              result: 'correct',
+              xpGained,
+            }]);
+
             if (gameMode === 'BLITZ') {
               setTimeLeft(t => t + 5);
               triggerTimeModifier('+5s', 'plus');
@@ -383,6 +412,13 @@ export default function ChessPuzzlePage() {
             setSolutionSquares([sol.from, sol.to]);
           }
           setMistakeSquare(chosenMove.to);
+
+          // Record incorrect attempt in history
+          setSessionHistory(prev => [...prev, {
+            puzzle: currentPuzzle,
+            result: 'incorrect',
+            xpGained: 0,
+          }]);
 
           if (gameMode === 'SURVIVAL') {
             // Sudden Death - Show solution clearly before ending run
@@ -461,7 +497,12 @@ export default function ChessPuzzlePage() {
           <button 
             className="chess-back-btn"
             onClick={() => {
-              if (isReviewing) {
+              if (isReviewing && reviewingHistoryPuzzle) {
+                // Back from history review → return to Victory screen
+                setIsReviewing(false);
+                setReviewingHistoryPuzzle(null);
+                setShowVictory(true);
+              } else if (isReviewing) {
                 setIsReviewing(false);
                 setShowVictory(true);
               } else if (gameMode && status === 'playing') {
@@ -768,6 +809,17 @@ export default function ChessPuzzlePage() {
                   >
                     <RotateCw size={15} /> Reset
                   </button>
+
+                  {gameMode === 'BLITZ' && status === 'playing' && (
+                    <button
+                      type="button"
+                      className="puzzle-action-btn puzzle-skip-btn"
+                      onClick={handleSkipPuzzle}
+                      title="Skip Puzzle (-15s)"
+                    >
+                      <SkipForward size={15} /> Skip
+                    </button>
+                  )}
                 </>
               ) : (
                 <button
@@ -834,37 +886,61 @@ export default function ChessPuzzlePage() {
           setShowVictory(false);
           setGameMode(null);
           setIsReviewing(false);
+          setReviewingHistoryPuzzle(null);
         }}
         onPlayAgain={() => {
           setShowVictory(false);
           startMode(gameMode || 'SURVIVAL');
         }}
+        onShowScreen={() => {
+          // "Show Screen" now also enters review mode for the last puzzle
+          setIsReviewing(true);
+          setReviewingHistoryPuzzle(currentPuzzle);
+        }}
         continueText="Back to Menu"
       >
-        {currentPuzzle && (
-          <div className="puzzle-review-callout" style={{ margin: '10px 0', textAlign: 'left' }}>
-            <div className="puzzle-review-header">
-              <span className="puzzle-review-title">
-                <Sparkles size={16} color="#d97706" /> Last Puzzle Solution
-              </span>
-              {currentPuzzle.theme && (
-                <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
-              )}
+        {/* Puzzle History List */}
+        {sessionHistory.length > 0 && (
+          <div className="puzzle-history-section">
+            <div className="puzzle-history-heading">
+              <List size={14} color="#b89f80" />
+              <span>Puzzle History</span>
             </div>
-            <div className="puzzle-review-moves">
-              <strong>Line:</strong> {currentPuzzle.moves.join(' ')}
+            <div className="puzzle-history-list">
+              {sessionHistory.map((attempt, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className={`puzzle-history-row puzzle-history-row--${attempt.result}`}
+                  onClick={() => {
+                    setShowVictory(false);
+                    loadPuzzle(attempt.puzzle);
+                    setIsReviewing(true);
+                    setReviewingHistoryPuzzle(attempt.puzzle);
+                  }}
+                  title={`Review puzzle #${idx + 1}`}
+                >
+                  <span className="puzzle-history-num">#{idx + 1}</span>
+                  <span className="puzzle-history-status-icon">
+                    {attempt.result === 'correct'
+                      ? <CheckCircle2 size={14} color="#4ade80" />
+                      : attempt.result === 'incorrect'
+                        ? <XCircle size={14} color="#f87171" />
+                        : <SkipForward size={14} color="#b89f80" />
+                    }
+                  </span>
+                  <span className="puzzle-history-theme">
+                    {attempt.puzzle?.theme || '—'}
+                  </span>
+                  <span className={`puzzle-history-diff puzzle-history-diff--${(attempt.puzzle?.difficultyLabel || 'Easy').toLowerCase()}`}>
+                    {attempt.puzzle?.difficultyLabel || 'Easy'}
+                  </span>
+                  {attempt.result === 'correct' && attempt.xpGained > 0 && (
+                    <span className="puzzle-history-xp">+{attempt.xpGained} XP</span>
+                  )}
+                </button>
+              ))}
             </div>
-            <button
-              type="button"
-              className="puzzle-action-btn"
-              onClick={() => {
-                setShowVictory(false);
-                setIsReviewing(true);
-              }}
-              style={{ width: '100%', marginTop: 4 }}
-            >
-              <Eye size={15} /> Inspect Solution on Board
-            </button>
           </div>
         )}
       </VictoryScreen>

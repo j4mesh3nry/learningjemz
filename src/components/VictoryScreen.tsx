@@ -40,6 +40,7 @@ export interface VictoryScreenProps {
   children?: React.ReactNode;
   disableDailyStreakModal?: boolean;
   hideShowScreen?: boolean;
+  onShowScreen?: () => void;
 }
 
 export default function VictoryScreen({
@@ -57,6 +58,7 @@ export default function VictoryScreen({
   children,
   disableDailyStreakModal = false,
   hideShowScreen = false,
+  onShowScreen,
 }: VictoryScreenProps) {
   const { user } = useAuth();
   const gameContext = useGame();
@@ -188,7 +190,7 @@ export default function VictoryScreen({
             </button>
           )}
           {!hideShowScreen && (
-            <button className="victory-btn-view" onClick={() => setIsMinimized(true)}>
+            <button className="victory-btn-view" onClick={() => { setIsMinimized(true); onShowScreen?.(); }}>
               <span>Show Screen</span>
             </button>
           )}
