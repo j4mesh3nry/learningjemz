@@ -517,14 +517,12 @@ export default function ChessPuzzlePage() {
           <button 
             className="chess-back-btn"
             onClick={() => {
-              if (isReviewing && reviewingHistoryPuzzle) {
-                // Back from history review → return to Victory screen
+              if (isReviewing) {
+                // Directly exit to Chess Puzzles Hub/Menu
+                setGameMode(null);
+                setShowVictory(false);
                 setIsReviewing(false);
                 setReviewingHistoryPuzzle(null);
-                setShowVictory(true);
-              } else if (isReviewing) {
-                setIsReviewing(false);
-                setShowVictory(true);
               } else if (gameMode && status === 'playing') {
                 setShowExitModal(true);
               } else if (gameMode) {
