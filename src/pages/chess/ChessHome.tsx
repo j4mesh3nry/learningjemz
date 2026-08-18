@@ -188,34 +188,34 @@ function ChessMenu() {
               style={{
                 display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 14,
                 textDecoration: 'none', color: '#fff',
-                background: 'linear-gradient(135deg, #4a2c11 0%, #351f0b 100%)', borderRadius: 16,
+                background: '#4a2c11', borderRadius: 16,
                 padding: '12px 16px', position: 'relative', overflow: 'hidden',
                 boxShadow: '0 4px 0 #2f1a08',
-                border: '2px solid rgba(255,255,255,0.2)',
+                border: '2px solid #2f1a08',
                 cursor: 'pointer'
               }}
             >
               <div style={{
                 width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(255,255,255,0.18)', borderRadius: 12,
+                background: '#351f0b', borderRadius: 12,
                 flexShrink: 0
               }}>
                 <Bot size={24} color="#ffffff" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>Play with Bot</h3>
-                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Practice against AI bots</p>
+                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#ebe3cf', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Practice against AI bots</p>
               </div>
               <div style={{
                 position: 'relative', zIndex: 1,
                 width: 32, height: 32,
                 borderRadius: 10,
-                background: 'rgba(255, 255, 255, 0.16)',
-                border: '1.5px solid rgba(255, 255, 255, 0.25)',
+                background: '#351f0b',
+                border: '1.5px solid #2f1a08',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0,
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                boxShadow: '0 2px 0 #2f1a08'
               }}>
                 <ArrowRight size={16} strokeWidth={2.5} color="#ffffff" />
               </div>
@@ -228,34 +228,34 @@ function ChessMenu() {
               style={{
                 display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 14,
                 textDecoration: 'none', color: '#fff',
-                background: 'linear-gradient(135deg, #4a2c11 0%, #351f0b 100%)', borderRadius: 16,
+                background: '#4a2c11', borderRadius: 16,
                 padding: '12px 16px', position: 'relative', overflow: 'hidden',
                 boxShadow: '0 4px 0 #2f1a08',
-                border: '2px solid rgba(255,255,255,0.2)',
+                border: '2px solid #2f1a08',
                 cursor: 'pointer'
               }}
             >
               <div style={{
                 width: 44, height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(255,255,255,0.18)', borderRadius: 12,
+                background: '#351f0b', borderRadius: 12,
                 flexShrink: 0
               }}>
                 <Puzzle size={24} color="#ffffff" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, lineHeight: 1.2 }}>Chess Puzzles</h3>
-                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', opacity: 0.9, fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Tactical drills & checkmate puzzles</p>
+                <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#ebe3cf', fontWeight: 500, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Tactical drills & checkmate puzzles</p>
               </div>
               <div style={{
                 position: 'relative', zIndex: 1,
                 width: 32, height: 32,
                 borderRadius: 10,
-                background: 'rgba(255, 255, 255, 0.16)',
-                border: '1.5px solid rgba(255, 255, 255, 0.25)',
+                background: '#351f0b',
+                border: '1.5px solid #2f1a08',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0,
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                boxShadow: '0 2px 0 #2f1a08'
               }}>
                 <ArrowRight size={16} strokeWidth={2.5} color="#ffffff" />
               </div>

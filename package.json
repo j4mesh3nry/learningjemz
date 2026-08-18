@@ -9,6 +9,7 @@
     "pr": "scripts\\create_pr.bat",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "verify": "node scripts/verify-health.js",
     "preview": "vite preview",
     "prepare": "husky"
   },
