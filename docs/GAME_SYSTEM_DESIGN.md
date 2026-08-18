@@ -120,13 +120,14 @@ The most robust module in the application.
   - **Grandmaster Gary (Hard)**: ~2500 Elo, aggressive and highly calculating.
 - **Chess Tactics Puzzles**:
   - **Sudden Death Survival & Time Attack Blitz**: Dynamic tactical challenge modes with progressive difficulty scaling.
-  - **Tactile Solution Review**: Interactive board review displaying expected solution moves on failed attempts.
+  - **Tactile Solution Review & Safe Exit**: Interactive board review mode upon completion displaying expected solution moves and mistake squares. Pressing the header back button during active play prompts a safe exit confirmation modal to protect the active run, and directly exits to the Chess Puzzles Hub rather than nesting screens.
+  - **Victory Minimized Dock**: A floating dock rendered below the board screen during active review showing Streak & Level metrics, satisfying the sub-page navigation header rules (which restrict the top navigation header to back button + title banner only) while keeping user metrics accessible.
 - **Board Rendering**: A custom CSS Grid implementation (`grid-template-columns: repeat(8, 1fr)`) that renders the 64 squares.
 - **Assets**: Uses standard SVG piece sets for a clean, universally recognizable look.
 - **Mechanics**:
   - **3D Board Flip**: Flips the board perspective smoothly while maintaining correct piece orientation.
   - **Tactile 3D Confirmation Modals**: Features dedicated tactile dialogs for Leaving, Restarting, and Resigning, with fair exit mechanics before first player moves.
-  - **Victory Cards**: When a game or puzzle run concludes, a cinematic overlay displays streak and XP rewards.
+  - **Victory Cards & Minimized Dock**: When a game or puzzle run concludes, a cinematic overlay displays streak and XP rewards, which can be minimized into the floating bottom dock to review the board.
 
 ### B. Geography Module (`/geo`)
 Focused currently on Philippine geography.

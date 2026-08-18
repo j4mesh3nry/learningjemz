@@ -102,7 +102,8 @@
   - **Chess Tactics Puzzles (`ChessPuzzlePage.jsx`)**:
     - **Sudden Death Survival**: Solve escalating difficulty tactical puzzles with a single life.
     - **Time Attack Blitz**: 3-minute timed mode with +5s rewards for correct moves and -10s penalties for blunders.
-    - **Tactile Solution Review & Safe Exit**: Features interactive board review mode upon completion and back navigation confirmation modals that protect active streaks.
+    - **Tactile Solution Review & Safe Exit**: Features an interactive board review mode upon completion showing correct solution moves and highlighted mistake squares, a safe back-navigation confirmation modal during active play to prevent loss, and a **Victory Minimized Dock** that floats below the screen during review allowing direct hub exit.
+    - **Header Rule Standard**: Sub-page navigation header renders only the back button and title, omitting the streak & level widget reserved for module home screens. To keep Streak & Level metrics accessible while complying with this header rule, they are displayed inside the **Victory Minimized Dock** at the bottom of the review layout.
 - **Board Grid**: 8x8 standard flex layout.
   - **Rank Labels (1–8 / 8–1)**: Strictly anchored on the **left edge** (`colIndex === 0`).
   - **File Labels (a–h / h–a)**: Strictly anchored on the **bottom edge** (`rowIndex === 7`).
