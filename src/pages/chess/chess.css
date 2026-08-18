@@ -1399,20 +1399,71 @@
 
 .puzzle-mode-label {
   font-weight: 900;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #4a2c11;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
+/* Unified Design System for Header Chips */
 .puzzle-difficulty-badge {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  color: #d97706;
-  background: #fff8e1;
-  border: 1.5px solid #ffe082;
-  padding: 2px 6px;
+  padding: 3px 8px;
   border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.puzzle-difficulty-badge--easy {
+  color: #16653e;
+  background: #e6f4ea;
+  border: 1.5px solid #b0cbaf;
+}
+
+.puzzle-difficulty-badge--medium {
+  color: #b45309;
+  background: #fff8e1;
+  border: 1.5px solid #fde68a;
+}
+
+.puzzle-difficulty-badge--hard {
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1.5px solid #fecaca;
+}
+
+.puzzle-theme-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #4a2c11;
+  background: #ebe3cf;
+  border: 1.5px solid #b89f80;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.puzzle-moves-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #3730a3;
+  background: #e0e7ff;
+  border: 1.5px solid #c7d2fe;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
 }
 
 .puzzle-progress-label {

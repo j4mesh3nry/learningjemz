@@ -501,6 +501,17 @@ export default function ChessPuzzlePage() {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  // Calculate total player moves required and current move step
+  const requiredPlayerMoves = useMemo(() => {
+    if (!currentPuzzle?.moves) return 1;
+    return Math.max(1, Math.ceil(currentPuzzle.moves.length / 2));
+  }, [currentPuzzle]);
+
+  const currentPlayerMoveStep = useMemo(() => {
+    if (!requiredPlayerMoves) return 1;
+    return Math.min(requiredPlayerMoves, Math.floor(moveStepIndex / 2) + 1);
+  }, [moveStepIndex, requiredPlayerMoves]);
+
   // Check hint piece square
   const hintPieceSquare = useMemo(() => {
     if (!showHint || !currentPuzzle || !game) return null;
@@ -646,18 +657,21 @@ export default function ChessPuzzlePage() {
           <div className="chess-play-layout">
             {/* Top Puzzle Objective Banner */}
             <div className="puzzle-header-banner">
-              {/* Row 1: Mode, Difficulty, Progress, Theme & Timer/Streak */}
+              {/* Row 1: Mode, Difficulty, Theme, Moves & Timer/Streak */}
               <div className="puzzle-header-meta-row">
                 <div className="puzzle-header-mode-info">
                   <span className="puzzle-mode-label">
                     {gameMode === 'SURVIVAL' ? 'Survival' : 'Blitz'}
                   </span>
-                  <span className="puzzle-difficulty-badge">
+                  <span className={`puzzle-difficulty-badge puzzle-difficulty-badge--${getCurrentDifficultyTier().toLowerCase()}`}>
                     {getCurrentDifficultyTier()}
                   </span>
                   {currentPuzzle?.theme && (
                     <span className="puzzle-theme-tag">{currentPuzzle.theme}</span>
                   )}
+                  <span className="puzzle-moves-badge">
+                    {requiredPlayerMoves} {requiredPlayerMoves === 1 ? 'MOVE' : 'MOVES'}
+                  </span>
                 </div>
 
                 {gameMode === 'SURVIVAL' ? (
@@ -687,6 +701,11 @@ export default function ChessPuzzlePage() {
                   <div className={`puzzle-turn-indicator ${game?.turn() === 'w' ? 'white' : 'black'}`} />
                   <div className="puzzle-objective-text">
                     {(game?.turn() === 'w' ? 'White' : 'Black')} to move — {(currentPuzzle?.goal || '').toLowerCase().includes('mate') ? 'Find Checkmate' : 'Find the Winning Move'}
+                    {requiredPlayerMoves > 1 && (
+                      <span style={{ marginLeft: 6, opacity: 0.85, fontWeight: 700 }}>
+                        (Move {currentPlayerMoveStep} of {requiredPlayerMoves})
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
