@@ -439,13 +439,6 @@ export default function ChessPlay() {
     setLegalMoves([]);
   };
 
-  const handleOpponentCardClick = (opp, e) => {
-    if (e && (e.target.closest('.chess-mode-info-btn') || e.target.closest('.chess-info-bubble'))) {
-      return;
-    }
-    setSelectedOpponent(selectedOpponent === opp ? null : opp);
-  };
-
   const lastMove = history.length > 0 ? history[history.length - 1] : null;
 
   const renderMoveHistoryList = () => {
@@ -626,7 +619,7 @@ export default function ChessPlay() {
 
           <div className="opponent-cards">
             {/* Beginner Bob (Easy) */}
-            <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={(e) => handleOpponentCardClick('Easy', e)}>
+            <div className={`opponent-card easy ${selectedOpponent === 'Easy' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Easy' ? null : 'Easy')} style={{ zIndex: activeInfoBubble === 'Easy' ? 12 : 1 }}>
               <button
                 type="button"
                 className="chess-mode-info-btn"
@@ -678,7 +671,7 @@ export default function ChessPlay() {
             </div>
 
             {/* Intermediate Ivy (Medium) */}
-            <div className={`opponent-card medium ${selectedOpponent === 'Medium' ? 'selected' : ''}`} onClick={(e) => handleOpponentCardClick('Medium', e)}>
+            <div className={`opponent-card medium ${selectedOpponent === 'Medium' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Medium' ? null : 'Medium')} style={{ zIndex: activeInfoBubble === 'Medium' ? 12 : 1 }}>
               <button
                 type="button"
                 className="chess-mode-info-btn"
@@ -730,7 +723,7 @@ export default function ChessPlay() {
             </div>
 
             {/* Grandmaster Gary (Hard) */}
-            <div className={`opponent-card hard ${selectedOpponent === 'Hard' ? 'selected' : ''}`} onClick={(e) => handleOpponentCardClick('Hard', e)}>
+            <div className={`opponent-card hard ${selectedOpponent === 'Hard' ? 'selected' : ''}`} onClick={() => setSelectedOpponent(selectedOpponent === 'Hard' ? null : 'Hard')} style={{ zIndex: activeInfoBubble === 'Hard' ? 12 : 1 }}>
               <button
                 type="button"
                 className="chess-mode-info-btn"

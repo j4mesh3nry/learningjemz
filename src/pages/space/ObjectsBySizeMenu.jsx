@@ -102,6 +102,7 @@ export default function ObjectsBySizeMenu() {
         {/* Game 1: Illuminate the System Collapsible Card */}
         <div style={{
           position: 'relative',
+          zIndex: showInfoBubble ? 12 : 1,
           background: '#161936',
           borderRadius: 18,
           border: '2px solid #385e8a',
@@ -111,12 +112,7 @@ export default function ObjectsBySizeMenu() {
         }}>
           {/* Main Card Header (Click to Expand / Toggle) */}
           <div
-            onClick={(e) => {
-              if (e.target.closest('.mode-info-btn') || e.target.closest('.cosmic-info-bubble')) {
-                return;
-              }
-              setShowIlluminateLevels(prev => !prev);
-            }}
+            onClick={() => setShowIlluminateLevels(prev => !prev)}
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
               padding: '14px 16px', cursor: 'pointer',
