@@ -895,6 +895,13 @@ export default function ChessPuzzlePage() {
       <VictoryScreen
         isOpen={showVictory}
         theme="chess"
+        isMinimized={isReviewing}
+        onMinimizeChange={(minimized) => {
+          setIsReviewing(minimized);
+          if (!minimized) {
+            setReviewingHistoryPuzzle(null);
+          }
+        }}
         title={gameMode === 'SURVIVAL' ? "Sudden Death Over!" : "Blitz Time's Up!"}
         subtitle={
           gameMode === 'SURVIVAL' 
@@ -933,7 +940,6 @@ export default function ChessPuzzlePage() {
                   type="button"
                   className={`puzzle-history-row puzzle-history-row--${attempt.result}`}
                   onClick={() => {
-                    setShowVictory(false);
                     loadPuzzle(attempt.puzzle);
                     setIsReviewing(true);
                     setReviewingHistoryPuzzle(attempt.puzzle);

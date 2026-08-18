@@ -41,6 +41,8 @@ export interface VictoryScreenProps {
   disableDailyStreakModal?: boolean;
   hideShowScreen?: boolean;
   onShowScreen?: () => void;
+  isMinimized?: boolean;
+  onMinimizeChange?: (minimized: boolean) => void;
 }
 
 export default function VictoryScreen({
@@ -59,6 +61,8 @@ export default function VictoryScreen({
   disableDailyStreakModal = false,
   hideShowScreen = false,
   onShowScreen,
+  isMinimized: propMinimized,
+  onMinimizeChange,
 }: VictoryScreenProps) {
   const { user } = useAuth();
   const gameContext = useGame();
@@ -81,7 +85,14 @@ export default function VictoryScreen({
     : (gameContext?.hasPlayedToday ?? true);
 
   const [showingStreakModal, setShowingStreakModal] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [localMinimized, setLocalMinimized] = useState(false);
+
+  const activeMinimized = propMinimized !== undefined ? propMinimized : localMinimized;
+
+  const setMinimized = (val: boolean) => {
+    setLocalMinimized(val);
+    onMinimizeChange?.(val);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -94,7 +105,7 @@ export default function VictoryScreen({
       }
     } else {
       setShowingStreakModal(false);
-      setIsMinimized(false);
+      setMinimized(false);
     }
   }, [isOpen, activeStreak, disableDailyStreakModal, userId]);
 
@@ -115,10 +126,10 @@ export default function VictoryScreen({
 
   const themeClass = `theme-${theme}`;
 
-  if (isMinimized) {
+  if (activeMinimized) {
     return (
       <div className={`victory-minimized-dock ${themeClass}`}>
-        <button className="victory-btn-restore" onClick={() => setIsMinimized(false)}>
+        <button className="victory-btn-restore" onClick={() => setMinimized(false)}>
           <span>Show Results</span>
         </button>
         {onPlayAgain && (
@@ -190,7 +201,7 @@ export default function VictoryScreen({
             </button>
           )}
           {!hideShowScreen && (
-            <button className="victory-btn-view" onClick={() => { setIsMinimized(true); onShowScreen?.(); }}>
+            <button className="victory-btn-view" onClick={() => { setMinimized(true); onShowScreen?.(); }}>
               <span>Show Screen</span>
             </button>
           )}
