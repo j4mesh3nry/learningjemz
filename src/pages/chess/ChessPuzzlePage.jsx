@@ -226,7 +226,10 @@ export default function ChessPuzzlePage() {
   }, []);
 
   // Start Mode
-  const startMode = (mode) => {
+  const startMode = (mode, e) => {
+    if (e && (e.target.closest('.chess-mode-info-btn') || e.target.closest('.chess-info-bubble'))) {
+      return;
+    }
     setGameMode(mode);
     setSessionSolvedCount(0);
     setSessionStreak(0);
@@ -579,7 +582,7 @@ export default function ChessPuzzlePage() {
             {/* Sudden Death Mode Card */}
             <div 
               className="puzzle-mode-card"
-              onClick={() => startMode('SURVIVAL')}
+              onClick={(e) => startMode('SURVIVAL', e)}
             >
               <button
                 type="button"
@@ -631,7 +634,7 @@ export default function ChessPuzzlePage() {
             {/* Time Attack Blitz Mode Card */}
             <div 
               className="puzzle-mode-card"
-              onClick={() => startMode('BLITZ')}
+              onClick={(e) => startMode('BLITZ', e)}
             >
               <button
                 type="button"

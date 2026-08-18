@@ -1018,7 +1018,7 @@
   justify-content: center;
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
-  z-index: 4;
+  z-index: 9;
 }
 
 .chess-mode-info-btn:hover {
