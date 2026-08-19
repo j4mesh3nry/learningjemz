@@ -608,3 +608,378 @@ button:active {
 .unlit-text {
   color: #444444 !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   GAME HOME SCREEN — Tactile 3D Mobile-Game UI System
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Hero Quest Banner ─────────────────────────── */
+.game-hero-banner {
+  background: #16653e;
+  border-radius: 22px;
+  border: 2.5px solid #0e4329;
+  box-shadow: 0 5px 0 #0e4329;
+  padding: 20px 18px 18px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  color: #ffffff;
+}
+
+.game-hero-greeting {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a3d9b1;
+  margin: 0 0 2px 0;
+}
+
+.game-hero-headline {
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 14px 0;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+.game-hero-xp-track {
+  height: 10px;
+  border-radius: 5px;
+  background: #0e4329;
+  border: 1.5px solid #0b3420;
+  overflow: hidden;
+}
+
+.game-hero-xp-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: #ffb400;
+  transition: width 0.5s ease;
+}
+
+.game-hero-xp-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #a3d9b1;
+  margin-top: 4px;
+}
+
+.game-hero-mascot {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  color: #a3d9b1;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* ── Section Heading ───────────────────────────── */
+.game-section-heading {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f3825;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* ── Module Adventure Cards ────────────────────── */
+.game-module-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+@media (min-width: 520px) {
+  .game-module-cards {
+    flex-direction: row;
+  }
+  .game-module-card {
+    flex: 1;
+  }
+}
+
+.game-module-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  color: #ffffff;
+}
+
+.game-module-card:active {
+  transform: translateY(2px);
+}
+
+.game-module-art-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.game-module-info {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.game-module-title {
+  font-family: var(--font-heading);
+  font-size: 1.08rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+}
+
+.game-module-subtitle {
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin: 2px 0 0 0;
+  opacity: 0.85;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-module-arrow {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  border-width: 1.5px;
+  border-style: solid;
+}
+
+/* ── Player Stats Grid ─────────────────────────── */
+.game-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+@media (max-width: 400px) {
+  .game-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.game-stat-tile {
+  background: #ffffff;
+  border: 2px solid #b0cbaf;
+  box-shadow: 0 3px 0 #b0cbaf;
+  border-radius: 16px;
+  padding: 12px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.game-stat-tile:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #b0cbaf;
+}
+
+.game-stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #0f3825;
+  margin: 4px 0 2px 0;
+  line-height: 1;
+}
+
+.game-stat-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #4e7361;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* ── Quick Action Chips ────────────────────────── */
+.game-quick-actions-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+  overflow-x: auto;
+}
+
+.game-quick-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 2px solid #b0cbaf;
+  box-shadow: 0 3px 0 #b0cbaf;
+  border-radius: 16px;
+  cursor: pointer;
+  min-width: 88px;
+  flex-shrink: 0;
+  transition: transform 0.1s ease;
+}
+
+.game-quick-chip:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #b0cbaf;
+}
+
+.game-quick-chip-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-quick-chip-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0f3825;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ── Locked Expedition Cards ───────────────────── */
+.game-locked-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (min-width: 640px) {
+  .game-locked-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .game-locked-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.game-locked-card {
+  background: #ffffff;
+  border: 2px solid #b0cbaf;
+  box-shadow: 0 3px 0 #b0cbaf;
+  border-radius: 16px;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+  cursor: not-allowed;
+}
+
+.game-locked-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background: #16653e;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: 1.5px solid #0e4329;
+  box-shadow: 0 2px 0 #0e4329;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.game-locked-content {
+  filter: blur(6px);
+  opacity: 0.35;
+  pointer-events: none;
+  user-select: none;
+}
+
+.game-locked-icon-box {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e1f0e2;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.game-locked-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f3825;
+  margin: 0;
+}
+
+.game-locked-subtitle {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #4e7361;
+  margin: 2px 0 0 0;
+}
+
+/* ── Motivational Footer Banner ────────────────── */
+.game-footer-banner {
+  background: #16653e;
+  border: 2.5px solid #0e4329;
+  box-shadow: 0 4px 0 #0e4329;
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #ffffff;
+}
+
+.game-footer-mascot {
+  flex-shrink: 0;
+  color: #a3d9b1;
+}
+
+.game-footer-text {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* ── Twinkle animation for star dots ───────────── */
+@keyframes twinkle {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
