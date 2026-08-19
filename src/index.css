@@ -45,6 +45,28 @@
   /* Font families */
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
+
+  /* ═══════════════════════════════════════════════════════════════
+     GAME DESIGN SYSTEM TOKENS
+     ═══════════════════════════════════════════════════════════════ */
+  --game-bg-canvas: #030d09;
+  --game-surface-card: #05130e;
+  --game-surface-card-header: #081711;
+  --game-border-default: #102d1f;
+  --game-border-highlight: #1a452f;
+  --game-divider-line: #132d1f;
+  --game-accent-emerald: #34d399;
+  --game-accent-emerald-bright: #4ade80;
+  --game-accent-emerald-glow: rgba(52, 211, 153, 0.4);
+  --game-accent-gold: #fbbf24;
+  --game-accent-red: #ff5a5a;
+  --game-accent-cyan: #38bdf8;
+  --game-text-primary: #ffffff;
+  --game-text-secondary: #cbe0d4;
+  --game-text-muted: #6b8f7b;
+  --game-radius-card: 22px;
+  --game-radius-pill: 9999px;
+  --game-radius-btn: 14px;
 }
 
 /* Dark mode is disabled to maintain the gamified theme consistently */

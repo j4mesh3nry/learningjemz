@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useGame } from '../contexts/GameContext.jsx';
 import { Header } from '../components/Header';
-import { HeroCharacter } from '../components/HeroCharacter';
+import { SectionDivider, GameModuleCard, StatTile, HeroCharacter } from '../components/game';
 import {
-  Lock, ArrowRight, BookOpen, Globe, Music, ScrollText, Calculator,
-  Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem, Sprout,
+  Lock, BookOpen, Globe, Music, ScrollText, Calculator,
+  Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem,
 } from 'lucide-react';
 import '../index.css';
 
@@ -105,170 +105,83 @@ export default function Home() {
       </div>
 
       {/* ── 2. Continue your journey ── */}
-      <div className="home-section-divider">
-        <Sprout size={16} className="home-divider-icon" />
-        <span className="home-divider-label">
-          Continue your <span className="text-emerald">journey</span>
-        </span>
-        <Sprout size={16} className="home-divider-icon flip-h" />
-        <div className="home-section-divider-line" />
-        <span className="home-divider-diamond">◆</span>
-        <div className="home-section-divider-line" />
-      </div>
+      <SectionDivider title="Continue your" highlightWord="journey" diamonds={1} />
 
       <div className="home-module-cards">
         {/* Chess Card */}
-        <div
-          className="home-module-card home-module-card-chess"
+        <GameModuleCard
+          theme="chess"
+          title="Chess"
+          subtitle="Challenge AI bots and improve your strategy."
+          badgeIcon={<Swords size={18} strokeWidth={2.4} />}
           onClick={() => navigate('/chess')}
-          role="button"
-          tabIndex={0}
-          aria-label="Chess"
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/chess'); }}
-        >
-          <div className="home-module-card-overlay-chess" />
-          <div className="home-module-card-info">
-            <div className="home-module-card-header">
-              <div className="home-module-mini-badge-chess">
-                <Swords size={18} strokeWidth={2.4} />
-              </div>
-              <h3 className="home-module-card-title">Chess</h3>
-            </div>
-            <p className="home-module-card-subtitle">
-              Challenge AI bots and improve your strategy.
-            </p>
-          </div>
-          <div className="home-module-action-btn-chess">
-            <ArrowRight size={18} strokeWidth={2.5} />
-          </div>
-        </div>
+          ariaLabel="Chess module"
+        />
 
         {/* Space Card */}
-        <div
-          className="home-module-card home-module-card-space"
+        <GameModuleCard
+          theme="space"
+          title="Space"
+          subtitle="Explore planets, solve mysteries, and more."
+          badgeIcon={<Orbit size={18} strokeWidth={2.4} />}
           onClick={() => navigate('/space')}
-          role="button"
-          tabIndex={0}
-          aria-label="Space"
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/space'); }}
-        >
-          <div className="home-module-card-overlay-space" />
-          <div className="home-module-card-info">
-            <div className="home-module-card-header">
-              <div className="home-module-mini-badge-space">
-                <Orbit size={18} strokeWidth={2.4} />
-              </div>
-              <h3 className="home-module-card-title">Space</h3>
-            </div>
-            <p className="home-module-card-subtitle">
-              Explore planets, solve mysteries, and more.
-            </p>
-          </div>
-          <div className="home-module-action-btn-space">
-            <ArrowRight size={18} strokeWidth={2.5} />
-          </div>
-        </div>
+          ariaLabel="Space module"
+        />
       </div>
 
       {/* ── 3. Your progress ── */}
-      <div className="home-section-divider">
-        <Sprout size={16} className="home-divider-icon" />
-        <span className="home-divider-label text-emerald">
-          Your progress
-        </span>
-        <div className="home-section-divider-line" />
-        <span className="home-divider-diamond">◆</span>
-        <div className="home-section-divider-line" />
-        <span className="home-divider-diamond">◆</span>
-        <div className="home-section-divider-line" />
-      </div>
+      <SectionDivider highlightWord="Your progress" diamonds={2} />
 
       <div className="home-stats-grid">
         {/* Day Streak */}
-        <div
-          className="home-stat-tile"
-          onClick={() => navigate('/profile')}
-          role="button"
-          tabIndex={0}
-          aria-label="Day Streak"
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
-        >
-          <div className="home-stat-icon-wrapper">
+        <StatTile
+          variant="streak"
+          icon={
             <Flame
               size={24}
               color={hasPlayedToday ? '#ff5a5a' : '#888888'}
               fill={hasPlayedToday ? '#ff5a5a' : '#bbbbbb'}
             />
-          </div>
-          <div className="home-stat-value home-stat-value-streak">
-            {streak ?? 0}
-          </div>
-          <div className="home-stat-label">Day Streak</div>
-        </div>
+          }
+          value={streak ?? 0}
+          label="Day Streak"
+          onClick={() => navigate('/profile')}
+          ariaLabel="View day streak in profile"
+        />
 
         {/* Total XP */}
-        <div
-          className="home-stat-tile"
+        <StatTile
+          variant="xp"
+          icon={<Trophy size={24} color="#fbbf24" fill="#fbbf24" />}
+          value={formatNumber(xp || 0)}
+          label="Total XP"
           onClick={() => navigate('/profile')}
-          role="button"
-          tabIndex={0}
-          aria-label="Total XP"
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
-        >
-          <div className="home-stat-icon-wrapper">
-            <Trophy size={24} color="#fbbf24" fill="#fbbf24" />
-          </div>
-          <div className="home-stat-value home-stat-value-xp">
-            {formatNumber(xp || 0)}
-          </div>
-          <div className="home-stat-label">Total XP</div>
-        </div>
+          ariaLabel="View total XP in profile"
+        />
 
         {/* Global Rank */}
-        <div
-          className="home-stat-tile"
+        <StatTile
+          variant="rank"
+          icon={<Globe size={24} color="#38bdf8" />}
+          value={getRankDisplay(xp || 0)}
+          label="Global Rank"
           onClick={() => navigate('/leaderboards')}
-          role="button"
-          tabIndex={0}
-          aria-label="Global Rank"
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/leaderboards'); }}
-        >
-          <div className="home-stat-icon-wrapper">
-            <Globe size={24} color="#38bdf8" />
-          </div>
-          <div className="home-stat-value home-stat-value-rank">
-            {getRankDisplay(xp || 0)}
-          </div>
-          <div className="home-stat-label">Global Rank</div>
-        </div>
+          ariaLabel="View global rank leaderboard"
+        />
 
         {/* Badges */}
-        <div
-          className="home-stat-tile"
+        <StatTile
+          variant="badges"
+          icon={<Gem size={24} color="#34d399" fill="#34d399" />}
+          value={badgeCount}
+          label="Badges"
           onClick={() => navigate('/profile')}
-          role="button"
-          tabIndex={0}
-          aria-label="Badges"
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
-        >
-          <div className="home-stat-icon-wrapper">
-            <Gem size={24} color="#34d399" fill="#34d399" />
-          </div>
-          <div className="home-stat-value home-stat-value-badges">
-            {badgeCount}
-          </div>
-          <div className="home-stat-label">Badges</div>
-        </div>
+          ariaLabel="View badges in profile"
+        />
       </div>
 
       {/* ── 4. More ways to grow ── */}
-      <div className="home-section-divider">
-        <Sprout size={16} className="home-divider-icon" />
-        <span className="home-divider-label text-emerald">
-          More ways to grow
-        </span>
-        <div className="home-section-divider-line" />
-      </div>
+      <SectionDivider highlightWord="More ways to grow" showLeaves={false} />
 
       <div className="home-quick-actions-row">
         <div
@@ -315,13 +228,7 @@ export default function Home() {
       </div>
 
       {/* ── 5. Coming Soon (Locked Expeditions) ── */}
-      <div className="home-section-divider">
-        <Sprout size={16} className="home-divider-icon" />
-        <span className="home-divider-label text-emerald">
-          Coming Soon
-        </span>
-        <div className="home-section-divider-line" />
-      </div>
+      <SectionDivider highlightWord="Coming Soon" showLeaves={false} />
 
       <div className="home-locked-grid">
         {lockedModules.map((m, idx) => (
