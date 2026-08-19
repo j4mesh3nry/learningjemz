@@ -9,85 +9,70 @@ export function Header() {
   const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const navigate = useNavigate();
 
+  const rankTitle = level >= 10 ? 'Master' : level >= 5 ? 'Scholar' : 'Learner';
+
   return (
     <div className="app-header">
       {/* Compact Header Row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+      <div className="app-header-row">
         {/* Logo Area */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{
-            background: '#16653e',
-            borderRadius: '9px',
-            padding: '5px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 0 #0e4329'
-          }}>
+        <div className="app-header-logo-group" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <div className="app-header-gem-badge">
             <Gem size={18} color="#ffffff" strokeWidth={2.5} />
           </div>
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1.35rem',
-            fontWeight: 800,
-            letterSpacing: '-0.3px',
-            color: '#0f3825',
-            margin: 0,
-          }}>
-            Learning<span style={{ color: '#16653e' }}>Jemz</span>
+          <h1 className="app-header-title">
+            Learning<span className="app-header-title-accent">Jemz</span>
           </h1>
         </div>
 
-        {/* Level & Streak Compact Pill */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 10,
-          background: '#ffffff',
-          padding: '4px 10px', borderRadius: 20,
-          border: '2px solid #b0cbaf',
-          boxShadow: '0 2px 0 #b0cbaf',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        {/* Level & Streak Capsule Pill */}
+        <div className="app-header-pill">
+          <div className="app-header-pill-item" onClick={() => navigate('/profile')} role="button" aria-label="Day Streak" style={{ cursor: 'pointer' }}>
             <Flame
-              size={13}
-              color={hasPlayedToday ? '#e53935' : '#888888'}
+              size={15}
+              color={hasPlayedToday ? '#ff4d4d' : '#888888'}
               fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'}
             />
-            <span style={{ fontWeight: 800, fontSize: '0.78rem', color: hasPlayedToday ? '#e53935' : '#4e7361' }}>
-              {streak ?? 0}
-            </span>
+            <div className="app-header-pill-text">
+              <span className={`app-header-streak-num ${hasPlayedToday ? 'active' : ''}`}>
+                {streak ?? 0}
+              </span>
+              <span className="app-header-pill-sub">Day Streak</span>
+            </div>
           </div>
 
-          <div style={{ width: 1, height: 12, background: '#b0cbaf' }} />
+          <div className="app-header-pill-divider" />
 
           <div
             onClick={() => navigate('/profile')}
-            style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}
+            className="app-header-pill-item"
             aria-label="Go to Profile"
             role="button"
+            style={{ cursor: 'pointer' }}
           >
-            <Star size={13} color="#f57f17" fill="#ffb300" />
-            <span style={{ fontWeight: 800, fontSize: '0.78rem', color: '#d97706' }}>Lv.{level}</span>
+            <Star size={15} color="#f59e0b" fill="#fbbf24" />
+            <div className="app-header-pill-text">
+              <span className="app-header-level-num">Lv.{level}</span>
+              <span className="app-header-pill-sub">{rankTitle}</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* XP Progress Bar */}
-      <div>
-        <div style={{
-          height: 6, borderRadius: 3, background: '#b8d9ba', overflow: 'hidden',
-          border: '1px solid #a3caa5'
-        }}>
-          <div style={{
-            height: '100%', borderRadius: 3, width: `${pct}%`,
-            background: '#16653e',
-            transition: 'width 0.4s ease',
-          }} />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: '#0f3825', marginTop: 3, fontWeight: 700 }}>
-          <span>{xpInLevel}/{levelXPReq} XP</span>
+      <div className="app-header-xp-container">
+        <div className="app-header-xp-labels">
+          <span>{xpInLevel} / {levelXPReq} XP</span>
           <span>Next: Lv.{level + 1}</span>
+        </div>
+        <div className="app-header-xp-track">
+          <div
+            className="app-header-xp-fill"
+            style={{ width: `${pct}%` }}
+          />
         </div>
       </div>
     </div>
   );
 }
+export default Header;

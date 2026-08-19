@@ -98,10 +98,8 @@ describe('Home', () => {
       </MemoryRouter>
     );
 
-    // Hero banner XP labels
+    // Header XP labels
     expect(screen.getByText('120 / 150 XP')).toBeInTheDocument();
-    // The hero banner shows "Next: Lv.6"
-    // The Header also shows "Next: Lv.6" — use getAllByText
     const nextLevelTexts = screen.getAllByText('Next: Lv.6');
     expect(nextLevelTexts.length).toBeGreaterThanOrEqual(1);
   });
@@ -130,11 +128,8 @@ describe('Home', () => {
         <Home />
       </MemoryRouter>
     );
-    // The Header's Lv. button has aria-label "Go to Profile"
-    // The stats grid badge tile also has "Go to Profile"
-    const profileBtns = screen.getAllByRole('button', { name: /go to profile/i });
-    expect(profileBtns.length).toBeGreaterThanOrEqual(1);
-    await user.click(profileBtns[0]);
+    const badgesBtn = screen.getByRole('button', { name: /badges/i });
+    await user.click(badgesBtn);
     expect(mockNavigate).toHaveBeenCalledWith('/profile');
   });
 
@@ -154,13 +149,13 @@ describe('Home', () => {
       </MemoryRouter>
     );
 
-    // Stat labels always render once in the stats grid
-    expect(screen.getByText('Day Streak')).toBeInTheDocument();
+    // Stat labels
+    expect(screen.getAllByText('Day Streak').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('Total XP')).toBeInTheDocument();
-    expect(screen.getByText('Rank')).toBeInTheDocument();
+    expect(screen.getByText('Global Rank')).toBeInTheDocument();
     expect(screen.getByText('Badges')).toBeInTheDocument();
 
-    // Badge count = 2 (unique, only appears in the stats grid)
+    // Badge count = 2
     expect(screen.getByText('2')).toBeInTheDocument();
   });
 

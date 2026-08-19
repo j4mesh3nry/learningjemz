@@ -1,87 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
-import { useGame, getLevelProgress } from '../contexts/GameContext.jsx';
-import { Card } from '../components/Card';
+import { useGame } from '../contexts/GameContext.jsx';
 import { Header } from '../components/Header';
-import { JemzMascot } from '../components/icons/JemzMascot';
 import {
   Lock, ArrowRight, BookOpen, Globe, Music, ScrollText, Calculator,
-  Rocket, Swords, Orbit, Flame, Star, Trophy, Award, Zap,
-  Target, Gift, Sparkles,
+  Swords, Orbit, Flame, Trophy, Award, Target, Gift,
 } from 'lucide-react';
 import '../index.css';
 
 /* ──────────────────────────────────────────────────────────────
-   Data
+   Locked Modules Data
    ────────────────────────────────────────────────────────────── */
-
-const modules = [
-  {
-    to: '/chess',
-    icon: <Swords size={26} color="#ffffff" />,
-    title: 'Chess',
-    subtitle: 'Challenge AI bots and improve your strategy.',
-    bg: '#4a2c11',
-    shadow: '0 4px 0 #251406',
-    border: '#6e441f',
-    arrowBg: '#6e441f',
-    arrowBorder: '#8a6035',
-    badgeBg: '#6e441f',
-    badgeBorder: '#8a6035',
-  },
-  {
-    to: '/space',
-    icon: <Orbit size={26} color="#38bdf8" />,
-    title: 'Space',
-    subtitle: 'Explore planets, solve mysteries, and more.',
-    bg: '#161936',
-    shadow: '0 4px 0 #0b0d1e',
-    border: '#385e8a',
-    arrowBg: '#232752',
-    arrowBorder: '#385e8a',
-    badgeBg: '#232752',
-    badgeBorder: '#385e8a',
-    hasStars: true,
-  },
-];
 
 const lockedModules = [
-  { icon: <BookOpen size={22} color="#16653e" />, title: 'Reading', subtitle: 'Books & Stories' },
-  { icon: <Globe size={22} color="#16653e" />, title: 'Geography', subtitle: 'Maps & Regions' },
-  { icon: <Music size={22} color="#16653e" />, title: 'Songs', subtitle: 'Sing & Learn' },
-  { icon: <ScrollText size={22} color="#16653e" />, title: 'Poems', subtitle: 'Rhymes & Verses' },
-  { icon: <Calculator size={22} color="#16653e" />, title: 'Math', subtitle: 'Numbers & Logic' },
+  { icon: <BookOpen size={20} color="#34d399" />, title: 'Reading', subtitle: 'Books & Stories' },
+  { icon: <Globe size={20} color="#34d399" />, title: 'Geography', subtitle: 'Maps & Regions' },
+  { icon: <Music size={20} color="#34d399" />, title: 'Songs', subtitle: 'Sing & Learn' },
+  { icon: <ScrollText size={20} color="#34d399" />, title: 'Poems', subtitle: 'Rhymes & Verses' },
+  { icon: <Calculator size={20} color="#34d399" />, title: 'Math', subtitle: 'Numbers & Logic' },
 ];
 
 /* ──────────────────────────────────────────────────────────────
-   Star dots for the Space card background
-   ────────────────────────────────────────────────────────────── */
-
-function StarDots() {
-  const dots = Array.from({ length: 18 }, () => ({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 2 + 1,
-    color: Math.random() > 0.5 ? '#ffdd57' : '#ffffff',
-    delay: Math.random() * 3,
-  }));
-  return (
-    <>
-      {dots.map((d, i) => (
-        <span key={i} style={{
-          position: 'absolute', left: `${d.x}%`, top: `${d.y}%`,
-          width: d.size, height: d.size, borderRadius: '50%',
-          background: d.color, opacity: 0.7,
-          animation: `twinkle ${1.5 + d.delay}s ease-in-out infinite alternate`,
-        }} />
-      ))}
-    </>
-  );
-}
-
-/* ──────────────────────────────────────────────────────────────
-   Greeting helper
+   Greeting & Formatting Helpers
    ────────────────────────────────────────────────────────────── */
 
 function getGreeting(): string {
@@ -91,25 +32,39 @@ function getGreeting(): string {
   return 'Good evening';
 }
 
-/* ──────────────────────────────────────────────────────────────
-   Format helpers
-   ────────────────────────────────────────────────────────────── */
-
 function formatNumber(n: number): string {
   if (n >= 10000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
   if (n >= 1000) return n.toLocaleString();
   return String(n);
 }
 
+function getRankDisplay(xp: number): string {
+  if (xp >= 5000) return 'Top 1%';
+  if (xp >= 2000) return 'Top 2%';
+  if (xp >= 1000) return 'Top 5%';
+  if (xp >= 500) return 'Top 10%';
+  if (xp >= 100) return 'Top 25%';
+  return 'Top 50%';
+}
+
 /* ──────────────────────────────────────────────────────────────
-   Home Page
+   Home Component
    ────────────────────────────────────────────────────────────── */
 
 export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { xp, level, streak, hasPlayedToday, achievements } = useGame();
-  const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
+  const { xp, streak, hasPlayedToday, achievements } = useGame();
+
+  // Attach dark theme attribute on mount, clean up on unmount
+  useEffect(() => {
+    document.body.dataset.homeDark = 'true';
+    document.documentElement.dataset.homeDark = 'true';
+    return () => {
+      delete document.body.dataset.homeDark;
+      delete document.documentElement.dataset.homeDark;
+    };
+  }, []);
 
   const displayName =
     user?.user_metadata?.name ||
@@ -121,246 +76,246 @@ export default function Home() {
   return (
     <div className="container" style={{
       minHeight: '100vh',
-      background: 'var(--color-bg-page)',
+      background: '#06110c',
       paddingBottom: 90,
+      boxSizing: 'border-box'
     }}>
-      {/* ── Sticky Top Header (Logo + Streak/Level) ── */}
+      {/* ── Top Header Widget ── */}
       <Header />
 
-      {/* ── 1. Hero Quest Banner ── */}
-      <div className="game-hero-banner">
-        <p className="game-hero-greeting">
-          {getGreeting()}, {displayName}!
-        </p>
-        <h2 className="game-hero-headline">
-          What will you<br />explore <span style={{ color: '#ffb400' }}>today</span>?
-        </h2>
-
-        {/* XP progress bar */}
-        <div className="game-hero-xp-track">
-          <div
-            className="game-hero-xp-fill"
-            style={{ width: `${pct}%` }}
-          />
-        </div>
-        <div className="game-hero-xp-labels">
-          <span>{xpInLevel} / {levelXPReq} XP</span>
-          <span>Next: Lv.{level + 1}</span>
-        </div>
-
-        {/* Mascot watermark */}
-        <div className="game-hero-mascot">
-          <JemzMascot size={72} />
+      {/* ── 1. Hero Quest Scene ── */}
+      <div className="home-hero-scene">
+        <div className="home-hero-overlay" />
+        <div className="home-hero-content">
+          <p className="home-hero-greeting">
+            {getGreeting()}, {displayName}! 👋
+          </p>
+          <h2 className="home-hero-heading">
+            What will you<br />
+            <span className="home-hero-heading-highlight">explore</span> today?
+          </h2>
         </div>
       </div>
 
-      {/* ── 2. Continue Your Journey ── */}
-      <h3 className="game-section-heading">
-        <Rocket size={18} color="#16653e" />
-        Continue your journey
-      </h3>
-
-      <div className="game-module-cards">
-        {modules.map((m) => (
-          <Card
-            key={m.to}
-            className="game-module-card"
-            onClick={() => navigate(m.to)}
-            ariaLabel={m.title}
-            style={{
-              background: m.bg,
-              border: `2px solid ${m.border}`,
-              boxShadow: m.shadow,
-            }}
-          >
-            {m.hasStars && <StarDots />}
-
-            {/* Icon badge */}
-            <div
-              className="game-module-art-badge"
-              style={{
-                background: m.badgeBg,
-                borderColor: m.badgeBorder,
-              }}
-            >
-              {m.icon}
-            </div>
-
-            {/* Info */}
-            <div className="game-module-info">
-              <h4 className="game-module-title">{m.title}</h4>
-              <p className="game-module-subtitle">{m.subtitle}</p>
-            </div>
-
-            {/* Arrow */}
-            <div
-              className="game-module-arrow"
-              style={{
-                background: m.arrowBg,
-                borderColor: m.arrowBorder,
-              }}
-            >
-              <ArrowRight size={16} strokeWidth={2.5} color="#ffffff" />
-            </div>
-          </Card>
-        ))}
+      {/* ── 2. Continue your journey ── */}
+      <div className="home-section-divider">
+        <div className="home-section-divider-line" />
+        <span>🌿 Continue your journey 🌿</span>
+        <div className="home-section-divider-line" />
       </div>
 
-      {/* ── 3. Your Progress ── */}
-      <h3 className="game-section-heading">
-        <Zap size={18} color="#16653e" />
-        Your progress
-      </h3>
-
-      <div className="game-stats-grid">
-        {/* Streak */}
+      <div className="home-module-cards">
+        {/* Chess Card */}
         <div
-          className="game-stat-tile"
+          className="home-module-card home-module-card-chess"
+          onClick={() => navigate('/chess')}
+          role="button"
+          tabIndex={0}
+          aria-label="Chess"
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/chess'); }}
+        >
+          <div className="home-module-card-overlay-chess" />
+          <div className="home-module-card-info">
+            <div className="home-module-card-header">
+              <div className="home-module-mini-badge-chess">
+                <Swords size={16} strokeWidth={2.2} />
+              </div>
+              <h3 className="home-module-card-title">Chess</h3>
+            </div>
+            <p className="home-module-card-subtitle">
+              Challenge AI bots and improve your strategy.
+            </p>
+          </div>
+          <div className="home-module-action-btn-chess">
+            <ArrowRight size={18} strokeWidth={2.5} />
+          </div>
+        </div>
+
+        {/* Space Card */}
+        <div
+          className="home-module-card home-module-card-space"
+          onClick={() => navigate('/space')}
+          role="button"
+          tabIndex={0}
+          aria-label="Space"
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/space'); }}
+        >
+          <div className="home-module-card-overlay-space" />
+          <div className="home-module-card-info">
+            <div className="home-module-card-header">
+              <div className="home-module-mini-badge-space">
+                <Orbit size={16} strokeWidth={2.2} />
+              </div>
+              <h3 className="home-module-card-title">Space</h3>
+            </div>
+            <p className="home-module-card-subtitle">
+              Explore planets, solve mysteries, and more.
+            </p>
+          </div>
+          <div className="home-module-action-btn-space">
+            <ArrowRight size={18} strokeWidth={2.5} />
+          </div>
+        </div>
+      </div>
+
+      {/* ── 3. Your progress ── */}
+      <div className="home-section-divider">
+        <div className="home-section-divider-line" />
+        <span>🌿 Your progress</span>
+        <div className="home-section-divider-line" />
+      </div>
+
+      <div className="home-stats-grid">
+        {/* Day Streak */}
+        <div
+          className="home-stat-tile"
           onClick={() => navigate('/profile')}
           role="button"
           tabIndex={0}
           aria-label="Day Streak"
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
         >
-          <Flame
-            size={20}
-            color={hasPlayedToday ? '#e53935' : '#888888'}
-            fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'}
-          />
-          <div className="game-stat-value" style={{ color: hasPlayedToday ? '#e53935' : '#0f3825' }}>
+          <div className="home-stat-icon-wrapper">
+            <Flame
+              size={22}
+              color={hasPlayedToday ? '#ff4d4d' : '#888888'}
+              fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'}
+            />
+          </div>
+          <div className="home-stat-value home-stat-value-streak">
             {streak ?? 0}
           </div>
-          <div className="game-stat-label">Day Streak</div>
+          <div className="home-stat-label">Day Streak</div>
         </div>
 
         {/* Total XP */}
         <div
-          className="game-stat-tile"
+          className="home-stat-tile"
           onClick={() => navigate('/profile')}
           role="button"
           tabIndex={0}
           aria-label="Total XP"
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
         >
-          <Star size={20} color="#f57f17" fill="#ffb300" />
-          <div className="game-stat-value">{formatNumber(xp || 0)}</div>
-          <div className="game-stat-label">Total XP</div>
+          <div className="home-stat-icon-wrapper">
+            <Trophy size={22} color="#fbbf24" />
+          </div>
+          <div className="home-stat-value home-stat-value-xp">
+            {formatNumber(xp || 0)}
+          </div>
+          <div className="home-stat-label">Total XP</div>
         </div>
 
         {/* Global Rank */}
         <div
-          className="game-stat-tile"
+          className="home-stat-tile"
           onClick={() => navigate('/leaderboards')}
           role="button"
           tabIndex={0}
           aria-label="Global Rank"
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/leaderboards'); }}
         >
-          <Trophy size={20} color="#16653e" />
-          <div className="game-stat-value">
-            <Trophy size={16} color="#16653e" style={{ verticalAlign: '-2px' }} />
+          <div className="home-stat-icon-wrapper">
+            <Globe size={22} color="#38bdf8" />
           </div>
-          <div className="game-stat-label">Rank</div>
+          <div className="home-stat-value home-stat-value-rank">
+            {getRankDisplay(xp || 0)}
+          </div>
+          <div className="home-stat-label">Global Rank</div>
         </div>
 
         {/* Badges */}
         <div
-          className="game-stat-tile"
+          className="home-stat-tile"
           onClick={() => navigate('/profile')}
           role="button"
           tabIndex={0}
-          aria-label="Go to Profile"
+          aria-label="Badges"
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
         >
-          <Award size={20} color="#7c3aed" />
-          <div className="game-stat-value">{badgeCount}</div>
-          <div className="game-stat-label">Badges</div>
+          <div className="home-stat-icon-wrapper">
+            <Award size={22} color="#34d399" />
+          </div>
+          <div className="home-stat-value home-stat-value-badges">
+            {badgeCount}
+          </div>
+          <div className="home-stat-label">Badges</div>
         </div>
       </div>
 
-      {/* ── 4. More Ways to Grow ── */}
-      <h3 className="game-section-heading">
-        <Sparkles size={18} color="#16653e" />
-        More ways to grow
-      </h3>
+      {/* ── 4. More ways to grow ── */}
+      <div className="home-section-divider">
+        <div className="home-section-divider-line" />
+        <span>🌿 More ways to grow</span>
+        <div className="home-section-divider-line" />
+      </div>
 
-      <div className="game-quick-actions-row">
+      <div className="home-quick-actions-row">
         <div
-          className="game-quick-chip"
+          className="home-quick-chip"
           onClick={() => navigate('/profile')}
           role="button"
           tabIndex={0}
           aria-label="Daily Quests"
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
         >
-          <div className="game-quick-chip-icon" style={{ background: '#e1f0e2' }}>
-            <Target size={20} color="#16653e" />
+          <div className="home-quick-chip-icon" style={{ background: '#0e291b' }}>
+            <Target size={22} color="#34d399" />
           </div>
-          <span className="game-quick-chip-label">Daily<br />Quests</span>
+          <span className="home-quick-chip-label">Daily<br />Quests</span>
         </div>
 
         <div
-          className="game-quick-chip"
+          className="home-quick-chip"
           onClick={() => navigate('/profile')}
           role="button"
           tabIndex={0}
           aria-label="Achievements"
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
         >
-          <div className="game-quick-chip-icon" style={{ background: '#fef3c7' }}>
-            <Award size={20} color="#d97706" />
+          <div className="home-quick-chip-icon" style={{ background: '#261e0b' }}>
+            <Award size={22} color="#fbbf24" />
           </div>
-          <span className="game-quick-chip-label">Achieve-<br />ments</span>
+          <span className="home-quick-chip-label">Achieve-<br />ments</span>
         </div>
 
         <div
-          className="game-quick-chip"
+          className="home-quick-chip"
           onClick={() => navigate('/store')}
           role="button"
           tabIndex={0}
           aria-label="Rewards Store"
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/store'); }}
         >
-          <div className="game-quick-chip-icon" style={{ background: '#ede9fe' }}>
-            <Gift size={20} color="#7c3aed" />
+          <div className="home-quick-chip-icon" style={{ background: '#241433' }}>
+            <Gift size={22} color="#c084fc" />
           </div>
-          <span className="game-quick-chip-label">Rewards</span>
+          <span className="home-quick-chip-label">Rewards</span>
         </div>
       </div>
 
       {/* ── 5. Coming Soon (Locked Expeditions) ── */}
-      <h3 className="game-section-heading">
-        <Rocket size={18} color="#16653e" />
-        Coming Soon
-      </h3>
+      <div className="home-section-divider">
+        <div className="home-section-divider-line" />
+        <span>🌿 Coming Soon</span>
+        <div className="home-section-divider-line" />
+      </div>
 
-      <div className="game-locked-grid">
+      <div className="home-locked-grid">
         {lockedModules.map((m, idx) => (
-          <div key={idx} className="game-locked-card">
-            <div className="game-locked-badge">
-              <Lock size={11} color="#ffffff" /> Locked
+          <div key={idx} className="home-locked-card">
+            <div className="home-locked-badge">
+              <Lock size={12} strokeWidth={2.5} color="#34d399" /> Locked
             </div>
-            <div className="game-locked-content">
-              <div className="game-locked-icon-box">
+            <div className="home-locked-content">
+              <div className="home-locked-icon-box">
                 {m.icon}
               </div>
-              <h4 className="game-locked-title">{m.title}</h4>
-              <p className="game-locked-subtitle">{m.subtitle}</p>
+              <h4 className="home-locked-title">{m.title}</h4>
+              <p className="home-locked-subtitle">{m.subtitle}</p>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* ── 6. Motivational Footer ── */}
-      <div className="game-footer-banner">
-        <div className="game-footer-mascot">
-          <JemzMascot size={44} />
-        </div>
-        <p className="game-footer-text">
-          Keep learning.<br />
-          Keep leveling up.<br />
-          Keep exploring!
-        </p>
       </div>
     </div>
   );
