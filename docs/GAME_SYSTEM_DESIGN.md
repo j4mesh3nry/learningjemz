@@ -167,4 +167,16 @@ When adding new features or modules, adhere strictly to these rules:
 1. **Never use standard browser alerts (`alert()`)**. Always build custom, sleek React modals (like the Restart Confirmation modal).
 2. **Never bypass `GameContext`**. All XP gains and streak triggers MUST route through `GameContext.jsx` functions to ensure they are properly synced to Supabase and trigger achievements.
 3. **Maintain the "Unlit" convention**. Any new modules that display the streak badge in their header must implement the `hasPlayedToday` check and apply the `.unlit-icon` and `.unlit-text` classes.
-4. **Use Lucide Icons**. For consistency, all UI icons should be pulled from the `lucide-react` library unless they are specific emojis used for gamification (🔥, 🏆, 💎).
+4. **Use Lucide Icons**. For consistency, all UI icons should be pulled from the `lucide-react` library. No emoji icons in UI.
+
+---
+
+## 7. Mobile-Game Design System & UI Architecture
+- **Atmospheric Dark Game Canvas**: Deep dark aesthetic (`--game-bg-canvas: #030d09`, `--game-surface-card: #05130e`) with theme-tinted glowing borders.
+- **2-Layer Hero Architecture**: Background scenery remains continuous (`home-hero-landscape.jpg`), while companion characters overlay dynamically via `<HeroCharacter avatar={user.avatar} />` on the cliff ledge.
+- **Component Library (`src/components/game/`)**:
+  - `SectionDivider`: Two-tone typography with sprout leaf flourishes and diamond accents.
+  - `GameModuleCard`: Standard 142px illustrated mission card with 3D artwork cutout, mini badge pill, and circular 3D arrow button.
+  - `StatTile`: 4-matrix progress card with glowing value colors.
+  - `SegmentedSwitcher`: Dark pill tab switcher (`Play | Learn`, `XP | Streak`) with glowing emerald active pill.
+- **Navigation**: Dark floating bottom navigation bar with **Home**, **Rank**, **Store**, **Me** tabs.

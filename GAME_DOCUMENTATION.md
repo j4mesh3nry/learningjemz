@@ -28,21 +28,30 @@
 ---
 
 ## 3. Design System & Visual Aesthetics
-- **Theme Palette & Tactile 3D Flat Principles**:
-  - **Canvas Background**: Medium-Light Sage Green (`#d4e8d5`).
-  - **Primary Headers & Text**: Forest Green (`#0f3825` & `#16653e`).
-  - **Card Surface**: Crisp White (`#ffffff`) with Muted Sage Borders (`#b0cbaf`).
-  - **Tactile 3D Shadows**: `box-shadow: 0 4px 0 #b0cbaf` (elements) and `0 3px 0 #0e4329` (buttons). Active press translates `2px` downward.
-  - **Anti-Glassmorphism & Anti-Glow Rule**: Strictly avoid glassmorphism (`backdrop-filter`), translucent fuzzy overlays, and neon glow effects (`box-shadow: 0 0 ... glow`, radial-gradient auras). All modals, cards, and UI surfaces use clean, solid background colors with solid contrast 3D borders and tactile offset shadows.
-  - **Light-Only Color Scheme Enforcement**: The app is deliberately light-only. `index.html` ships `<meta name="color-scheme" content="light">` and `src/index.css` `:root` sets `color-scheme: light only` plus `forced-color-adjust: none`. A `@media (forced-colors: active)` block re-asserts `forced-color-adjust: none` on every element/pseudo-element and re-declares the canvas colors on `html`/`body`, so phone browsers (Chrome auto dark mode, Samsung Internet force dark, OS dark-theme engines) and forced-colors engines (Windows High Contrast, Android high contrast text) never re-tint or invert the palette, while the design itself stays identical.
-- **Module Theme Backgrounds**: `data-module-theme` is applied to both `body` and `html` tags, ensuring the theme's background color seamlessly covers the entire viewport and overscroll regions (e.g., `#ebe3cf` ivory for Chess, `#0b0d1c` deep space for Space).
+- **Atmospheric Mobile-Game Design System**:
+  - **Global Dark Canvas**: Deep, dark game environment (`--game-bg-canvas: #030d09`).
+  - **Surface & Cards**: High-contrast dark containers (`--game-surface-card: #05130e`) with theme-tinted subtle border outlines (`--game-border-default: #102d1f`).
+  - **Module Themes & Glows**:
+    - *Chess*: Warm bronze/amber border (`#855930`) with mahogany tones (`#160c06`) and knight artwork.
+    - *Space*: Deep cosmic sapphire border (`#295285`) with nebula tones (`#050b1a`) and ringed planet artwork.
+    - *Emerald Glow*: Primary brand accent (`#34d399` / `#4ade80`) for active states and XP progress.
+    - *Gold Glow*: XP and achievement highlights (`#fbbf24`).
+    - *Red Glow*: Day streak counters (`#ff5a5a`).
+    - *Cyan Glow*: Global rank and leaderboards (`#38bdf8`).
+- **2-Layer Hero Architecture**:
+  - Background scenery remains a continuous landscape (`home-hero-landscape.jpg`), while the companion character is an overlay via `<HeroCharacter avatar={user.avatar} />` on the stone cliff ledge so user avatars can be dynamically swapped without re-rendering the scenery.
+- **Reusable Component Library (`src/components/game/`)**:
+  - `SectionDivider`: Two-tone headline with sprout leaf flourishes and diamond line accents (`Continue your` [white] `journey` [emerald]).
+  - `GameModuleCard`: 142px tall illustrated card with 3D artwork cutout, mini badge pill, and circular 3D arrow button.
+  - `StatTile`: 4-matrix progress card with glowing value colors.
+  - `SegmentedSwitcher`: Dark pill tab switcher (`Play | Learn`, `XP | Streak`) with glowing emerald active indicator.
 - **Typography**:
-  - **Headings**: `Outfit` (Bold, rounded geometric sans-serif, `800 - 900`).
-  - **Body**: `Inter` (Clean, legible sans-serif).
-- **Layout & Multi-Device Responsive System**:
-  - **Mobile (< 640px)**: 100% fluid container (`padding: 16px`), 1-column card grids, and fixed bottom floating navigation pill bar.
-  - **Tablet (640px - 1024px)**: Expanded max-width container (`860px`), 2 to 3 column active & coming-soon module card grids, 2-column profile dashboard, and centered floating navigation dock (`max-width: 580px`).
-  - **Desktop / PC (> 1024px)**: Wide max-width canvas (`1200px`), 4-column module grid, side-by-side dashboard panels, and spacious navigation dock (`max-width: 680px`).
+  - **Headings & Numbers**: `Outfit` (Bold, rounded geometric sans-serif, `800 - 900`).
+  - **Body & Micro-labels**: `Inter` (Clean, legible sans-serif).
+- **Navigation & Mobile Experience**:
+  - **Bottom Navigation**: Dark floating bar with **Home**, **Rank**, **Store**, **Me** tabs, featuring an illuminated emerald pill active indicator.
+  - **Invisible Scrollbars**: Page and container scrollbars are hidden globally (`scrollbar-width: none`).
+  - **Module Headers**: The top header capsule widget (`Flame` & `Star`) appears ONLY on the root page of each module; sub-page headers render only the back button and title banner.
 
 ---
 
