@@ -76,13 +76,21 @@ export default function Home() {
 
   const badgeCount = Array.isArray(achievements) ? achievements.length : 0;
 
+  // 2-Layer Hero: Switch background to empty cliff when custom avatar is active
+  const avatar = user?.user_metadata?.avatar;
+  const isCustomAvatar = avatar && avatar !== 'owl' && avatar !== '🦉';
+  const heroBgImage = isCustomAvatar ? '/images/home-hero-landscape.jpg' : '/images/home-hero.jpg';
+
   return (
     <div className="container home-page-container">
       {/* ── Top Header Widget (Logo + Streak/Level Pill + XP Bar) ── */}
       <Header />
 
-      {/* ── 1. Hero Quest Scene (Full-Bleed Landscape + Character) ── */}
-      <div className="home-hero-scene">
+      {/* ── 1. Hero Quest Scene (Full-Bleed Landscape + Character Overlay) ── */}
+      <div
+        className="home-hero-scene"
+        style={{ backgroundImage: `url('${heroBgImage}')` }}
+      >
         <div className="home-hero-overlay" />
         <div className="home-hero-content">
           <p className="home-hero-greeting-sub">
@@ -97,8 +105,8 @@ export default function Home() {
           </h2>
         </div>
 
-        {/* Character companion slot (default owl, extensible to profile avatars) */}
-        <HeroCharacter avatar={user?.user_metadata?.avatar} characterType="owl" />
+        {/* 2-Layer Character Companion slot (renders overlay if custom avatar is selected) */}
+        <HeroCharacter avatar={avatar} characterType="owl" />
 
         {/* Bottom soft gradient fade into the page canvas */}
         <div className="home-hero-fade-bottom" />
