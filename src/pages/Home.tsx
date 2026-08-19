@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useGame } from '../contexts/GameContext.jsx';
 import { Header } from '../components/Header';
+import { HeroCharacter } from '../components/HeroCharacter';
 import {
   Lock, ArrowRight, BookOpen, Globe, Music, ScrollText, Calculator,
-  Swords, Orbit, Flame, Trophy, Award, Target, Gift,
+  Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem,
 } from 'lucide-react';
 import '../index.css';
 
@@ -76,7 +77,7 @@ export default function Home() {
   return (
     <div className="container" style={{
       minHeight: '100vh',
-      background: '#06110c',
+      background: '#030d09',
       paddingBottom: 90,
       boxSizing: 'border-box'
     }}>
@@ -87,14 +88,20 @@ export default function Home() {
       <div className="home-hero-scene">
         <div className="home-hero-overlay" />
         <div className="home-hero-content">
-          <p className="home-hero-greeting">
-            {getGreeting()}, {displayName}! 👋
+          <p className="home-hero-greeting-sub">
+            {getGreeting()},
           </p>
+          <div className="home-hero-username">
+            {displayName}! 👋
+          </div>
           <h2 className="home-hero-heading">
             What will you<br />
             <span className="home-hero-heading-highlight">explore</span> today?
           </h2>
         </div>
+
+        {/* Character companion slot (default owl, extensible to profile avatars) */}
+        <HeroCharacter avatar={user?.user_metadata?.avatar} characterType="owl" />
       </div>
 
       {/* ── 2. Continue your journey ── */}
@@ -118,7 +125,7 @@ export default function Home() {
           <div className="home-module-card-info">
             <div className="home-module-card-header">
               <div className="home-module-mini-badge-chess">
-                <Swords size={16} strokeWidth={2.2} />
+                <Swords size={18} strokeWidth={2.4} />
               </div>
               <h3 className="home-module-card-title">Chess</h3>
             </div>
@@ -144,7 +151,7 @@ export default function Home() {
           <div className="home-module-card-info">
             <div className="home-module-card-header">
               <div className="home-module-mini-badge-space">
-                <Orbit size={16} strokeWidth={2.2} />
+                <Orbit size={18} strokeWidth={2.4} />
               </div>
               <h3 className="home-module-card-title">Space</h3>
             </div>
@@ -177,9 +184,9 @@ export default function Home() {
         >
           <div className="home-stat-icon-wrapper">
             <Flame
-              size={22}
-              color={hasPlayedToday ? '#ff4d4d' : '#888888'}
-              fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'}
+              size={24}
+              color={hasPlayedToday ? '#ff5a5a' : '#888888'}
+              fill={hasPlayedToday ? '#ff5a5a' : '#bbbbbb'}
             />
           </div>
           <div className="home-stat-value home-stat-value-streak">
@@ -198,7 +205,7 @@ export default function Home() {
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
         >
           <div className="home-stat-icon-wrapper">
-            <Trophy size={22} color="#fbbf24" />
+            <Trophy size={24} color="#fbbf24" fill="#fbbf24" />
           </div>
           <div className="home-stat-value home-stat-value-xp">
             {formatNumber(xp || 0)}
@@ -216,7 +223,7 @@ export default function Home() {
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/leaderboards'); }}
         >
           <div className="home-stat-icon-wrapper">
-            <Globe size={22} color="#38bdf8" />
+            <Globe size={24} color="#38bdf8" />
           </div>
           <div className="home-stat-value home-stat-value-rank">
             {getRankDisplay(xp || 0)}
@@ -234,7 +241,7 @@ export default function Home() {
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
         >
           <div className="home-stat-icon-wrapper">
-            <Award size={22} color="#34d399" />
+            <Gem size={24} color="#34d399" fill="#34d399" />
           </div>
           <div className="home-stat-value home-stat-value-badges">
             {badgeCount}

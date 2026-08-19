@@ -9,14 +9,22 @@ export function Header() {
   const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const navigate = useNavigate();
 
-  const rankTitle = level >= 10 ? 'Master' : level >= 5 ? 'Scholar' : 'Learner';
+  const rankTitle = level >= 30 ? 'Master' : level >= 10 ? 'Scholar' : level >= 5 ? 'Explorer' : 'Learner';
 
   return (
     <div className="app-header">
-      {/* Compact Header Row */}
+      {/* Compact Top Header Row */}
       <div className="app-header-row">
         {/* Logo Area */}
-        <div className="app-header-logo-group" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+        <div
+          className="app-header-logo-group"
+          onClick={() => navigate('/')}
+          style={{ cursor: 'pointer' }}
+          role="button"
+          aria-label="Home"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/'); }}
+        >
           <div className="app-header-gem-badge">
             <Gem size={18} color="#ffffff" strokeWidth={2.5} />
           </div>
@@ -27,11 +35,19 @@ export function Header() {
 
         {/* Level & Streak Capsule Pill */}
         <div className="app-header-pill">
-          <div className="app-header-pill-item" onClick={() => navigate('/profile')} role="button" aria-label="Day Streak" style={{ cursor: 'pointer' }}>
+          <div
+            className="app-header-pill-item"
+            onClick={() => navigate('/profile')}
+            role="button"
+            aria-label="Day Streak"
+            style={{ cursor: 'pointer' }}
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
+          >
             <Flame
-              size={15}
-              color={hasPlayedToday ? '#ff4d4d' : '#888888'}
-              fill={hasPlayedToday ? '#ff4d4d' : '#bbbbbb'}
+              size={16}
+              color={hasPlayedToday ? '#ff5a5a' : '#888888'}
+              fill={hasPlayedToday ? '#ff5a5a' : '#bbbbbb'}
             />
             <div className="app-header-pill-text">
               <span className={`app-header-streak-num ${hasPlayedToday ? 'active' : ''}`}>
@@ -49,8 +65,10 @@ export function Header() {
             aria-label="Go to Profile"
             role="button"
             style={{ cursor: 'pointer' }}
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
           >
-            <Star size={15} color="#f59e0b" fill="#fbbf24" />
+            <Star size={16} color="#f59e0b" fill="#fbbf24" />
             <div className="app-header-pill-text">
               <span className="app-header-level-num">Lv.{level}</span>
               <span className="app-header-pill-sub">{rankTitle}</span>
@@ -59,11 +77,11 @@ export function Header() {
         </div>
       </div>
 
-      {/* XP Progress Bar */}
+      {/* XP Progress Bar Row */}
       <div className="app-header-xp-container">
         <div className="app-header-xp-labels">
-          <span>{xpInLevel} / {levelXPReq} XP</span>
-          <span>Next: Lv.{level + 1}</span>
+          <span className="app-header-xp-current">{xpInLevel} / {levelXPReq} XP</span>
+          <span className="app-header-xp-next">Next: Lv.{level + 1}</span>
         </div>
         <div className="app-header-xp-track">
           <div
@@ -75,4 +93,5 @@ export function Header() {
     </div>
   );
 }
+
 export default Header;
