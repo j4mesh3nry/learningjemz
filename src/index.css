@@ -112,6 +112,21 @@ body[data-module-theme="space"] {
   --color-muted: #94a3b8;
 }
 
+html[data-module-theme="home"],
+body[data-module-theme="home"] {
+  --color-bg-page: #030d09;
+  /* Deep atmospheric dark forest game canvas */
+  --bg-pattern: none;
+  --color-primary: #10b981;
+  --color-primary-light: #34d399;
+  --color-primary-dark: #064e3b;
+  --color-bg-card: #05130e;
+  --color-border: #102d1f;
+  --color-shadow: #000000;
+  --color-text: #ffffff;
+  --color-muted: #6b8f7b;
+}
+
 html {
   /* Explicit non-trivial html background so the canvas keeps the author palette
      under forced colors mode (a transparent html would inherit body's adjusted
@@ -615,14 +630,17 @@ button:active {
 
 /* ── Dark Canvas Override ──────────────────────── */
 html[data-home-dark="true"],
-body[data-home-dark="true"] {
+body[data-home-dark="true"],
+html[data-module-theme="home"],
+body[data-module-theme="home"] {
   --color-bg-page: #030d09;
   background-color: #030d09 !important;
   background-image: none !important;
   color: #f1f5f9;
 }
 
-body[data-home-dark="true"] .container {
+body[data-home-dark="true"] .container,
+body[data-module-theme="home"] .container {
   background-color: #030d09 !important;
   max-width: 480px;
   margin: 0 auto;
@@ -630,7 +648,8 @@ body[data-home-dark="true"] .container {
 }
 
 @media (min-width: 640px) {
-  body[data-home-dark="true"] .container {
+  body[data-home-dark="true"] .container,
+  body[data-module-theme="home"] .container {
     padding: 20px 20px 100px 20px;
     max-width: 520px;
   }
@@ -647,7 +666,8 @@ body[data-home-dark="true"] .container {
   border-bottom: 2px solid #b0cbaf;
 }
 
-body[data-home-dark="true"] .app-header {
+body[data-home-dark="true"] .app-header,
+body[data-module-theme="home"] .app-header {
   background: #030d09;
   border-bottom: none;
   padding: 8px 4px 14px 4px;
@@ -677,7 +697,8 @@ body[data-home-dark="true"] .app-header {
   box-shadow: 0 2px 0 #0e4329;
 }
 
-body[data-home-dark="true"] .app-header-gem-badge {
+body[data-home-dark="true"] .app-header-gem-badge,
+body[data-module-theme="home"] .app-header-gem-badge {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -692,7 +713,8 @@ body[data-home-dark="true"] .app-header-gem-badge {
   margin: 0;
 }
 
-body[data-home-dark="true"] .app-header-title {
+body[data-home-dark="true"] .app-header-title,
+body[data-module-theme="home"] .app-header-title {
   color: #ffffff;
 }
 
@@ -700,7 +722,8 @@ body[data-home-dark="true"] .app-header-title {
   color: #16653e;
 }
 
-body[data-home-dark="true"] .app-header-title-accent {
+body[data-home-dark="true"] .app-header-title-accent,
+body[data-module-theme="home"] .app-header-title-accent {
   color: #4ade80;
 }
 
@@ -716,7 +739,8 @@ body[data-home-dark="true"] .app-header-title-accent {
   box-shadow: 0 2px 0 #b0cbaf;
 }
 
-body[data-home-dark="true"] .app-header-pill {
+body[data-home-dark="true"] .app-header-pill,
+body[data-module-theme="home"] .app-header-pill {
   background: #081711;
   border: 1.5px solid #163626;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -742,11 +766,13 @@ body[data-home-dark="true"] .app-header-pill {
   line-height: 1.1;
 }
 
-body[data-home-dark="true"] .app-header-streak-num {
+body[data-home-dark="true"] .app-header-streak-num,
+body[data-module-theme="home"] .app-header-streak-num {
   color: #ffffff;
 }
 
-body[data-home-dark="true"] .app-header-streak-num.active {
+body[data-home-dark="true"] .app-header-streak-num.active,
+body[data-module-theme="home"] .app-header-streak-num.active {
   color: #ffffff;
 }
 
@@ -757,7 +783,8 @@ body[data-home-dark="true"] .app-header-streak-num.active {
   line-height: 1.1;
 }
 
-body[data-home-dark="true"] .app-header-level-num {
+body[data-home-dark="true"] .app-header-level-num,
+body[data-module-theme="home"] .app-header-level-num {
   color: #ffffff;
 }
 
@@ -770,7 +797,8 @@ body[data-home-dark="true"] .app-header-level-num {
   margin-top: 1px;
 }
 
-body[data-home-dark="true"] .app-header-pill-sub {
+body[data-home-dark="true"] .app-header-pill-sub,
+body[data-module-theme="home"] .app-header-pill-sub {
   display: block;
 }
 
@@ -780,7 +808,8 @@ body[data-home-dark="true"] .app-header-pill-sub {
   background: #b0cbaf;
 }
 
-body[data-home-dark="true"] .app-header-pill-divider {
+body[data-home-dark="true"] .app-header-pill-divider,
+body[data-module-theme="home"] .app-header-pill-divider {
   height: 22px;
   background: #183d2a;
 }
@@ -799,13 +828,15 @@ body[data-home-dark="true"] .app-header-pill-divider {
   margin-bottom: 5px;
 }
 
-body[data-home-dark="true"] .app-header-xp-labels {
+body[data-home-dark="true"] .app-header-xp-labels,
+body[data-module-theme="home"] .app-header-xp-labels {
   color: #cbe0d4;
   font-size: 0.8rem;
   font-weight: 700;
 }
 
-body[data-home-dark="true"] .app-header-xp-next {
+body[data-home-dark="true"] .app-header-xp-next,
+body[data-module-theme="home"] .app-header-xp-next {
   color: #4ade80;
   font-weight: 800;
 }
@@ -818,7 +849,8 @@ body[data-home-dark="true"] .app-header-xp-next {
   border: 1px solid #a3caa5;
 }
 
-body[data-home-dark="true"] .app-header-xp-track {
+body[data-home-dark="true"] .app-header-xp-track,
+body[data-module-theme="home"] .app-header-xp-track {
   height: 8px;
   border-radius: 5px;
   background: #081d14;
@@ -832,24 +864,28 @@ body[data-home-dark="true"] .app-header-xp-track {
   transition: width 0.4s ease;
 }
 
-body[data-home-dark="true"] .app-header-xp-fill {
+body[data-home-dark="true"] .app-header-xp-fill,
+body[data-module-theme="home"] .app-header-xp-fill {
   border-radius: 4px;
   background: linear-gradient(90deg, #10b981 0%, #4ade80 100%);
   box-shadow: 0 0 10px rgba(74, 222, 128, 0.45);
 }
 
 /* ── Bottom Navigation Bar (Dark Theme) ────────── */
-body[data-home-dark="true"] .bottom-nav {
+body[data-home-dark="true"] .bottom-nav,
+body[data-module-theme="home"] .bottom-nav {
   background: #040f0b;
   border-top: 1px solid #11281c;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
 }
 
-body[data-home-dark="true"] .bottom-nav a {
+body[data-home-dark="true"] .bottom-nav a,
+body[data-module-theme="home"] .bottom-nav a {
   color: #5c7c6a;
 }
 
-body[data-home-dark="true"] .bottom-nav a.active {
+body[data-home-dark="true"] .bottom-nav a.active,
+body[data-module-theme="home"] .bottom-nav a.active {
   color: #34d399;
   background: #0b2518;
   border: 1.5px solid #1c5236;

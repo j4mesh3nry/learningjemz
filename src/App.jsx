@@ -81,7 +81,8 @@ function Layout() {
 
   useEffect(() => {
     const theme = location.pathname.startsWith('/chess') ? 'chess' :
-                  location.pathname.startsWith('/space') ? 'space' : 'main';
+                  location.pathname.startsWith('/space') ? 'space' :
+                  location.pathname === '/' ? 'home' : 'main';
     document.body.dataset.moduleTheme = theme;
     document.documentElement.dataset.moduleTheme = theme;
   }, [location.pathname]);
