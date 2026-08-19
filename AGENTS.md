@@ -5,8 +5,8 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 ## Commands & verification (run in this order of reliability)
 
 - `npm run dev` — Vite dev server. Requires `.env.local` (gitignored) with `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` for auth/cloud-sync to work.
-- `npm run lint` — oxlint. Exit code is 0 but emits **~5,000 pre-existing warnings** (unused vars/imports, exhaustive-deps, fast-refresh). Do NOT chase them; only avoid adding new ones. Husky pre-commit hook runs this.
-- `npm test` — Vitest (`vitest run`). 7 files / 39 tests; runs to completion and exits. If you see a hang again, run focused files, e.g. `npx vitest run src/pages/__tests__/Home.test.tsx`.
+- `npm run lint` — oxlint. Exit code is 0 but emits pre-existing warnings (unused vars/imports, exhaustive-deps, fast-refresh). Do NOT chase them; only avoid adding new ones. Husky pre-commit hook runs this.
+- `npm test` — Vitest (`vitest run`). 14 files / 91 tests; runs to completion and exits. If you see a hang again, run focused files, e.g. `npx vitest run src/pages/__tests__/Home.test.tsx`.
 - `npm run build` — `tsc -b && vite build`. Passes. It's the only typecheck step, so use it after TS changes. No separate typecheck script.
 
 - Active branch for development is `dev` (and feature branches created from `dev`). 
@@ -17,14 +17,19 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 - Windows / CRLF: `core.autocrlf=true` makes `git status` show ~70 files as modified even when only a few have real diffs. Check `git diff --ignore-cr-at-eol` first; never `git add -A` blindly.
 - When merging features to `main`, update `GAME_DOCUMENTATION.md` (and `docs/GAME_SYSTEM_DESIGN.md`) to match.
 
-## Hard design rules (from `.agents/AGENTS.md` — non-negotiable)
+## Hard Design Rules & Mobile-Game Design System
 
-- **No emojis** in UI or data. All icons via Lucide React or custom SVG. Custom icons must follow the flat, stroke-based Lucide grammar (24x24 viewBox, `stroke="currentColor"`, no fill, round caps/joins). NO cartoon or cutesy/emoji-style icon artwork.
-- **No glassmorphism** (`backdrop-filter`), no translucent or semi-transparent surfaces (`rgba`/`hsla`/opacity panels, buttons, cards, tiles, borders — solid hex fills only), and no neon glows (`box-shadow: 0 0 ...`, `text-shadow` glows, radial auras, gradient text via `background-clip`). Tactile 3D flat design only: solid colors, solid borders, offset solid shadows (e.g. `box-shadow: 0 4px 0 ...`).
-- **Theme connection**: screens/modals must hook into the global tokens in `src/index.css` (`--bg-*`, `--color-*`, `--font-heading`) and the established module palettes (e.g. `theme-space` in `victory.css`) so nothing looks out of place.
-- Outfit for headings, Inter for body. Vanilla CSS with tokens in `src/index.css`; no CSS framework.
-- **No visible scrollbars**: page and container scrollbars must never be visible (scroll must still work). Enforced globally in `src/index.css`; don't re-enable scrollbars on any element.
-- **Module Headers**: The top header widget showing Streak & Level/XP (`Flame` & `Star`) must ONLY appear on the root/home page of each module (e.g. `SpaceHome.tsx`). Sub-pages, games, and sub-screens must NOT render this widget in their top navigation header; sub-page headers must only render the back button and title banner.
+- **No emojis** in UI or data. All icons via Lucide React or custom SVG. Custom icons must follow the flat, stroke-based Lucide grammar (24x24 viewBox, `stroke="currentColor"`, no fill, round caps/joins). NO cartoon or emoji artwork as UI icons.
+- **Atmospheric Mobile-Game Aesthetic**:
+  - Deep dark game canvas (`--game-bg-canvas: #030d09`, `--game-surface-card: #05130e`).
+  - Subtle ambient border glows and theme-tinted outlines (`--game-border-default: #102d1f`, Chess amber `#855930`, Space sapphire `#295285`).
+  - Thematic 3D artwork assets for module cards and panoramic landscape hero scenes.
+  - Reusable component library in `src/components/game/` (`SectionDivider`, `GameModuleCard`, `StatTile`, `SegmentedSwitcher`).
+- **2-Layer Hero Architecture**: Background scenery remains a continuous landscape (`home-hero-landscape.jpg`), while the companion character is a separate overlay layer via `<HeroCharacter avatar={user.avatar} />` on the stone cliff ledge so user avatars can be dynamically swapped.
+- **Theme connection**: Screens must hook into the global game tokens in `src/index.css` (`--game-*`, `--color-*`, `--font-heading`, `--font-body`).
+- **Typography**: Outfit for headings/titles/numbers, Inter for body text and micro-labels. Vanilla CSS with tokens in `src/index.css`; no CSS framework.
+- **No visible scrollbars**: Page and container scrollbars must never be visible (`scrollbar-width: none`, `-ms-overflow-style: none`, `::-webkit-scrollbar { display: none }`). Enforced globally in `src/index.css`; do not re-enable scrollbars on any element.
+- **Module Headers**: The top header capsule widget showing Streak & Level/XP (`Flame` & `Star`) must ONLY appear on the root/home page of each module (e.g. `SpaceHome.tsx`). Sub-pages, games, and sub-screens must NOT render this widget in their top navigation header; sub-page headers must only render the back button and title banner.
 
 ## Architecture
 
@@ -52,5 +57,3 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 - Keep it under 2 sentences.  
 - Use emojis sparingly (👍, 🚀, 🐞) – they are allowed in the message even though UI cannot contain them.
 - Example: `🚀 Added new Cosmic Mystery Sprint mode – players now earn up to 20 XP for perfect runs.`
-
-
