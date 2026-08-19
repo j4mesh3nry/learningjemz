@@ -6,7 +6,7 @@ import { Header } from '../components/Header';
 import { HeroCharacter } from '../components/HeroCharacter';
 import {
   Lock, ArrowRight, BookOpen, Globe, Music, ScrollText, Calculator,
-  Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem,
+  Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem, Sprout,
 } from 'lucide-react';
 import '../index.css';
 
@@ -61,6 +61,8 @@ export default function Home() {
   useEffect(() => {
     document.body.dataset.homeDark = 'true';
     document.documentElement.dataset.homeDark = 'true';
+    document.body.dataset.moduleTheme = 'home';
+    document.documentElement.dataset.moduleTheme = 'home';
     return () => {
       delete document.body.dataset.homeDark;
       delete document.documentElement.dataset.homeDark;
@@ -75,16 +77,11 @@ export default function Home() {
   const badgeCount = Array.isArray(achievements) ? achievements.length : 0;
 
   return (
-    <div className="container" style={{
-      minHeight: '100vh',
-      background: '#030d09',
-      paddingBottom: 90,
-      boxSizing: 'border-box'
-    }}>
-      {/* ── Top Header Widget ── */}
+    <div className="container home-page-container">
+      {/* ── Top Header Widget (Logo + Streak/Level Pill + XP Bar) ── */}
       <Header />
 
-      {/* ── 1. Hero Quest Scene ── */}
+      {/* ── 1. Hero Quest Scene (Full-Bleed Landscape + Character) ── */}
       <div className="home-hero-scene">
         <div className="home-hero-overlay" />
         <div className="home-hero-content">
@@ -102,12 +99,20 @@ export default function Home() {
 
         {/* Character companion slot (default owl, extensible to profile avatars) */}
         <HeroCharacter avatar={user?.user_metadata?.avatar} characterType="owl" />
+
+        {/* Bottom soft gradient fade into the page canvas */}
+        <div className="home-hero-fade-bottom" />
       </div>
 
       {/* ── 2. Continue your journey ── */}
       <div className="home-section-divider">
+        <Sprout size={16} className="home-divider-icon" />
+        <span className="home-divider-label">
+          Continue your <span className="text-emerald">journey</span>
+        </span>
+        <Sprout size={16} className="home-divider-icon flip-h" />
         <div className="home-section-divider-line" />
-        <span>🌿 Continue your journey 🌿</span>
+        <span className="home-divider-diamond">◆</span>
         <div className="home-section-divider-line" />
       </div>
 
@@ -167,8 +172,14 @@ export default function Home() {
 
       {/* ── 3. Your progress ── */}
       <div className="home-section-divider">
+        <Sprout size={16} className="home-divider-icon" />
+        <span className="home-divider-label text-emerald">
+          Your progress
+        </span>
         <div className="home-section-divider-line" />
-        <span>🌿 Your progress</span>
+        <span className="home-divider-diamond">◆</span>
+        <div className="home-section-divider-line" />
+        <span className="home-divider-diamond">◆</span>
         <div className="home-section-divider-line" />
       </div>
 
@@ -252,8 +263,10 @@ export default function Home() {
 
       {/* ── 4. More ways to grow ── */}
       <div className="home-section-divider">
-        <div className="home-section-divider-line" />
-        <span>🌿 More ways to grow</span>
+        <Sprout size={16} className="home-divider-icon" />
+        <span className="home-divider-label text-emerald">
+          More ways to grow
+        </span>
         <div className="home-section-divider-line" />
       </div>
 
@@ -303,8 +316,10 @@ export default function Home() {
 
       {/* ── 5. Coming Soon (Locked Expeditions) ── */}
       <div className="home-section-divider">
-        <div className="home-section-divider-line" />
-        <span>🌿 Coming Soon</span>
+        <Sprout size={16} className="home-divider-icon" />
+        <span className="home-divider-label text-emerald">
+          Coming Soon
+        </span>
         <div className="home-section-divider-line" />
       </div>
 

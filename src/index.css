@@ -892,29 +892,48 @@ body[data-module-theme="home"] .bottom-nav a.active {
   box-shadow: 0 0 14px rgba(52, 211, 153, 0.18);
 }
 
-/* ── Hero Scene Card ───────────────────────────── */
+/* ── Hero Scene (Full Bleed with Soft Fades) ───── */
 .home-hero-scene {
   position: relative;
-  border-radius: 24px;
   overflow: hidden;
-  background-color: #0c1c14;
+  background-color: #030d09;
   background-image: url('/images/home-hero.jpg');
   background-size: cover;
-  background-position: center right 15%;
-  border: 1.5px solid #143523;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  margin-bottom: 22px;
-  min-height: 250px;
+  background-position: center right 10%;
+  border-radius: 0 0 24px 24px;
+  border: none;
+  box-shadow: none;
+  margin: -14px -14px 14px -14px;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 24px 22px;
+  padding: 32px 18px 36px 18px;
+}
+
+@media (min-width: 640px) {
+  .home-hero-scene {
+    margin: -20px -20px 20px -20px;
+    border-radius: 24px;
+    border: 1px solid #143523;
+    padding: 36px 24px;
+  }
 }
 
 .home-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(3, 11, 8, 0.95) 0%, rgba(3, 11, 8, 0.76) 45%, rgba(3, 11, 8, 0.1) 85%, transparent 100%);
+  background: linear-gradient(90deg, rgba(3, 11, 8, 0.96) 0%, rgba(3, 11, 8, 0.78) 45%, rgba(3, 11, 8, 0.1) 85%, transparent 100%);
+  pointer-events: none;
+}
+
+.home-hero-fade-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: linear-gradient(180deg, transparent 0%, rgba(3, 13, 9, 0.6) 45%, #030d09 100%);
   pointer-events: none;
 }
 
@@ -959,46 +978,67 @@ body[data-module-theme="home"] .bottom-nav a.active {
 .home-section-divider {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 22px 0 14px 0;
+  gap: 7px;
+  margin: 18px 0 12px 0;
   color: #8db5a0;
   font-family: var(--font-heading);
-  font-size: 0.98rem;
+  font-size: 0.94rem;
   font-weight: 800;
   letter-spacing: 0.2px;
+}
+
+.home-divider-icon {
+  color: #34d399;
+  flex-shrink: 0;
+}
+
+.home-divider-icon.flip-h {
+  transform: scaleX(-1);
+}
+
+.home-divider-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffffff;
+  white-space: nowrap;
+  font-size: 0.94rem;
+}
+
+.text-emerald {
+  color: #34d399 !important;
 }
 
 .home-section-divider-line {
   flex: 1;
   height: 1px;
-  background: #143021;
+  background: #132d1f;
 }
 
-.home-section-divider-diamond {
-  width: 5px;
-  height: 5px;
-  background: #2a5a3f;
-  transform: rotate(45deg);
+.home-divider-diamond {
+  color: #1e4530;
+  font-size: 0.52rem;
   margin: 0 2px;
+  line-height: 1;
 }
 
 /* ── Themed Game Module Cards ──────────────────── */
 .home-module-cards {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 14px;
+  margin-bottom: 22px;
 }
 
 .home-module-card {
   position: relative;
   overflow: hidden;
-  border-radius: 24px;
-  height: 140px;
+  border-radius: 22px;
+  height: 142px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 22px;
+  padding: 18px 20px;
   cursor: pointer;
   background-size: cover;
   background-position: left center;
@@ -1017,14 +1057,14 @@ body[data-module-theme="home"] .bottom-nav a.active {
 .home-module-card-chess {
   background-color: #160c06;
   background-image: url('/images/chess-card-bg.jpg');
-  border: 1.5px solid #855930;
+  border: 1.5px solid rgba(197, 137, 74, 0.45);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
 
 .home-module-card-space {
   background-color: #050b1a;
   background-image: url('/images/space-card-bg.jpg');
-  border: 1.5px solid #295285;
+  border: 1.5px solid rgba(41, 82, 133, 0.55);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
 
@@ -1047,7 +1087,7 @@ body[data-module-theme="home"] .bottom-nav a.active {
   z-index: 2;
   margin-left: auto;
   max-width: 58%;
-  padding-right: 14px;
+  padding-right: 12px;
 }
 
 .home-module-card-header {
@@ -1058,8 +1098,8 @@ body[data-module-theme="home"] .bottom-nav a.active {
 }
 
 .home-module-mini-badge-chess {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
   background: #25150c;
   border: 1px solid #633e21;
@@ -1071,8 +1111,8 @@ body[data-module-theme="home"] .bottom-nav a.active {
 }
 
 .home-module-mini-badge-space {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
   background: #0d1e34;
   border: 1px solid #1e4776;
@@ -1085,7 +1125,7 @@ body[data-module-theme="home"] .bottom-nav a.active {
 
 .home-module-card-title {
   font-family: var(--font-heading);
-  font-size: 1.3rem;
+  font-size: 1.32rem;
   font-weight: 800;
   color: #ffffff;
   margin: 0;
@@ -1110,7 +1150,7 @@ body[data-module-theme="home"] .bottom-nav a.active {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #2a170c;
+  background: #26150b;
   border: 1.5px solid #855930;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
   display: flex;
@@ -1126,7 +1166,7 @@ body[data-module-theme="home"] .bottom-nav a.active {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #0f1f38;
+  background: #0c1a2d;
   border: 1.5px solid #295285;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
   display: flex;

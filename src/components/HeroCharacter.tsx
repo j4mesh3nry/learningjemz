@@ -9,9 +9,9 @@ type HeroCharacterProps = {
 };
 
 /**
- * Flexible Hero Character component.
- * Currently renders the default Owl scholar placeholder on the scenic ledge.
- * Structured to easily swap in custom avatar/character illustrations per user in future updates.
+ * Flexible Hero Character Slot component.
+ * Allows rendering user avatar illustrations / companions on the hero ledge.
+ * When no custom avatar is set, the default owl companion on the scenic background is displayed.
  */
 export function HeroCharacter({
   avatar,
@@ -20,37 +20,59 @@ export function HeroCharacter({
   className = '',
   style = {},
 }: HeroCharacterProps) {
-  // When custom user avatar characters are provided in the future, we can map them here:
-  // e.g., if (avatar === 'robot') return <RobotCharacter size={size} />;
-  // For now, the owl is the default placeholder companion.
+  // If user has a custom avatar selected, render the custom overlay character
+  if (avatar && avatar !== 'owl') {
+    return (
+      <div
+        className={`hero-character-overlay ${className}`.trim()}
+        style={{
+          position: 'absolute',
+          right: '8%',
+          bottom: '12%',
+          width: size,
+          height: size,
+          zIndex: 3,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+          ...style,
+        }}
+        aria-label={`User companion: ${avatar}`}
+      >
+        <img
+          src={`/images/characters/${avatar}.png`}
+          alt={avatar}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.6))',
+          }}
+          onError={(e) => {
+            // Fallback gracefully if custom character image isn't loaded
+            (e.target as HTMLElement).style.display = 'none';
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Default mode: Owl companion is seamlessly integrated with the landscape
   return (
     <div
       className={`hero-character-slot ${className}`.trim()}
       style={{
+        position: 'absolute',
+        right: '6%',
+        bottom: '8%',
         width: size,
         height: size,
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        pointerEvents: 'none',
         ...style,
       }}
-      aria-label={avatar ? `Hero avatar: ${avatar}` : 'Hero character companion'}
-    >
-      {/* Default placeholder character graphic slot */}
-      <img
-        src="/images/home-hero.jpg"
-        alt="Hero companion character"
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'right 20% center',
-          borderRadius: 16,
-          display: 'none', // Background image is rendered in .home-hero-scene
-        }}
-      />
-    </div>
+      aria-label="Default companion: Owl scholar"
+    />
   );
 }
 
