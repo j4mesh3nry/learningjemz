@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame, getLevelProgress } from '../contexts/GameContext';
-import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw, Gem, Lock, Shield } from 'lucide-react';
+import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw, Gem, Lock, Shield, Star } from 'lucide-react';
 import { Header } from '../components/Header';
 import { JemzLoader } from '../components/JemzLoader';
 import { SegmentedSwitcher } from '../components/game';
@@ -334,7 +334,8 @@ export default function Leaderboard() {
                 {displayName}!
               </div>
               <div className="rank-hero-title" style={{ color: prestige.color }}>
-                <span>★ {prestige.title}</span>
+                <Star size={11} fill="currentColor" strokeWidth={0} />
+                <span>{prestige.title}</span>
               </div>
 
               <div className="rank-hero-progress-box">
@@ -415,7 +416,7 @@ export default function Leaderboard() {
                     <AvatarIcon avatar={top2?.avatar} size={44} iconSize={24} />
                   </div>
                   <div className="rank-podium-name">{top2?.name || 'Player'}</div>
-                  <div className="rank-podium-level">★ Lv.{top2?.level || 1}</div>
+                  <div className="rank-podium-level">Lv.{top2?.level || 1}</div>
                   <div className="rank-podium-score rank-podium-score-2nd">
                     {sortBy === 'xp' ? `${formatXP(top2?.xp || 0)} XP` : <><Flame size={13} color="#ff5a5a" fill="#ff5a5a" /> {getActiveStreak(top2)}</>}
                   </div>
@@ -428,7 +429,7 @@ export default function Leaderboard() {
                     <AvatarIcon avatar={top1?.avatar} size={54} iconSize={30} />
                   </div>
                   <div className="rank-podium-name">{top1?.name || 'Champion'}</div>
-                  <div className="rank-podium-level">★ Lv.{top1?.level || 1}</div>
+                  <div className="rank-podium-level">Lv.{top1?.level || 1}</div>
                   <div className="rank-podium-score rank-podium-score-1st">
                     {sortBy === 'xp' ? `${formatXP(top1?.xp || 0)} XP` : <><Flame size={14} color="#ff5a5a" fill="#ff5a5a" /> {getActiveStreak(top1)}</>}
                   </div>
@@ -441,7 +442,7 @@ export default function Leaderboard() {
                     <AvatarIcon avatar={top3?.avatar} size={44} iconSize={24} />
                   </div>
                   <div className="rank-podium-name">{top3?.name || 'Player'}</div>
-                  <div className="rank-podium-level">★ Lv.{top3?.level || 1}</div>
+                  <div className="rank-podium-level">Lv.{top3?.level || 1}</div>
                   <div className="rank-podium-score rank-podium-score-3rd">
                     {sortBy === 'xp' ? `${formatXP(top3?.xp || 0)} XP` : <><Flame size={13} color="#ff5a5a" fill="#ff5a5a" /> {getActiveStreak(top3)}</>}
                   </div>
