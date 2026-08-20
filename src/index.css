@@ -1474,7 +1474,7 @@ body[data-module-theme="home"] .bottom-nav a.active {
   border: 1.5px solid #102d1f;
   border-radius: 22px;
   padding: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 4px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: stretch;
