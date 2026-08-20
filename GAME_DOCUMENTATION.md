@@ -39,8 +39,10 @@
     - *Red Glow*: Day streak counters (`#ff5a5a`).
     - *Cyan Glow*: Global rank and leaderboards (`#38bdf8`).
     - *Unique Thematic Realm Vibe*: Every new learning module MUST craft its own distinct visual theme (custom surface tint, glowing border, action button styling, and 3D card artwork) to give learners a unique, immersive atmospheric vibe when entering that realm.
-- **2-Layer Hero Architecture**:
-  - Background scenery remains a continuous landscape (`home-hero-landscape.jpg`), while the companion character is an overlay via `<HeroCharacter avatar={user.avatar} />` on the stone cliff ledge so user avatars can be dynamically swapped without re-rendering the scenery.
+- **2-Layer Hero Architecture & Layout Consistency**:
+  - **Universal Landscape Base**: All accounts share a continuous scenic cliff landscape (`home-hero-landscape.jpg`) locked to a fixed height (`280px` mobile, `290px` tablet/desktop) to eliminate layout shifts.
+  - **Dynamic Companion Cutout**: The player's active companion is rendered as a seamless, transparent cutout overlay via `<HeroCharacter avatar={user.avatar} />` perched directly on the stone cliff ledge, complete with contact shadows, subtle idle breathing/floating animation (`heroCompanionBreathe`), and interactive tap feedback.
+  - **Zero Layout Distortion**: Text fields (including long player usernames) utilize CSS truncation (`text-overflow: ellipsis`) so user data never wraps or stretches the hero section dimensions.
 - **Reusable Component Library (`src/components/game/`)**:
   - `AvatarIcon`: Stroke-based Lucide React avatar system supporting clean identifier strings (`user`, `bot`, `shield`, `crown`, `zap`, etc.) with 100% backward-compatibility for legacy accounts.
   - `LivesTracker`: Universal 3/4/5 heart counter using Lucide stroke icons with smooth filled-to-unlit transitions and pop animations.

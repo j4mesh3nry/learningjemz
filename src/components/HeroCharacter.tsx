@@ -1,78 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 type HeroCharacterProps = {
   avatar?: string | null;
   characterType?: string;
-  size?: number;
   className?: string;
   style?: React.CSSProperties;
 };
 
-// Map avatar emojis/names to image assets
+// Map avatar keys to transparent companion assets
 const AVATAR_MAP: Record<string, string> = {
-  '🦉': '/images/characters/owl.jpg',
-  'owl': '/images/characters/owl.jpg',
+  '🦉': '/images/characters/owl.png',
+  'owl': '/images/characters/owl.png',
+  'user': '/images/characters/owl.png',
+  'bot': '/images/characters/owl.png',
+  'robot': '/images/characters/owl.png',
 };
 
 /**
- * 2-Layer Hero Character Slot component.
- * Allows placing user-selected avatar companions onto the scenic cliff ledge.
+ * 2-Layer Hero Companion Slot component.
+ * Positions the user's active companion on the cliff ledge of the landscape hero,
+ * with subtle idle floating/breathing animation and interactive tap reactions.
  */
 export function HeroCharacter({
   avatar,
   characterType = 'owl',
-  size = 130,
   className = '',
   style = {},
 }: HeroCharacterProps) {
-  const currentAvatar = avatar || characterType;
-  const isDefaultOwl = !avatar || avatar === 'owl' || avatar === '🦉';
-
-  // If using default owl, it is already seamlessly painted into the default landscape scene
-  if (isDefaultOwl) {
-    return null;
-  }
-
-  // If the user selected another companion avatar, render the companion on the cliff ledge
+  const [isBouncing, setIsBouncing] = useState(false);
+  const currentAvatar = (avatar || characterType).toLowerCase().trim();
   const imageSrc = AVATAR_MAP[currentAvatar] || '/images/characters/owl.jpg';
+
+  const handleTap = () => {
+    setIsBouncing(true);
+    setTimeout(() => setIsBouncing(false), 500);
+  };
 
   return (
     <div
-      className={`hero-character-overlay ${className}`.trim()}
-      style={{
-        position: 'absolute',
-        right: '6%',
-        bottom: '12%',
-        width: size,
-        height: size,
-        zIndex: 3,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        pointerEvents: 'none',
-        ...style,
-      }}
-      aria-label={`Hero avatar companion: ${currentAvatar}`}
+      className={`hero-companion-wrapper ${isBouncing ? 'bounce' : ''} ${className}`.trim()}
+      style={style}
+      onClick={handleTap}
+      role="img"
+      aria-label={`Hero companion: ${currentAvatar}`}
+      title="Companion (Tap to interact)"
     >
-      <img
-        src={imageSrc}
-        alt={currentAvatar}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          borderRadius: '20px',
-          border: '2px solid rgba(52, 211, 153, 0.4)',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.75)',
-          filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8))',
-        }}
-        onError={(e) => {
-          // Graceful fallback if image is missing
-          (e.target as HTMLElement).style.display = 'none';
-        }}
-      />
+      {/* Stone cliff contact shadow */}
+      <div className="hero-companion-shadow" />
+
+      {/* Companion figure container */}
+      <div className="hero-companion-figure">
+        <img
+          src={imageSrc}
+          alt={currentAvatar}
+          className="hero-companion-img"
+          onError={(e) => {
+            // Graceful fallback to default owl if image is missing
+            (e.target as HTMLImageElement).src = '/images/characters/owl.png';
+          }}
+        />
+      </div>
     </div>
   );
 }
 
 export default HeroCharacter;
+

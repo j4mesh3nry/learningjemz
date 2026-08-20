@@ -92,7 +92,7 @@ LearningJemz is engineered around an **Atmospheric Mobile-Game Design System** t
 
 ### Core Visual Principles
 1. **Deep Dark Game Canvas**: Global dark canvas (`--game-bg-canvas: #030d09`) with high-contrast card surfaces (`--game-surface-card: #05130e`) and theme-tinted glowing borders.
-2. **2-Layer Dynamic Hero Architecture**: Continuous panoramic landscape backdrop (`home-hero-landscape.jpg`) with a modular overlay slot (`<HeroCharacter avatar={user.avatar} />`) dynamically rendering the player's active avatar atop the stone cliff ledge without reloading background scenery.
+2. **2-Layer Dynamic Hero Architecture & Fixed Layout**: Continuous panoramic landscape backdrop (`home-hero-landscape.jpg`) locked to fixed dimensions (`280px` / `290px`), paired with a dynamic overlay slot (`<HeroCharacter avatar={user.avatar} />`) rendering the player's active companion as a transparent cutout with contact shadows and idle breathing animation (`heroCompanionBreathe`) directly on the stone cliff ledge, with username text truncation preventing layout shifts across accounts.
 3. **Stroke-Based Icon Grammar (Zero Emojis)**: Strictly no emojis in UI markup, text, or data structures. All iconography is rendered via stroke-based Lucide React icons (`24x24` viewBox, `stroke="currentColor"`, round caps/joins).
 4. **Invisible Scrollbars**: Page and container scrollbars are hidden globally (`scrollbar-width: none`, `-webkit-scrollbar { display: none }`) while preserving natural touch and mouse wheel scrolling.
 5. **Tactile Mobile Ergonomics**: Generous tap targets (minimum 44px), subtle physical press feedback (`translateY(1px)` on active press, `translateY(-2px)` on hover), clamped to a maximum 480px mobile-first width.

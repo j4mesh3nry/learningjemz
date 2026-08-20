@@ -73,27 +73,22 @@ export default function Home() {
 
   const badgeCount = Array.isArray(achievements) ? achievements.length : 0;
 
-  // 2-Layer Hero: Switch background to empty cliff when custom avatar is active
-  const avatar = user?.user_metadata?.avatar;
-  const isCustomAvatar = avatar && avatar !== 'owl' && avatar !== '🦉';
-  const heroBgImage = isCustomAvatar ? '/images/home-hero-landscape.jpg' : '/images/home-hero.jpg';
+  // Universal Scenic Cliff Hero: Standard landscape background + dynamic companion overlay
+  const avatar = user?.user_metadata?.avatar || 'owl';
 
   return (
     <div className="container home-page-container">
       {/* ── Top Header Widget (Logo + Streak/Level Pill + XP Bar) ── */}
       <Header />
 
-      {/* ── 1. Hero Quest Scene (Full-Bleed Landscape + Character Overlay) ── */}
-      <div
-        className="home-hero-scene"
-        style={{ backgroundImage: `url('${heroBgImage}')` }}
-      >
+      {/* ── 1. Hero Quest Scene (Full-Bleed Landscape + Character Companion Overlay) ── */}
+      <div className="home-hero-scene">
         <div className="home-hero-overlay" />
         <div className="home-hero-content">
           <p className="home-hero-greeting-sub">
             {getGreeting()},
           </p>
-          <div className="home-hero-username">
+          <div className="home-hero-username" title={displayName}>
             {displayName}!
           </div>
           <h2 className="home-hero-heading">
@@ -102,7 +97,7 @@ export default function Home() {
           </h2>
         </div>
 
-        {/* 2-Layer Character Companion slot (renders overlay if custom avatar is selected) */}
+        {/* Dynamic Character Companion on the cliff ledge */}
         <HeroCharacter avatar={avatar} characterType="owl" />
 
         {/* Bottom soft gradient fade into the page canvas */}
