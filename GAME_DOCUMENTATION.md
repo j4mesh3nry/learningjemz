@@ -8,7 +8,7 @@
   - **Active Learning Realms**:
     - 🚀 **Space Exploration & Astronomy**: Discover planetary science, scale of the solar system, 3D planet visualizer with natural satellites, and Illuminate the System size-ordering spelling challenge.
     - ♟️ **Chess Tactics & AI Strategy**: Master AI strategy and test skills against adaptive Stockfish AI bot levels.
-  - **Future Horizon**: Architected to seamlessly integrate upcoming modules such as **Geography & Maps**, **Reading & Literature**, **Math & Logic Puzzles**, **Science Experiments**, **History Timelines**, **Coding Fundamentals**, and **Languages**.
+  - **Future Horizon**: Architected to seamlessly integrate upcoming learning modules and educational mini-games staged as placeholder preview cards on the dashboard.
 - **Target Audience**: Students, children, and lifelong learners seeking an intuitive, fun, and visually stunning hub to explore diverse topics at their own pace.
 
 ---
@@ -38,6 +38,7 @@
     - *Gold Glow*: XP and achievement highlights (`#fbbf24`).
     - *Red Glow*: Day streak counters (`#ff5a5a`).
     - *Cyan Glow*: Global rank and leaderboards (`#38bdf8`).
+    - *Unique Thematic Realm Vibe*: Every new learning module MUST craft its own distinct visual theme (custom surface tint, glowing border, action button styling, and 3D card artwork) to give learners a unique, immersive atmospheric vibe when entering that realm.
 - **2-Layer Hero Architecture**:
   - Background scenery remains a continuous landscape (`home-hero-landscape.jpg`), while the companion character is an overlay via `<HeroCharacter avatar={user.avatar} />` on the stone cliff ledge so user avatars can be dynamically swapped without re-rendering the scenery.
 - **Reusable Component Library (`src/components/game/`)**:
@@ -51,7 +52,7 @@
   - `SegmentedSwitcher`: Dark pill tab switcher (`Play | Learn`, `XP | Streak`) with glowing emerald active indicator.
 - **Design Rules & Aesthetic Standards**:
   - **Zero Emojis**: Emojis are prohibited in UI markup, text, and data structures. All iconography is strictly stroke-based Lucide React (24x24 viewBox, `stroke="currentColor"`).
-  - **Zero Backdrop-Filter**: Glassmorphism blur filters (`backdrop-filter`) are prohibited. All card and modal surfaces use solid, opaque design tokens (`--game-bg-canvas: #030d09`, `--game-surface-card: #05130e`).
+  - **Surface Opacity**: Card and modal surfaces use high-contrast dark design tokens (`--game-bg-canvas: #030d09`, `--game-surface-card: #05130e`) with luminous theme-tinted outlines.
   - **Invisible Scrollbars**: Page and container scrollbars are hidden globally (`scrollbar-width: none`).
   - **Module Headers**: The top header capsule widget (`Flame` & `Star`) appears ONLY on the root page of each module; sub-page headers render only the back button and title banner.
 - **Typography**:
@@ -73,8 +74,8 @@
 - **Local Midnight Rollover (no reload needed)**: A `GameContext` heartbeat (30s interval + `visibilitychange` when the tab becomes visible) detects the local day change at 12:00am. If the previous day was missed, a stale streak immediately resets to `0` (and any fabricated future dates are pruned); if yesterday was played the streak survives. `hasPlayedToday` recomputes on the forced re-render, so fire icons across headers, Profile ("Me"), module headers, and the Victory screen instantly switch to the unlit grey state without requiring a page reload. Corrected state syncs to Supabase automatically.
 - **Duolingo Streak Calendar**: Rendered in Profile and Streak Screen drawer modal. Days where the learner *actually* played display lit fire badges (`Flame`); past days with no activity remain open/unlit. The current day is lit only after the learner completes their first activity of that day.
 - **Streak Transition Animations**: Counter transitions smoothly from `previousStreak` to `currentStreak` (e.g., `3 -> 4`) with an absolutely positioned, floating `+1` badge effect that floats upwards (`plusOneFloatUp` animation) next to the number, avoiding layout shifts, followed by an igniting scale-pop animation on the main counter number.
-- **Theme & Aesthetics**: Styled universally to match the platform's main game theme. Uses a soft, light sage background canvas (`#d4e8d5`), crisp white tracker cards (`#ffffff`) with sage borders (`#b0cbaf`), deep forest green labels, and tactile 3D buttons.
-- **Indicator**: Active Flame (`#ff6d00` badge/fill, `#ff9800` border), Inactive Flame (`#b0cbaf` dot).
+- **Theme & Aesthetics**: Styled universally to match the platform's Atmospheric Mobile-Game theme. Uses the deep dark canvas (`#030d09`), dark surfaces (`#05130e`), subtle glowing emerald and theme borders, and tactile 3D buttons.
+- **Indicator**: Active Flame (`#ff5a5a` badge/fill, `#ff4d4d` border), Inactive Flame (`#4e7361` unlit grey).
 - **Reset Trigger**: Absence of recorded activity on the previous calendar day (enforced at the next local midnight).
 - **Cloud Sync (lossless, offline-safe, cross-device)**: Every state change snapshots into a per-account "pending sync" queue in `localStorage` *before* the Supabase `game_progress` upsert is attempted. The queue is cleared only after the server write succeeds; failed writes (offline play, flaky mobile networks, expired sessions) are retried automatically on state change, on reconnection (`online`), and when the tab becomes visible again. **`played_dates` lives inside the `bot_stats` JSONB column** (there is no separate `played_dates` column in `game_progress` — the payload never sends one, so upserts can't fail against the real schema). On app start the pending queue and the server row are resolved **last-writer-wins by timestamp**: if the pending snapshot `savedAt` is NEWER than the row's `updated_at`, local progress wins and is re-flushed (offline XP/streak gains are never dropped); if the server row is as new or newer (progress synced from another device), the server wins and the stale queue is discarded so it can never overwrite newer cloud data. Fabricated *default* snapshots (empty 0-state produced by a stuck init or an offline first load on a fresh device) are never flushed or merged over real server data, and a pristine offline fallback blocks syncing entirely until a fetch succeeds — so empty states can't zero out a real account. The pending queue and its last-synced marker **survive sign-out** (they are per-account keyed), and the Profile sign-out button pushes an immediate `flushNow` before logging out, so play right before signing out — even on a flaky connection — is never lost and restores on the next login. Backgrounding or closing the app fires an immediate flush (`pagehide` / hidden state) because mobile browsers throttle debounce timers. An account whose server row is missing (`PGRST116`) but which holds real queued progress restores from the queue instead of being reset to a fresh 0-state. The leaderboard pushes any pending progress (immediate `flushNow`) before fetching, refreshes again when the app returns to the foreground, and shows the signed-in learner's row with live app values, so the board can't lag or contradict the app. Auth token refreshes no longer reset in-memory progress (initialization is keyed on the account ID, and re-runs if a mid-flight init was aborted).
 
@@ -103,7 +104,7 @@
 
 
 ### Victory Screen & Module Theme System
-- **Module Theme Modes**: Supports `theme="space"` (deep muted indigo solid card `#171a38`, muted steel border `#3d4461`, muted slate action buttons), `theme="chess"` (dark warm solid card `#1c1917`, 3D amber border `#d97706`), `theme="geo"` (emerald card `#f0fdf4`, green border `#16653e`), and `theme="default"` (playful white/emerald card). The Space victory and Illuminate game-over screens share a unified minimal palette (no vibrant/glowy colors): streak shown in muted rose `#d8a8a8`, XP in muted gold `#d9c58f`, with a clean 54px icon tile and compact stat-slot boxes.
+- **Module Theme Modes**: Supports `theme="space"` (deep nebula navy solid card `#050b1a`, cosmic sapphire border `#295285`, slate action buttons), `theme="chess"` (dark warm mahogany card `#160c06`, 3D amber border `#855930`), `theme="geo"` (dark forest card `#06150d`, emerald border `#2e7d32`), and `theme="default"` (dark emerald card `#05130e`).
 - **Design Enforcement**: Follows the Atmospheric Mobile-Game Design System. Victory and modal cards use dark thematic containers with ambient border glows, tactile buttons, and subtle backdrop dimming.
 - **Iconography Standard**: Strictly NO emojis in UI or data. All graphics render high-quality Lucide React icons (`Gem`, `Sparkles`, `Flame`, `Trophy`, `Zap`).
 
@@ -149,18 +150,18 @@
   - **Sizes**: Earth diameter = 1.0 unit — true diameter ratios (Jupiter 10.97×, Saturn 9.14×, Uranus 3.98×, Neptune 3.86×, Venus 0.95×, Mars 0.53×, Mercury 0.38×, Pluto 0.186×, Ceres 0.074×). Charon is correctly smaller than Pluto.
   - **Pluto-Charon Binary System**: Both bodies orbit the shared barycenter (mass ratio 0.118 — the barycenter sits outside Pluto's surface); Charon distance & size are true-proportional. Moons (Earth's Moon, Europa, Titan) orbit all bodies with true sizes but a capped 14-unit display distance.
   - **Sun**: Capped at ~1/30 true scale so planets stay visible; its info badge honestly notes it is truly 109× Earth's width.
-  - **Info Panel**: Translucent blur card (backdrop of orbiting planets shows through) while all 3D name labels fade out when open (drei `Html` labels capped at `zIndexRange [5,0]`). Every body (Sun + all 10 planets/dwarf planets) has an educational badge with a Lucide icon (e.g. "Fastest Planet", "Ringed Giant", "Binary Dwarf Planet System") plus stat grid and fun fact.
-  - **Tab & Navigation State Persistence**: Module hubs (`/space`, `/reading`, `/geo`) remember the active tab (`Play` vs `Learn`) across sub-page navigation via `sessionStorage` and URL query parameters (`?tab=...`).
+  - **Info Panel**: Sleek dark info card with body badges from the `PLANET_BADGES` map (Lucide icon + title + fact); drei `Html` name labels are capped to `zIndexRange [5, 0]` (below the panel's z-index 50) and fade out entirely while a body is selected (`labelsHidden` prop).
+  - **Tab & Navigation State Persistence**: Module hubs (`/space`, `/chess`) remember the active tab (`Play` vs `Learn`) across sub-page navigation via `sessionStorage` and URL query parameters (`?tab=...`).
   - **App Loading & Background Asset Preloading**:
-    - **Startup & Refresh Sequence**: App launch renders the clean white logo `SplashScreen` followed by the light green `<JemzLoader darkTheme={false} />` (`Loading LearningJemz... Preparing your experience... 0% -> 100%`).
+    - **Startup & Refresh Sequence**: App launch renders the clean white logo `SplashScreen` followed by the dark `<JemzLoader darkTheme={true} />` (`Loading LearningJemz... Preparing your experience... 0% -> 100%`).
     - **Background Preloader (`preloadSpaceObjectImages`)**: Silently pre-caches all 35 high-res space object images into browser memory during app startup, eliminating image pops and flickering during gameplay.
-    - **Global Error Boundary**: The entire app is wrapped in an `ErrorBoundary` component. If a network chunk loading error occurs or the app experiences a runtime crash, it intercepts the blank screen and presents a custom soft light sage error recovery screen with a tactile 3D **"Refresh App"** button that automatically clears the active browser/PWA caches and hard reloads the application.
+    - **Global Error Boundary**: The entire app is wrapped in an `ErrorBoundary` component. If a network chunk loading error occurs or the app experiences a runtime crash, it intercepts the blank screen and presents a custom dark error recovery screen with a tactile 3D **"Refresh App"** button that automatically clears the active browser/PWA caches and hard reloads the application.
     - **PWA Service Worker & Cache Strategy**:
       - Registers a custom Service Worker (`public/sw.js`) with an automatic update checking sequence running in the background every 30 minutes.
       - **Network-First Navigation Strategy**: Directs navigation/index requests to fetch from the network first to guarantee new code deployment hashes load instantly, falling back to cached files only when offline.
       - **Stale-While-Revalidate Asset Cache**: Background-updates CSS, JS, and image assets seamlessly while serving cached versions immediately for ultra-fast startup.
       - **Automatic Cache Flushing**: Detects new deployments in the background, automatically activates the new service worker via `skipWaiting()`, and performs a clean background window reload to avoid stale JS chunk exceptions.
-      - **Theme-Aligned Launch Experience**: Configured the native PWA launch background (`background_color` in `manifest.json` and `theme-color` in `index.html`) to match the soft light sage canvas color (`#d4e8d5`) with a translucent status bar (`black-translucent`), preventing the default blank white transition screen on iOS and Android.
+      - **Theme-Aligned Launch Experience**: Configured the native PWA launch background (`background_color` in `manifest.json` and `theme-color` in `index.html`) to match the dark canvas color (`#030d09`) with a translucent status bar (`black-translucent`), preventing the default blank white transition screen on iOS and Android.
   - **Cosmic Mystery Card Challenge (`CosmicMystery.tsx`)**:
     - **Dual Game Modes**:
       - **10-Card Sprint**: 10-round speedrun trivia format with real-time timer, +3s wrong answer penalty, and local storage Best Time record (`cosmic_mystery_sprint_best_time`). Flawless 10/10 runs unlock a gold `Crown` badge. XP: +1 XP per correct answer, +5 XP perfect run bonus, +5 XP speed demon bonus (<30s).

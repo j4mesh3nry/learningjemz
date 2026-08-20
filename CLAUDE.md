@@ -41,6 +41,7 @@ Run commands from the project root using these exact scripts:
 Always verify compliance with these rules during the planning phase:
 - **No Emojis:** UI text, data, and buttons must not contain emojis. Use Lucide React stroke icons (24x24 viewBox, `stroke="currentColor"`, round caps/joins) or custom SVGs.
 - **Atmospheric Mobile-Game Aesthetic:** Deep dark game canvas (`#030d09`), card surfaces (`#05130e`), subtle ambient border glows (`#102d1f`, Chess `#855930`, Space `#295285`), and rich thematic artwork.
+- **Unique Thematic Identity per Module:** Each learning module must have its own distinct, authentic theme vibe (unique surface color tint, glowing border, action button styling, and 3D card artwork) so entering a module feels like entering an immersive world.
 - **2-Layer Hero Architecture:** Background scenery stays a continuous landscape (`home-hero-landscape.jpg`), while the companion character is an overlay via `<HeroCharacter avatar={user.avatar} />` on the cliff ledge.
 - **Component Library:** Utilize standardized components from `src/components/game/` (`SectionDivider`, `GameModuleCard`, `StatTile`, `SegmentedSwitcher`).
 - **Invisible Scrollbars:** All scrollable divs and page bodies must keep scroll functional but with scrollbars hidden.

@@ -5,11 +5,11 @@ This document is the absolute source of truth for the LearningJemz application. 
 ---
 
 ## 1. Vision & Core Architecture
-LearningJemz is designed to be a highly gamified, educational progressive web app. The core philosophy is to use psychological feedback loops (streaks, leveling, achievements, micro-animations) heavily inspired by Duolingo to incentivize learning across various disciplines (Chess, Geography, Space, Reading).
+LearningJemz is designed to be a highly gamified, educational progressive web app. The core philosophy is to use psychological feedback loops (streaks, leveling, achievements, micro-animations) heavily inspired by Duolingo to incentivize learning across various disciplines (Chess, Space, and expanding frontiers).
 
 ### Tech Stack
 - **Frontend Framework**: React 19, built with Vite for lightning-fast HMR and bundling.
-- **Routing**: `react-router-dom` v7. We use a global `<Layout>` component in `App.jsx` that conditionally renders the `<BottomNav>` only on root paths (Home, Rank, Store, Profile). Active learning modules use nested routing (`/chess/*`, `/space/*`), while upcoming modules (Reading, Geography, Songs, Poems, Math) are displayed as locked preview cards on the Home screen.
+- **Routing**: `react-router-dom` v7. We use a global `<Layout>` component in `App.jsx` that conditionally renders the `<BottomNav>` only on root paths (Home, Rank, Store, Profile). Active learning modules use nested routing (`/chess/*`, `/space/*`), while upcoming modules (Module 3, Module 4, Module 5) are displayed as locked preview cards on the Home screen.
 - **Backend & Database**: Supabase. Used for PostgreSQL data storage, Row Level Security (RLS) policies, and user Authentication.
 - **Styling**: Pure Vanilla CSS. We rely on CSS Grid, Flexbox, and global CSS variables (`index.css`) rather than utility frameworks to ensure we have pixel-perfect control over custom 3D animations and gamified aesthetics.
 
@@ -32,7 +32,7 @@ This context holds all the gamification state and syncs it between `localStorage
   - `streak` (Current active streak count)
   - `maxStreak` (Highest streak achieved)
   - `lastVisit` (Timestamp string to track daily logins)
-  - Module-specific stats (`chessWins`, `puzzlesSolved`, `provincesCorrect`, `flashcardsMastered`, `quizHighScore`, `booksReading`).
+  - Module-specific stats (`chessWins`, `puzzlesSolved`, `flashcardsMastered`, `quizHighScore`).
   - **Modular Progression Engine (`useModuleProgress`)**: Enables any learning module to track namespaced stats via `useModuleProgress(moduleId)` and dispatch XP/streaks via `recordProgress({ xpGained, statsUpdate, streakEligible })`, persisted in Supabase `bot_stats[moduleId]` JSONB.
 - **Data Syncing (lossless queue, cross-device last-writer-wins, never fire-and-forget)**: A `useEffect` writes every state change to `localStorage` and snapshots it into a per-account "pending sync" queue (`utils/pendingSync.js`). A debounced flusher then upserts the newest snapshot to Supabase and clears the queue **only on success**. Failures (offline PWA play, mobile network flakes, expired sessions) keep the queue and retry on state change, the `online` event, and tab visibility. On startup the pending snapshot and the fetched `game_progress` row are reconciled **by timestamp** (`pending.savedAt` vs the row's `updated_at` column): newer wins and is flushed, older side is discarded — so offline gains on one device are never lost, and a stale queue from another device can never overwrite a newer cloud row. **`played_dates` is persisted inside the `bot_stats` JSONB column** (`bot_stats.playedDates`) — there is no top-level `played_dates` column in `game_progress`, and no payload sends one. Uploads race a 10s timeout so a hung request can never stall the queue.
   - **Anti-zeroing guards**: snapshots with zero progress (`isPristineDefaultState`) are treated as fabrications — the flusher skips them, and the startup restore discards them in favour of a real server row. A pristine offline fallback (fetch failed, no local data) sets a blocking mode until a fetch succeeds, so even gameplay from that empty base can never overwrite real progress. Initialization is keyed on the account ID (not the user object identity) and re-runs when a mid-flight init was aborted by an identity refresh, so state is never left stuck on a default 0-streak snapshot.
@@ -59,7 +59,6 @@ Level progression is designed to be progressive and challenging. High-level badg
   - **Chess Tactics Puzzle**: Easy (`+6 XP`), Medium (`+10 XP`), Hard (`+15 XP`) + Survival milestone bonuses
   - **Space Cosmic Mystery**: Sprint / Survival trivia (`+1 XP` per correct, up to `+10 XP` bonuses)
   - **Space Illuminate the System**: Easy (`6-9 XP`), Medium (`13-19 XP`), Hard (`22-31 XP`)
-  - **Reading**: `+1 XP` per minute of active reading.
 
 ### B. The Streak "Ignition" System
 Streaks are the core retention mechanic, heavily leveraging psychological triggers.
@@ -87,41 +86,51 @@ Streaks are the core retention mechanic, heavily leveraging psychological trigge
 
 ---
 
-## 4. UI/UX Design Language & Theming
+## 4. UI/UX Design Language & Atmospheric Mobile-Game Design System
 
-The application explicitly avoids Dark Mode to maintain a bright, energetic, and engaging environment. This is enforced against device-level dark/forced-color overrides: `index.html` declares `<meta name="color-scheme" content="light">`, the `:root` block declares `color-scheme: light only` + `forced-color-adjust: none`, and a `@media (forced-colors: active)` block applies `forced-color-adjust: none` to all elements and re-asserts the canvas colors on `html`/`body` — so browsers (Chrome auto dark, Samsung force dark, Windows High Contrast, forced-colors high contrast) never re-tint the UI.
+LearningJemz is engineered around an **Atmospheric Mobile-Game Design System** that delivers a deep, tactile, and immersive experience.
 
-### Typography
-- **Headings & Large Numbers**: `Outfit` (sans-serif) - chosen for its modern, geometric, and highly legible structure.
-- **Body & UI Elements**: `Inter` (sans-serif) - chosen for maximum readability at small sizes.
+### Core Visual Principles
+1. **Deep Dark Game Canvas**: Global dark canvas (`--game-bg-canvas: #030d09`) with high-contrast card surfaces (`--game-surface-card: #05130e`) and theme-tinted glowing borders.
+2. **2-Layer Dynamic Hero Architecture**: Continuous panoramic landscape backdrop (`home-hero-landscape.jpg`) with a modular overlay slot (`<HeroCharacter avatar={user.avatar} />`) dynamically rendering the player's active avatar atop the stone cliff ledge without reloading background scenery.
+3. **Stroke-Based Icon Grammar (Zero Emojis)**: Strictly no emojis in UI markup, text, or data structures. All iconography is rendered via stroke-based Lucide React icons (`24x24` viewBox, `stroke="currentColor"`, round caps/joins).
+4. **Invisible Scrollbars**: Page and container scrollbars are hidden globally (`scrollbar-width: none`, `-webkit-scrollbar { display: none }`) while preserving natural touch and mouse wheel scrolling.
+5. **Tactile Mobile Ergonomics**: Generous tap targets (minimum 44px), subtle physical press feedback (`translateY(1px)` on active press, `translateY(-2px)` on hover), clamped to a maximum 480px mobile-first width.
 
-### Global Color Palette (CSS Variables)
-- **Primary Brand**: Emerald Green (`--color-primary: #1c7c54`). Used for primary buttons, the main logo, and active states.
-- **XP / Rewards**: Amber/Gold (`--color-xp: #ffb400`).
-- **Streak**: Vibrant Red/Orange (`--color-streak: #ff4d4d` / `#e53935`).
-- **Backgrounds**: White (`#ffffff`) for cards, Off-White (`#f5f5f5`) for main backgrounds.
+### Typography Hierarchy
+- **Headings, Display Titles & Numbers**: `Outfit` (800–900 weight, bold geometric sans-serif).
+- **Body Text, Descriptions & Micro-labels**: `Inter` (500–700 weight, clean legible sans-serif).
 
-### Module-Specific Color Identities
-Each learning module has its own distinct background color to create a sense of place. To ensure these backgrounds seamlessly cover the entire viewport and overscroll regions, the `data-module-theme` attribute is dynamically applied to both `document.body` and `document.documentElement` (`html`) (e.g., `data-module-theme="chess"`), syncing the global background variables universally.
-- **Chess Module**: Dark Emerald (`--bg-chess: #0e4d2e`)
-- **Geography Module**: Philippines Teal (`--bg-geo: #0066cc`)
-- **Reading Module**: Warm Amber (`--bg-reading: #d16f2c`)
-- **Space Module**: Deep Space Black (`--bg-space: #0a0a0a`)
-- **Space Victory / Game Over Screens**: Muted minimal palette shared by the Illuminate System victory (`theme="space"`) and game-over cards: solid indigo card `#171a38`, muted steel border `#3d4461`, tactile offset shadow `#0b0d22`, slate stat/action surfaces `#1d2040`, streak value muted rose `#d8a8a8`, XP value muted gold `#d9c58f`. No vibrant or glowy accents on these screens.
+### Global Design Tokens (`src/index.css`)
+- **Canvas Background**: `--game-bg-canvas: #030d09`
+- **Card Surface**: `--game-surface-card: #05130e`
+- **Header Pill Surface**: `--game-surface-card-header: #081711`
+- **Default Border**: `--game-border-default: #102d1f`
+- **Highlight Border**: `--game-border-highlight: #1a452f`
+- **Emerald Brand Accent**: `--game-accent-emerald: #34d399` / `#4ade80` (Primary brand, active nav, XP progress bar)
+- **Gold XP Accent**: `--game-accent-gold: #fbbf24` (XP badges, star level icons, trophies)
+- **Streak Red Accent**: `--game-accent-red: #ff5a5a` (Day streak counters, flame badges)
+- **Cyan Rank Accent**: `--game-accent-cyan: #38bdf8` (Leaderboard rankings, cosmic highlights)
+- **Purple Rewards Accent**: `--game-accent-purple: #c084fc` (Store chips, cosmetic unlocks)
+
+### Module-Specific Theme Palettes
+Each learning module has an authentic, thematic identity:
+- **Chess (`theme="chess"`)**: Warm bronze/amber border (`#855930`), mahogany card surface (`#160c06`), and carved knight 3D artwork.
+- **Space (`theme="space"`)**: Cosmic sapphire border (`#295285`), deep nebula navy surface (`#050b1a`), and sapphire ringed planet 3D artwork.
 
 ### Key CSS Animations
-Stored in module CSS files (like `chess.css`), we utilize keyframes to make the UI feel alive:
-- `slideUp`: Used for notifications and modals to enter smoothly from the bottom.
-- `cinematicIn`: Used for the Game Over overlay, scaling in from 0.95 to 1.0.
-- `ignitePulse`: The 0.6s cubic-bezier pulse used when a streak is ignited.
-- `fadeIn`: Standard opacity transitions.
+- `slideUp`: Smooth modal and drawer entry from screen bottom.
+- `cinematicIn`: Game over and victory overlays scaling in from 0.95 to 1.0.
+- `ignitePulse`: Dynamic scale-pop pulse (0.6s cubic-bezier) when a daily streak is ignited.
+- `plusOneFloatUp`: Floating `+1` streak indicator badge floating upwards next to the counter number.
+- `fadeIn`: Standard opacity transitions for tab switches and view swaps.
 
 ---
 
 ## 5. Detailed Module Breakdown
 
-### A. Chess Module (`/chess`)
-The most robust module in the application.
+### A. Chess Module (`/chess`) [ACTIVE REALM]
+The primary strategy and critical thinking module.
 - **Logic Engine**: Uses the open-source `chess.js` library for move validation, FEN/PGN parsing, and checkmate detection.
 - **AI Opponents**: Powered by Stockfish 10 running as a Web Worker (with an automatic local JS fallback).
   - **Beginner Bob (Easy)**: ~400 Elo, randomizes moves for accessible introductory play.
@@ -138,37 +147,32 @@ The most robust module in the application.
   - **Tactile 3D Confirmation Modals**: Features dedicated tactile dialogs for Leaving, Restarting, and Resigning, with fair exit mechanics before first player moves.
   - **Victory Cards & Minimized Dock**: When a game or puzzle run concludes, a cinematic overlay displays streak and XP rewards, which can be minimized into the floating bottom dock to review the board.
 
-### B. Geography Module (`/geo`)
-Focused currently on Philippine geography.
-- **Core Loop**: Users are presented with a blank map or a highlighted region and must identify the correct province from multiple choices.
-- **Progression**: Correct answers grant +2 XP and track towards the `provincesCorrect` stat.
-
-### C. Space Module (`/space`)
-A memory and trivia module.
-- **Flashcards**: Uses a basic implementation of Spaced Repetition. Mastering a flashcard grants +2 XP.
-- **Quizzes**: Tests knowledge retained from flashcards. High scores are tracked in the global state (`quizHighScore`).
-- **Illuminate the System**: Size-ordering spelling puzzle across up to 35 solar objects. The Reveal Letter hint is progressive and input-aware — it reveals the correct prefix up to the first letter typed incorrectly (e.g. `JUPETIR` → `JUPI`), advancing with each hint while skipping positions already typed correctly. Wrong submissions retain the learner's typed text so they can consult the hint. After the first object (Sun) is guessed, a brief non-blocking gold cue ("Tap any lit objects for facts") teaches that revealed objects are tappable for mini facts.
+### B. Space Module (`/space`) [ACTIVE REALM]
+Cosmic scale, astronomy, and planetary memory module.
+- **Size Guide, Mnemonic & Flashcards (`/space/size-guide`)**: Interactive reference guides comparing celestial object diameters, progressive 1-to-1 mnemonic sentence practice, and interactive spaced-repetition flashcards.
+- **Illuminate the System (`/space/illuminate`)**: Size-ordering spelling puzzle across up to 35 solar objects. The Reveal Letter hint is progressive and input-aware — it reveals the correct prefix up to the first letter typed incorrectly (e.g. `JUPETIR` → `JUPI`), advancing with each hint while skipping positions already typed correctly. Wrong submissions retain the learner's typed text so they can consult the hint. After the first object (Sun) is guessed, a brief non-blocking gold cue ("Tap any lit objects for facts") teaches that revealed objects are tappable for mini facts.
 - **Cosmic Mystery (`/space/mystery`)**: A multiple-choice trivia card game featuring sanitized clues (fun facts/descriptions of celestial bodies with target names masked out) and 4 tricky options (prioritizing distractors of the same astronomical type). Offers two distinct modes:
   - **10-Card Sprint**: Speedrun across 10 rounds with realtime timer, +3s wrong answer penalty, and Best Time record (`cosmic_mystery_sprint_best_time`). Flawless 10/10 runs unlock a gold `Crown` badge. XP: +1 XP per correct +5 XP perfect bonus +5 XP speed demon bonus (<30s).
   - **Endless Survival**: 3 Lives mode where players answer endless cards to score as high as possible before losing all 3 lives, displaying total cards answered and accuracy percentage alongside High Score (`cosmic_mystery_survival_high_score`). XP: +1 XP per correct answer + tier bonuses (+5 XP at 10 pts, +10 XP at 20 pts).
   - **Recent Runs History & Combo Streaks**: Tracks last 3 runs per mode on start cards, live `Flame` combo streak badges during play, session max streak on VictoryScreen, and all-time max combo records.
   - **Supabase Account Cloud Sync**: All records, high scores, crowns, and histories automatically sync to Supabase (`bot_stats.cosmicMystery` JSONB column) via `GameContext` and restore across all devices upon login.
   - Reuses `VictoryScreen` overlay with `theme="space"` in a 2x2 grid stats box. Following architectural rules, sub-game navigation renders only the back button and title, omitting the streak & level header widget reserved exclusively for main module hubs.
-- **SolarSystem3D (Solar Explorer)**: Interactive Three.js visualizer (`/space/solar-system`) using **true proportional scale** so learners can compare real distances and sizes:
+- **SolarSystem3D (Solar Explorer) (`/space/solar-system`)**: Interactive Three.js visualizer using **true proportional scale** so learners can compare real distances and sizes:
   - Scale convention: **1 AU = 10 units** (orbits) and **Earth diameter = 1.0 unit** (sizes; the `size` fields are radii). Config lives in `PLANET_CONFIG` in `SolarSystem3D.jsx`; body data comes from `planets` (8 planets) + `dwarfPlanets` (Pluto, Ceres — exported from `space-data.js`) + `sunData`.
   - Distances are true AU ratios (Mercury 0.387 AU → 3.87, Pluto 39.48 AU → 394.8); the asteroid belt renders at its real 2.1–3.3 AU range and Ceres orbits inside it.
   - Sizes are true diameter ratios (Jupiter ≈ 11× Earth; Ceres ≈ 0.074×). Moons use true size ratios but their orbits are scaled relative to the host planet surface: `scaledDistance = R_planet + (configuredDistance - R_planet) * 0.6 + 0.15` to ensure inner moons (like Io) are never buried inside the planet mesh while preventing overlapping.
   - Pluto–Charon is a `BinarySystem` component: both orbit the group origin — the barycenter — with `massRatio 0.118` (Charon/Pluto masses), placing the barycenter outside Pluto's surface. Its orbit uses the same surface-relative scaling.
-  - InfoPanel: translucent card (`rgba` + `backdrop-filter: blur`) with orbiting planets bleeding through; drei `Html` name labels are capped to `zIndexRange [5, 0]` (below the panel's z-index 50) and fade out entirely while a body is selected (`labelsHidden` prop). Every body (Sun + all 10 planets/dwarf planets) has an educational badge from the `PLANET_BADGES` map (Lucide icon + title + fact).
+  - InfoPanel: Sleek dark info card with body badges from the `PLANET_BADGES` map (Lucide icon + title + fact); drei `Html` name labels are capped to `zIndexRange [5, 0]` (below the panel's z-index 50) and fade out entirely while a body is selected (`labelsHidden` prop).
   - Action Buttons Redesign: Close and Collapse buttons in the top-right corner of the Info Panel are styled with premium 3D tactile offset borders and shadows, enlarged to 36px with 20px icons. Click actions translate the buttons 2px down. An adjacent circular Close (X) button is placed next to the collapsed state's "SHOW INFO" tab for a one-click focused exit.
   - Textures: planet textures in `public/textures/planets/`; Pluto/Ceres reuse `public/textures/objects/` JPEGs. Moons and binary companions render with dedicated high-resolution surface textures (e.g. Luna, Io, Europa, Ganymede, Callisto, Titan, Ariel, Oberon, Titania, Triton, Charon) wrapped around smooth 32-segment sphere geometry, falling back to a cratered moon texture with color-tinting for others.
   - Background Starfield: Renders a high-fidelity two-layer starfield (16,000 tiny background stars and 4,000 medium colored stars) to create a subtle, non-distracting 3D parallax effect on camera rotation. Auto-rotation on OrbitControls is disabled when the simulation is frozen (`simSpeed = 0`).
 
-### D. Planned Upcoming Modules (e.g. Reading, Geography, Math)
-Upcoming modules are designed to integrate seamlessly into the progression engine:
-- **Reading**: Active reading timer awarding `+1 XP` per minute with comprehension quizzes.
-- **Geography**: Interactive map challenges for provinces and regional capitals.
-- **Status**: Displayed as locked preview cards on the Home screen awaiting gameplay implementation.
+### C. Upcoming Modules (Locked on Home Dashboard)
+Upcoming learning frontiers are displayed as locked placeholder preview cards (Module 3, Module 4, Module 5) on the Home dashboard awaiting future gameplay routes:
+- **Module 3** (Coming Soon)
+- **Module 4** (Coming Soon)
+- **Module 5** (Coming Soon)
+- **Space Quiz**: Standalone multiple-choice quiz challenge (locked on `SpaceHome.tsx`).
 
 ---
 
@@ -178,6 +182,7 @@ When adding new features or modules, adhere strictly to these rules:
 2. **Never bypass `GameContext`**. All XP gains and streak triggers MUST route through `GameContext.jsx` functions to ensure they are properly synced to Supabase and trigger achievements.
 3. **Maintain the "Unlit" convention**. Any new modules that display the streak badge in their header must implement the `hasPlayedToday` check and apply the `.unlit-icon` and `.unlit-text` classes.
 4. **Use Lucide Icons**. For consistency, all UI icons should be pulled from the `lucide-react` library. No emoji icons in UI.
+5. **Unique Thematic Realm Vibe**. Every new learning module MUST craft its own distinct visual theme (custom surface tint, glowing border color, action button styling, and 3D card artwork) to give learners a unique, immersive atmospheric vibe when entering that realm.
 
 ---
 

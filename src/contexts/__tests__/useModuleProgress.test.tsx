@@ -74,32 +74,32 @@ describe('useModuleProgress Hook & Game Progression Engine', () => {
 
   it('isolates state across different module IDs', async () => {
     function MultiModuleConsumer() {
-      const geo = useModuleProgress('geo');
-      const reading = useModuleProgress('reading');
+      const moduleA = useModuleProgress('moduleA');
+      const moduleB = useModuleProgress('moduleB');
 
       return (
         <div>
-          <div data-testid="geo-score">{geo.moduleStats?.score || 0}</div>
-          <div data-testid="reading-score">{reading.moduleStats?.score || 0}</div>
+          <div data-testid="moduleA-score">{moduleA.moduleStats?.score || 0}</div>
+          <div data-testid="moduleB-score">{moduleB.moduleStats?.score || 0}</div>
           <button
             onClick={() =>
-              geo.recordProgress({
+              moduleA.recordProgress({
                 xpGained: 10,
                 statsUpdate: { score: 100 },
               })
             }
           >
-            Update Geo
+            Update Module A
           </button>
           <button
             onClick={() =>
-              reading.recordProgress({
+              moduleB.recordProgress({
                 xpGained: 15,
                 statsUpdate: { score: 200 },
               })
             }
           >
-            Update Reading
+            Update Module B
           </button>
         </div>
       );
@@ -113,13 +113,13 @@ describe('useModuleProgress Hook & Game Progression Engine', () => {
       </GameProvider>
     );
 
-    await user.click(screen.getByRole('button', { name: /Update Geo/i }));
-    expect(screen.getByTestId('geo-score').textContent).toBe('100');
-    expect(screen.getByTestId('reading-score').textContent).toBe('0');
+    await user.click(screen.getByRole('button', { name: /Update Module A/i }));
+    expect(screen.getByTestId('moduleA-score').textContent).toBe('100');
+    expect(screen.getByTestId('moduleB-score').textContent).toBe('0');
 
-    await user.click(screen.getByRole('button', { name: /Update Reading/i }));
-    expect(screen.getByTestId('geo-score').textContent).toBe('100');
-    expect(screen.getByTestId('reading-score').textContent).toBe('200');
+    await user.click(screen.getByRole('button', { name: /Update Module B/i }));
+    expect(screen.getByTestId('moduleA-score').textContent).toBe('100');
+    expect(screen.getByTestId('moduleB-score').textContent).toBe('200');
   });
 });
 

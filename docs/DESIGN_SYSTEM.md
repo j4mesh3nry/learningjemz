@@ -42,8 +42,10 @@ All colors are centralized in `src/index.css` under the `--game-*` token namespa
 | **Cyan (Rank / Globe)** | `#38bdf8` | `--game-accent-cyan` | Global leaderboard rank (`Top 2%`), globe icons, cosmic highlights |
 | **Purple (Rewards)** | `#c084fc` | `--game-accent-purple` | Rewards store chips, gift icons, cosmetic unlockables |
 
-### Module-Specific Theme Palettes
-Each learning module has an authentic, thematic identity:
+### Module-Specific Theme Palettes & Unique Realm Vibe Rule
+Every learning module in LearningJemz **MUST have its own distinct, authentic theme identity** so entering that module feels like stepping into a unique thematic world.
+
+#### Existing Module Realms:
 - **Chess (`theme="chess"`)**:
   - Border: `rgba(197, 137, 74, 0.45)` / `#855930` (Warm bronze/amber)
   - Surface: `#160c06` (Deep mahogany wood)
@@ -54,6 +56,16 @@ Each learning module has an authentic, thematic identity:
   - Surface: `#050b1a` (Obsidian space navy)
   - Action Button: `#0c1a2d` (Cosmic indigo with `#295285` border)
   - Artwork: Luminous sapphire ringed planet in starry nebula (`space-card-bg.jpg`)
+
+#### Crafting a New Module Theme (Standard Architecture):
+When creating a new module (e.g. `theme="mymodule"`):
+1. **Define Scoped CSS Variables** in `src/pages/<module-name>/<module-name>.css`:
+   - `--game-theme-border`: Luminous thematic border outline.
+   - `--game-theme-surface`: Dark theme-tinted card surface.
+   - `--game-theme-btn`: Thematic action button surface and border.
+2. **Hook Global Layout**: Update `Layout()` in `App.jsx` so `data-module-theme="<module-name>"` dynamically applies to `document.body` on navigation.
+3. **Add 3D Illustrated Card Artwork**: Generate/provide 3D illustrated card art for `GameModuleCard` in `public/images/`.
+4. **Register in VictoryScreen**: Add the module's accent and particle colors to the palette map in `src/components/VictoryScreen.tsx`.
 
 ---
 

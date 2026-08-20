@@ -1,7 +1,7 @@
 {
   "name": "LearningJemz",
   "short_name": "LearningJemz",
-  "description": "A gamified learning hub for Chess, Geography, Reading, and Space",
+  "description": "A gamified learning hub for Chess, Space exploration, and expanding learning modules",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#d4e8d5",

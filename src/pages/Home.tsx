@@ -5,8 +5,7 @@ import { useGame } from '../contexts/GameContext.jsx';
 import { Header } from '../components/Header';
 import { SectionDivider, GameModuleCard, StatTile, HeroCharacter } from '../components/game';
 import {
-  Lock, BookOpen, Globe, Music, ScrollText, Calculator,
-  Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem,
+  Lock, Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem, Sparkles, Globe,
 } from 'lucide-react';
 import '../index.css';
 
@@ -15,11 +14,9 @@ import '../index.css';
    ────────────────────────────────────────────────────────────── */
 
 const lockedModules = [
-  { icon: <BookOpen size={20} color="#34d399" />, title: 'Reading', subtitle: 'Books & Stories' },
-  { icon: <Globe size={20} color="#34d399" />, title: 'Geography', subtitle: 'Maps & Regions' },
-  { icon: <Music size={20} color="#34d399" />, title: 'Songs', subtitle: 'Sing & Learn' },
-  { icon: <ScrollText size={20} color="#34d399" />, title: 'Poems', subtitle: 'Rhymes & Verses' },
-  { icon: <Calculator size={20} color="#34d399" />, title: 'Math', subtitle: 'Numbers & Logic' },
+  { icon: <Lock size={20} color="#34d399" />, title: 'Module 3', subtitle: 'Coming Soon' },
+  { icon: <Lock size={20} color="#34d399" />, title: 'Module 4', subtitle: 'Coming Soon' },
+  { icon: <Lock size={20} color="#34d399" />, title: 'Module 5', subtitle: 'Coming Soon' },
 ];
 
 /* ──────────────────────────────────────────────────────────────

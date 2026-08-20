@@ -166,9 +166,9 @@ describe('Home', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Reading')).toBeInTheDocument();
-    expect(screen.getByText('Geography')).toBeInTheDocument();
-    expect(screen.getByText('Math')).toBeInTheDocument();
+    expect(screen.getByText('Module 3')).toBeInTheDocument();
+    expect(screen.getByText('Module 4')).toBeInTheDocument();
+    expect(screen.getByText('Module 5')).toBeInTheDocument();
   });
 
   it('navigates to leaderboard on rank tile click', async () => {

@@ -59,14 +59,7 @@ LearningJemz is engineered around a reusable **Mobile-Game Component Library**:
 LearningJemz is designed to expand with new educational frontiers:
 
 ### 📚 Upcoming Modules
-- 🌍 **Geography** (Interactive maps, regional identification, and quizzes)
-- 📖 **Reading & Literature** (Read classics, track active reading time, and test comprehension)
-- 🧮 **Math & Logic Puzzles** (Numbers, arithmetic speedruns, and logic drills)
-- 🧪 **Science Experiments** (Interactive virtual labs)
-- 📜 **History Timelines** (Historical event sequence challenges)
-- 💻 **Coding Fundamentals** (Core programming logic)
-- 🗣️ **Languages** (Vocabulary training)
-- 🎵 **Learning Songs & Poems** (Sing-along educational topics)
+- 🔒 **Expanding Learning Frontiers** — Additional subjects, mini-games, and learning challenges are continuously planned to expand the LearningJemz universe. Placeholder preview cards (Module 3, Module 4, Module 5) are staged on the dashboard for future release.
 
 ### 🛠️ Future Features
 - **Rewards Store:** Economy where learners can redeem Jemz for exclusive avatar companions and badges.
@@ -81,7 +74,7 @@ LearningJemz is designed to expand with new educational frontiers:
 - **3D Graphics:** Three.js, React Three Fiber (R3F)
 - **Styling:** Vanilla CSS with scoped game design tokens
 - **Backend & Database:** Supabase (PostgreSQL, Authentication, Realtime Sync)
-- **Testing:** Vitest + React Testing Library (14 test files / 91 tests)
+- **Testing:** Vitest + React Testing Library (15 test files / 96 tests)
 - **Deployment:** Vercel (PWA enabled)
 
 ---

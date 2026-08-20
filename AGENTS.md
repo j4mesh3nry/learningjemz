@@ -6,7 +6,7 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 
 - `npm run dev` — Vite dev server. Requires `.env.local` (gitignored) with `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` for auth/cloud-sync to work.
 - `npm run lint` — oxlint. Exit code is 0 but emits pre-existing warnings (unused vars/imports, exhaustive-deps, fast-refresh). Do NOT chase them; only avoid adding new ones. Husky pre-commit hook runs this.
-- `npm test` — Vitest (`vitest run`). 14 files / 91 tests; runs to completion and exits. If you see a hang again, run focused files, e.g. `npx vitest run src/pages/__tests__/Home.test.tsx`.
+- `npm test` — Vitest (`vitest run`). 15 files / 96 tests; runs to completion and exits. If you see a hang again, run focused files, e.g. `npx vitest run src/pages/__tests__/Home.test.tsx`.
 - `npm run build` — `tsc -b && vite build`. Passes. It's the only typecheck step, so use it after TS changes. No separate typecheck script.
 
 - Active branch for development is `dev` (and feature branches created from `dev`). 
@@ -23,6 +23,7 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 - **Atmospheric Mobile-Game Aesthetic**:
   - Deep dark game canvas (`--game-bg-canvas: #030d09`, `--game-surface-card: #05130e`).
   - Subtle ambient border glows and theme-tinted outlines (`--game-border-default: #102d1f`, Chess amber `#855930`, Space sapphire `#295285`).
+  - **Unique Thematic Identity per Module**: Every learning module MUST have its own distinct, immersive theme vibe (custom surface tint, themed glowing border, action button colors, and custom 3D card artwork) to give players a unique environment when entering that realm, while anchoring to the dark canvas baseline.
   - Thematic 3D artwork assets for module cards and panoramic landscape hero scenes.
   - Reusable component library in `src/components/game/` (`SectionDivider`, `GameModuleCard`, `StatTile`, `SegmentedSwitcher`).
 - **2-Layer Hero Architecture**: Background scenery remains a continuous landscape (`home-hero-landscape.jpg`), while the companion character is a separate overlay layer via `<HeroCharacter avatar={user.avatar} />` on the stone cliff ledge so user avatars can be dynamically swapped.
@@ -33,10 +34,10 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 
 ## Architecture
 
-- Routes are nested per active module: `/chess/*` → `src/pages/chess/ChessHome.tsx`, `/space/*` → `src/pages/space/SpaceHome.tsx`. Upcoming modules (Reading, Geography, Songs, Poems, Math) are displayed as locked preview cards on Home with no active routes yet. Module home files are `.tsx`; most sub-pages and components are `.jsx`. Prefer TypeScript for new files (`tsconfig.app.json` has `allowJs`, `noImplicitAny: false`, `erasableSyntaxOnly: true`).
+- Routes are nested per active module: `/chess/*` → `src/pages/chess/ChessHome.tsx`, `/space/*` → `src/pages/space/SpaceHome.tsx`. Upcoming modules (Module 3, Module 4, Module 5) are displayed as locked preview cards on Home with no active routes yet. Module home files are `.tsx`; most sub-pages and components are `.jsx`. Prefer TypeScript for new files (`tsconfig.app.json` has `allowJs`, `noImplicitAny: false`, `erasableSyntaxOnly: true`).
 - Global state: `src/contexts/AuthContext.jsx` (Supabase auth) and `src/contexts/GameContext.jsx` (XP/level/streak/playedDates, synced between `localStorage` and Supabase `game_progress`). Context files intentionally export non-component helpers — the fast-refresh lint warnings there are expected; don't "fix" them.
 - Supabase client: `src/utils/supabase.js`; helper layer: `src/api/supabase.js`. Tables: `game_progress`, `achievements`.
-- Data: `src/data/space-objects.js` (35 solar-system objects in size order with a strict 1:1 mnemonic — keep ordering/mapping intact), `chess-puzzles.json`, `philippines-provinces.js`. `scripts/` and `download_pieces.cjs` are one-off data-fetch scripts (Lichess/OpenLibrary), not part of the app.
+- Data: `src/data/space-objects.js` (35 solar-system objects in size order with a strict 1:1 mnemonic — keep ordering/mapping intact) and `chess-puzzles.json`. `scripts/` and `download_pieces.cjs` are one-off data-fetch scripts (Lichess), not part of the app.
 - Chess AI: `public/stockfish/stockfish.js` loaded as a Web Worker in `src/pages/chess/ChessPlay.jsx` with a local JS fallback. It's minified — ignore lint on it.
 
 ## Testing conventions
