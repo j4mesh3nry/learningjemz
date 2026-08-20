@@ -1388,4 +1388,510 @@ body[data-module-theme="home"] .bottom-nav a.active {
   font-weight: 500;
   color: #6d9681;
   margin: 2px 0 0 0;
-}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RANKINGS & LEADERBOARD — Castle Arena Mobile-Game UI System
+   ═══════════════════════════════════════════════════════════════ */
+
+.rank-page-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 12px 14px 90px 14px;
+}
+
+@media (min-width: 640px) {
+  .rank-page-container {
+    max-width: 520px;
+    padding: 16px 20px 100px 20px;
+  }
+}
+
+/* ── Title & Switcher Section ──────────────────── */
+.rank-header-section {
+  margin-bottom: 16px;
+}
+
+.rank-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.rank-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rank-title {
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  color: #ffffff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rank-subtitle {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #8db5a0;
+  margin: 0;
+}
+
+.rank-refresh-btn {
+  background: #081711;
+  border: 1.5px solid #163626;
+  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #34d399;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.rank-refresh-btn:hover {
+  border-color: #34d399;
+}
+
+.rank-refresh-btn:active {
+  transform: scale(0.94);
+}
+
+/* ── YOUR POSITION Hero Showcase Card ──────────── */
+.rank-hero-card {
+  background: #05130e;
+  background-image: radial-gradient(circle at 10% 20%, rgba(52, 211, 153, 0.1) 0%, transparent 60%);
+  border: 1.5px solid #102d1f;
+  border-radius: 22px;
+  padding: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.rank-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.rank-hero-avatar-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.rank-hero-avatar-ring {
+  border: 2.5px solid #34d399;
+  border-radius: 50%;
+  padding: 2px;
+  box-shadow: 0 0 14px rgba(52, 211, 153, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-hero-level-tag {
+  position: absolute;
+  bottom: -6px;
+  background: #0b2518;
+  border: 1px solid #1c5236;
+  color: #4ade80;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+.rank-hero-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.rank-hero-position-sub {
+  font-size: 0.64rem;
+  font-weight: 800;
+  color: #34d399;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.rank-hero-name {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rank-hero-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rank-hero-progress-box {
+  margin-top: 5px;
+  width: 100%;
+}
+
+.rank-hero-progress-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #8db5a0;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rank-hero-progress-track {
+  height: 6px;
+  background: #081d14;
+  border: 1px solid #112d1f;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rank-hero-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #4ade80 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+  transition: width 0.3s ease;
+}
+
+.rank-hero-right {
+  width: 110px;
+  flex-shrink: 0;
+  background: #071912;
+  border: 1px solid #133824;
+  border-radius: 18px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.rank-hero-percentile-label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.rank-hero-percentile-sub {
+  font-size: 0.56rem;
+  font-weight: 600;
+  color: #8db5a0;
+  margin-top: 1px;
+}
+
+.rank-hero-gem-badge {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.25) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border: 1.5px solid rgba(52, 211, 153, 0.45);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.35);
+}
+
+.rank-hero-rewards-btn {
+  background: #0e3321;
+  border: 1px solid #236541;
+  color: #4ade80;
+  font-size: 0.64rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  transition: transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.rank-hero-rewards-btn:active {
+  transform: scale(0.96);
+}
+
+/* ── Castle Arena Top 3 Podium ─────────────────── */
+.rank-podium-arena {
+  position: relative;
+  margin-bottom: 22px;
+  padding: 16px 4px 0 4px;
+}
+
+.rank-podium-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.12fr 1fr;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.rank-podium-card {
+  position: relative;
+  border-radius: 20px 20px 14px 14px;
+  padding: 16px 6px 12px 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+  transition: transform 0.15s ease;
+}
+
+.rank-podium-card-1st {
+  background: linear-gradient(180deg, #181305 0%, #0c0903 100%);
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.35), 0 8px 20px rgba(0, 0, 0, 0.6);
+  transform: scale(1.05) translateY(-6px);
+  z-index: 3;
+}
+
+.rank-podium-card-2nd {
+  background: linear-gradient(180deg, #09131d 0%, #04090f 100%);
+  border: 1.5px solid #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.25), 0 6px 16px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.rank-podium-card-3rd {
+  background: linear-gradient(180deg, #180e06 0%, #0c0602 100%);
+  border: 1.5px solid #d97706;
+  box-shadow: 0 0 16px rgba(217, 119, 6, 0.25), 0 6px 16px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.rank-podium-crown-badge-1st {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.8));
+}
+
+.rank-podium-rank-tag {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 0.76rem;
+}
+
+.rank-podium-rank-tag-2nd {
+  background: #0c2336;
+  border: 1.5px solid #38bdf8;
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+.rank-podium-rank-tag-3rd {
+  background: #261506;
+  border: 1.5px solid #d97706;
+  color: #fbbf24;
+  box-shadow: 0 0 10px rgba(217, 119, 6, 0.5);
+}
+
+.rank-podium-avatar-wrapper {
+  margin: 8px 0 4px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.rank-podium-name {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.rank-podium-level {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #8db5a0;
+  margin-top: 2px;
+}
+
+.rank-podium-score {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 0.82rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.rank-podium-score-1st {
+  color: #fbbf24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.rank-podium-score-2nd {
+  color: #38bdf8;
+}
+
+.rank-podium-score-3rd {
+  color: #f59e0b;
+}
+
+/* ── Table Stream ──────────────────────────────── */
+.rank-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px 8px 12px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #6b8f7b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rank-table-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.rank-table-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #05130e;
+  border: 1px solid #102d1f;
+  border-radius: 16px;
+  padding: 10px 14px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.rank-table-row-me {
+  border: 1.5px solid #34d399 !important;
+  background: #071c14 !important;
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.25);
+}
+
+.rank-table-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.rank-table-num {
+  width: 24px;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #8db5a0;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rank-table-num-me {
+  color: #34d399;
+  font-weight: 900;
+}
+
+.rank-table-name-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rank-table-name {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rank-table-level-pill {
+  background: #0b2518;
+  border: 1px solid #16432b;
+  color: #4ade80;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.rank-table-score {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.84rem;
+  color: #4ade80;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.rank-table-ellipsis {
+  text-align: center;
+  color: #34d399;
+  font-size: 1.2rem;
+  letter-spacing: 4px;
+  padding: 4px 0;
+  opacity: 0.6;
+}
+
