@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame, getLevelProgress } from '../contexts/GameContext';
-import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw, Gem, Lock, Shield, Star, Globe, Users } from 'lucide-react';
+import { Flame, Zap, RefreshCw, Target, Lock, Users, Star } from 'lucide-react';
 import { Header } from '../components/Header';
 import { JemzLoader } from '../components/JemzLoader';
 import { SegmentedSwitcher } from '../components/game';
@@ -23,7 +23,6 @@ const getActiveStreak = (item: any) => {
   return raw;
 };
 
-// Whole days since the player's last recorded visit (0 = today, 1 = yesterday).
 const getStreakDaysInactive = (item: any) => {
   const lastVisitStr = toLocalDateString(item?.last_visit);
   if (!lastVisitStr) return 0;
@@ -34,110 +33,37 @@ const getStreakDaysInactive = (item: any) => {
   return Math.max(0, Math.round((todayMidnight.getTime() - last.getTime()) / 86400000));
 };
 
-const formatXP = (val: number) => {
-  if (val >= 10000) {
-    const kVal = val / 1000;
-    return kVal.toFixed(1).replace(/\.0$/, '') + 'k';
-  }
-  if (val >= 1000) {
-    return val.toLocaleString();
-  }
-  return String(val);
+const formatXP = (xp: number) => {
+  if (xp >= 10000) return (xp / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+  return xp.toLocaleString();
 };
 
-export function getPrestigeInfo(level: number) {
-  if (level >= 100) return { title: 'Cosmic Ascendant', color: '#ffffff' };
-  if (level >= 90) return { title: 'Immortal', color: '#c084fc' };
-  if (level >= 75) return { title: 'Mythic', color: '#f43f5e' };
-  if (level >= 60) return { title: 'Grandmaster', color: '#ec4899' };
-  if (level >= 50) return { title: 'Master', color: '#f97316' };
-  if (level >= 40) return { title: 'Adept', color: '#f59e0b' };
-  if (level >= 30) return { title: 'Sage', color: '#a78bfa' };
-  if (level >= 20) return { title: 'Scholar', color: '#818cf8' };
-  if (level >= 10) return { title: 'Explorer', color: '#38bdf8' };
-  if (level >= 5) return { title: 'Apprentice', color: '#34d399' };
+/**
+ * 11-Tier Prestige Progression System based on Player Level (Lv. 1 - 100+)
+ */
+export const getPrestigeInfo = (lvl: number) => {
+  if (lvl >= 100) return { title: 'Cosmic Ascendant', color: '#ffffff' };
+  if (lvl >= 90) return { title: 'Immortal', color: '#c084fc' };
+  if (lvl >= 75) return { title: 'Mythic', color: '#f43f5e' };
+  if (lvl >= 60) return { title: 'Grandmaster', color: '#ec4899' };
+  if (lvl >= 50) return { title: 'Master', color: '#f97316' };
+  if (lvl >= 40) return { title: 'Adept', color: '#f59e0b' };
+  if (lvl >= 30) return { title: 'Sage', color: '#a78bfa' };
+  if (lvl >= 20) return { title: 'Scholar', color: '#818cf8' };
+  if (lvl >= 10) return { title: 'Explorer', color: '#38bdf8' };
+  if (lvl >= 5) return { title: 'Apprentice', color: '#34d399' };
   return { title: 'Novice', color: '#8db5a0' };
-}
+};
 
-export function getCompetitiveLeague(isQualified: boolean, rankIndex: number, xp: number) {
-  if (isQualified && rankIndex >= 0 && rankIndex < 3) {
-    return {
-      name: 'Champions League',
-      color: '#f59e0b',
-      iconType: 'crown' as const,
-      pillText: 'CHAMPIONS',
-    };
-  }
-  if (isQualified && rankIndex >= 3 && rankIndex < 10) {
-    return {
-      name: 'Mythic Diamond',
-      color: '#38bdf8',
-      iconType: 'diamond' as const,
-      pillText: 'MYTHIC DIAMOND',
-    };
-  }
-  if (isQualified && rankIndex >= 10 && rankIndex < 20) {
-    return {
-      name: 'Emerald Master',
-      color: '#34d399',
-      iconType: 'shield' as const,
-      pillText: 'EMERALD LEAGUE',
-    };
-  }
-  if (xp >= 5000) {
-    return {
-      name: 'Mythic Diamond',
-      color: '#38bdf8',
-      iconType: 'diamond' as const,
-      pillText: 'MYTHIC DIAMOND',
-    };
-  }
-  if (xp >= 2000) {
-    return {
-      name: 'Emerald Master',
-      color: '#34d399',
-      iconType: 'shield' as const,
-      pillText: 'EMERALD LEAGUE',
-    };
-  }
-  if (xp >= 1000) {
-    return {
-      name: 'Platinum League',
-      color: '#22d3ee',
-      iconType: 'shield' as const,
-      pillText: 'PLATINUM LEAGUE',
-    };
-  }
-  if (xp >= 500) {
-    return {
-      name: 'Gold League',
-      color: '#fbbf24',
-      iconType: 'shield' as const,
-      pillText: 'GOLD LEAGUE',
-    };
-  }
-  if (xp >= 100) {
-    return {
-      name: 'Silver League',
-      color: '#94a3b8',
-      iconType: 'shield' as const,
-      pillText: 'SILVER LEAGUE',
-    };
-  }
-  return {
-    name: 'Bronze League',
-    color: '#d97706',
-    iconType: 'shield' as const,
-    pillText: 'BRONZE LEAGUE',
-  };
-}
-
-export function getRankDisplay(xp: number): string {
+/**
+ * Global Rank percentile calculation matching Home page
+ */
+function getRankDisplay(xp: number): string {
   if (xp >= 5000) return 'Top 1%';
-  if (xp >= 2000) return 'Top 5%';
-  if (xp >= 1000) return 'Top 10%';
-  if (xp >= 500) return 'Top 25%';
-  if (xp >= 100) return 'Top 40%';
+  if (xp >= 2000) return 'Top 2%';
+  if (xp >= 1000) return 'Top 5%';
+  if (xp >= 500) return 'Top 10%';
+  if (xp >= 100) return 'Top 25%';
   return 'Top 50%';
 }
 
@@ -156,6 +82,7 @@ export default function Leaderboard() {
   const [leaders, setLeaders] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [sortBy, setSortBy] = useState<'xp' | 'streak'>('xp');
+  const [filterTab, setFilterTab] = useState<'xp' | 'streak' | 'friends'>('xp');
   const [toast, setToast] = useState<string | null>(null);
 
   // Set dark theme attributes on mount, clean up on unmount
@@ -169,11 +96,6 @@ export default function Leaderboard() {
       delete document.documentElement.dataset.homeDark;
     };
   }, []);
-
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 3000);
-  };
 
   const processLeaders = useCallback((data: any[], type: 'xp' | 'streak') => {
     const merged = withLiveUserValues(data, user, xp, streak, level);
@@ -210,15 +132,11 @@ export default function Leaderboard() {
   useEffect(() => {
     let cancelled = false;
 
-    // Push any unsynced local progress first so the board reflects the app's
-    // latest values (the realtime channel re-fetches when the upsert commits).
     (flushNow?.() ?? Promise.resolve()).then(() => {
       if (cancelled) return;
       fetchLeaders(leaders.length === 0);
     });
 
-    // Mobile browsers drop websockets/background timers aggressively — refresh
-    // whenever the app returns to the foreground so the board is never stale.
     const onVisibility = () => {
       if (document.visibilityState === 'visible') {
         (flushNow?.() ?? Promise.resolve()).then(() => {
@@ -244,8 +162,8 @@ export default function Leaderboard() {
   }, [fetchLeaders, leaders.length, flushNow]);
 
   const handleTabChange = (tabId: string) => {
+    setFilterTab(tabId as 'xp' | 'streak' | 'friends');
     if (tabId === 'friends') {
-      showToast('Friends leaderboard coming soon! Add friends to compete.');
       return;
     }
     const newSortBy = tabId as 'xp' | 'streak';
@@ -254,16 +172,14 @@ export default function Leaderboard() {
     setLeaders(prev => processLeaders(prev, newSortBy));
   };
 
-  // Strictly cap visible podium & main list to Top 20
   const top20Leaders = leaders.slice(0, 20);
   const top1 = top20Leaders[0];
   const top2 = top20Leaders[1];
   const top3 = top20Leaders[2];
   const restLeaders = top20Leaders.slice(3);
 
-  // User rank metrics
   const fullUserRankIndex = leaders.findIndex(l => l.id === user?.id);
-  const isUserQualified = sortBy === 'streak' ? (streak ?? 0) > 0 : (xp ?? 0) > 0;
+  const isUserQualified = filterTab === 'streak' ? (streak ?? 0) > 0 : (xp ?? 0) > 0;
   const isUserInTop20 = isUserQualified && fullUserRankIndex !== -1 && fullUserRankIndex < 20;
   const currentUserRankDisplay = isUserQualified && fullUserRankIndex !== -1 ? `#${fullUserRankIndex + 1}` : 'Unranked';
 
@@ -273,20 +189,13 @@ export default function Leaderboard() {
     'Learner';
   const userAvatar = user?.user_metadata?.avatar || 'user';
   const prestige = getPrestigeInfo(level);
-  const league = getCompetitiveLeague(isUserQualified, fullUserRankIndex, xp || 0);
   const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const percentileDisplay = getRankDisplay(xp || 0);
 
-  const [scope, setScope] = useState<'global' | 'friends'>('global');
-
-  const scopeTabs = [
-    { id: 'global', label: 'Global', icon: <Globe size={13} /> },
-    { id: 'friends', label: 'Friends', icon: <Users size={13} /> },
-  ];
-
-  const metricTabs = [
-    { id: 'xp', label: 'XP', icon: <Zap size={13} /> },
-    { id: 'streak', label: 'Streak', icon: <Flame size={13} /> },
+  const rankingFilterTabs = [
+    { id: 'xp', label: 'XP', icon: <Zap size={14} /> },
+    { id: 'streak', label: 'Streak', icon: <Flame size={14} /> },
+    { id: 'friends', label: 'Friends', icon: <Users size={14} /> },
   ];
 
   return (
@@ -297,23 +206,18 @@ export default function Leaderboard() {
         </div>
       )}
 
-      {/* ── Top Header Widget (Streak Flame + Level Star + XP Bar) ── */}
       <Header />
 
-      {/* ── Title Header Row (RANK + Refresh Button) ── */}
       <div className="rank-title-row">
         <div className="rank-title-group">
-          <h2 className="rank-title">
-            <Crown size={22} color="#fbbf24" strokeWidth={2.2} />
-            RANK
-          </h2>
-          <p className="rank-subtitle">Compete. Climb. Become legendary.</p>
+          <h1 className="rank-title">RANK</h1>
+          <p className="rank-subtitle">Compete with learners worldwide and climb the leaderboard.</p>
         </div>
 
         <button
           onClick={() => fetchLeaders(true)}
           disabled={loading}
-          aria-label="Refresh leaderboard"
+          aria-label="Refresh rankings"
           className="rank-refresh-btn"
           title="Refresh Leaderboard"
         >
@@ -321,111 +225,65 @@ export default function Leaderboard() {
         </button>
       </div>
 
-      {/* ── YOUR POSITION Hero Showcase Card ── */}
       {user && (
-        <div className="rank-hero-card">
-          {/* Left Column: Avatar + Rank + Progress */}
-          <div className="rank-hero-left">
-            <div className="rank-hero-avatar-col">
-              <div className="rank-hero-avatar-ring" style={{ borderColor: `${prestige.color}99`, boxShadow: `0 0 16px ${prestige.color}55` }}>
-                <AvatarIcon avatar={userAvatar} size={54} iconSize={30} />
-              </div>
-              <span className="rank-hero-level-tag" style={{ background: prestige.color, color: level >= 100 ? '#000000' : '#ffffff' }}>Lv.{level}</span>
+        <div className="rank-position-card">
+          <div className="rank-position-header">
+            <span className="rank-position-badge-label">Your Position</span>
+            <span className="rank-position-percentile">{percentileDisplay}</span>
+          </div>
+
+          <div className="rank-position-body">
+            <div className="rank-position-avatar-wrap">
+              <AvatarIcon avatar={userAvatar} size={48} iconSize={26} />
+              <span className="rank-position-level-badge">Lv.{level}</span>
             </div>
 
-            <div className="rank-hero-info">
-              <span className="rank-hero-position-sub">Your Position</span>
-              <div className="rank-hero-name">
-                <span style={{ color: '#34d399', marginRight: 6 }}>{currentUserRankDisplay}</span>
-                {displayName}!
+            <div className="rank-position-details">
+              <div className="rank-position-name-row">
+                <span className="rank-position-rank-num">{currentUserRankDisplay}</span>
+                <span className="rank-position-username">{displayName}</span>
               </div>
-              <div className="rank-hero-title" style={{ color: prestige.color }}>
+              <div className="rank-position-tier" style={{ color: prestige.color }}>
                 <Star size={11} color={prestige.color} strokeWidth={2.2} />
                 <span>{prestige.title}</span>
-              </div>
-
-              <div className="rank-hero-progress-box">
-                <div className="rank-hero-progress-label">
-                  {xpInLevel.toLocaleString()} / {levelXPReq.toLocaleString()} XP to next rank
-                </div>
-                <div className="rank-hero-progress-track">
-                  <div
-                    className="rank-hero-progress-fill"
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column: League / Tier Division Badge */}
-          <div className="rank-hero-right">
-            <div>
-              <div className="rank-hero-percentile-label">{percentileDisplay}</div>
-              <div className="rank-hero-percentile-sub">of all learners</div>
+          <div className="rank-position-progress">
+            <div className="rank-position-progress-text">
+              {xpInLevel.toLocaleString()} / {levelXPReq.toLocaleString()} XP to next rank
             </div>
-
-            <div
-              className="rank-hero-tier-emblem"
-              style={{
-                background: `linear-gradient(135deg, ${league.color}2e 0%, ${league.color}0a 100%)`,
-                borderColor: `${league.color}55`,
-                boxShadow: `0 0 12px ${league.color}35`,
-              }}
-            >
-              {league.iconType === 'crown' ? (
-                <Crown size={20} color={league.color} strokeWidth={2.2} />
-              ) : league.iconType === 'diamond' ? (
-                <Gem size={20} color={league.color} strokeWidth={2.2} />
-              ) : (
-                <Shield size={20} color={league.color} strokeWidth={2.2} />
-              )}
-            </div>
-
-            <div
-              className="rank-hero-tier-pill"
-              style={{
-                background: `${league.color}15`,
-                borderColor: `${league.color}40`,
-                color: league.color,
-              }}
-            >
-              {league.pillText}
+            <div className="rank-position-progress-track">
+              <div
+                className="rank-position-progress-fill"
+                style={{ width: `${pct}%` }}
+              />
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Dual-Axis Filter Bar: Scope (Global / Friends) & Metric (XP / Streak) ── */}
-      <div className="rank-filter-bar">
+      <div className="rank-switcher-wrap">
         <SegmentedSwitcher
-          tabs={scopeTabs}
-          activeTab={scope}
-          onChange={(tab) => setScope(tab as 'global' | 'friends')}
-          ariaLabel="Leaderboard scope switcher"
-          className="rank-filter-scope"
-        />
-        <SegmentedSwitcher
-          tabs={metricTabs}
-          activeTab={sortBy}
-          onChange={(tab) => handleTabChange(tab as 'xp' | 'streak')}
-          ariaLabel="Leaderboard ranking metric switcher"
-          className="rank-filter-metric"
+          tabs={rankingFilterTabs}
+          activeTab={filterTab}
+          onChange={handleTabChange}
+          ariaLabel="Leaderboard ranking filters"
         />
       </div>
 
-      {/* ── Friends Scope Empty State ── */}
-      {scope === 'friends' ? (
-        <div className="rank-friends-placeholder">
-          <div className="rank-friends-icon-wrap">
-            <Users size={28} color="#34d399" />
+      {filterTab === 'friends' ? (
+        <div className="rank-friends-card">
+          <div className="rank-friends-icon-box">
+            <Users size={24} color="#34d399" />
           </div>
-          <h3 className="rank-friends-title">Friends Leaderboard</h3>
-          <p className="rank-friends-sub">
-            Compete directly with your friends and see who holds the highest XP and Streak ranks!
+          <h3 className="rank-friends-heading">Friends Leaderboard</h3>
+          <p className="rank-friends-subtext">
+            Compete with your friends and see who holds the highest rank!
           </p>
-          <div className="rank-friends-badge">
-            <Lock size={12} /> Coming Soon
+          <div className="rank-friends-badge-pill">
+            <Lock size={12} strokeWidth={2.2} /> Coming Soon
           </div>
         </div>
       ) : loading ? (
@@ -434,57 +292,48 @@ export default function Leaderboard() {
         </div>
       ) : (
         <>
-          {/* ── Castle Arena Top 3 Podium ── */}
           {top20Leaders.length >= 3 && (
-            <div className="rank-podium-arena">
-              <div className="rank-podium-grid">
-                {/* 2nd Place (Left) */}
-                <div className="rank-podium-card rank-podium-card-2nd">
-                  <div className="rank-podium-rank-tag rank-podium-rank-tag-2nd">#2</div>
-                  <div className="rank-podium-avatar-wrapper">
-                    <AvatarIcon avatar={top2?.avatar} size={44} iconSize={24} />
-                  </div>
-                  <div className="rank-podium-name">{top2?.name || 'Player'}</div>
-                  <div className="rank-podium-level">Lv.{top2?.level || 1}</div>
-                  <div className="rank-podium-score rank-podium-score-2nd">
-                    {sortBy === 'xp' ? `${formatXP(top2?.xp || 0)} XP` : <><Flame size={13} color="#ff5a5a" strokeWidth={2.2} /> {getActiveStreak(top2)}</>}
-                  </div>
+            <div className="rank-top3-grid">
+              <div className="rank-top3-card rank-top3-card-2nd">
+                <span className="rank-top3-badge rank-top3-badge-2nd">#2</span>
+                <div className="rank-top3-avatar">
+                  <AvatarIcon avatar={top2?.avatar} size={44} iconSize={24} />
                 </div>
-
-                {/* 1st Place (Center Champion) */}
-                <div className="rank-podium-card rank-podium-card-1st">
-                  <div className="rank-podium-crown-badge-1st">
-                    <Crown size={15} color="#fbbf24" strokeWidth={2.4} />
-                  </div>
-                  <div className="rank-podium-avatar-wrapper">
-                    <AvatarIcon avatar={top1?.avatar} size={54} iconSize={30} />
-                  </div>
-                  <div className="rank-podium-name">{top1?.name || 'Champion'}</div>
-                  <div className="rank-podium-level">Lv.{top1?.level || 1}</div>
-                  <div className="rank-podium-score rank-podium-score-1st">
-                    {sortBy === 'xp' ? `${formatXP(top1?.xp || 0)} XP` : <><Flame size={14} color="#ff5a5a" strokeWidth={2.2} /> {getActiveStreak(top1)}</>}
-                  </div>
+                <div className="rank-top3-name">{top2?.name || 'Player'}</div>
+                <div className="rank-top3-level">Lv.{top2?.level || 1}</div>
+                <div className="rank-top3-score rank-top3-score-2nd">
+                  {sortBy === 'xp' ? `${formatXP(top2?.xp || 0)} XP` : <><Flame size={13} color="#38bdf8" strokeWidth={2.2} /> {getActiveStreak(top2)}</>}
                 </div>
+              </div>
 
-                {/* 3rd Place (Right) */}
-                <div className="rank-podium-card rank-podium-card-3rd">
-                  <div className="rank-podium-rank-tag rank-podium-rank-tag-3rd">#3</div>
-                  <div className="rank-podium-avatar-wrapper">
-                    <AvatarIcon avatar={top3?.avatar} size={44} iconSize={24} />
-                  </div>
-                  <div className="rank-podium-name">{top3?.name || 'Player'}</div>
-                  <div className="rank-podium-level">Lv.{top3?.level || 1}</div>
-                  <div className="rank-podium-score rank-podium-score-3rd">
-                    {sortBy === 'xp' ? `${formatXP(top3?.xp || 0)} XP` : <><Flame size={13} color="#ff5a5a" strokeWidth={2.2} /> {getActiveStreak(top3)}</>}
-                  </div>
+              <div className="rank-top3-card rank-top3-card-1st">
+                <span className="rank-top3-badge rank-top3-badge-1st">#1</span>
+                <div className="rank-top3-avatar">
+                  <AvatarIcon avatar={top1?.avatar} size={48} iconSize={26} />
+                </div>
+                <div className="rank-top3-name">{top1?.name || 'Champion'}</div>
+                <div className="rank-top3-level">Lv.{top1?.level || 1}</div>
+                <div className="rank-top3-score rank-top3-score-1st">
+                  {sortBy === 'xp' ? `${formatXP(top1?.xp || 0)} XP` : <><Flame size={13} color="#fbbf24" strokeWidth={2.2} /> {getActiveStreak(top1)}</>}
+                </div>
+              </div>
+
+              <div className="rank-top3-card rank-top3-card-3rd">
+                <span className="rank-top3-badge rank-top3-badge-3rd">#3</span>
+                <div className="rank-top3-avatar">
+                  <AvatarIcon avatar={top3?.avatar} size={44} iconSize={24} />
+                </div>
+                <div className="rank-top3-name">{top3?.name || 'Player'}</div>
+                <div className="rank-top3-level">Lv.{top3?.level || 1}</div>
+                <div className="rank-top3-score rank-top3-score-3rd">
+                  {sortBy === 'xp' ? `${formatXP(top3?.xp || 0)} XP` : <><Flame size={13} color="#fb923c" strokeWidth={2.2} /> {getActiveStreak(top3)}</>}
                 </div>
               </div>
             </div>
           )}
 
-          {/* ── Table Stream ── */}
-          <div className="rank-table-stream">
-            <div className="rank-table-header">
+          <div className="rank-list-stream">
+            <div className="rank-list-header">
               <span>Rank</span>
               <span>Learner</span>
               <span>{sortBy === 'xp' ? 'Total XP' : 'Streak'}</span>
@@ -492,14 +341,14 @@ export default function Leaderboard() {
 
             {top20Leaders.length === 0 ? (
               <div style={{
-                background: '#05130e', borderRadius: 20, border: '1.5px solid #102d1f',
+                background: '#05130e', borderRadius: 18, border: '1.5px solid #102d1f',
                 padding: '28px 16px', textAlign: 'center', color: '#ffffff'
               }}>
-                <Target size={36} color="#34d399" style={{ margin: '0 auto 10px' }} />
-                <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.15rem', fontWeight: 800 }}>
+                <Target size={32} color="#34d399" style={{ margin: '0 auto 8px' }} />
+                <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
                   {sortBy === 'streak' ? 'No Active Streaks Yet!' : 'No XP Scores Earned Yet!'}
                 </h3>
-                <p style={{ fontSize: '0.82rem', color: '#8db5a0', marginTop: 4, fontWeight: 500 }}>
+                <p style={{ fontSize: '0.8rem', color: '#8db5a0', marginTop: 4, fontWeight: 500 }}>
                   {sortBy === 'streak'
                     ? 'Play any game to ignite your flame and claim the #1 spot!'
                     : 'Complete a challenge to earn your first XP and take the lead!'}
@@ -508,7 +357,7 @@ export default function Leaderboard() {
                   onClick={() => navigate('/')}
                   style={{
                     marginTop: 14, background: '#10b981', color: '#ffffff',
-                    fontWeight: 800, fontSize: '0.85rem', padding: '10px 22px',
+                    fontWeight: 800, fontSize: '0.85rem', padding: '10px 20px',
                     borderRadius: 14, border: 'none', boxShadow: '0 3px 10px rgba(16, 185, 129, 0.4)',
                     cursor: 'pointer'
                   }}
@@ -524,26 +373,26 @@ export default function Leaderboard() {
                 return (
                   <div
                     key={item.id || idx}
-                    className={`rank-table-row ${isMe ? 'rank-table-row-me' : ''}`}
+                    className={`rank-list-row ${isMe ? 'rank-list-row-me' : ''}`}
                   >
-                    <div className="rank-table-left">
-                      <span className={`rank-table-num ${isMe ? 'rank-table-num-me' : ''}`}>
+                    <div className="rank-list-left">
+                      <span className={`rank-list-num ${isMe ? 'rank-list-num-me' : ''}`}>
                         {actualRank}
                       </span>
                       <AvatarIcon avatar={item.avatar} size={34} iconSize={18} />
-                      <div className="rank-table-name-group">
-                        <span className="rank-table-name">
+                      <div className="rank-list-name-group">
+                        <span className="rank-list-name">
                           {item.name || 'Learner'} {isMe && <span style={{ color: '#34d399', fontSize: '0.74rem' }}>(You)</span>}
                         </span>
-                        <span className="rank-table-level-pill">Lv.{item.level || 1}</span>
+                        <span className="rank-list-level-pill">Lv.{item.level || 1}</span>
                       </div>
                     </div>
 
-                    <div className="rank-table-score">
+                    <div className="rank-list-score">
                       {sortBy === 'xp' ? (
                         `${formatXP(item.xp || 0)} XP`
                       ) : (
-                        <><Flame size={14} color="#ff5a5a" strokeWidth={2.2} /> {getActiveStreak(item)}</>
+                        <><Flame size={13} color="#ff5a5a" strokeWidth={2.2} /> {getActiveStreak(item)}</>
                       )}
                     </div>
                   </div>
@@ -551,29 +400,28 @@ export default function Leaderboard() {
               })
             )}
 
-            {/* If user is qualified but ranked beyond Top 20, render an ellipsis jump to their row */}
             {!isUserInTop20 && isUserQualified && fullUserRankIndex >= 20 && (
               <>
-                <div className="rank-table-ellipsis">···</div>
-                <div className="rank-table-row rank-table-row-me">
-                  <div className="rank-table-left">
-                    <span className="rank-table-num rank-table-num-me">
+                <div className="rank-list-ellipsis">···</div>
+                <div className="rank-list-row rank-list-row-me">
+                  <div className="rank-list-left">
+                    <span className="rank-list-num rank-list-num-me">
                       #{fullUserRankIndex + 1}
                     </span>
                     <AvatarIcon avatar={userAvatar} size={34} iconSize={18} />
-                    <div className="rank-table-name-group">
-                      <span className="rank-table-name">
+                    <div className="rank-list-name-group">
+                      <span className="rank-list-name">
                         {displayName} <span style={{ color: '#34d399', fontSize: '0.74rem' }}>(You)</span>
                       </span>
-                      <span className="rank-table-level-pill">Lv.{level}</span>
+                      <span className="rank-list-level-pill">Lv.{level}</span>
                     </div>
                   </div>
 
-                  <div className="rank-table-score">
+                  <div className="rank-list-score">
                     {sortBy === 'xp' ? (
                       `${formatXP(xp || 0)} XP`
                     ) : (
-                      <><Flame size={14} color="#ff5a5a" strokeWidth={2.2} /> {streak}</>
+                      <><Flame size={13} color="#ff5a5a" strokeWidth={2.2} /> {streak}</>
                     )}
                   </div>
                 </div>
@@ -585,4 +433,3 @@ export default function Leaderboard() {
     </div>
   );
 }
-
