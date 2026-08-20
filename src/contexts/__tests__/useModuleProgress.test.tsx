@@ -24,7 +24,7 @@ vi.mock('../AuthContext', () => ({
   useAuth: () => ({ user: null, logout: vi.fn() }),
 }));
 
-function TestModuleConsumer({ moduleId = 'geo' }: { moduleId?: string }) {
+function TestModuleConsumer({ moduleId = 'testModule' }: { moduleId?: string }) {
   const { xp, level, streak, moduleStats, recordProgress } = useModuleProgress(moduleId);
 
   return (
@@ -32,12 +32,12 @@ function TestModuleConsumer({ moduleId = 'geo' }: { moduleId?: string }) {
       <div data-testid="xp-value">{xp}</div>
       <div data-testid="level-value">{level}</div>
       <div data-testid="streak-value">{streak}</div>
-      <div data-testid="module-count">{moduleStats?.provincesCount || 0}</div>
+      <div data-testid="module-count">{moduleStats?.scoreCount || 0}</div>
       <button
         onClick={() =>
           recordProgress({
             xpGained: 25,
-            statsUpdate: { provincesCount: (moduleStats?.provincesCount || 0) + 5 },
+            statsUpdate: { scoreCount: (moduleStats?.scoreCount || 0) + 5 },
             streakEligible: true,
           })
         }
@@ -58,7 +58,7 @@ describe('useModuleProgress Hook & Game Progression Engine', () => {
 
     render(
       <GameProvider>
-        <TestModuleConsumer moduleId="geo" />
+        <TestModuleConsumer moduleId="testModule" />
       </GameProvider>
     );
 

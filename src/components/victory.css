@@ -320,88 +320,6 @@
 }
 
 
-/* --- GEO THEME (`theme-geo`) --- */
-.victory-modal-clean.theme-geo {
-  background: #f0fdf4;
-  border: 2px solid #16653e;
-  box-shadow: 0 6px 0 #14532d;
-  color: #0f3825;
-}
-
-.theme-geo .victory-logo-bg {
-  background: #15803d;
-  border: 2px solid #22c55e;
-  box-shadow: 0 4px 0 #14532d;
-}
-
-.theme-geo .victory-clean-title {
-  color: #0f3825;
-}
-
-.theme-geo .victory-btn-primary {
-  background: #15803d;
-  color: #ffffff;
-  border: 2px solid #22c55e;
-  box-shadow: 0 3px 0 #14532d;
-  border-radius: 16px;
-  padding: 12px;
-  font-size: 0.95rem;
-}
-
-.theme-geo .victory-btn-primary:hover {
-  background: #16653e;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 #14532d;
-}
-
-.theme-geo .victory-btn-primary:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #14532d;
-}
-
-.theme-geo .victory-btn-secondary {
-  background: #ffffff;
-  color: #15803d;
-  border: 2px solid #b0cbaf;
-  box-shadow: 0 3px 0 #b0cbaf;
-  border-radius: 16px;
-  padding: 12px;
-  font-size: 0.95rem;
-}
-
-.theme-geo .victory-btn-secondary:hover {
-  background: #f1f5f9;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 #b0cbaf;
-}
-
-.theme-geo .victory-btn-secondary:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #b0cbaf;
-}
-
-.theme-geo .victory-btn-view {
-  background: #ffffff;
-  color: #15803d;
-  border: 2px solid #15803d;
-  box-shadow: 0 3px 0 #15803d;
-  border-radius: 16px;
-  padding: 12px;
-  font-size: 0.95rem;
-}
-
-.theme-geo .victory-btn-view:hover {
-  background: #e1f0e2;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 #15803d;
-}
-
-.theme-geo .victory-btn-view:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #15803d;
-}
-
-
 /* ==========================================================================
    SHARED UI ELEMENTS (Clean Solid Icons, Badges & Tactile Typography)
    ========================================================================== */
@@ -654,13 +572,6 @@
   border: 2px solid #5c3a1e;
   box-shadow: 0 5px 0 #180d05;
   color: #faf6ee;
-}
-
-.victory-minimized-dock.theme-geo {
-  background: #f0fdf4;
-  border: 2px solid #16653e;
-  box-shadow: 0 5px 0 #14532d;
-  color: #0f3825;
 }
 
 .victory-btn-restore {

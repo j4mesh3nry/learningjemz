@@ -104,9 +104,6 @@ export function isPristineDefaultState(s) {
     && played.length === 0
     && (s.chessWins || 0) === 0
     && (s.puzzlesSolved || 0) === 0
-    && (s.provincesCorrect || 0) === 0
-    && (s.readingMinutes || 0) === 0
     && (s.flashcardsMastered || 0) === 0
-    && (s.booksReading || 0) === 0
     && (s.quizHighScore || 0) === 0;
 }

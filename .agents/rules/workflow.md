@@ -36,8 +36,8 @@ For every non-trivial bug fix, refactor, or new feature:
 ## 🐙 4. Automated Git Workflow Rules
 When handling git commands on behalf of the developer:
 * **The CRLF Guard (Crucial):** Never run `git add -A` or `git add .` blindly. Check `git diff --ignore-cr-at-eol` first to see the true changes. Stage files individually (e.g., `git add path/to/file.js`) to prevent line-ending noise.
-* **Feature Branches:** For new features, checkout a feature branch from `dev` (e.g., `git checkout -b feature/geo-map`). For minor fixes, you may commit directly to `dev`.
-* **Standard Commit Format:** Write clean, descriptive commit messages (e.g., `feat: scaffold geography module` or `fix: resolve stockfish bot mapping`).
+* **Feature Branches:** For new features, checkout a feature branch from `dev` (e.g., `git checkout -b feature/space-quiz`). For minor fixes, you may commit directly to `dev`.
+* **Standard Commit Format:** Write clean, descriptive commit messages (e.g., `feat: scaffold space quiz challenge` or `fix: resolve stockfish bot mapping`).
 * **Merging to Dev:** When the feature is complete and verified:
   1. `git checkout dev`
   2. `git merge feature/branch-name`

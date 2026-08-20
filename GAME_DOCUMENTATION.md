@@ -104,7 +104,7 @@
 
 
 ### Victory Screen & Module Theme System
-- **Module Theme Modes**: Supports `theme="space"` (deep nebula navy solid card `#050b1a`, cosmic sapphire border `#295285`, slate action buttons), `theme="chess"` (dark warm mahogany card `#160c06`, 3D amber border `#855930`), `theme="geo"` (dark forest card `#06150d`, emerald border `#2e7d32`), and `theme="default"` (dark emerald card `#05130e`).
+- **Module Theme Modes**: Supports `theme="space"` (deep nebula navy solid card `#050b1a`, cosmic sapphire border `#295285`, slate action buttons), `theme="chess"` (dark warm mahogany card `#160c06`, 3D amber border `#855930`), and `theme="default"` (dark emerald card `#05130e`).
 - **Design Enforcement**: Follows the Atmospheric Mobile-Game Design System. Victory and modal cards use dark thematic containers with ambient border glows, tactile buttons, and subtle backdrop dimming.
 - **Iconography Standard**: Strictly NO emojis in UI or data. All graphics render high-quality Lucide React icons (`Gem`, `Sparkles`, `Flame`, `Trophy`, `Zap`).
 
