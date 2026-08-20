@@ -96,7 +96,7 @@ export default function ChessPlay() {
   }, []);
 
   const playerName = user?.user_metadata?.name || 'You';
-  const playerAvatar = user?.user_metadata?.avatar || '👤';
+  const playerAvatar = user?.user_metadata?.avatar || 'user';
 
   const capturedStats = React.useMemo(() => {
     const startCount = { w: { p: 8, n: 2, b: 2, r: 2, q: 1 }, b: { p: 8, n: 2, b: 2, r: 2, q: 1 } };
@@ -660,11 +660,11 @@ export default function ChessPlay() {
               {selectedOpponent === 'Easy' && (
                 <div className="color-select-bar" onClick={e => e.stopPropagation()}>
                   <span className="color-select-label">Play as:</span>
-                  <button className="color-btn white" onClick={() => startGame('Easy', 'w')}>
-                    <span style={{ fontSize: '1.1rem' }}>♔</span> White
+                  <button className="color-btn white" onClick={() => startGame('Easy', 'w')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <img src={PIECE_IMAGES.w.k} alt="White" style={{ width: 18, height: 18 }} /> White
                   </button>
-                  <button className="color-btn black" onClick={() => startGame('Easy', 'b')}>
-                    <span style={{ fontSize: '1.1rem' }}>♚</span> Black
+                  <button className="color-btn black" onClick={() => startGame('Easy', 'b')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <img src={PIECE_IMAGES.b.k} alt="Black" style={{ width: 18, height: 18 }} /> Black
                   </button>
                 </div>
               )}
@@ -712,11 +712,11 @@ export default function ChessPlay() {
               {selectedOpponent === 'Medium' && (
                 <div className="color-select-bar" onClick={e => e.stopPropagation()}>
                   <span className="color-select-label">Play as:</span>
-                  <button className="color-btn white" onClick={() => startGame('Medium', 'w')}>
-                    <span style={{ fontSize: '1.1rem' }}>♔</span> White
+                  <button className="color-btn white" onClick={() => startGame('Medium', 'w')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <img src={PIECE_IMAGES.w.k} alt="White" style={{ width: 18, height: 18 }} /> White
                   </button>
-                  <button className="color-btn black" onClick={() => startGame('Medium', 'b')}>
-                    <span style={{ fontSize: '1.1rem' }}>♚</span> Black
+                  <button className="color-btn black" onClick={() => startGame('Medium', 'b')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <img src={PIECE_IMAGES.b.k} alt="Black" style={{ width: 18, height: 18 }} /> Black
                   </button>
                 </div>
               )}
@@ -764,11 +764,11 @@ export default function ChessPlay() {
               {selectedOpponent === 'Hard' && (
                 <div className="color-select-bar" onClick={e => e.stopPropagation()}>
                   <span className="color-select-label">Play as:</span>
-                  <button className="color-btn white" onClick={() => startGame('Hard', 'w')}>
-                    <span style={{ fontSize: '1.1rem' }}>♔</span> White
+                  <button className="color-btn white" onClick={() => startGame('Hard', 'w')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <img src={PIECE_IMAGES.w.k} alt="White" style={{ width: 18, height: 18 }} /> White
                   </button>
-                  <button className="color-btn black" onClick={() => startGame('Hard', 'b')}>
-                    <span style={{ fontSize: '1.1rem' }}>♚</span> Black
+                  <button className="color-btn black" onClick={() => startGame('Hard', 'b')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <img src={PIECE_IMAGES.b.k} alt="Black" style={{ width: 18, height: 18 }} /> Black
                   </button>
                 </div>
               )}

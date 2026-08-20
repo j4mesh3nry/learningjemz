@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Gem, Mail, Lock, LogIn, Eye, EyeOff, ArrowLeft, Send } from 'lucide-react';
+import { Gem, Mail, Lock, LogIn, Eye, EyeOff, ArrowLeft, Send, Star, Rocket, Brain } from 'lucide-react';
 import '../../index.css';
 
 export default function Login() {
@@ -69,9 +69,9 @@ export default function Login() {
       padding: '20px', position: 'relative', overflow: 'hidden'
     }}>
       {/* Background decorations */}
-      <div style={{ position: 'absolute', top: '10%', left: '10%', opacity: 0.1, fontSize: '4rem' }}>⭐</div>
-      <div style={{ position: 'absolute', bottom: '20%', right: '15%', opacity: 0.1, fontSize: '5rem' }}>🚀</div>
-      <div style={{ position: 'absolute', top: '40%', right: '10%', opacity: 0.1, fontSize: '3rem' }}>🧠</div>
+      <div style={{ position: 'absolute', top: '10%', left: '10%', opacity: 0.08, pointerEvents: 'none' }}><Star size={64} color="#ffffff" strokeWidth={1.5} /></div>
+      <div style={{ position: 'absolute', bottom: '20%', right: '15%', opacity: 0.08, pointerEvents: 'none' }}><Rocket size={80} color="#ffffff" strokeWidth={1.5} /></div>
+      <div style={{ position: 'absolute', top: '40%', right: '10%', opacity: 0.08, pointerEvents: 'none' }}><Brain size={48} color="#ffffff" strokeWidth={1.5} /></div>
       
       {/* Brand Header */}
       <div style={{ textAlign: 'center', marginBottom: '32px', zIndex: 10 }}>

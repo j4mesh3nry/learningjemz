@@ -910,8 +910,11 @@ const ParkerProbe = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, simS
               boxShadow: '0 2px 0 #07081a',
               fontFamily: 'var(--font-heading, sans-serif)',
               letterSpacing: '0.5px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
             }}>
-              🚀 Gravity Assist (Phase {phaseIndex + 1}/7)
+              <Rocket size={11} color="#38bdf8" /> Gravity Assist (Phase {phaseIndex + 1}/7)
             </div>
           </Html>
         )}
@@ -1526,8 +1529,8 @@ export default function SolarSystem3D() {
             pointerEvents: 'auto',
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '10px 18px', borderRadius: 24,
-            background: 'rgba(11,13,34,0.72)', backdropFilter: 'blur(12px)',
-            border: '1.5px solid rgba(255,255,255,0.12)', color: '#fff',
+            background: '#0b0d22',
+            border: '1.5px solid #232752', color: '#fff',
             fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
             boxShadow: '0 4px 0 #07081a',
           }}
@@ -1538,12 +1541,12 @@ export default function SolarSystem3D() {
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8,
           padding: '8px 16px', borderRadius: 20,
-          background: 'rgba(11,13,34,0.72)', backdropFilter: 'blur(12px)',
-          border: '1.5px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.7)',
+          background: '#0b0d22',
+          border: '1.5px solid #232752', color: '#cbd5e1',
           fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase',
           boxShadow: '0 4px 0 #07081a',
         }}>
-          🪐 SOLAR EXPLORER
+          <Globe size={14} color="#38bdf8" /> SOLAR EXPLORER
         </div>
       </div>
 

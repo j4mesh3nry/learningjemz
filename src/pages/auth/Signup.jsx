@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Gem, Mail, Lock, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Gem, Mail, Lock, UserPlus, Eye, EyeOff, Star, Trophy, Target } from 'lucide-react';
 import '../../index.css';
 
 export default function Signup() {
@@ -49,9 +49,9 @@ export default function Signup() {
       padding: '20px', position: 'relative', overflow: 'hidden'
     }}>
       {/* Background decorations */}
-      <div style={{ position: 'absolute', top: '15%', right: '10%', opacity: 0.1, fontSize: '4rem' }}>⭐</div>
-      <div style={{ position: 'absolute', bottom: '15%', left: '15%', opacity: 0.1, fontSize: '5rem' }}>🏆</div>
-      <div style={{ position: 'absolute', top: '50%', left: '8%', opacity: 0.1, fontSize: '3rem' }}>🎯</div>
+      <div style={{ position: 'absolute', top: '15%', right: '10%', opacity: 0.08, pointerEvents: 'none' }}><Star size={64} color="#ffffff" strokeWidth={1.5} /></div>
+      <div style={{ position: 'absolute', bottom: '15%', left: '15%', opacity: 0.08, pointerEvents: 'none' }}><Trophy size={80} color="#ffffff" strokeWidth={1.5} /></div>
+      <div style={{ position: 'absolute', top: '50%', left: '8%', opacity: 0.08, pointerEvents: 'none' }}><Target size={48} color="#ffffff" strokeWidth={1.5} /></div>
       
       {/* Brand Header */}
       <div style={{ textAlign: 'center', marginBottom: '24px', zIndex: 10 }}>

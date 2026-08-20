@@ -32,7 +32,7 @@ describe('AuthContext logout', () => {
     localStorage.setItem('learningjemz_pending_sync_u1', JSON.stringify({ savedAt: 1, state: { xp: 100 } }));
     localStorage.setItem('learningjemz_last_synced_u1', '1');
     localStorage.setItem('learningjemz-game-state_u1', JSON.stringify({ xp: 100 }));
-    localStorage.setItem('learningjemz_avatar', '🦊');
+    localStorage.setItem('learningjemz_avatar', 'fox');
 
     render(
       <AuthProvider>

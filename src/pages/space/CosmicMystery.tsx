@@ -837,7 +837,7 @@ export default function CosmicMystery() {
               </div>
               <div className="cosmic-summary-stat">
                 <span className="stat-label" style={isNewComboRecord ? { color: '#ff6a00', fontWeight: 'bold' } : {}}>
-                  {isNewComboRecord ? '🔥 New Max Streak!' : 'Max Streak'}
+                  {isNewComboRecord ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><Flame size={14} color="#ff6a00" fill="#ff6a00" /> New Max Streak!</span> : 'Max Streak'}
                 </span>
                 <span className="stat-value" style={isNewComboRecord ? { color: '#ff6a00', fontWeight: 'bold' } : {}}>
                   {sessionMaxCombo}
@@ -860,7 +860,7 @@ export default function CosmicMystery() {
               </div>
               <div className="cosmic-summary-stat">
                 <span className="stat-label" style={isNewComboRecord ? { color: '#ff6a00', fontWeight: 'bold' } : {}}>
-                  {isNewComboRecord ? '🔥 New Max Streak!' : 'Max Streak'}
+                  {isNewComboRecord ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><Flame size={14} color="#ff6a00" fill="#ff6a00" /> New Max Streak!</span> : 'Max Streak'}
                 </span>
                 <span className="stat-value" style={isNewComboRecord ? { color: '#ff6a00', fontWeight: 'bold' } : {}}>
                   {sessionMaxCombo}

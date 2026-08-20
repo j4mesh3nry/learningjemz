@@ -69,7 +69,7 @@ function sampleRow(id: string, streak: number) {
     last_visit: ys,
     played_dates: [ys],
     name: 'Me',
-    avatar: '👤'
+    avatar: 'user'
   };
 }
 

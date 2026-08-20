@@ -18,7 +18,6 @@ export const planets = [
       'A year on Mercury is only 88 Earth days, but one solar day (sunrise to sunrise) takes 176 Earth days!'
     ],
     color: '#8c8c8c',
-    emoji: '🪐'
   },
   {
     id: 'venus',
@@ -39,7 +38,6 @@ export const planets = [
       'Venus has thousands of volcanoes, and scientists recently detected evidence of active lava flows today.'
     ],
     color: '#e3bb76',
-    emoji: '🪐'
   },
   {
     id: 'earth',
@@ -60,7 +58,6 @@ export const planets = [
       'About 100 tons of cosmic dust and micro-meteors enter Earth\'s atmosphere every single day.'
     ],
     color: '#2b82c9',
-    emoji: '🌍'
   },
   {
     id: 'mars',
@@ -81,7 +78,6 @@ export const planets = [
       'Pieces of Mars have actually landed on Earth! Meteorites blasted off Mars by asteroid impacts have been found in Antarctica and the Sahara Desert.'
     ],
     color: '#c1440e',
-    emoji: '🪐'
   },
   {
     id: 'jupiter',
@@ -102,7 +98,6 @@ export const planets = [
       'If Jupiter were 80 times more massive, it would have collapsed under its own gravity to become a star instead of a gas giant planet.'
     ],
     color: '#d39c7e',
-    emoji: '🪐'
   },
   {
     id: 'saturn',
@@ -123,7 +118,6 @@ export const planets = [
       'Saturn\'s rings are young! Scientists estimate they formed only 10 to 100 million years ago, meaning dinosaurs never saw Saturn with rings.'
     ],
     color: '#ead6b8',
-    emoji: '🪐'
   },
   {
     id: 'uranus',
@@ -144,7 +138,6 @@ export const planets = [
       'Uranus was the first planet discovered using a telescope, spotted by astronomer William Herschel in 1781.'
     ],
     color: '#4b70dd',
-    emoji: '🪐'
   },
   {
     id: 'neptune',
@@ -165,7 +158,6 @@ export const planets = [
       'Deep inside Neptune, pressure is so intense that carbon atoms are crushed into liquid diamond oceans filled with floating diamond iceberg chunks.'
     ],
     color: '#274687',
-    emoji: '🪐'
   }
 ];
 
@@ -265,7 +257,6 @@ export const dwarfPlanets = [
       'Pluto and its largest moon Charon are tidally locked — they always show the same face to each other.'
     ],
     color: '#a89f91',
-    emoji: '🪐'
   },
   {
     id: 'ceres',
@@ -286,7 +277,6 @@ export const dwarfPlanets = [
       'Bright spots in Occator Crater are salt deposits from briny water that reached the surface.'
     ],
     color: '#c8c2b8',
-    emoji: '🪐'
   },
   {
     id: 'orcus',
@@ -306,41 +296,40 @@ export const dwarfPlanets = [
       'Orcus has one large moon, Vanth, which is about half the size of Orcus — making them a binary dwarf planet pair similar to Pluto and Charon.'
     ],
     color: '#94a3b8',
-    emoji: '🪐'
   }
 ];
 
 export const flashcards = [
-  { id: 'f1', front: 'Mercury', back: 'The smallest and fastest planet. It has no moons and a very thin atmosphere.', category: 'planets', image: '🪐' },
-  { id: 'f2', front: 'Venus', back: 'The hottest planet in our solar system due to a thick, toxic atmosphere that traps heat.', category: 'planets', image: '🪐' },
-  { id: 'f3', front: 'Earth', back: 'Our home planet, and the only known planet to harbor life and liquid water on its surface.', category: 'planets', image: '🌍' },
-  { id: 'f4', front: 'Mars', back: 'The "Red Planet," colored by iron oxide (rust). Home to the largest volcano, Olympus Mons.', category: 'planets', image: '🪐' },
-  { id: 'f5', front: 'Jupiter', back: 'The largest planet, a gas giant with a Great Red Spot (a massive storm) and 95 known moons.', category: 'planets', image: '🪐' },
-  { id: 'f6', front: 'Saturn', back: 'A gas giant famous for its spectacular and complex ring system made of ice and rock.', category: 'planets', image: '🪐' },
-  { id: 'f7', front: 'Uranus', back: 'An ice giant that rotates on its side. It has a pale blue color due to methane gas.', category: 'planets', image: '🪐' },
-  { id: 'f8', front: 'Neptune', back: 'The most distant planet. It is dark, cold, and whipped by supersonic winds.', category: 'planets', image: '🪐' },
-  { id: 'f9', front: 'The Moon', back: 'Earth\'s only natural satellite. It regulates our tides and stabilizes Earth\'s wobble.', category: 'moons', image: '🌕' },
-  { id: 'f10', front: 'Ganymede', back: 'Jupiter\'s largest moon, and the biggest moon in the solar system (larger than Mercury).', category: 'moons', image: '🌖' },
-  { id: 'f11', front: 'Titan', back: 'Saturn\'s largest moon. It has a thick atmosphere and lakes of liquid methane.', category: 'moons', image: '🌗' },
-  { id: 'f12', front: 'Io', back: 'A moon of Jupiter, famous for being the most volcanically active body in the solar system.', category: 'moons', image: '🌔' },
-  { id: 'f13', front: 'Europa', back: 'A moon of Jupiter covered in ice, likely hiding a vast ocean of liquid water underneath.', category: 'moons', image: '🧊' },
-  { id: 'f14', front: 'Phobos & Deimos', back: 'The two tiny, potato-shaped moons of Mars. Phobos is slowly spiraling towards Mars.', category: 'moons', image: '🥔' },
-  { id: 'f15', front: 'Enceladus', back: 'A small icy moon of Saturn that shoots geysers of water vapor into space.', category: 'moons', image: '💦' },
-  { id: 'f16', front: 'Triton', back: 'Neptune\'s largest moon. It orbits in the opposite direction to Neptune\'s rotation.', category: 'moons', image: '🔄' },
-  { id: 'f17', front: 'Sun', back: 'A yellow dwarf star at the center of our solar system. It provides the energy for life on Earth.', category: 'stars', image: '☀️' },
-  { id: 'f18', front: 'Sirius', back: 'The brightest star in the night sky. Often called the "Dog Star." It is part of a binary system.', category: 'stars', image: '✨' },
-  { id: 'f19', front: 'Polaris', back: 'The North Star. It appears almost stationary in the sky because it lies near the north celestial pole.', category: 'stars', image: '⭐' },
-  { id: 'f20', front: 'Proxima Centauri', back: 'A red dwarf star that is the closest known star to our solar system.', category: 'stars', image: '🔴' },
-  { id: 'f21', front: 'Betelgeuse', back: 'A massive red supergiant star in the constellation Orion. It is expected to explode as a supernova.', category: 'stars', image: '💥' },
-  { id: 'f22', front: 'Rigel', back: 'A blue supergiant star in Orion. It is much hotter and brighter than our Sun.', category: 'stars', image: '🔵' },
-  { id: 'f23', front: 'Vega', back: 'A bright blue-white star in the constellation Lyra. It has been a pole star in the past.', category: 'stars', image: '🌟' },
-  { id: 'f24', front: 'Aldebaran', back: 'An orange giant star in Taurus. It is known as the "Eye of the Bull."', category: 'stars', image: '👁️' },
-  { id: 'f25', front: 'Light Year', back: 'The distance light travels in one Earth year (about 9.46 trillion kilometers). Used to measure distances in space.', category: 'stars', image: '📏' },
-  { id: 'f26', front: 'Supernova', back: 'The explosive death of a massive star, briefly outshining an entire galaxy.', category: 'stars', image: '🎇' },
-  { id: 'f27', front: 'Black Hole', back: 'A region of space where gravity is so strong that nothing, not even light, can escape.', category: 'stars', image: '🕳️' },
-  { id: 'f28', front: 'Galaxy', back: 'A vast system of stars, gas, dust, and dark matter held together by gravity (e.g., the Milky Way).', category: 'stars', image: '🌌' },
-  { id: 'f29', front: 'Constellation', back: 'A grouping of stars that form a recognizable pattern or picture in the sky.', category: 'stars', image: '🌠' },
-  { id: 'f30', front: 'Asteroid Belt', back: 'A region between Mars and Jupiter filled with rocky bodies (asteroids) orbiting the Sun.', category: 'planets', image: '🪨' }
+  { id: 'f1', front: 'Mercury', back: 'The smallest and fastest planet. It has no moons and a very thin atmosphere.', category: 'planets' },
+  { id: 'f2', front: 'Venus', back: 'The hottest planet in our solar system due to a thick, toxic atmosphere that traps heat.', category: 'planets' },
+  { id: 'f3', front: 'Earth', back: 'Our home planet, and the only known planet to harbor life and liquid water on its surface.', category: 'planets' },
+  { id: 'f4', front: 'Mars', back: 'The "Red Planet," colored by iron oxide (rust). Home to the largest volcano, Olympus Mons.', category: 'planets' },
+  { id: 'f5', front: 'Jupiter', back: 'The largest planet, a gas giant with a Great Red Spot (a massive storm) and 95 known moons.', category: 'planets' },
+  { id: 'f6', front: 'Saturn', back: 'A gas giant famous for its spectacular and complex ring system made of ice and rock.', category: 'planets' },
+  { id: 'f7', front: 'Uranus', back: 'An ice giant that rotates on its side. It has a pale blue color due to methane gas.', category: 'planets' },
+  { id: 'f8', front: 'Neptune', back: 'The most distant planet. It is dark, cold, and whipped by supersonic winds.', category: 'planets' },
+  { id: 'f9', front: 'The Moon', back: 'Earth\'s only natural satellite. It regulates our tides and stabilizes Earth\'s wobble.', category: 'moons' },
+  { id: 'f10', front: 'Ganymede', back: 'Jupiter\'s largest moon, and the biggest moon in the solar system (larger than Mercury).', category: 'moons' },
+  { id: 'f11', front: 'Titan', back: 'Saturn\'s largest moon. It has a thick atmosphere and lakes of liquid methane.', category: 'moons' },
+  { id: 'f12', front: 'Io', back: 'A moon of Jupiter, famous for being the most volcanically active body in the solar system.', category: 'moons' },
+  { id: 'f13', front: 'Europa', back: 'A moon of Jupiter covered in ice, likely hiding a vast ocean of liquid water underneath.', category: 'moons' },
+  { id: 'f14', front: 'Phobos & Deimos', back: 'The two tiny, potato-shaped moons of Mars. Phobos is slowly spiraling towards Mars.', category: 'moons' },
+  { id: 'f15', front: 'Enceladus', back: 'A small icy moon of Saturn that shoots geysers of water vapor into space.', category: 'moons' },
+  { id: 'f16', front: 'Triton', back: 'Neptune\'s largest moon. It orbits in the opposite direction to Neptune\'s rotation.', category: 'moons' },
+  { id: 'f17', front: 'Sun', back: 'A yellow dwarf star at the center of our solar system. It provides the energy for life on Earth.', category: 'stars' },
+  { id: 'f18', front: 'Sirius', back: 'The brightest star in the night sky. Often called the "Dog Star." It is part of a binary system.', category: 'stars' },
+  { id: 'f19', front: 'Polaris', back: 'The North Star. It appears almost stationary in the sky because it lies near the north celestial pole.', category: 'stars' },
+  { id: 'f20', front: 'Proxima Centauri', back: 'A red dwarf star that is the closest known star to our solar system.', category: 'stars' },
+  { id: 'f21', front: 'Betelgeuse', back: 'A massive red supergiant star in the constellation Orion. It is expected to explode as a supernova.', category: 'stars' },
+  { id: 'f22', front: 'Rigel', back: 'A blue supergiant star in Orion. It is much hotter and brighter than our Sun.', category: 'stars' },
+  { id: 'f23', front: 'Vega', back: 'A bright blue-white star in the constellation Lyra. It has been a pole star in the past.', category: 'stars' },
+  { id: 'f24', front: 'Aldebaran', back: 'An orange giant star in Taurus. It is known as the "Eye of the Bull."', category: 'stars' },
+  { id: 'f25', front: 'Light Year', back: 'The distance light travels in one Earth year (about 9.46 trillion kilometers). Used to measure distances in space.', category: 'stars' },
+  { id: 'f26', front: 'Supernova', back: 'The explosive death of a massive star, briefly outshining an entire galaxy.', category: 'stars' },
+  { id: 'f27', front: 'Black Hole', back: 'A region of space where gravity is so strong that nothing, not even light, can escape.', category: 'stars' },
+  { id: 'f28', front: 'Galaxy', back: 'A vast system of stars, gas, dust, and dark matter held together by gravity (e.g., the Milky Way).', category: 'stars' },
+  { id: 'f29', front: 'Constellation', back: 'A grouping of stars that form a recognizable pattern or picture in the sky.', category: 'stars' },
+  { id: 'f30', front: 'Asteroid Belt', back: 'A region between Mars and Jupiter filled with rocky bodies (asteroids) orbiting the Sun.', category: 'planets' }
 ];
 
 export const sunData = {
@@ -362,7 +351,6 @@ export const sunData = {
     'The Sun generates energy through nuclear fusion, converting 600 million tons of hydrogen into helium every second!'
   ],
   color: '#FDB813',
-  emoji: '☀️'
 };
 
 export const parkerSolarProbe = {

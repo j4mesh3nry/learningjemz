@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Header } from '../components/Header';
 import { useGame } from '../contexts/GameContext';
-import { Gem, Lock, ShoppingBag, Check } from 'lucide-react';
+import { Gem, Lock, ShoppingBag, Check, Shield, Zap, Crown, Sparkles } from 'lucide-react';
 import '../index.css';
 
 const STORE_ITEMS = [
@@ -11,7 +11,7 @@ const STORE_ITEMS = [
     name: 'Streak Freeze',
     description: 'Protects your daily streak if you miss a day of learning.',
     price: 100,
-    icon: '🛡️',
+    icon: Shield,
     badge: 'Popular',
     category: 'Protection'
   },
@@ -20,25 +20,25 @@ const STORE_ITEMS = [
     name: 'Double XP (30m)',
     description: 'Earn 2x Experience Points across all modules for 30 minutes.',
     price: 150,
-    icon: '⚡',
+    icon: Zap,
     badge: '2x Boost',
     category: 'Boosters'
   },
   {
     id: 'avatar_king',
-    name: 'Royal King Avatar 👑',
+    name: 'Royal King Avatar',
     description: 'Unlock the exclusive Royal Crown avatar icon for your profile.',
     price: 200,
-    icon: '👑',
+    icon: Crown,
     badge: 'Exclusive',
     category: 'Avatars'
   },
   {
     id: 'avatar_dragon',
-    name: 'Dragon Avatar 🐉',
+    name: 'Dragon Avatar',
     description: 'Unlock the mythical Golden Dragon avatar icon.',
     price: 200,
-    icon: '🐉',
+    icon: Sparkles,
     badge: 'Mythic',
     category: 'Avatars'
   }
@@ -121,9 +121,9 @@ export default function Store() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{
               width: 44, height: 44, borderRadius: 14, background: 'rgba(255,255,255,0.15)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem'
+              display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}>
-              🛍️
+              <ShoppingBag size={24} color="#ffffff" />
             </div>
             <div>
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', margin: 0, fontWeight: 800 }}>
@@ -146,31 +146,33 @@ export default function Store() {
 
         {/* Shop Item List */}
         <div className="responsive-grid-locked">
-          {STORE_ITEMS.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                background: '#ffffff',
-                borderRadius: 20,
-                border: '2px solid #cce3d7',
-                boxShadow: '0 5px 0 #b7d6c5',
-                padding: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 12
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{
-                  fontSize: '2rem', width: 50, height: 50,
-                  background: '#e8f3ed', borderRadius: 14,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0
-                }}>
-                  {item.icon}
-                </div>
-                <div>
+          {STORE_ITEMS.map((item) => {
+            const ItemIcon = item.icon;
+            return (
+              <div
+                key={item.id}
+                style={{
+                  background: '#ffffff',
+                  borderRadius: 20,
+                  border: '2px solid #cce3d7',
+                  boxShadow: '0 5px 0 #b7d6c5',
+                  padding: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 12
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{
+                    width: 50, height: 50,
+                    background: '#e8f3ed', borderRadius: 14,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <ItemIcon size={26} color="#16653e" strokeWidth={2.2} />
+                  </div>
+                  <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <h3 style={{
                       fontFamily: 'var(--font-heading)', fontSize: '1.05rem',
@@ -213,7 +215,8 @@ export default function Store() {
                 <Gem size={14} color="#ffffff" /> {item.price}
               </button>
             </div>
-          ))}
+          );
+        })}
         </div>
       </div>
     </div>

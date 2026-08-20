@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
-import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw } from 'lucide-react';
+import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw, Award } from 'lucide-react';
 import { Header } from '../components/Header';
 import { JemzLoader } from '../components/JemzLoader';
 import { toLocalDateString } from '../utils/dateUtils';
+import { AvatarIcon } from '../components/AvatarIcon';
 import '../index.css';
 
 // Streaks are ranked by their active value. If a user is inactive for more than 1 day,
@@ -147,8 +148,8 @@ export default function Leaderboard() {
   const getTargetMessage = () => {
     if (!isUserQualified) {
       return sortBy === 'streak'
-        ? '🔥 No active streak! Play today to ignite your flame & enter Top 20!'
-        : '⚡ Complete a lesson to earn your first XP & enter Top 20!';
+        ? 'No active streak! Play today to ignite your flame and enter Top 20!'
+        : 'Complete a lesson to earn your first XP and enter Top 20!';
     }
 
     if (!isUserInTop20) {
@@ -159,14 +160,14 @@ export default function Leaderboard() {
         const needed = Math.max(1, targetVal - myVal + 1);
 
         return sortBy === 'streak'
-          ? `🔥 Keep streak ${needed} more ${needed === 1 ? 'day' : 'days'} to reach Top 20! (#20 is ${rank20Item.name || 'Learner'})`
-          : `🎯 Earn ${needed} XP more to break into Top 20! (#20 is ${rank20Item.name || 'Learner'})`;
+          ? `Keep streak ${needed} more ${needed === 1 ? 'day' : 'days'} to reach Top 20! (#20 is ${rank20Item.name || 'Learner'})`
+          : `Earn ${needed} XP more to break into Top 20! (#20 is ${rank20Item.name || 'Learner'})`;
       }
-      return '🚀 You qualify! Complete daily challenges to climb higher!';
+      return 'You qualify! Complete daily challenges to climb higher!';
     }
 
     if (fullUserRankIndex === 0) {
-      return '🏆 Leaderboard Champion! You hold #1 Rank!';
+      return 'Leaderboard Champion! You hold #1 Rank!';
     }
 
     const playerAhead = top20Leaders[fullUserRankIndex - 1];
@@ -176,11 +177,11 @@ export default function Leaderboard() {
       const needed = Math.max(1, aheadVal - myVal + 1);
 
       return sortBy === 'streak'
-        ? `🔥 Streak ${needed} more ${needed === 1 ? 'day' : 'days'} to overtake #${fullUserRankIndex} ${playerAhead.name || 'Learner'}!`
-        : `🚀 Rank #${fullUserRankIndex + 1}! Earn ${needed} XP more to overtake #${fullUserRankIndex} ${playerAhead.name || 'Learner'}!`;
+        ? `Streak ${needed} more ${needed === 1 ? 'day' : 'days'} to overtake #${fullUserRankIndex} ${playerAhead.name || 'Learner'}!`
+        : `Rank #${fullUserRankIndex + 1}! Earn ${needed} XP more to overtake #${fullUserRankIndex} ${playerAhead.name || 'Learner'}!`;
     }
 
-    return `✨ Great job! You are Rank #${fullUserRankIndex + 1}!`;
+    return `Great job! You are Rank #${fullUserRankIndex + 1}!`;
   };
 
   return (
@@ -273,8 +274,12 @@ export default function Leaderboard() {
                 borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
                 padding: '12px 8px', textAlign: 'center', position: 'relative'
               }}>
-                <div style={{ fontSize: '1.4rem', marginTop: '-18px' }}>🥈</div>
-                <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top2?.avatar || '👤'}</div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: '50%', background: '#f1f5f9', border: '1.5px solid #94a3b8', marginTop: '-18px' }}>
+                  <Award size={16} color="#64748b" />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0' }}>
+                  <AvatarIcon avatar={top2?.avatar} size={44} />
+                </div>
                 <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#0f3825', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {top2?.name || 'Player'}
                 </div>
@@ -292,7 +297,9 @@ export default function Leaderboard() {
                 <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)' }}>
                   <Crown size={24} color="#f59e0b" fill="#fbbf24" />
                 </div>
-                <div style={{ fontSize: '2.2rem', margin: '6px 0 2px' }}>{top1?.avatar || '👑'}</div>
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '8px 0 2px' }}>
+                  <AvatarIcon avatar={top1?.avatar} size={52} />
+                </div>
                 <div style={{ fontWeight: 900, fontSize: '0.92rem', color: '#78350f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {top1?.name || 'Champion'}
                 </div>
@@ -307,8 +314,12 @@ export default function Leaderboard() {
                 borderRadius: 18, border: '2px solid #b0cbaf', boxShadow: '0 4px 0 #b0cbaf',
                 padding: '12px 8px', textAlign: 'center', position: 'relative'
               }}>
-                <div style={{ fontSize: '1.4rem', marginTop: '-18px' }}>🥉</div>
-                <div style={{ fontSize: '1.8rem', margin: '4px 0' }}>{top3?.avatar || '👤'}</div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: '50%', background: '#fef3c7', border: '1.5px solid #d97706', marginTop: '-18px' }}>
+                  <Award size={16} color="#b45309" />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0' }}>
+                  <AvatarIcon avatar={top3?.avatar} size={44} />
+                </div>
                 <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#4a2c1d', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {top3?.name || 'Player'}
                 </div>
@@ -375,7 +386,7 @@ export default function Leaderboard() {
                       }}>
                         {actualRank}
                       </div>
-                      <div style={{ fontSize: '1.4rem' }}>{item.avatar || '👤'}</div>
+                      <AvatarIcon avatar={item.avatar} size={36} />
                       <div>
                         <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f3825' }}>
                           {item.name || 'Learner'} {isMe && <span style={{ color: '#16653e', fontSize: '0.75rem' }}>(You)</span>}
@@ -397,9 +408,11 @@ export default function Leaderboard() {
                 background: 'rgba(225, 240, 226, 0.6)',
                 borderRadius: 16, border: '2px dashed #b0cbaf',
                 padding: '12px 16px', textAlign: 'center',
-                fontSize: '0.82rem', color: '#0f3825', fontWeight: 700
+                fontSize: '0.82rem', color: '#0f3825', fontWeight: 700,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
               }}>
-                ⚡ Open spots in Top 20! Only {top20Leaders.length} {top20Leaders.length === 1 ? 'player has' : 'players have'} {sortBy === 'streak' ? 'a streak' : 'earned XP'} — {sortBy === 'streak' ? 'keep your streak alive to hold the spot, or play to take it!' : 'earn XP to claim a spot!'}
+                <Zap size={15} color="#16653e" />
+                <span>Open spots in Top 20! Only {top20Leaders.length} {top20Leaders.length === 1 ? 'player has' : 'players have'} {sortBy === 'streak' ? 'a streak' : 'earned XP'} — {sortBy === 'streak' ? 'keep your streak alive to hold the spot, or play to take it!' : 'earn XP to claim a spot!'}</span>
               </div>
             )}
           </div>

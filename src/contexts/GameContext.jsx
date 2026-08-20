@@ -144,7 +144,7 @@ export function GameProvider({ children }) {
           quiz_high_score: s.quizHighScore,
           bot_stats: { ...(s.botStats || {}), illuminate: s.illuminateStats || {}, playedDates: s.playedDates || [] },
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
-          avatar: user.user_metadata?.avatar || '👤'
+          avatar: user.user_metadata?.avatar || 'user'
         };
         const { error } = await Promise.race([
           supabase.from('game_progress').upsert(dbPayload),
@@ -350,7 +350,7 @@ export function GameProvider({ children }) {
           quiz_high_score: cleanState.quizHighScore,
           bot_stats: { ...cleanState.botStats, illuminate: cleanState.illuminateStats, playedDates: cleanState.playedDates },
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
-          avatar: user.user_metadata?.avatar || '👤'
+          avatar: user.user_metadata?.avatar || 'user'
         };
         const insertResult = await supabase.from('game_progress').insert([dbPayload]);
         if (insertResult.error) {
@@ -535,7 +535,7 @@ if (user) {
         quiz_high_score: 0,
         bot_stats: { ...defaultState.botStats, illuminate: defaultState.illuminateStats, playedDates: [] },
         name: user.user_metadata?.name || user.email?.split('@')[0] || 'Learner',
-        avatar: user.user_metadata?.avatar || '👤'
+        avatar: user.user_metadata?.avatar || 'user'
       };
       clearPendingSync(user.id);
       await supabase.from('game_progress').upsert(dbPayload);
@@ -838,6 +838,36 @@ if (user) {
     });
   }, []);
 
+  const getModuleStats = useCallback((moduleId) => {
+    return state.botStats?.[moduleId] || {};
+  }, [state.botStats]);
+
+  const recordModuleActivity = useCallback(({
+    moduleId,
+    xpGained = 0,
+    statsUpdate = {},
+    streakEligible = true
+  } = {}) => {
+    if (xpGained > 0) {
+      addXP(xpGained);
+    }
+    if (streakEligible) {
+      recordActivity();
+    }
+    if (moduleId && statsUpdate && typeof statsUpdate === 'object' && Object.keys(statsUpdate).length > 0) {
+      setState(prev => ({
+        ...prev,
+        botStats: {
+          ...(prev.botStats || {}),
+          [moduleId]: {
+            ...(prev.botStats?.[moduleId] || {}),
+            ...statsUpdate
+          }
+        }
+      }));
+    }
+  }, [addXP, recordActivity]);
+
   return (
     <GameContext.Provider value={{
       ...state,
@@ -856,6 +886,8 @@ if (user) {
       recordPuzzleRunEnd,
       recordIlluminateTime,
       recordCosmicMysteryRun,
+      getModuleStats,
+      recordModuleActivity,
       resetProgress,
       flushNow
     }}>
@@ -866,4 +898,28 @@ if (user) {
 
 export function useGame() {
   return useContext(GameContext);
+}
+
+export function useModuleProgress(moduleId) {
+  const game = useGame();
+  const moduleStats = game.getModuleStats ? game.getModuleStats(moduleId) : (game.botStats?.[moduleId] || {});
+
+  const recordProgress = useCallback(({ xpGained = 0, statsUpdate = {}, streakEligible = true } = {}) => {
+    if (game.recordModuleActivity) {
+      return game.recordModuleActivity({
+        moduleId,
+        xpGained,
+        statsUpdate,
+        streakEligible
+      });
+    }
+    if (xpGained > 0 && game.addXP) game.addXP(xpGained);
+    if (streakEligible && game.recordActivity) game.recordActivity();
+  }, [game, moduleId]);
+
+  return {
+    ...game,
+    moduleStats,
+    recordProgress
+  };
 }

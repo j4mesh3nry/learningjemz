@@ -37,7 +37,7 @@ describe('Profile', () => {
     } as any);
 
     vi.spyOn(AuthContext, 'useAuth').mockReturnValue({
-      user: { id: '123', email: 'test@example.com', user_metadata: { name: 'Test User', avatar: '🤖' } },
+      user: { id: '123', email: 'test@example.com', user_metadata: { name: 'Test User', avatar: 'bot' } },
       logout: mockLogout,
     } as any);
 
@@ -54,7 +54,7 @@ describe('Profile', () => {
 
     expect(screen.getByText('Test User')).toBeInTheDocument();
     expect(screen.getByText('test@example.com')).toBeInTheDocument();
-    expect(screen.getByText('🤖')).toBeInTheDocument(); // avatar
+    expect(screen.getByTestId('avatar-icon-bot')).toBeInTheDocument(); // avatar
     expect(screen.getByText('Level 3')).toBeInTheDocument();
     expect(screen.getByText('Beginner')).toBeInTheDocument();
     expect(screen.getAllByText('7')[0]).toBeInTheDocument(); // streak
@@ -90,14 +90,14 @@ describe('Profile', () => {
     );
 
     // Click on avatar to open modal
-    const avatarContainer = screen.getByText('🤖');
+    const avatarContainer = screen.getByTestId('avatar-icon-bot');
     await user.click(avatarContainer);
     
     expect(screen.getByText('Choose Avatar')).toBeInTheDocument();
     
     // Select new avatar
-    await user.click(screen.getByText('🦊'));
-    expect(SupabaseApi.updateAvatar).toHaveBeenCalledWith('123', '🦊');
+    await user.click(screen.getByTitle('Guardian'));
+    expect(SupabaseApi.updateAvatar).toHaveBeenCalledWith('123', 'shield');
     
     await waitFor(() => {
       expect(screen.queryByText('Choose Avatar')).not.toBeInTheDocument();

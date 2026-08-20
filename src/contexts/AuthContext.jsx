@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
       options: {
         data: {
           name: name || email.split('@')[0],
-          avatar: '👤'
+          avatar: 'user'
         }
       }
     });

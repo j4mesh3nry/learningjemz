@@ -8,7 +8,6 @@ import SplashScreen from './components/SplashScreen.jsx';
 import Login from './pages/auth/Login.jsx';
 import Signup from './pages/auth/Signup.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import ForcedDarkToast from './components/ForcedDarkToast.tsx';
 import './index.css';
 
 import { Home as HomeIcon, Trophy, Store, User } from 'lucide-react';
@@ -170,7 +169,6 @@ function AppContent() {
   return (
     <Router>
       <Layout />
-      <ForcedDarkToast />
     </Router>
   );
 }

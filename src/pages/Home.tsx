@@ -97,7 +97,7 @@ export default function Home() {
             {getGreeting()},
           </p>
           <div className="home-hero-username">
-            {displayName}! 👋
+            {displayName}!
           </div>
           <h2 className="home-hero-heading">
             What will you<br />

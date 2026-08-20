@@ -1,21 +1,46 @@
-// src/pages/Profile.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { ACHIEVEMENTS } from '../utils/achievements.js';
-import { Settings, LogOut, Trophy, Lock, Pencil, Flame, Calendar as CalendarIcon } from 'lucide-react';
+import {
+  Settings,
+  LogOut,
+  Trophy,
+  Lock,
+  Pencil,
+  Flame,
+  Calendar as CalendarIcon,
+  Gamepad2,
+  Compass,
+  BookOpen,
+  Sparkles,
+  GraduationCap,
+  Crown
+} from 'lucide-react';
 import { updateAvatar, updateName } from '../api/supabase.js';
 import { getPlayedDates } from '../components/StreakScreen';
 import { getLocalDateString } from '../utils/dateUtils';
+import { AvatarIcon, AVATAR_OPTIONS } from '../components/AvatarIcon';
 import '../index.css';
+
+const ACHIEVEMENT_ICON_MAP: Record<string, React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>> = {
+  Trophy,
+  Gamepad2,
+  Compass,
+  BookOpen,
+  Sparkles,
+  Flame,
+  GraduationCap,
+  Crown,
+};
 
 export default function Profile() {
   const navigate = useNavigate();
   const { xp, level, streak, hasPlayedToday, achievements, playedDates: contextPlayedDates, flushNow } = useGame();
   const { user, logout } = useAuth();
 
-  const [avatar, setAvatar] = useState(() => user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar') || '👤');
+  const [avatar, setAvatar] = useState(() => user?.user_metadata?.avatar || localStorage.getItem('learningjemz_avatar') || 'user');
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
 
   const [name, setName] = useState(() => user?.user_metadata?.name || localStorage.getItem('learningjemz_name') || user?.email?.split('@')[0] || 'Learner');
@@ -46,7 +71,6 @@ export default function Profile() {
     await logout();
   };
 
-  const PFP_OPTIONS = ['👤', '🦊', '🦉', '🐯', '🐼', '🐸', '🐶', '🦄', '🤖', '👽', '🦸‍♂️', '👩‍🚀', '🐱', '🦁'];
 
   // Sync with cloud when user data loads on new device
   useEffect(() => {
@@ -167,14 +191,13 @@ export default function Profile() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '3rem',
                   border: '4px solid #ffffff',
                   boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
                   position: 'relative',
                   zIndex: 2
                 }}
               >
-                {avatar}
+                <AvatarIcon avatar={avatar} size={88} iconSize={48} />
               </div>
               <button
                 onClick={() => setIsEditingAvatar(true)}
@@ -387,6 +410,7 @@ export default function Profile() {
             {ACHIEVEMENTS.map(a => {
               const unlockedData = achievements?.find(ach => ach.id === a.id);
               const unlocked = !!unlockedData;
+              const IconComponent = ACHIEVEMENT_ICON_MAP[a.icon] || Trophy;
               return (
                 <div key={a.id} style={{
                   display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
@@ -398,11 +422,11 @@ export default function Profile() {
                     background: unlocked ? '#fff8e1' : '#f5f5f5',
                     border: unlocked ? '2px solid #ffb400' : '2px dashed #ddd',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '2rem', marginBottom: 8,
+                    marginBottom: 8,
                     position: 'relative',
                     boxShadow: unlocked ? '0 4px 12px rgba(255,180,0,0.3)' : 'none'
                   }}>
-                    {unlocked ? a.icon : <Lock size={20} color="#999" />}
+                    {unlocked ? <IconComponent size={28} color="#d97706" strokeWidth={2.2} /> : <Lock size={20} color="#999" />}
                   </div>
                   <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', lineHeight: 1.2 }}>{a.name}</div>
                   {unlocked && (
@@ -453,12 +477,11 @@ export default function Profile() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(0,0,0,0.6)',
+            background: 'rgba(0,0,0,0.75)',
             zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backdropFilter: 'blur(5px)'
           }}
           onClick={() => setIsEditingAvatar(false)}
         >
@@ -468,34 +491,34 @@ export default function Profile() {
               padding: 24,
               borderRadius: 24,
               width: '90%',
-              maxWidth: 360,
+              maxWidth: 380,
               boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
             }}
             onClick={e => e.stopPropagation()}
           >
             <h3 style={{ fontFamily: 'var(--font-heading)', textAlign: 'center', marginBottom: 20 }}>Choose Avatar</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
-              {PFP_OPTIONS.map(a => (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 10, justifyContent: 'center' }}>
+              {AVATAR_OPTIONS.map(opt => (
                 <div
-                  key={a}
-                  onClick={() => handleSelectAvatar(a)}
+                  key={opt.id}
+                  onClick={() => handleSelectAvatar(opt.id)}
                   style={{
-                    width: 60,
-                    height: 60,
+                    width: 50,
+                    height: 50,
                     borderRadius: '50%',
-                    background: avatar === a ? '#e8f5e9' : '#f5f5f5',
-                    border: avatar === a ? '3px solid #4caf50' : '2px solid transparent',
+                    background: avatar === opt.id ? '#e8f5e9' : '#f5f5f5',
+                    border: avatar === opt.id ? '3px solid #16653e' : '2px solid transparent',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '2rem',
                     cursor: 'pointer',
                     transition: 'transform 0.1s ease',
-                    transform: avatar === a ? 'scale(1.1)' : 'scale(1)',
-                    boxShadow: avatar === a ? '0 4px 12px rgba(76,175,80,0.3)' : 'none'
+                    transform: avatar === opt.id ? 'scale(1.1)' : 'scale(1)',
+                    boxShadow: avatar === opt.id ? '0 4px 12px rgba(22,101,62,0.3)' : 'none'
                   }}
+                  title={opt.label}
                 >
-                  {a}
+                  <AvatarIcon avatar={opt.id} size={42} iconSize={24} />
                 </div>
               ))}
             </div>
@@ -528,12 +551,11 @@ export default function Profile() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(0,0,0,0.6)',
+            background: 'rgba(0,0,0,0.75)',
             zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backdropFilter: 'blur(5px)'
           }}
           onClick={() => setIsEditingName(false)}
         >

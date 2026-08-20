@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { planets } from '../../data/space-data.js';
-import { ArrowLeft, X, Info } from 'lucide-react';
+import { ArrowLeft, X, Info, Globe } from 'lucide-react';
 import './space.css';
 
 export default function SolarSystem() {
@@ -79,7 +79,9 @@ export default function SolarSystem() {
         <div className="planet-info-card">
           <button className="close-btn" onClick={() => setSelectedPlanet(null)}><X size={24} /></button>
           <div className="planet-header">
-            <div className="planet-icon" style={{ backgroundColor: selectedPlanet.color }}>{selectedPlanet.emoji}</div>
+            <div className="planet-icon" style={{ backgroundColor: selectedPlanet.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Globe size={24} color="#ffffff" />
+            </div>
             <div>
               <h2>{selectedPlanet.name}</h2>
               <span className="planet-type">{selectedPlanet.type}</span>

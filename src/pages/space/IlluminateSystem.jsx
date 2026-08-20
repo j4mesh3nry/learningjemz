@@ -645,7 +645,7 @@ export default function IlluminateSystem() {
                     cursor: 'pointer'
                   }}
                 >
-                  ✕
+                  <X size={14} />
                 </button>
               </div>
 
