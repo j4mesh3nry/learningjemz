@@ -45,12 +45,99 @@ const formatXP = (val: number) => {
   return String(val);
 };
 
-function getRankDisplay(xp: number): string {
+export function getPrestigeInfo(level: number) {
+  if (level >= 100) return { title: 'Cosmic Ascendant', color: '#ffffff' };
+  if (level >= 90) return { title: 'Immortal', color: '#c084fc' };
+  if (level >= 75) return { title: 'Mythic', color: '#f43f5e' };
+  if (level >= 60) return { title: 'Grandmaster', color: '#ec4899' };
+  if (level >= 50) return { title: 'Master', color: '#f97316' };
+  if (level >= 40) return { title: 'Adept', color: '#f59e0b' };
+  if (level >= 30) return { title: 'Sage', color: '#a78bfa' };
+  if (level >= 20) return { title: 'Scholar', color: '#818cf8' };
+  if (level >= 10) return { title: 'Explorer', color: '#38bdf8' };
+  if (level >= 5) return { title: 'Apprentice', color: '#34d399' };
+  return { title: 'Novice', color: '#8db5a0' };
+}
+
+export function getCompetitiveLeague(isQualified: boolean, rankIndex: number, xp: number) {
+  if (isQualified && rankIndex >= 0 && rankIndex < 3) {
+    return {
+      name: 'Champions League',
+      color: '#f59e0b',
+      iconType: 'crown' as const,
+      pillText: 'CHAMPIONS',
+    };
+  }
+  if (isQualified && rankIndex >= 3 && rankIndex < 10) {
+    return {
+      name: 'Mythic Diamond',
+      color: '#38bdf8',
+      iconType: 'diamond' as const,
+      pillText: 'MYTHIC DIAMOND',
+    };
+  }
+  if (isQualified && rankIndex >= 10 && rankIndex < 20) {
+    return {
+      name: 'Emerald Master',
+      color: '#34d399',
+      iconType: 'shield' as const,
+      pillText: 'EMERALD LEAGUE',
+    };
+  }
+  if (xp >= 5000) {
+    return {
+      name: 'Mythic Diamond',
+      color: '#38bdf8',
+      iconType: 'diamond' as const,
+      pillText: 'MYTHIC DIAMOND',
+    };
+  }
+  if (xp >= 2000) {
+    return {
+      name: 'Emerald Master',
+      color: '#34d399',
+      iconType: 'shield' as const,
+      pillText: 'EMERALD LEAGUE',
+    };
+  }
+  if (xp >= 1000) {
+    return {
+      name: 'Platinum League',
+      color: '#22d3ee',
+      iconType: 'shield' as const,
+      pillText: 'PLATINUM LEAGUE',
+    };
+  }
+  if (xp >= 500) {
+    return {
+      name: 'Gold League',
+      color: '#fbbf24',
+      iconType: 'shield' as const,
+      pillText: 'GOLD LEAGUE',
+    };
+  }
+  if (xp >= 100) {
+    return {
+      name: 'Silver League',
+      color: '#94a3b8',
+      iconType: 'shield' as const,
+      pillText: 'SILVER LEAGUE',
+    };
+  }
+  return {
+    name: 'Bronze League',
+    color: '#d97706',
+    iconType: 'shield' as const,
+    pillText: 'BRONZE LEAGUE',
+  };
+}
+
+export function getRankDisplay(xp: number): string {
   if (xp >= 5000) return 'Top 1%';
-  if (xp >= 2000) return 'Top 2%';
-  if (xp >= 1000) return 'Top 5%';
-  if (xp >= 500) return 'Top 8%';
-  if (xp >= 100) return 'Top 25%';
+  if (xp >= 2000) return 'Top 5%';
+  if (xp >= 1000) return 'Top 10%';
+  if (xp >= 500) return 'Top 25%';
+  if (xp >= 100) return 'Top 40%';
   return 'Top 50%';
 }
 
@@ -185,14 +272,8 @@ export default function Leaderboard() {
     user?.email?.split('@')[0] ||
     'Learner';
   const userAvatar = user?.user_metadata?.avatar || 'user';
-  const rankTitle = level >= 30 ? 'Master' : level >= 10 ? 'Scholar' : level >= 5 ? 'Explorer' : 'Learner';
-  const tierColor = level >= 30 ? '#38bdf8' : level >= 10 ? '#fbbf24' : level >= 5 ? '#34d399' : '#d97706';
-  const tierName = level >= 30 ? 'Diamond Tier' : level >= 10 ? 'Gold Tier' : level >= 5 ? 'Emerald Tier' : 'Bronze Tier';
-  const tierBadgeText = isUserQualified && fullUserRankIndex !== -1 && fullUserRankIndex < 3
-    ? 'Podium Tier'
-    : isUserInTop20
-    ? 'Top 20 Safe'
-    : tierName;
+  const prestige = getPrestigeInfo(level);
+  const league = getCompetitiveLeague(isUserQualified, fullUserRankIndex, xp || 0);
   const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const percentileDisplay = getRankDisplay(xp || 0);
 
@@ -240,10 +321,10 @@ export default function Leaderboard() {
           {/* Left Column: Avatar + Rank + Progress */}
           <div className="rank-hero-left">
             <div className="rank-hero-avatar-col">
-              <div className="rank-hero-avatar-ring">
+              <div className="rank-hero-avatar-ring" style={{ borderColor: `${prestige.color}99`, boxShadow: `0 0 16px ${prestige.color}55` }}>
                 <AvatarIcon avatar={userAvatar} size={54} iconSize={30} />
               </div>
-              <span className="rank-hero-level-tag">Lv.{level}</span>
+              <span className="rank-hero-level-tag" style={{ background: prestige.color, color: level >= 100 ? '#000000' : '#ffffff' }}>Lv.{level}</span>
             </div>
 
             <div className="rank-hero-info">
@@ -252,8 +333,8 @@ export default function Leaderboard() {
                 <span style={{ color: '#34d399', marginRight: 6 }}>{currentUserRankDisplay}</span>
                 {displayName}!
               </div>
-              <div className="rank-hero-title">
-                <span>★ {rankTitle}</span>
+              <div className="rank-hero-title" style={{ color: prestige.color }}>
+                <span>★ {prestige.title}</span>
               </div>
 
               <div className="rank-hero-progress-box">
@@ -280,23 +361,29 @@ export default function Leaderboard() {
             <div
               className="rank-hero-tier-emblem"
               style={{
-                background: `linear-gradient(135deg, ${tierColor}2e 0%, ${tierColor}0a 100%)`,
-                borderColor: `${tierColor}55`,
-                boxShadow: `0 0 12px ${tierColor}35`,
+                background: `linear-gradient(135deg, ${league.color}2e 0%, ${league.color}0a 100%)`,
+                borderColor: `${league.color}55`,
+                boxShadow: `0 0 12px ${league.color}35`,
               }}
             >
-              <Shield size={20} color={tierColor} strokeWidth={2.4} />
+              {league.iconType === 'crown' ? (
+                <Crown size={20} color={league.color} fill={league.color} />
+              ) : league.iconType === 'diamond' ? (
+                <Gem size={20} color={league.color} strokeWidth={2.4} />
+              ) : (
+                <Shield size={20} color={league.color} strokeWidth={2.4} />
+              )}
             </div>
 
             <div
               className="rank-hero-tier-pill"
               style={{
-                background: `${tierColor}15`,
-                borderColor: `${tierColor}40`,
-                color: tierColor,
+                background: `${league.color}15`,
+                borderColor: `${league.color}40`,
+                color: league.color,
               }}
             >
-              {tierBadgeText}
+              {league.pillText}
             </div>
           </div>
         </div>
