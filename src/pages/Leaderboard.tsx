@@ -259,10 +259,10 @@ export default function Leaderboard() {
           {/* Left Column: Avatar + Rank + Progress */}
           <div className="rank-hero-left">
             <div className="rank-hero-avatar-col">
-              <div className="rank-hero-avatar-ring" style={{ borderColor: `${prestige.color}99`, boxShadow: `0 0 14px ${prestige.color}35` }}>
+              <div className="rank-hero-avatar-ring">
                 <AvatarIcon avatar={userAvatar} size={50} iconSize={26} />
               </div>
-              <span className="rank-hero-level-tag" style={{ background: prestige.color, color: level >= 100 ? '#000000' : '#ffffff' }}>Lv.{level}</span>
+              <span className="rank-hero-level-tag">Lv.{level}</span>
             </div>
 
             <div className="rank-hero-info">
@@ -297,31 +297,17 @@ export default function Leaderboard() {
               <div className="rank-hero-percentile-sub">of all learners</div>
             </div>
 
-            <div
-              className="rank-hero-tier-emblem"
-              style={{
-                background: `linear-gradient(135deg, ${league.color}2e 0%, ${league.color}0a 100%)`,
-                borderColor: `${league.color}55`,
-                boxShadow: `0 0 12px ${league.color}30`,
-              }}
-            >
+            <div className="rank-hero-tier-emblem">
               {league.iconType === 'crown' ? (
-                <Crown size={20} color={league.color} strokeWidth={2.2} />
+                <Crown size={18} color="#34d399" strokeWidth={2.2} />
               ) : league.iconType === 'diamond' ? (
-                <Gem size={20} color={league.color} strokeWidth={2.2} />
+                <Gem size={18} color="#34d399" strokeWidth={2.2} />
               ) : (
-                <Shield size={20} color={league.color} strokeWidth={2.2} />
+                <Shield size={18} color="#34d399" strokeWidth={2.2} />
               )}
             </div>
 
-            <div
-              className="rank-hero-tier-pill"
-              style={{
-                background: `${league.color}15`,
-                borderColor: `${league.color}40`,
-                color: league.color,
-              }}
-            >
+            <div className="rank-hero-tier-pill">
               {league.pillText}
             </div>
           </div>
