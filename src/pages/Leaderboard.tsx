@@ -206,37 +206,6 @@ export default function Leaderboard() {
       {/* ── Top Header Widget (Streak Flame + Level Star + XP Bar) ── */}
       <Header />
 
-      {/* ── Title & Switcher Header Section ── */}
-      <div className="rank-header-section">
-        <div className="rank-title-row">
-          <div className="rank-title-group">
-            <h2 className="rank-title">
-              <Crown size={26} color="#f59e0b" fill="#fbbf24" />
-              RANK
-            </h2>
-            <p className="rank-subtitle">Compete. Climb. Become legendary.</p>
-          </div>
-
-          <button
-            onClick={() => fetchLeaders(true)}
-            disabled={loading}
-            aria-label="Refresh leaderboard"
-            className="rank-refresh-btn"
-            title="Refresh Leaderboard"
-          >
-            <RefreshCw size={17} color={loading ? '#5c7c6a' : '#34d399'} className={loading ? 'spin' : ''} />
-          </button>
-        </div>
-
-        {/* Segmented Switcher (XP | Streak | Friends) */}
-        <SegmentedSwitcher
-          tabs={switcherTabs}
-          activeTab={sortBy}
-          onChange={handleTabChange}
-          ariaLabel="Leaderboard category switcher"
-        />
-      </div>
-
       {/* ── YOUR POSITION Hero Showcase Card ── */}
       {user && (
         <div className="rank-hero-card">
@@ -295,6 +264,37 @@ export default function Leaderboard() {
           </div>
         </div>
       )}
+
+      {/* ── Title & Switcher Header Section ── */}
+      <div className="rank-header-section">
+        <div className="rank-title-row">
+          <div className="rank-title-group">
+            <h2 className="rank-title">
+              <Crown size={26} color="#f59e0b" fill="#fbbf24" />
+              RANK
+            </h2>
+            <p className="rank-subtitle">Compete. Climb. Become legendary.</p>
+          </div>
+
+          <button
+            onClick={() => fetchLeaders(true)}
+            disabled={loading}
+            aria-label="Refresh leaderboard"
+            className="rank-refresh-btn"
+            title="Refresh Leaderboard"
+          >
+            <RefreshCw size={17} color={loading ? '#5c7c6a' : '#34d399'} className={loading ? 'spin' : ''} />
+          </button>
+        </div>
+
+        {/* Segmented Switcher (XP | Streak | Friends) */}
+        <SegmentedSwitcher
+          tabs={switcherTabs}
+          activeTab={sortBy}
+          onChange={handleTabChange}
+          ariaLabel="Leaderboard category switcher"
+        />
+      </div>
 
       {/* ── Loading State ── */}
       {loading ? (
