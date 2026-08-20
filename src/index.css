@@ -1786,7 +1786,15 @@ body[data-module-theme="home"] .bottom-nav a.active {
   top: -14px;
   left: 50%;
   transform: translateX(-50%);
-  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.8));
+  width: 28px;
+  height: 28px;
+  background: #1c1407;
+  border: 1.5px solid #f59e0b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
 }
 
 .rank-podium-rank-tag {
