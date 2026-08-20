@@ -1600,18 +1600,41 @@ body[data-module-theme="home"] .bottom-nav a.active {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .rank-filter-bar .game-segmented-switcher {
   margin: 0 !important;
   padding: 3px !important;
+  background: #05130e !important;
+  border: 1.5px solid #102d1f !important;
+  box-shadow: none !important;
 }
 
 .rank-filter-bar .game-segmented-switcher button {
-  padding: 8px 10px !important;
-  font-size: 0.82rem !important;
-  gap: 6px !important;
+  padding: 6px 8px !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  gap: 5px !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+}
+
+.rank-filter-bar .game-segmented-switcher button[aria-selected="true"] {
+  background: #0b2518 !important;
+  border: 1px solid #16432b !important;
+  color: #34d399 !important;
+  box-shadow: none !important;
+}
+
+.rank-filter-bar .game-segmented-switcher button[aria-selected="false"] {
+  color: #6b8f7b !important;
+  background: transparent !important;
+}
+
+.rank-filter-bar .game-segmented-switcher button[aria-selected="false"]:hover {
+  color: #a3c4b2 !important;
 }
 
 /* ── Top 3 Podium Section ──────────────────────── */
