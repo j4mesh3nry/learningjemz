@@ -41,17 +41,26 @@
 - **2-Layer Hero Architecture**:
   - Background scenery remains a continuous landscape (`home-hero-landscape.jpg`), while the companion character is an overlay via `<HeroCharacter avatar={user.avatar} />` on the stone cliff ledge so user avatars can be dynamically swapped without re-rendering the scenery.
 - **Reusable Component Library (`src/components/game/`)**:
+  - `AvatarIcon`: Stroke-based Lucide React avatar system supporting clean identifier strings (`user`, `bot`, `shield`, `crown`, `zap`, etc.) with 100% backward-compatibility for legacy accounts.
+  - `LivesTracker`: Universal 3/4/5 heart counter using Lucide stroke icons with smooth filled-to-unlit transitions and pop animations.
+  - `SpeedrunTimerDock`: Precision speedrun timer with millisecond accuracy (`MM:SS.s`) and animated blunder penalty flashes (`+3s`).
+  - `GameReviewDock`: Standardized review dock for challenge completions and quiz summaries (Score, XP, Streak, Action navigation).
   - `SectionDivider`: Two-tone headline with sprout leaf flourishes and diamond line accents (`Continue your` [white] `journey` [emerald]).
   - `GameModuleCard`: 142px tall illustrated card with 3D artwork cutout, mini badge pill, and circular 3D arrow button.
   - `StatTile`: 4-matrix progress card with glowing value colors.
   - `SegmentedSwitcher`: Dark pill tab switcher (`Play | Learn`, `XP | Streak`) with glowing emerald active indicator.
+- **Design Rules & Aesthetic Standards**:
+  - **Zero Emojis**: Emojis are prohibited in UI markup, text, and data structures. All iconography is strictly stroke-based Lucide React (24x24 viewBox, `stroke="currentColor"`).
+  - **Zero Backdrop-Filter**: Glassmorphism blur filters (`backdrop-filter`) are prohibited. All card and modal surfaces use solid, opaque design tokens (`--game-bg-canvas: #030d09`, `--game-surface-card: #05130e`).
+  - **Invisible Scrollbars**: Page and container scrollbars are hidden globally (`scrollbar-width: none`).
+  - **Module Headers**: The top header capsule widget (`Flame` & `Star`) appears ONLY on the root page of each module; sub-page headers render only the back button and title banner.
 - **Typography**:
   - **Headings & Numbers**: `Outfit` (Bold, rounded geometric sans-serif, `800 - 900`).
   - **Body & Micro-labels**: `Inter` (Clean, legible sans-serif).
 - **Navigation & Mobile Experience**:
   - **Bottom Navigation**: Dark floating bar with **Home**, **Rank**, **Store**, **Me** tabs, featuring an illuminated emerald pill active indicator.
-  - **Invisible Scrollbars**: Page and container scrollbars are hidden globally (`scrollbar-width: none`).
-  - **Module Headers**: The top header capsule widget (`Flame` & `Star`) appears ONLY on the root page of each module; sub-page headers render only the back button and title banner.
+- **Modular Progression Engine (`useModuleProgress`)**:
+  - Global `useModuleProgress(moduleId)` hook enables any learning module to track namespaced stats (persisted in Supabase `bot_stats[moduleId]` JSONB) and dispatch XP/streaks via `recordProgress({ xpGained, statsUpdate, streakEligible })`.
 
 ---
 
