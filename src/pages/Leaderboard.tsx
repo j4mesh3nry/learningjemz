@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame, getLevelProgress } from '../contexts/GameContext';
-import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw, Gem, Lock, Shield, Star } from 'lucide-react';
+import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw, Gem, Lock, Shield, Star, Globe, Users } from 'lucide-react';
 import { Header } from '../components/Header';
 import { JemzLoader } from '../components/JemzLoader';
 import { SegmentedSwitcher } from '../components/game';
@@ -277,10 +277,16 @@ export default function Leaderboard() {
   const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const percentileDisplay = getRankDisplay(xp || 0);
 
-  const switcherTabs = [
-    { id: 'xp', label: 'XP', icon: <Zap size={14} /> },
-    { id: 'streak', label: 'Streak', icon: <Flame size={14} /> },
-    { id: 'friends', label: 'Friends', icon: <Lock size={12} /> },
+  const [scope, setScope] = useState<'global' | 'friends'>('global');
+
+  const scopeTabs = [
+    { id: 'global', label: 'Global', icon: <Globe size={13} /> },
+    { id: 'friends', label: 'Friends', icon: <Users size={13} /> },
+  ];
+
+  const metricTabs = [
+    { id: 'xp', label: 'XP', icon: <Zap size={13} /> },
+    { id: 'streak', label: 'Streak', icon: <Flame size={13} /> },
   ];
 
   return (
@@ -390,16 +396,39 @@ export default function Leaderboard() {
         </div>
       )}
 
-      {/* ── Segmented Tab Switcher (XP | Streak | Friends) ── */}
-      <SegmentedSwitcher
-        tabs={switcherTabs}
-        activeTab={sortBy}
-        onChange={handleTabChange}
-        ariaLabel="Leaderboard category switcher"
-      />
+      {/* ── Dual-Axis Filter Bar: Scope (Global / Friends) & Metric (XP / Streak) ── */}
+      <div className="rank-filter-bar">
+        <SegmentedSwitcher
+          tabs={scopeTabs}
+          activeTab={scope}
+          onChange={(tab) => setScope(tab as 'global' | 'friends')}
+          ariaLabel="Leaderboard scope switcher"
+          className="rank-filter-scope"
+        />
+        <SegmentedSwitcher
+          tabs={metricTabs}
+          activeTab={sortBy}
+          onChange={(tab) => handleTabChange(tab as 'xp' | 'streak')}
+          ariaLabel="Leaderboard ranking metric switcher"
+          className="rank-filter-metric"
+        />
+      </div>
 
-      {/* ── Loading State ── */}
-      {loading ? (
+      {/* ── Friends Scope Empty State ── */}
+      {scope === 'friends' ? (
+        <div className="rank-friends-placeholder">
+          <div className="rank-friends-icon-wrap">
+            <Users size={28} color="#34d399" />
+          </div>
+          <h3 className="rank-friends-title">Friends Leaderboard</h3>
+          <p className="rank-friends-sub">
+            Compete directly with your friends and see who holds the highest XP and Streak ranks!
+          </p>
+          <div className="rank-friends-badge">
+            <Lock size={12} /> Coming Soon
+          </div>
+        </div>
+      ) : loading ? (
         <div style={{ padding: '30px 0' }}>
           <JemzLoader message="Loading Rankings..." subtext="Fetching Top 20 Learners..." darkTheme={true} fullScreen={false} />
         </div>

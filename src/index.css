@@ -1653,6 +1653,83 @@ body[data-module-theme="home"] .bottom-nav a.active {
   text-overflow: ellipsis;
 }
 
+/* ── Dual-Axis Filter Bar (Scope & Metric) ──────── */
+.rank-filter-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0 16px 0;
+}
+
+.rank-filter-bar .game-segmented-switcher {
+  margin: 0 !important;
+  padding: 3px !important;
+}
+
+.rank-filter-bar .game-segmented-switcher button {
+  padding: 8px 10px !important;
+  font-size: 0.82rem !important;
+  gap: 6px !important;
+}
+
+.rank-friends-placeholder {
+  background: #05130e;
+  border: 1.5px solid #102d1f;
+  border-radius: 20px;
+  padding: 36px 20px;
+  text-align: center;
+  margin: 16px 0 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.rank-friends-icon-wrap {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(16, 185, 129, 0.04) 100%);
+  border: 1.5px solid #133824;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.2);
+}
+
+.rank-friends-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+}
+
+.rank-friends-sub {
+  font-size: 0.82rem;
+  color: #8db5a0;
+  max-width: 280px;
+  line-height: 1.4;
+  margin: 0 0 16px 0;
+}
+
+.rank-friends-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #0b2518;
+  border: 1px solid #16432b;
+  color: #34d399;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 /* ── Castle Arena Top 3 Podium ─────────────────── */
 .rank-podium-arena {
   position: relative;
