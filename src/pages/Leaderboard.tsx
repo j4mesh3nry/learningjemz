@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame, getLevelProgress } from '../contexts/GameContext';
-import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw, Gem, Lock } from 'lucide-react';
+import { Trophy, Flame, Zap, Crown, ArrowRight, Target, RefreshCw, Gem, Lock, Shield } from 'lucide-react';
 import { Header } from '../components/Header';
 import { JemzLoader } from '../components/JemzLoader';
 import { SegmentedSwitcher } from '../components/game';
@@ -186,6 +186,13 @@ export default function Leaderboard() {
     'Learner';
   const userAvatar = user?.user_metadata?.avatar || 'user';
   const rankTitle = level >= 30 ? 'Master' : level >= 10 ? 'Scholar' : level >= 5 ? 'Explorer' : 'Learner';
+  const tierColor = level >= 30 ? '#38bdf8' : level >= 10 ? '#fbbf24' : level >= 5 ? '#34d399' : '#d97706';
+  const tierName = level >= 30 ? 'Diamond Tier' : level >= 10 ? 'Gold Tier' : level >= 5 ? 'Emerald Tier' : 'Bronze Tier';
+  const tierBadgeText = isUserQualified && fullUserRankIndex !== -1 && fullUserRankIndex < 3
+    ? 'Podium Tier'
+    : isUserInTop20
+    ? 'Top 20 Safe'
+    : tierName;
   const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const percentileDisplay = getRankDisplay(xp || 0);
 
@@ -263,25 +270,34 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          {/* Right Column: Percentile + Gem Emblem + View Rewards */}
+          {/* Right Column: League / Tier Division Badge */}
           <div className="rank-hero-right">
             <div>
               <div className="rank-hero-percentile-label">{percentileDisplay}</div>
               <div className="rank-hero-percentile-sub">of all learners</div>
             </div>
 
-            <div className="rank-hero-gem-badge">
-              <Gem size={20} color="#34d399" strokeWidth={2.4} />
+            <div
+              className="rank-hero-tier-emblem"
+              style={{
+                background: `linear-gradient(135deg, ${tierColor}2e 0%, ${tierColor}0a 100%)`,
+                borderColor: `${tierColor}55`,
+                boxShadow: `0 0 12px ${tierColor}35`,
+              }}
+            >
+              <Shield size={20} color={tierColor} strokeWidth={2.4} />
             </div>
 
-            <button
-              onClick={() => navigate('/store')}
-              className="rank-hero-rewards-btn"
-              aria-label="View store rewards"
+            <div
+              className="rank-hero-tier-pill"
+              style={{
+                background: `${tierColor}15`,
+                borderColor: `${tierColor}40`,
+                color: tierColor,
+              }}
             >
-              <span>Rewards</span>
-              <ArrowRight size={11} strokeWidth={2.5} />
-            </button>
+              {tierBadgeText}
+            </div>
           </div>
         </div>
       )}
