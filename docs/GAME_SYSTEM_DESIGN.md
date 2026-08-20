@@ -43,13 +43,21 @@ This context holds all the gamification state and syncs it between `localStorage
 ## 3. The Gamification Engine
 
 ### A. Experience Points (XP) & Leveling
-Level progression is designed to be intentionally slow and demanding. We avoid rapid level-ups so that high-level badges hold genuine prestige.
-- **The Formula**: `Level = Math.floor(TotalXP / 100) + 1`. Every 100 XP grants a new level.
+Level progression is designed to be progressive and challenging. High-level badges hold genuine prestige.
+- **The Progressive Formula**: Total XP required for level $N$ follows the power-curve formula:
+  $$\text{Total XP Required for Level } N = \text{Math.round}(38 \times (N - 1)^{1.6})$$
+  - Level 1: `0 XP`
+  - Level 2: `38 XP`
+  - Level 3: `97 XP`
+  - Level 4: `166 XP`
+  - Level 5: `326 XP`
+  - Level 10: `1,277 XP`
+  - Level 20: `4,188 XP`
 - **The Economy (XP Rewards)**:
-  - **Chess Checkmate against Bot**: `+15 XP`
-  - **Chess Puzzle Solved**: `+5 XP`
-  - **Geography Province Identified**: `+2 XP`
-  - **Space Flashcard Mastered**: `+2 XP`
+  - **Chess Checkmate against Bot**: Easy (`+15 XP`), Medium (`+30 XP`), Hard (`+45 XP`)
+  - **Chess Tactics Puzzle**: Easy (`+6 XP`), Medium (`+10 XP`), Hard (`+15 XP`) + Survival milestone bonuses
+  - **Space Cosmic Mystery**: Sprint / Survival trivia (`+1 XP` per correct, up to `+10 XP` bonuses)
+  - **Space Illuminate the System**: Easy (`6-9 XP`), Medium (`13-19 XP`), Hard (`22-31 XP`)
   - **Reading**: `+1 XP` per minute of active reading.
 
 ### B. The Streak "Ignition" System
