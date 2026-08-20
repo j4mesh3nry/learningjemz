@@ -9,7 +9,7 @@ LearningJemz is designed to be a highly gamified, educational progressive web ap
 
 ### Tech Stack
 - **Frontend Framework**: React 19, built with Vite for lightning-fast HMR and bundling.
-- **Routing**: `react-router-dom` v7. We use a global `<Layout>` component in `App.jsx` that conditionally renders the `<BottomNav>` only on root paths (Home, Rank, Store, Profile). Sub-modules use nested routing (`/chess/*`, `/geo/*`).
+- **Routing**: `react-router-dom` v7. We use a global `<Layout>` component in `App.jsx` that conditionally renders the `<BottomNav>` only on root paths (Home, Rank, Store, Profile). Active learning modules use nested routing (`/chess/*`, `/space/*`), while upcoming modules (Reading, Geography, Songs, Poems, Math) are displayed as locked preview cards on the Home screen.
 - **Backend & Database**: Supabase. Used for PostgreSQL data storage, Row Level Security (RLS) policies, and user Authentication.
 - **Styling**: Pure Vanilla CSS. We rely on CSS Grid, Flexbox, and global CSS variables (`index.css`) rather than utility frameworks to ensure we have pixel-perfect control over custom 3D animations and gamified aesthetics.
 
@@ -163,10 +163,11 @@ A memory and trivia module.
   - Textures: planet textures in `public/textures/planets/`; Pluto/Ceres reuse `public/textures/objects/` JPEGs. Moons and binary companions render with dedicated high-resolution surface textures (e.g. Luna, Io, Europa, Ganymede, Callisto, Titan, Ariel, Oberon, Titania, Triton, Charon) wrapped around smooth 32-segment sphere geometry, falling back to a cratered moon texture with color-tinting for others.
   - Background Starfield: Renders a high-fidelity two-layer starfield (16,000 tiny background stars and 4,000 medium colored stars) to create a subtle, non-distracting 3D parallax effect on camera rotation. Auto-rotation on OrbitControls is disabled when the simulation is frozen (`simSpeed = 0`).
 
-### D. Reading Module (`/reading`)
-A focus and comprehension module.
-- **Mechanic**: Users select texts to read. A timer tracks their active reading time.
-- **Progression**: Rewards are time-based (+1 XP per minute) to encourage sustained focus rather than rushing through texts.
+### D. Planned Upcoming Modules (e.g. Reading, Geography, Math)
+Upcoming modules are designed to integrate seamlessly into the progression engine:
+- **Reading**: Active reading timer awarding `+1 XP` per minute with comprehension quizzes.
+- **Geography**: Interactive map challenges for provinces and regional capitals.
+- **Status**: Displayed as locked preview cards on the Home screen awaiting gameplay implementation.
 
 ---
 

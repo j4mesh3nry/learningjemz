@@ -33,7 +33,7 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 
 ## Architecture
 
-- Routes are nested per module: `/chess/*` → `src/pages/chess/ChessHome.tsx`, likewise `/geo`, `/reading`, `/space`. Module home files are `.tsx`; most sub-pages and components are `.jsx`. Prefer TypeScript for new files (`tsconfig.app.json` has `allowJs`, `noImplicitAny: false`, `erasableSyntaxOnly: true`).
+- Routes are nested per active module: `/chess/*` → `src/pages/chess/ChessHome.tsx`, `/space/*` → `src/pages/space/SpaceHome.tsx`. Upcoming modules (Reading, Geography, Songs, Poems, Math) are displayed as locked preview cards on Home with no active routes yet. Module home files are `.tsx`; most sub-pages and components are `.jsx`. Prefer TypeScript for new files (`tsconfig.app.json` has `allowJs`, `noImplicitAny: false`, `erasableSyntaxOnly: true`).
 - Global state: `src/contexts/AuthContext.jsx` (Supabase auth) and `src/contexts/GameContext.jsx` (XP/level/streak/playedDates, synced between `localStorage` and Supabase `game_progress`). Context files intentionally export non-component helpers — the fast-refresh lint warnings there are expected; don't "fix" them.
 - Supabase client: `src/utils/supabase.js`; helper layer: `src/api/supabase.js`. Tables: `game_progress`, `achievements`.
 - Data: `src/data/space-objects.js` (35 solar-system objects in size order with a strict 1:1 mnemonic — keep ordering/mapping intact), `chess-puzzles.json`, `philippines-provinces.js`. `scripts/` and `download_pieces.cjs` are one-off data-fetch scripts (Lichess/OpenLibrary), not part of the app.
