@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame, getLevelProgress } from '../contexts/GameContext';
-import { Flame, Zap, RefreshCw, Target, Lock, Users, Star } from 'lucide-react';
+import { Flame, Zap, RefreshCw, Target, Lock, Users, Star, Globe } from 'lucide-react';
 import { Header } from '../components/Header';
 import { JemzLoader } from '../components/JemzLoader';
 import { SegmentedSwitcher } from '../components/game';
@@ -82,7 +82,7 @@ export default function Leaderboard() {
   const [leaders, setLeaders] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [sortBy, setSortBy] = useState<'xp' | 'streak'>('xp');
-  const [filterTab, setFilterTab] = useState<'xp' | 'streak' | 'friends'>('xp');
+  const [scope, setScope] = useState<'global' | 'friends'>('global');
   const [toast, setToast] = useState<string | null>(null);
 
   // Set dark theme attributes on mount, clean up on unmount
@@ -161,12 +161,8 @@ export default function Leaderboard() {
     };
   }, [fetchLeaders, leaders.length, flushNow]);
 
-  const handleTabChange = (tabId: string) => {
-    setFilterTab(tabId as 'xp' | 'streak' | 'friends');
-    if (tabId === 'friends') {
-      return;
-    }
-    const newSortBy = tabId as 'xp' | 'streak';
+  const handleSortChange = (metricId: string) => {
+    const newSortBy = metricId as 'xp' | 'streak';
     if (newSortBy === sortBy) return;
     setSortBy(newSortBy);
     setLeaders(prev => processLeaders(prev, newSortBy));
@@ -179,7 +175,7 @@ export default function Leaderboard() {
   const restLeaders = top20Leaders.slice(3);
 
   const fullUserRankIndex = leaders.findIndex(l => l.id === user?.id);
-  const isUserQualified = filterTab === 'streak' ? (streak ?? 0) > 0 : (xp ?? 0) > 0;
+  const isUserQualified = sortBy === 'streak' ? (streak ?? 0) > 0 : (xp ?? 0) > 0;
   const isUserInTop20 = isUserQualified && fullUserRankIndex !== -1 && fullUserRankIndex < 20;
   const currentUserRankDisplay = isUserQualified && fullUserRankIndex !== -1 ? `#${fullUserRankIndex + 1}` : 'Unranked';
 
@@ -192,10 +188,14 @@ export default function Leaderboard() {
   const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const percentileDisplay = getRankDisplay(xp || 0);
 
-  const rankingFilterTabs = [
-    { id: 'xp', label: 'XP', icon: <Zap size={14} /> },
-    { id: 'streak', label: 'Streak', icon: <Flame size={14} /> },
-    { id: 'friends', label: 'Friends', icon: <Users size={14} /> },
+  const scopeTabs = [
+    { id: 'global', label: 'Global', icon: <Globe size={13} strokeWidth={2.2} /> },
+    { id: 'friends', label: 'Friends', icon: <Users size={13} strokeWidth={2.2} /> },
+  ];
+
+  const metricTabs = [
+    { id: 'xp', label: 'XP', icon: <Zap size={13} strokeWidth={2.2} /> },
+    { id: 'streak', label: 'Streak', icon: <Flame size={13} strokeWidth={2.2} /> },
   ];
 
   return (
@@ -264,16 +264,23 @@ export default function Leaderboard() {
         </div>
       )}
 
-      <div className="rank-switcher-wrap">
+      {/* ── Dual-Axis Filter Bar: Scope (Global / Friends) & Metric (XP / Streak) ── */}
+      <div className="rank-filter-bar">
         <SegmentedSwitcher
-          tabs={rankingFilterTabs}
-          activeTab={filterTab}
-          onChange={handleTabChange}
-          ariaLabel="Leaderboard ranking filters"
+          tabs={scopeTabs}
+          activeTab={scope}
+          onChange={(tab) => setScope(tab as 'global' | 'friends')}
+          ariaLabel="Leaderboard scope filter"
+        />
+        <SegmentedSwitcher
+          tabs={metricTabs}
+          activeTab={sortBy}
+          onChange={handleSortChange}
+          ariaLabel="Ranking metric filter"
         />
       </div>
 
-      {filterTab === 'friends' ? (
+      {scope === 'friends' ? (
         <div className="rank-friends-card">
           <div className="rank-friends-icon-box">
             <Users size={24} color="#34d399" />
