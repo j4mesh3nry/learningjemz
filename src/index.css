@@ -1465,122 +1465,114 @@ body[data-module-theme="home"] .bottom-nav a.active {
   transform: scale(0.94);
 }
 
-/* ── "Your Position" Card (Matches Home Card Style) ─ */
-.rank-position-card {
+/* ── "YOUR POSITION" Hero Showcase Card ────────── */
+.rank-hero-card {
   background: #05130e;
   border: 1.5px solid #102d1f;
   border-radius: 18px;
-  padding: 16px;
+  padding: 14px 16px;
   margin-bottom: 16px;
+  min-height: 112px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.rank-position-header {
-  display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  box-sizing: border-box;
 }
 
-.rank-position-badge-label {
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: #34d399;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-}
-
-.rank-position-percentile {
-  background: #0b2518;
-  border: 1px solid #1c5236;
-  color: #34d399;
-  font-size: 0.72rem;
-  font-weight: 800;
-  padding: 2.5px 9px;
-  border-radius: 9999px;
-}
-
-.rank-position-body {
+.rank-hero-left {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
-.rank-position-avatar-wrap {
+.rank-hero-avatar-col {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   flex-shrink: 0;
 }
 
-.rank-position-level-badge {
+.rank-hero-avatar-ring {
+  border: 2px solid #34d399;
+  border-radius: 50%;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-hero-level-tag {
   position: absolute;
-  bottom: -4px;
-  right: -4px;
+  bottom: -6px;
   background: #10b981;
   color: #ffffff;
   font-size: 0.62rem;
   font-weight: 800;
-  padding: 1px 6px;
-  border-radius: 8px;
-  border: 1.5px solid #05130e;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  padding: 1px 7px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
 }
 
-.rank-position-details {
-  flex: 1;
-  min-width: 0;
+.rank-hero-info {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+  flex: 1;
 }
 
-.rank-position-name-row {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-.rank-position-rank-num {
-  font-family: var(--font-heading);
-  font-size: 1.15rem;
+.rank-hero-position-sub {
+  font-size: 0.66rem;
   font-weight: 800;
   color: #34d399;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
 }
 
-.rank-position-username {
+.rank-hero-name {
   font-family: var(--font-heading);
   font-size: 1.15rem;
   font-weight: 800;
   color: #ffffff;
+  line-height: 1.15;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.rank-position-tier {
-  font-size: 0.76rem;
+.rank-hero-title {
+  font-size: 0.74rem;
   font-weight: 700;
+  color: #fbbf24;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-/* XP Progress Bar inside Your Position */
-.rank-position-progress {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 2px;
+.rank-hero-progress-box {
+  margin-top: 4px;
+  width: 100%;
 }
 
-.rank-position-progress-text {
-  font-size: 0.68rem;
+.rank-hero-progress-label {
+  font-size: 0.64rem;
   font-weight: 600;
   color: #8db5a0;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.rank-position-progress-track {
+.rank-hero-progress-track {
   height: 6px;
   background: #081d14;
   border: 1px solid #112d1f;
@@ -1588,11 +1580,71 @@ body[data-module-theme="home"] .bottom-nav a.active {
   overflow: hidden;
 }
 
-.rank-position-progress-fill {
+.rank-hero-progress-fill {
   height: 100%;
   background: #10b981;
   border-radius: 3px;
   transition: width 0.3s ease;
+}
+
+/* Right Column: Competitive League / Tier Division Badge */
+.rank-hero-right {
+  width: 126px;
+  min-width: 126px;
+  max-width: 126px;
+  flex-shrink: 0;
+  background: #081a13;
+  border: 1px solid #133b27;
+  border-radius: 16px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.rank-hero-percentile-label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.rank-hero-percentile-sub {
+  font-size: 0.56rem;
+  font-weight: 600;
+  color: #8db5a0;
+  margin-top: 1px;
+}
+
+.rank-hero-tier-emblem {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(52, 211, 153, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-hero-tier-pill {
+  font-size: 0.58rem;
+  font-weight: 800;
+  padding: 2.5px 6px;
+  border-radius: 7px;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── Dual-Axis Filter Bar (Scope & Metric) ──────── */

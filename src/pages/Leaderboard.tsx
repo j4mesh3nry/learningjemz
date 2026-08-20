@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame, getLevelProgress } from '../contexts/GameContext';
-import { Flame, Zap, RefreshCw, Target, Lock, Users, Star, Globe } from 'lucide-react';
+import { Flame, Zap, RefreshCw, Target, Lock, Users, Star, Globe, Crown, Gem, Shield } from 'lucide-react';
 import { Header } from '../components/Header';
 import { JemzLoader } from '../components/JemzLoader';
 import { SegmentedSwitcher } from '../components/game';
@@ -53,6 +53,34 @@ export const getPrestigeInfo = (lvl: number) => {
   if (lvl >= 10) return { title: 'Explorer', color: '#38bdf8' };
   if (lvl >= 5) return { title: 'Apprentice', color: '#34d399' };
   return { title: 'Novice', color: '#8db5a0' };
+};
+
+/**
+ * 7-Tier Competitive League Division System
+ */
+export const getCompetitiveLeague = (isQualified: boolean, rankIndex: number, xp: number) => {
+  if (!isQualified || rankIndex === -1) {
+    return { name: 'Unranked', pillText: 'Unranked', color: '#8db5a0', iconType: 'shield' as const };
+  }
+  if (rankIndex >= 0 && rankIndex < 3) {
+    return { name: 'Champions League', pillText: 'CHAMPIONS', color: '#fbbf24', iconType: 'crown' as const };
+  }
+  if (rankIndex < 10 || xp >= 5000) {
+    return { name: 'Mythic Diamond', pillText: 'MYTHIC DIAMOND', color: '#c084fc', iconType: 'diamond' as const };
+  }
+  if (rankIndex < 20 || xp >= 2000) {
+    return { name: 'Emerald Master', pillText: 'EMERALD LEAGUE', color: '#34d399', iconType: 'shield' as const };
+  }
+  if (xp >= 1000) {
+    return { name: 'Platinum League', pillText: 'PLATINUM LEAGUE', color: '#38bdf8', iconType: 'shield' as const };
+  }
+  if (xp >= 500) {
+    return { name: 'Gold League', pillText: 'GOLD LEAGUE', color: '#f59e0b', iconType: 'shield' as const };
+  }
+  if (xp >= 100) {
+    return { name: 'Silver League', pillText: 'SILVER LEAGUE', color: '#94a3b8', iconType: 'shield' as const };
+  }
+  return { name: 'Bronze League', pillText: 'BRONZE LEAGUE', color: '#d97706', iconType: 'shield' as const };
 };
 
 /**
@@ -185,6 +213,7 @@ export default function Leaderboard() {
     'Learner';
   const userAvatar = user?.user_metadata?.avatar || 'user';
   const prestige = getPrestigeInfo(level);
+  const league = getCompetitiveLeague(isUserQualified, fullUserRankIndex, xp || 0);
   const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const percentileDisplay = getRankDisplay(xp || 0);
 
@@ -226,39 +255,74 @@ export default function Leaderboard() {
       </div>
 
       {user && (
-        <div className="rank-position-card">
-          <div className="rank-position-header">
-            <span className="rank-position-badge-label">Your Position</span>
-            <span className="rank-position-percentile">{percentileDisplay}</span>
-          </div>
-
-          <div className="rank-position-body">
-            <div className="rank-position-avatar-wrap">
-              <AvatarIcon avatar={userAvatar} size={48} iconSize={26} />
-              <span className="rank-position-level-badge">Lv.{level}</span>
+        <div className="rank-hero-card">
+          {/* Left Column: Avatar + Rank + Progress */}
+          <div className="rank-hero-left">
+            <div className="rank-hero-avatar-col">
+              <div className="rank-hero-avatar-ring" style={{ borderColor: `${prestige.color}99`, boxShadow: `0 0 14px ${prestige.color}35` }}>
+                <AvatarIcon avatar={userAvatar} size={50} iconSize={26} />
+              </div>
+              <span className="rank-hero-level-tag" style={{ background: prestige.color, color: level >= 100 ? '#000000' : '#ffffff' }}>Lv.{level}</span>
             </div>
 
-            <div className="rank-position-details">
-              <div className="rank-position-name-row">
-                <span className="rank-position-rank-num">{currentUserRankDisplay}</span>
-                <span className="rank-position-username">{displayName}</span>
+            <div className="rank-hero-info">
+              <span className="rank-hero-position-sub">Your Position</span>
+              <div className="rank-hero-name">
+                <span style={{ color: '#34d399', marginRight: 6 }}>{currentUserRankDisplay}</span>
+                {displayName}
               </div>
-              <div className="rank-position-tier" style={{ color: prestige.color }}>
+              <div className="rank-hero-title" style={{ color: prestige.color }}>
                 <Star size={11} color={prestige.color} strokeWidth={2.2} />
                 <span>{prestige.title}</span>
               </div>
+
+              <div className="rank-hero-progress-box">
+                <div className="rank-hero-progress-label">
+                  {xpInLevel.toLocaleString()} / {levelXPReq.toLocaleString()} XP to next rank
+                </div>
+                <div className="rank-hero-progress-track">
+                  <div
+                    className="rank-hero-progress-fill"
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="rank-position-progress">
-            <div className="rank-position-progress-text">
-              {xpInLevel.toLocaleString()} / {levelXPReq.toLocaleString()} XP to next rank
+          {/* Right Column: Competitive League / Tier Division Badge */}
+          <div className="rank-hero-right">
+            <div>
+              <div className="rank-hero-percentile-label">{percentileDisplay}</div>
+              <div className="rank-hero-percentile-sub">of all learners</div>
             </div>
-            <div className="rank-position-progress-track">
-              <div
-                className="rank-position-progress-fill"
-                style={{ width: `${pct}%` }}
-              />
+
+            <div
+              className="rank-hero-tier-emblem"
+              style={{
+                background: `linear-gradient(135deg, ${league.color}2e 0%, ${league.color}0a 100%)`,
+                borderColor: `${league.color}55`,
+                boxShadow: `0 0 12px ${league.color}30`,
+              }}
+            >
+              {league.iconType === 'crown' ? (
+                <Crown size={20} color={league.color} strokeWidth={2.2} />
+              ) : league.iconType === 'diamond' ? (
+                <Gem size={20} color={league.color} strokeWidth={2.2} />
+              ) : (
+                <Shield size={20} color={league.color} strokeWidth={2.2} />
+              )}
+            </div>
+
+            <div
+              className="rank-hero-tier-pill"
+              style={{
+                background: `${league.color}15`,
+                borderColor: `${league.color}40`,
+                color: league.color,
+              }}
+            >
+              {league.pillText}
             </div>
           </div>
         </div>
