@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame, getLevelProgress } from '../contexts/GameContext';
-import { Flame, Zap, RefreshCw, Target, Lock, Users, Star, Globe } from 'lucide-react';
+import { Flame, Zap, RefreshCw, Target, Lock, Users, Star } from 'lucide-react';
 import { Header } from '../components/Header';
 import { JemzLoader } from '../components/JemzLoader';
 import { SegmentedSwitcher } from '../components/game';
@@ -82,7 +82,7 @@ export default function Leaderboard() {
   const [leaders, setLeaders] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [sortBy, setSortBy] = useState<'xp' | 'streak'>('xp');
-  const [scope, setScope] = useState<'global' | 'friends'>('global');
+  const [filterTab, setFilterTab] = useState<'xp' | 'streak' | 'friends'>('xp');
   const [toast, setToast] = useState<string | null>(null);
 
   // Set dark theme attributes on mount, clean up on unmount
@@ -161,7 +161,11 @@ export default function Leaderboard() {
     };
   }, [fetchLeaders, leaders.length, flushNow]);
 
-  const handleMetricChange = (tabId: string) => {
+  const handleTabChange = (tabId: string) => {
+    setFilterTab(tabId as 'xp' | 'streak' | 'friends');
+    if (tabId === 'friends') {
+      return;
+    }
     const newSortBy = tabId as 'xp' | 'streak';
     if (newSortBy === sortBy) return;
     setSortBy(newSortBy);
@@ -175,7 +179,7 @@ export default function Leaderboard() {
   const restLeaders = top20Leaders.slice(3);
 
   const fullUserRankIndex = leaders.findIndex(l => l.id === user?.id);
-  const isUserQualified = sortBy === 'streak' ? (streak ?? 0) > 0 : (xp ?? 0) > 0;
+  const isUserQualified = filterTab === 'streak' ? (streak ?? 0) > 0 : (xp ?? 0) > 0;
   const isUserInTop20 = isUserQualified && fullUserRankIndex !== -1 && fullUserRankIndex < 20;
   const currentUserRankDisplay = isUserQualified && fullUserRankIndex !== -1 ? `#${fullUserRankIndex + 1}` : 'Unranked';
 
@@ -188,14 +192,10 @@ export default function Leaderboard() {
   const { xpInLevel, levelXPReq, pct } = getLevelProgress(xp || 0);
   const percentileDisplay = getRankDisplay(xp || 0);
 
-  const scopeTabs = [
-    { id: 'global', label: 'Global', icon: <Globe size={13} strokeWidth={2.2} /> },
-    { id: 'friends', label: 'Friends', icon: <Users size={13} strokeWidth={2.2} /> },
-  ];
-
-  const metricTabs = [
-    { id: 'xp', label: 'XP', icon: <Zap size={13} strokeWidth={2.2} /> },
-    { id: 'streak', label: 'Streak', icon: <Flame size={13} strokeWidth={2.2} /> },
+  const rankingFilterTabs = [
+    { id: 'xp', label: 'XP', icon: <Zap size={14} /> },
+    { id: 'streak', label: 'Streak', icon: <Flame size={14} /> },
+    { id: 'friends', label: 'Friends', icon: <Users size={14} /> },
   ];
 
   return (
@@ -206,10 +206,8 @@ export default function Leaderboard() {
         </div>
       )}
 
-      {/* ── Top Header Widget (Streak Flame + Level Star + XP Bar) ── */}
       <Header />
 
-      {/* ── Title Header Row (RANK + Refresh Button) ── */}
       <div className="rank-title-row">
         <div className="rank-title-group">
           <h1 className="rank-title">RANK</h1>
@@ -227,7 +225,6 @@ export default function Leaderboard() {
         </button>
       </div>
 
-      {/* ── YOUR POSITION Card (Unified with Home Cards) ── */}
       {user && (
         <div className="rank-position-card">
           <div className="rank-position-header">
@@ -267,24 +264,16 @@ export default function Leaderboard() {
         </div>
       )}
 
-      {/* ── Dual-Axis Filter Bar: Scope (Global / Friends) & Metric (XP / Streak) ── */}
-      <div className="rank-filter-bar">
+      <div className="rank-switcher-wrap">
         <SegmentedSwitcher
-          tabs={scopeTabs}
-          activeTab={scope}
-          onChange={(tab) => setScope(tab as 'global' | 'friends')}
-          ariaLabel="Leaderboard scope switcher"
-        />
-        <SegmentedSwitcher
-          tabs={metricTabs}
-          activeTab={sortBy}
-          onChange={(tab) => handleMetricChange(tab as 'xp' | 'streak')}
-          ariaLabel="Leaderboard metric switcher"
+          tabs={rankingFilterTabs}
+          activeTab={filterTab}
+          onChange={handleTabChange}
+          ariaLabel="Leaderboard ranking filters"
         />
       </div>
 
-      {/* ── Friends View ── */}
-      {scope === 'friends' ? (
+      {filterTab === 'friends' ? (
         <div className="rank-friends-card">
           <div className="rank-friends-icon-box">
             <Users size={24} color="#34d399" />
@@ -303,10 +292,8 @@ export default function Leaderboard() {
         </div>
       ) : (
         <>
-          {/* ── Top 3 Podium Section (Subtle Accents: #1 Gold, #2 Blue, #3 Orange) ── */}
           {top20Leaders.length >= 3 && (
             <div className="rank-top3-grid">
-              {/* #2 Blue subtle accent */}
               <div className="rank-top3-card rank-top3-card-2nd">
                 <span className="rank-top3-badge rank-top3-badge-2nd">#2</span>
                 <div className="rank-top3-avatar">
@@ -319,7 +306,6 @@ export default function Leaderboard() {
                 </div>
               </div>
 
-              {/* #1 Gold subtle accent */}
               <div className="rank-top3-card rank-top3-card-1st">
                 <span className="rank-top3-badge rank-top3-badge-1st">#1</span>
                 <div className="rank-top3-avatar">
@@ -332,7 +318,6 @@ export default function Leaderboard() {
                 </div>
               </div>
 
-              {/* #3 Orange subtle accent */}
               <div className="rank-top3-card rank-top3-card-3rd">
                 <span className="rank-top3-badge rank-top3-badge-3rd">#3</span>
                 <div className="rank-top3-avatar">
@@ -347,7 +332,6 @@ export default function Leaderboard() {
             </div>
           )}
 
-          {/* ── Table Rows Stream ── */}
           <div className="rank-list-stream">
             <div className="rank-list-header">
               <span>Rank</span>
@@ -416,7 +400,6 @@ export default function Leaderboard() {
               })
             )}
 
-            {/* If user is qualified but ranked beyond Top 20, render an ellipsis jump to their row */}
             {!isUserInTop20 && isUserQualified && fullUserRankIndex >= 20 && (
               <>
                 <div className="rank-list-ellipsis">···</div>

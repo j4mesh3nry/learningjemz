@@ -1595,23 +1595,9 @@ body[data-module-theme="home"] .bottom-nav a.active {
   transition: width 0.3s ease;
 }
 
-/* ── Dual-Axis Filter Bar (Scope & Metric) ──────── */
-.rank-filter-bar {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+/* ── Ranking Filters (Segmented Switcher) ──────── */
+.rank-switcher-wrap {
   margin: 0 0 16px 0;
-}
-
-.rank-filter-bar .game-segmented-switcher {
-  margin: 0 !important;
-  padding: 3px !important;
-}
-
-.rank-filter-bar .game-segmented-switcher button {
-  padding: 8px 10px !important;
-  font-size: 0.82rem !important;
-  gap: 6px !important;
 }
 
 /* ── Top 3 Podium Section ──────────────────────── */

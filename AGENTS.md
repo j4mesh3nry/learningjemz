@@ -19,6 +19,15 @@ React + Vite + Supabase gamified learning PWA (React Router SPA, vanilla CSS, Lu
 
 ## Hard Design Rules & Mobile-Game Design System
 
+- **Visual System Consistency with Home Page**:
+  - All screens (`/leaderboards` [Rank], `/store` [Store], `/profile` [Me], `/settings` [Settings], and module hubs) MUST feel like a natural, seamless continuation of the **Home page** design system (`Home.tsx`) — never like disconnected or disparate visual experiments.
+  - **Shared Visual Grammar**:
+    - Dark green-black canvas (`--game-bg-canvas: #030d09`, `--game-surface-card: #05130e`).
+    - Clean 1.5px solid dark-green borders (`--game-border-default: #102d1f`), rounded corners (`16px–18px` for cards, `9999px` for pills/chips).
+    - Restrained, subtle accents (Emerald `#34d399` / `#10b981`, Sapphire `#38bdf8`, Amber/Gold `#fbbf24` / `#f59e0b`, Coral `#ff5a5a`).
+    - Subtle depth and glow philosophy (`box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4)`). **DO NOT** introduce heavy glassmorphism, excessive background transparency, blurry neon glows, or cartoonish sticker graphics.
+    - Strict stroke-based Lucide React icons with **zero emojis** and **zero solid cartoon fills** (icons must be flat stroke grammar with `strokeWidth={2}` to `2.4`).
+    - Standard UI primitives: `<Header />` top capsule widget, `<SegmentedSwitcher />` for tabs/filters, `<AvatarIcon />` for learner avatars, and standard bottom navigation with active tab highlight.
 - **No emojis** in UI or data. All icons via Lucide React or custom SVG. Custom icons must follow the flat, stroke-based Lucide grammar (24x24 viewBox, `stroke="currentColor"`, no fill, round caps/joins). NO cartoon or emoji artwork as UI icons.
 - **Atmospheric Mobile-Game Aesthetic**:
   - Deep dark game canvas (`--game-bg-canvas: #030d09`, `--game-surface-card: #05130e`).
