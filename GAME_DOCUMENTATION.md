@@ -95,7 +95,7 @@
 
 ### Victory Screen & Module Theme System
 - **Module Theme Modes**: Supports `theme="space"` (deep muted indigo solid card `#171a38`, muted steel border `#3d4461`, muted slate action buttons), `theme="chess"` (dark warm solid card `#1c1917`, 3D amber border `#d97706`), `theme="geo"` (emerald card `#f0fdf4`, green border `#16653e`), and `theme="default"` (playful white/emerald card). The Space victory and Illuminate game-over screens share a unified minimal palette (no vibrant/glowy colors): streak shown in muted rose `#d8a8a8`, XP in muted gold `#d9c58f`, with a clean 54px icon tile and compact stat-slot boxes.
-- **Design Enforcement**: Strictly NO glassmorphism (`backdrop-filter`), NO translucent blurry cards, and NO neon glow effects. All modals use solid 3D cards with tactile offset borders and solid pushable buttons.
+- **Design Enforcement**: Follows the Atmospheric Mobile-Game Design System. Victory and modal cards use dark thematic containers with ambient border glows, tactile buttons, and subtle backdrop dimming.
 - **Iconography Standard**: Strictly NO emojis in UI or data. All graphics render high-quality Lucide React icons (`Gem`, `Sparkles`, `Flame`, `Trophy`, `Zap`).
 
 ---
