@@ -8,8 +8,8 @@ This document is the absolute source of truth for the LearningJemz application. 
 LearningJemz is designed to be a highly gamified, educational progressive web app. The core philosophy is to use psychological feedback loops (streaks, leveling, achievements, micro-animations) heavily inspired by Duolingo to incentivize learning across various disciplines (Chess, Geography, Space, Reading).
 
 ### Tech Stack
-- **Frontend Framework**: React 18, built with Vite for lightning-fast HMR and bundling.
-- **Routing**: `react-router-dom` v6. We use a global `<Layout>` component in `App.jsx` that conditionally renders the `<BottomNav>` only on root paths (Home, Rank, Store, Profile). Sub-modules use nested routing (`/chess/*`, `/geo/*`).
+- **Frontend Framework**: React 19, built with Vite for lightning-fast HMR and bundling.
+- **Routing**: `react-router-dom` v7. We use a global `<Layout>` component in `App.jsx` that conditionally renders the `<BottomNav>` only on root paths (Home, Rank, Store, Profile). Sub-modules use nested routing (`/chess/*`, `/geo/*`).
 - **Backend & Database**: Supabase. Used for PostgreSQL data storage, Row Level Security (RLS) policies, and user Authentication.
 - **Styling**: Pure Vanilla CSS. We rely on CSS Grid, Flexbox, and global CSS variables (`index.css`) rather than utility frameworks to ensure we have pixel-perfect control over custom 3D animations and gamified aesthetics.
 
