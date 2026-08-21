@@ -487,53 +487,83 @@ export default function Profile() {
         >
           <div
             style={{
-              background: '#fff',
+              background: 'var(--game-surface-card, #05130e)',
+              border: '1.5px solid var(--game-border-default, #102d1f)',
               padding: 24,
               borderRadius: 24,
               width: '90%',
-              maxWidth: 380,
-              boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+              maxWidth: 420,
+              boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+              color: '#ffffff',
             }}
             onClick={e => e.stopPropagation()}
           >
-            <h3 style={{ fontFamily: 'var(--font-heading)', textAlign: 'center', marginBottom: 20 }}>Choose Avatar</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 10, justifyContent: 'center' }}>
-              {AVATAR_OPTIONS.map(opt => (
-                <div
-                  key={opt.id}
-                  onClick={() => handleSelectAvatar(opt.id)}
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: '50%',
-                    background: avatar === opt.id ? '#e8f5e9' : '#f5f5f5',
-                    border: avatar === opt.id ? '3px solid #16653e' : '2px solid transparent',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'transform 0.1s ease',
-                    transform: avatar === opt.id ? 'scale(1.1)' : 'scale(1)',
-                    boxShadow: avatar === opt.id ? '0 4px 12px rgba(22,101,62,0.3)' : 'none'
-                  }}
-                  title={opt.label}
-                >
-                  <AvatarIcon avatar={opt.id} size={42} iconSize={24} />
-                </div>
-              ))}
+            <h3 style={{ fontFamily: 'var(--font-heading)', textAlign: 'center', margin: '0 0 6px 0', fontSize: '1.4rem' }}>
+              Choose Companion
+            </h3>
+            <p style={{ textAlign: 'center', fontSize: '0.85rem', color: '#9ca3af', margin: '0 0 20px 0' }}>
+              Select your mythic spirit guide for your journey
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, justifyContent: 'center' }}>
+              {AVATAR_OPTIONS.map(opt => {
+                const isSelected = avatar === opt.id || (opt.id === 'owl' && (!avatar || avatar === 'user'));
+                return (
+                  <div
+                    key={opt.id}
+                    onClick={() => handleSelectAvatar(opt.id)}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      padding: '14px 8px',
+                      borderRadius: 16,
+                      background: isSelected ? 'rgba(52, 211, 153, 0.12)' : 'rgba(255, 255, 255, 0.03)',
+                      border: isSelected ? `2px solid ${opt.color}` : '1.5px solid rgba(255, 255, 255, 0.08)',
+                      cursor: 'pointer',
+                      transition: 'all 0.18s ease',
+                      transform: isSelected ? 'scale(1.04)' : 'scale(1)',
+                      boxShadow: isSelected ? `0 6px 20px ${opt.color}33` : 'none',
+                    }}
+                    title={opt.label}
+                  >
+                    <AvatarIcon avatar={opt.id} size={58} bordered={isSelected} />
+                    <span style={{
+                      marginTop: 10,
+                      fontSize: '0.85rem',
+                      fontWeight: 700,
+                      color: isSelected ? opt.color : '#e5e7eb',
+                      textAlign: 'center',
+                      fontFamily: 'var(--font-heading)',
+                    }}>
+                      {opt.label.split(' ')[0]}
+                    </span>
+                    <span style={{
+                      fontSize: '0.68rem',
+                      color: '#9ca3af',
+                      textAlign: 'center',
+                      marginTop: 2,
+                    }}>
+                      {opt.label.includes('(') ? opt.label.match(/\((.*?)\)/)?.[1] : ''}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
+
             <button
               onClick={() => setIsEditingAvatar(false)}
               style={{
                 width: '100%',
                 marginTop: 24,
                 padding: 14,
-                borderRadius: 12,
-                background: '#f5f5f5',
-                color: '#333',
+                borderRadius: 14,
+                background: 'rgba(255, 255, 255, 0.07)',
+                color: '#e5e7eb',
                 fontWeight: 600,
-                border: 'none',
-                cursor: 'pointer'
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                cursor: 'pointer',
+                transition: 'background 0.2s ease',
               }}
             >
               Cancel

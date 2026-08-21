@@ -94,14 +94,24 @@ public class ImageCutout {
 
 Add-Type -TypeDefinition $csharpCode -ReferencedAssemblies System.Drawing
 
-# 1. Process Hero Companion Sprite
-$heroInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_owl_hero_sprite_1787299559954.jpg"
-$heroOutput = "C:\projectvc\learningjemz\public\images\characters\owl-pixel.png"
-[ImageCutout]::Process($heroInput, $heroOutput, 25, 25)
-Write-Host "Generated hero sprite: $heroOutput"
+# 1. Process Bot Assets
+$botHeroInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_bot_hero_sprite_1787300369245.jpg"
+$botHeroOutput = "C:\projectvc\learningjemz\public\images\characters\bot-pixel.png"
+[ImageCutout]::Process($botHeroInput, $botHeroOutput, 25, 25)
+Write-Host "Generated bot hero: $botHeroOutput"
 
-# 2. Process Profile Avatar Token
-$avatarInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_owl_avatar_token_1787299591006.jpg"
-$avatarOutput = "C:\projectvc\learningjemz\public\images\characters\owl-avatar-pixel.png"
-[ImageCutout]::Process($avatarInput, $avatarOutput, 25, 25)
-Write-Host "Generated avatar token: $avatarOutput"
+$botAvatarInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_bot_avatar_token_1787300406175.jpg"
+$botAvatarOutput = "C:\projectvc\learningjemz\public\images\characters\bot-avatar-pixel.png"
+[ImageCutout]::Process($botAvatarInput, $botAvatarOutput, 25, 25)
+Write-Host "Generated bot avatar: $botAvatarOutput"
+
+# 2. Process Fox Assets
+$foxHeroInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_fox_hero_sprite_1787300427991.jpg"
+$foxHeroOutput = "C:\projectvc\learningjemz\public\images\characters\fox-pixel.png"
+[ImageCutout]::Process($foxHeroInput, $foxHeroOutput, 25, 25)
+Write-Host "Generated fox hero: $foxHeroOutput"
+
+$foxAvatarInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_fox_avatar_token_1787300452267.jpg"
+$foxAvatarOutput = "C:\projectvc\learningjemz\public\images\characters\fox-avatar-pixel.png"
+[ImageCutout]::Process($foxAvatarInput, $foxAvatarOutput, 25, 25)
+Write-Host "Generated fox avatar: $foxAvatarOutput"

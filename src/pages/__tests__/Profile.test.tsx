@@ -93,14 +93,14 @@ describe('Profile', () => {
     const avatarContainer = screen.getByTestId('avatar-icon-bot');
     await user.click(avatarContainer);
     
-    expect(screen.getByText('Choose Avatar')).toBeInTheDocument();
+    expect(screen.getByText('Choose Companion')).toBeInTheDocument();
     
     // Select new avatar
-    await user.click(screen.getByTitle('Owl Companion'));
+    await user.click(screen.getByTitle('Archimedes (Sage Owl)'));
     expect(SupabaseApi.updateAvatar).toHaveBeenCalledWith('123', 'owl');
     
     await waitFor(() => {
-      expect(screen.queryByText('Choose Avatar')).not.toBeInTheDocument();
+      expect(screen.queryByText('Choose Companion')).not.toBeInTheDocument();
     });
     
     // Check if toast appears
