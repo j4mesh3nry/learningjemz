@@ -8,4 +8,5 @@ export { GameReviewDock } from './GameReviewDock';
 export { AvatarIcon, AVATAR_OPTIONS } from '../AvatarIcon';
 export { HeroCharacter } from '../HeroCharacter';
 export { HeroDioramaCanvas } from './HeroDioramaCanvas';
+export { CompanionRig } from '../companion/CompanionRig';
 

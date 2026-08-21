@@ -1,0 +1,408 @@
+/* src/components/companion/companion-rig.css */
+
+/* ── Root Layer & Pixel Rendering ── */
+.companion-rig-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  user-select: none;
+  pointer-events: auto;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.companion-rig-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  shape-rendering: crispEdges;
+}
+
+/* ── Hierarchical Bone Rig Container ── */
+.bone-rig-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform-origin: bottom center;
+}
+
+/* ── 1. Core Respiratory Loop (Torso Spine Root) ── */
+.bone-torso {
+  transform-origin: 50% 92%;
+  animation: boneTorsoBreathe 4.4s ease-in-out infinite;
+}
+
+@keyframes boneTorsoBreathe {
+  0%, 100% {
+    transform: translateY(0px) scale(1, 1);
+  }
+  50% {
+    transform: translateY(-2.5px) scale(1.015, 1.025);
+  }
+}
+
+/* ── 2. Head & Neck Follow-Through ── */
+.bone-head {
+  transform-origin: 50% 88%;
+  animation: boneHeadBreatheLag 4.4s ease-in-out infinite;
+  transition: transform 0.4s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+@keyframes boneHeadBreatheLag {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0px);
+  }
+  30% {
+    transform: rotate(-0.5deg) translateY(-0.8px);
+  }
+  60% {
+    transform: rotate(0.6deg) translateY(-1.6px);
+  }
+}
+
+/* Look-Around States */
+.state-look-left .bone-head {
+  transform: rotate(-3.5deg) translate(-2px, -1px);
+}
+
+.state-look-right .bone-head {
+  transform: rotate(3.5deg) translate(2px, -1px);
+}
+
+.state-look-up .bone-head {
+  transform: rotate(0deg) translate(0px, -3.5px) scale(1.02);
+}
+
+/* ── 3. Eye Blinking & Glances ── */
+.bone-eyes {
+  transition: transform 0.25s ease, opacity 0.1s ease;
+}
+
+.state-look-left .bone-eyes {
+  transform: translateX(-1.5px);
+}
+
+.state-look-right .bone-eyes {
+  transform: translateX(1.5px);
+}
+
+.eye-blink-layer {
+  transform-origin: 50% 50%;
+  transition: transform 0.08s ease, opacity 0.08s ease;
+}
+
+.is-blinking .eye-open-part {
+  opacity: 0 !important;
+}
+
+.is-blinking .eye-closed-part {
+  opacity: 1 !important;
+}
+
+.eye-closed-part {
+  opacity: 0;
+}
+
+/* ── 4. Appendages & Wings (Shoulder Pivots) ── */
+.bone-wing-left {
+  transform-origin: 25% 45%;
+  animation: boneWingOscillateL 4.4s ease-in-out infinite;
+}
+
+.bone-wing-right {
+  transform-origin: 75% 45%;
+  animation: boneWingOscillateR 4.4s ease-in-out infinite;
+}
+
+@keyframes boneWingOscillateL {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(2.2deg) translateY(-1px);
+  }
+}
+
+@keyframes boneWingOscillateR {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-2.2deg) translateY(-1px);
+  }
+}
+
+/* ── 5. Tails & Sinusoidal Flow (Fox 3-Tail Rig) ── */
+.bone-tail-left {
+  transform-origin: 30% 90%;
+  animation: boneTailWave1 3.6s ease-in-out infinite;
+}
+
+.bone-tail-center {
+  transform-origin: 50% 95%;
+  animation: boneTailWave2 3.6s ease-in-out 0.4s infinite;
+}
+
+.bone-tail-right {
+  transform-origin: 70% 90%;
+  animation: boneTailWave3 3.6s ease-in-out 0.8s infinite;
+}
+
+@keyframes boneTailWave1 {
+  0%, 100% {
+    transform: rotate(-3deg) skewY(-1deg);
+  }
+  50% {
+    transform: rotate(4deg) skewY(2deg) translateY(-2px);
+  }
+}
+
+@keyframes boneTailWave2 {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-3.5deg) translateY(-3px);
+  }
+}
+
+@keyframes boneTailWave3 {
+  0%, 100% {
+    transform: rotate(3deg) skewY(1deg);
+  }
+  50% {
+    transform: rotate(-4deg) skewY(-2deg) translateY(-2px);
+  }
+}
+
+/* ── 6. Ear Twitches (Fox) ── */
+.bone-ear-left {
+  transform-origin: 30% 85%;
+  animation: earTwitchLeft 6.8s ease-in-out infinite;
+}
+
+.bone-ear-right {
+  transform-origin: 70% 85%;
+  animation: earTwitchRight 7.4s ease-in-out 1.2s infinite;
+}
+
+@keyframes earTwitchLeft {
+  0%, 92%, 100% {
+    transform: rotate(0deg);
+  }
+  95% {
+    transform: rotate(-5deg);
+  }
+  97% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes earTwitchRight {
+  0%, 91%, 100% {
+    transform: rotate(0deg);
+  }
+  94% {
+    transform: rotate(5deg);
+  }
+  97% {
+    transform: rotate(-3deg);
+  }
+}
+
+/* ── 7. Held Props (Book / Chrono-Staff) ── */
+.bone-prop-staff {
+  transform-origin: 70% 80%;
+  animation: propStaffOscillate 4.4s ease-in-out infinite;
+}
+
+@keyframes propStaffOscillate {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0px);
+  }
+  50% {
+    transform: rotate(-1.5deg) translateY(-2px);
+  }
+}
+
+.bone-staff-orb {
+  transform-origin: 50% 50%;
+  animation: staffOrbFloat 2.8s ease-in-out infinite;
+}
+
+@keyframes staffOrbFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    filter: drop-shadow(0 0 4px var(--ambient-color, #38bdf8));
+  }
+  50% {
+    transform: translateY(-3px) scale(1.12);
+    filter: drop-shadow(0 0 10px var(--ambient-color, #38bdf8));
+  }
+}
+
+.bone-prop-book {
+  transform-origin: 40% 70%;
+  animation: propBookHover 4.4s ease-in-out infinite;
+}
+
+@keyframes propBookHover {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px) rotate(1deg);
+  }
+}
+
+/* ── 8. Robot Visor Scanline ── */
+.bone-bot-scanline {
+  animation: botVisorSweep 2.8s ease-in-out infinite;
+}
+
+@keyframes botVisorSweep {
+  0%, 100% {
+    transform: translateX(-4px);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(4px);
+    opacity: 1;
+  }
+}
+
+/* ── 9. Special Idle Flourishes (State: Flourish) ── */
+.state-flourish .bone-torso {
+  animation: flourishTorso 2.2s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+@keyframes flourishTorso {
+  0% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-6px) scale(1.04, 1.05); }
+  60% { transform: translateY(-2px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.state-flourish .bone-head {
+  animation: flourishHead 2.2s ease-in-out;
+}
+
+@keyframes flourishHead {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg) translateY(-2px); }
+  60% { transform: rotate(4deg) translateY(-1px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+
+.state-flourish .bone-wing-right,
+.state-flourish .bone-wing-left {
+  animation: flourishWings 2.2s ease-in-out;
+}
+
+@keyframes flourishWings {
+  0% { transform: rotate(0deg); }
+  20%, 40% { transform: rotate(8deg) scaleY(1.08); }
+  30%, 50% { transform: rotate(-6deg) scaleY(0.95); }
+  100% { transform: rotate(0deg); }
+}
+
+.state-flourish .bone-tail-left,
+.state-flourish .bone-tail-center,
+.state-flourish .bone-tail-right {
+  animation: flourishTails 2.2s ease-in-out;
+}
+
+@keyframes flourishTails {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.15) rotate(8deg) translateY(-4px); }
+  60% { transform: scale(1.05) rotate(-6deg); }
+  100% { transform: scale(1); }
+}
+
+/* ── 10. Interactive Tap Reaction (Happy Bounce) ── */
+.state-tap-happy .bone-rig-wrapper {
+  animation: tapHappyPop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes tapHappyPop {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+  25% {
+    transform: scale(1.15, 0.9) translateY(4px); /* Anticipation squish */
+  }
+  50% {
+    transform: scale(0.95, 1.18) translateY(-18px); /* Explosive happy jump */
+  }
+  75% {
+    transform: scale(1.04, 0.96) translateY(2px);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+.state-tap-happy .bone-head {
+  animation: tapHappyHead 0.65s ease-out;
+}
+
+@keyframes tapHappyHead {
+  0% { transform: rotate(0deg); }
+  45% { transform: rotate(-4deg) translateY(-3px) scale(1.06); }
+  75% { transform: rotate(3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* ── 11. AFK Drowse / Slumber State ── */
+.state-drowse .bone-torso {
+  animation: drowseTorso 6.5s ease-in-out infinite;
+}
+
+@keyframes drowseTorso {
+  0%, 100% { transform: translateY(2px) scale(1, 0.98); }
+  50% { transform: translateY(-1px) scale(1.01, 1.01); }
+}
+
+.state-drowse .bone-head {
+  transform: rotate(4deg) translateY(3px) !important;
+}
+
+.state-drowse .eye-open-part {
+  opacity: 0 !important;
+}
+
+.state-drowse .eye-closed-part {
+  opacity: 0.9 !important;
+}
+
+/* ── 12. Floating Pixel Particles / Embers ── */
+.companion-sparkle-particle {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 1px;
+  animation: sparkleFlyOut 0.75s ease-out forwards;
+  z-index: 10;
+}
+
+@keyframes sparkleFlyOut {
+  0% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+    transform: translate(calc((var(--sp-vx, 0) * 1px)), calc((var(--sp-vy, -20) * 1px))) scale(1.2);
+  }
+  100% {
+    transform: translate(calc((var(--sp-vx, 0) * 1.5px)), calc((var(--sp-vy, -36) * 1.5px))) scale(0.2);
+    opacity: 0;
+  }
+}
