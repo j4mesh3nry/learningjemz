@@ -34,23 +34,6 @@ export interface AvatarOption {
 }
 
 export const AVATAR_OPTIONS: AvatarOption[] = [
-  { id: 'user', label: 'Learner', icon: User, color: '#16653e', bg: '#e1f0e2' },
-  { id: 'bot', label: 'Robot', icon: Bot, color: '#2563eb', bg: '#dbeafe' },
-  { id: 'sparkles', label: 'Magic', icon: Sparkles, color: '#9333ea', bg: '#f3e8ff' },
-  { id: 'crown', label: 'Royalty', icon: Crown, color: '#d97706', bg: '#fef3c7' },
-  { id: 'shield', label: 'Guardian', icon: Shield, color: '#059669', bg: '#d1fae5' },
-  { id: 'zap', label: 'Lightning', icon: Zap, color: '#ca8a04', bg: '#fef9c3' },
-  { id: 'star', label: 'Starlight', icon: Star, color: '#eab308', bg: '#fef08a' },
-  { id: 'flame', label: 'Fire', icon: Flame, color: '#dc2626', bg: '#fee2e2' },
-  { id: 'rocket', label: 'Explorer', icon: Rocket, color: '#0284c7', bg: '#e0f2fe' },
-  { id: 'globe', label: 'Cosmos', icon: Globe, color: '#0d9488', bg: '#ccfbf1' },
-  { id: 'gem', label: 'Jem', icon: Gem, color: '#16a34a', bg: '#dcfce7' },
-  { id: 'smile', label: 'Happy', icon: Smile, color: '#ea580c', bg: '#ffedd5' },
-  { id: 'compass', label: 'Navigator', icon: Compass, color: '#4f46e5', bg: '#e0e7ff' },
-  { id: 'trophy', label: 'Champion', icon: Trophy, color: '#b45309', bg: '#fef3c7' },
-  { id: 'target', label: 'Sharpshooter', icon: Target, color: '#be123c', bg: '#ffe4e6' },
-  { id: 'heart', label: 'Heart', icon: Heart, color: '#e11d48', bg: '#ffe4e6' },
-  { id: 'gamepad', label: 'Gamer', icon: Gamepad2, color: '#7c3aed', bg: '#ede9fe' },
   { id: 'owl', label: 'Owl Companion', icon: Bird, color: '#15803d', bg: '#dcfce7' },
 ];
 
@@ -119,6 +102,45 @@ export function AvatarIcon({
   bordered = false,
 }: AvatarIconProps) {
   const key = (avatar || 'user').toLowerCase().trim();
+
+  // If avatar is owl companion, render the rich 32-bit pixel medallion
+  if (key === 'owl' || key === '🦉') {
+    return (
+      <div
+        data-testid={`avatar-icon-${key}`}
+        aria-label={`Avatar: ${key}`}
+        className={`avatar-icon-container avatar-icon-pixel ${className}`.trim()}
+        style={{
+          width: size,
+          height: size,
+          minWidth: size,
+          minHeight: size,
+          borderRadius: '50%',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          flexShrink: 0,
+          background: '#041d13',
+          border: bordered ? `2px solid #34d399` : 'none',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
+          ...style,
+        }}
+      >
+        <img
+          src="/images/characters/owl-avatar-pixel.png"
+          alt="Owl Companion"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            imageRendering: 'pixelated',
+          }}
+        />
+      </div>
+    );
+  }
+
   const config = AVATAR_ICON_MAP[key] || AVATAR_ICON_MAP[avatar || ''] || AVATAR_ICON_MAP.user;
   const IconComponent = config.icon;
   const resolvedColor = color || config.color;

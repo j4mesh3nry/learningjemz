@@ -7,3 +7,5 @@ export { SpeedrunTimerDock } from './SpeedrunTimerDock';
 export { GameReviewDock } from './GameReviewDock';
 export { AvatarIcon, AVATAR_OPTIONS } from '../AvatarIcon';
 export { HeroCharacter } from '../HeroCharacter';
+export { HeroDioramaCanvas } from './HeroDioramaCanvas';
+

@@ -52,7 +52,7 @@ public class ImageCutout {
                     int cy = (packed >> 16) & 0xFFFF;
 
                     int idx = (cy * width + cx) * 4;
-                    dstBytes[idx + 3] = 0; // Transparent
+                    dstBytes[idx + 3] = 0; // Set outer background to fully transparent
 
                     for (int d = 0; d < 4; d++) {
                         int nx = cx + dx[d];
@@ -64,7 +64,7 @@ public class ImageCutout {
                                 if (IsDark(srcBytes, width, nx, ny, darkThreshold)) {
                                     queue.Enqueue(nx | (ny << 16));
                                 } else {
-                                    // Feather border
+                                    // Feather edge
                                     int nidx = (ny * width + nx) * 4;
                                     byte nb = srcBytes[nidx];
                                     byte ng = srcBytes[nidx + 1];
@@ -94,8 +94,14 @@ public class ImageCutout {
 
 Add-Type -TypeDefinition $csharpCode -ReferencedAssemblies System.Drawing
 
-$inputPath = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\owl_companion_1787248952495.jpg"
-$outputPath = "C:\projectvc\learningjemz\public\images\characters\owl.png"
+# 1. Process Hero Companion Sprite
+$heroInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_owl_hero_sprite_1787299559954.jpg"
+$heroOutput = "C:\projectvc\learningjemz\public\images\characters\owl-pixel.png"
+[ImageCutout]::Process($heroInput, $heroOutput, 25, 25)
+Write-Host "Generated hero sprite: $heroOutput"
 
-[ImageCutout]::Process($inputPath, $outputPath, 30, 35)
-Write-Host "C# Flood-Fill Cutout completed successfully at $outputPath"
+# 2. Process Profile Avatar Token
+$avatarInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_owl_avatar_token_1787299591006.jpg"
+$avatarOutput = "C:\projectvc\learningjemz\public\images\characters\owl-avatar-pixel.png"
+[ImageCutout]::Process($avatarInput, $avatarOutput, 25, 25)
+Write-Host "Generated avatar token: $avatarOutput"

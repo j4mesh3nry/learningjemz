@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useGame } from '../contexts/GameContext.jsx';
 import { Header } from '../components/Header';
-import { SectionDivider, GameModuleCard, StatTile, HeroCharacter } from '../components/game';
+import { SectionDivider, GameModuleCard, StatTile, HeroCharacter, HeroDioramaCanvas } from '../components/game';
 import {
   Lock, Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem, Sparkles, Globe,
 } from 'lucide-react';
@@ -24,10 +24,11 @@ const lockedModules = [
    ────────────────────────────────────────────────────────────── */
 
 function getGreeting(): string {
-  const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 17) return 'Good afternoon';
-  return 'Good evening';
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return 'Good morning';
+  if (hour >= 12 && hour < 17) return 'Good afternoon';
+  if (hour >= 17 && hour < 22) return 'Good evening';
+  return 'Night owl mode';
 }
 
 function formatNumber(n: number): string {
@@ -81,8 +82,11 @@ export default function Home() {
       {/* ── Top Header Widget (Logo + Streak/Level Pill + XP Bar) ── */}
       <Header />
 
-      {/* ── 1. Hero Quest Scene (Full-Bleed Landscape + Character Companion Overlay) ── */}
+      {/* ── 1. Hero Quest Scene (Living Diorama + Character Companion Overlay) ── */}
       <div className="home-hero-scene">
+        {/* Ambient Living Environment Canvas (floating spores, light dust) */}
+        <HeroDioramaCanvas ambientColor="#34d399" particleCount={10} />
+
         <div className="home-hero-overlay" />
         <div className="home-hero-content">
           <p className="home-hero-greeting-sub">

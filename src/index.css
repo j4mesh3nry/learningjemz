@@ -1006,7 +1006,7 @@ body[data-module-theme="home"] .bottom-nav a.active {
   text-shadow: 0 0 20px rgba(74, 222, 128, 0.45);
 }
 
-/* ── Hero Character Companion (On-Cliff Cutout & Idle Breathing) ── */
+/* ── Living Hero Companion Rig (On-Cliff Cutout, Breathing, Blinking & Tap) ── */
 .hero-companion-wrapper {
   position: absolute;
   right: 4%;
@@ -1016,68 +1016,17 @@ body[data-module-theme="home"] .bottom-nav a.active {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  animation: heroCompanionBreathe 4.5s ease-in-out infinite;
   transform-origin: bottom center;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
-}
-
-.hero-companion-wrapper.bounce {
-  animation: heroCompanionBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes heroCompanionBreathe {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-5px) scale(1.015);
-  }
-}
-
-@keyframes heroCompanionBounce {
-  0% {
-    transform: scale(1) translateY(0);
-  }
-  40% {
-    transform: scale(1.1) translateY(-14px);
-  }
-  70% {
-    transform: scale(0.96) translateY(2px);
-  }
-  100% {
-    transform: scale(1) translateY(0);
-  }
-}
-
-.hero-companion-shadow {
-  position: absolute;
-  bottom: 2px;
-  width: 95px;
-  height: 16px;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.35) 55%, transparent 75%);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 2;
-  animation: heroCompanionShadow 4.5s ease-in-out infinite;
-}
-
-@keyframes heroCompanionShadow {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.85;
-  }
-  50% {
-    transform: scale(0.88);
-    opacity: 0.55;
-  }
+  transition: filter 0.25s ease;
 }
 
 .hero-companion-figure {
   position: relative;
-  width: 145px;
-  height: 155px;
+  width: 155px;
+  height: 180px;
   z-index: 3;
   display: flex;
   align-items: flex-end;
@@ -1090,28 +1039,159 @@ body[data-module-theme="home"] .bottom-nav a.active {
     bottom: 12px;
   }
   .hero-companion-figure {
-    width: 165px;
-    height: 175px;
+    width: 175px;
+    height: 200px;
   }
   .hero-companion-shadow {
-    width: 110px;
+    width: 105px;
     height: 18px;
   }
 }
 
+/* ── 1. Natural Breathing Sine-Wave Body Animation ── */
+.hero-companion-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: companionBreatheNatural 4.6s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes companionBreatheNatural {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1) translateY(0);
+  }
+  50% {
+    transform: scaleY(1.02) scaleX(1.008) translateY(-3px);
+  }
+}
+
+/* ── 2. Subtle Micro-Tilt (Curious Head Movement) ── */
+.hero-companion-wrapper.micro-tilt .hero-companion-body {
+  animation: companionMicroTilt 2.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes companionMicroTilt {
+  0% {
+    transform: rotate(0deg) scaleY(1) translateY(0);
+  }
+  35% {
+    transform: rotate(1.8deg) scaleY(1.015) translateY(-2px);
+  }
+  75% {
+    transform: rotate(1.2deg) scaleY(1.01) translateY(-1px);
+  }
+  100% {
+    transform: rotate(0deg) scaleY(1) translateY(0);
+  }
+}
+
+/* ── 3. Interactive Tap Spring Bounce ── */
+.hero-companion-wrapper.tap-bounce .hero-companion-body {
+  animation: companionHappyBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes companionHappyBounce {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  35% {
+    transform: scale(1.12) translateY(-16px);
+  }
+  70% {
+    transform: scale(0.95) translateY(2px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ── 4. Main 32-Bit Pixel Character Cutout Image ── */
 .hero-companion-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.75));
   border: none;
   background: transparent;
   pointer-events: auto;
   transition: filter 0.2s ease;
 }
 
+.hero-pixel-sprite {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.avatar-icon-pixel img {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
 .hero-companion-wrapper:hover .hero-companion-img {
-  filter: drop-shadow(0 10px 20px rgba(52, 211, 153, 0.35)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.65)) brightness(1.05);
+  filter: drop-shadow(0 10px 20px rgba(52, 211, 153, 0.45)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.75)) brightness(1.06);
+}
+
+/* ── 5. Synchronized Stone Contact Shadow ── */
+.hero-companion-shadow {
+  position: absolute;
+  bottom: 2px;
+  width: 90px;
+  height: 16px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 55%, transparent 75%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  animation: companionShadowPulse 4.6s ease-in-out infinite;
+}
+
+@keyframes companionShadowPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(0.9);
+    opacity: 0.55;
+  }
+}
+
+/* ── 6. Interactive Pixel Sparkles Burst on Tap ── */
+.companion-tap-sparkle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  animation: sparkleBurstFloat 0.7s ease-out forwards;
+}
+
+.pixel-sparkle {
+  border-radius: 1px;
+}
+
+@keyframes sparkleBurstFloat {
+  0% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, -24px) scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* ── 7. Ambient Diorama Particle Canvas ── */
+.hero-diorama-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* ── Section Dividers with Leaf Flourishes ─────── */

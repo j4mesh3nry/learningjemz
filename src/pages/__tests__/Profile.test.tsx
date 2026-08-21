@@ -96,8 +96,8 @@ describe('Profile', () => {
     expect(screen.getByText('Choose Avatar')).toBeInTheDocument();
     
     // Select new avatar
-    await user.click(screen.getByTitle('Guardian'));
-    expect(SupabaseApi.updateAvatar).toHaveBeenCalledWith('123', 'shield');
+    await user.click(screen.getByTitle('Owl Companion'));
+    expect(SupabaseApi.updateAvatar).toHaveBeenCalledWith('123', 'owl');
     
     await waitFor(() => {
       expect(screen.queryByText('Choose Avatar')).not.toBeInTheDocument();
