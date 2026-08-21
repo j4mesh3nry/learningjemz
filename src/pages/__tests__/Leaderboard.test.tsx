@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import Leaderboard, { withLiveUserValues } from '../Leaderboard';
+import Leaderboard from '../Leaderboard';
+import { withLiveUserValues } from '../../utils/leaderboardUtils';
 
 const { supabaseMock, mockSelect, mockFlushNow } = vi.hoisted(() => {
   const mockSelect = vi.fn(() => chainable);

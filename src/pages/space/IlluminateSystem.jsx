@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle, ArrowLeft, Heart, Clock, Lightbulb, Zap, Trophy, ArrowRight, X, Sun, Globe, Moon, Sparkles, Ruler, Compass, Delete } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE, getMnemonicUpToIndex, preloadSpaceObjectImages } from '../../data/space-objects';
@@ -96,6 +96,41 @@ export default function IlluminateSystem() {
   const [discoveryTriggered, setDiscoveryTriggered] = useState(false);
   const inputRef = useRef(null);
 
+  const scrollToCurrentPlanet = useCallback((idx = currentIndex) => {
+    setTimeout(() => {
+      const el = document.getElementById(`planet-${idx}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 100);
+  }, [currentIndex]);
+
+  const startGame = useCallback((diffLevel) => {
+    setLevel(diffLevel);
+    setGameData(SPACE_OBJECTS_BY_SIZE.slice(0, DIFFICULTIES[diffLevel].count));
+    setCurrentIndex(0);
+    setInputValue('');
+    setIsComplete(false);
+    setIsGameOver(false);
+    setLives(DIFFICULTIES[diffLevel].maxLives);
+    setElapsedTime(0);
+    setHintsLeft(3);
+    setShowHintBubble(false);
+    setCurrentObjectHint(null);
+    setIsNewRecord(false);
+    setSelectedCard(null);
+    setDiscoveryShown(false);
+    setDiscoveryTriggered(false);
+    setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
+    setTimeout(() => {
+      inputRef.current?.focus({ preventScroll: true });
+      const el = document.getElementById('planet-0');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 100);
+  }, []);
+
   // Auto-start level if URL param or location state is provided
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -105,7 +140,7 @@ export default function IlluminateSystem() {
     } else if (!paramLevel && !level) {
       navigate('/space/objects-by-size', { replace: true });
     }
-  }, [location, level, navigate]);
+  }, [location, level, navigate, startGame]);
 
   // Focus input and scroll to current planet on start
   useEffect(() => {
@@ -115,7 +150,7 @@ export default function IlluminateSystem() {
         scrollToCurrentPlanet();
       }, 100);
     }
-  }, [level]);
+  }, [level, isComplete, isGameOver, scrollToCurrentPlanet]);
 
   // Live Timer Effect
   useEffect(() => {
@@ -134,20 +169,11 @@ export default function IlluminateSystem() {
     return `${mins.toString().padStart(2, '0')}:${remainingSecs.toString().padStart(2, '0')}`;
   };
 
-  const scrollToCurrentPlanet = () => {
-    setTimeout(() => {
-      const el = document.getElementById(`planet-${currentIndex}`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }, 100);
-  };
-
   useEffect(() => {
     if (level && !isComplete && !isGameOver) {
       scrollToCurrentPlanet();
     }
-  }, [currentIndex, level, isComplete, isGameOver]);
+  }, [currentIndex, level, isComplete, isGameOver, scrollToCurrentPlanet]);
 
   // Discovery cue: show subtle pulse when first world (Sun) is revealed
   useEffect(() => {
@@ -163,35 +189,11 @@ export default function IlluminateSystem() {
     return () => clearTimeout(timer);
   }, [discoveryTriggered]);
 
-  const startGame = (diffLevel) => {
-    setLevel(diffLevel);
-    setGameData(SPACE_OBJECTS_BY_SIZE.slice(0, DIFFICULTIES[diffLevel].count));
-    setCurrentIndex(0);
-    setWrongAttempts(0);
-    setInputValue('');
-    setIsComplete(false);
-    setIsGameOver(false);
-    setLives(DIFFICULTIES[diffLevel].maxLives);
-    setElapsedTime(0);
-    setUserUsedHint(false);
-    setHintsLeft(3);
-    setShowHintBubble(false);
-    setCurrentObjectHint(null);
-    setIsNewRecord(false);
-    setSelectedCard(null);
-    setDiscoveryShown(false);
-    setDiscoveryTriggered(false);
-    setScoreData({ hintsUsed: 0, startTime: Date.now(), endTime: null });
-    setTimeout(() => {
-      inputRef.current?.focus({ preventScroll: true });
-      scrollToCurrentPlanet();
-    }, 100);
-  };
-
-  const submitAnswer = (guess = inputValue) => {
+  const submitAnswer = useCallback((guess = inputValue) => {
     if (!guess.trim() || isComplete || isGameOver) return;
 
     const currentObject = gameData[currentIndex];
+    if (!currentObject) return;
     const userGuess = guess.trim().toLowerCase();
 
     // Check if guess matches any accepted names
@@ -201,9 +203,7 @@ export default function IlluminateSystem() {
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
       setInputValue('');
-      setWrongAttempts(0);
       setIsError(false);
-      setUserUsedHint(false);
       setShowHintBubble(false);
       setCurrentObjectHint(null);
 
@@ -251,7 +251,6 @@ export default function IlluminateSystem() {
       }
     } else {
       setIsError(true);
-      setWrongAttempts(prev => prev + 1);
       setTimeout(() => setIsError(false), 500);
 
       // Deduct Life
@@ -263,7 +262,7 @@ export default function IlluminateSystem() {
         // No XP awarded for failing — completion required
       }
     }
-  };
+  }, [inputValue, isComplete, isGameOver, gameData, currentIndex, recordActivity, recordIlluminateTime, level, elapsedTime, scoreData.hintsUsed, addXP, addXp, lives]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -358,7 +357,7 @@ export default function IlluminateSystem() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [level, isComplete, isGameOver, currentIndex, inputValue, gameData]);
+  }, [level, isComplete, isGameOver, currentIndex, inputValue, gameData, submitAnswer]);
 
   // Reset hint tracking when index changes
   useEffect(() => {

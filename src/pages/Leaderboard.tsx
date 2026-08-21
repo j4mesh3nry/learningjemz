@@ -12,96 +12,14 @@ import { toLocalDateString } from '../utils/dateUtils';
 import { AvatarIcon } from '../components/AvatarIcon';
 import '../index.css';
 
-// Streaks are ranked by their active value. If a user is inactive for more than 1 day,
-// their streak is considered broken (0) and is filtered off the board.
-const getActiveStreak = (item: any) => {
-  const raw = Number(item?.streak) || 0;
-  if (raw <= 0) return 0;
-  if (getStreakDaysInactive(item) > 1) {
-    return 0;
-  }
-  return raw;
-};
-
-const getStreakDaysInactive = (item: any) => {
-  const lastVisitStr = toLocalDateString(item?.last_visit);
-  if (!lastVisitStr) return 0;
-  const [y, m, d] = lastVisitStr.split('-').map(Number);
-  const last = new Date(y, m - 1, d);
-  const now = new Date();
-  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  return Math.max(0, Math.round((todayMidnight.getTime() - last.getTime()) / 86400000));
-};
-
-const formatXP = (xp: number) => {
-  if (xp >= 10000) return (xp / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
-  return xp.toLocaleString();
-};
-
-/**
- * 11-Tier Prestige Progression System based on Player Level (Lv. 1 - 100+)
- */
-export const getPrestigeInfo = (lvl: number) => {
-  if (lvl >= 100) return { title: 'Cosmic Ascendant', color: '#ffffff' };
-  if (lvl >= 90) return { title: 'Immortal', color: '#c084fc' };
-  if (lvl >= 75) return { title: 'Mythic', color: '#f43f5e' };
-  if (lvl >= 60) return { title: 'Grandmaster', color: '#ec4899' };
-  if (lvl >= 50) return { title: 'Master', color: '#f97316' };
-  if (lvl >= 40) return { title: 'Adept', color: '#f59e0b' };
-  if (lvl >= 30) return { title: 'Sage', color: '#a78bfa' };
-  if (lvl >= 20) return { title: 'Scholar', color: '#818cf8' };
-  if (lvl >= 10) return { title: 'Explorer', color: '#38bdf8' };
-  if (lvl >= 5) return { title: 'Apprentice', color: '#34d399' };
-  return { title: 'Novice', color: '#8db5a0' };
-};
-
-/**
- * 7-Tier Competitive League Division System
- */
-export const getCompetitiveLeague = (isQualified: boolean, rankIndex: number, xp: number) => {
-  if (!isQualified || rankIndex === -1) {
-    return { name: 'Unranked', pillText: 'Unranked', color: '#8db5a0', iconType: 'shield' as const };
-  }
-  if (rankIndex >= 0 && rankIndex < 3) {
-    return { name: 'Champions League', pillText: 'CHAMPIONS', color: '#fbbf24', iconType: 'crown' as const };
-  }
-  if (rankIndex < 10 || xp >= 5000) {
-    return { name: 'Mythic Diamond', pillText: 'MYTHIC DIAMOND', color: '#c084fc', iconType: 'diamond' as const };
-  }
-  if (rankIndex < 20 || xp >= 2000) {
-    return { name: 'Emerald Master', pillText: 'EMERALD LEAGUE', color: '#34d399', iconType: 'shield' as const };
-  }
-  if (xp >= 1000) {
-    return { name: 'Platinum League', pillText: 'PLATINUM LEAGUE', color: '#38bdf8', iconType: 'shield' as const };
-  }
-  if (xp >= 500) {
-    return { name: 'Gold League', pillText: 'GOLD LEAGUE', color: '#f59e0b', iconType: 'shield' as const };
-  }
-  if (xp >= 100) {
-    return { name: 'Silver League', pillText: 'SILVER LEAGUE', color: '#94a3b8', iconType: 'shield' as const };
-  }
-  return { name: 'Bronze League', pillText: 'BRONZE LEAGUE', color: '#d97706', iconType: 'shield' as const };
-};
-
-/**
- * Global Rank percentile calculation matching Home page
- */
-function getRankDisplay(xp: number): string {
-  if (xp >= 5000) return 'Top 1%';
-  if (xp >= 2000) return 'Top 2%';
-  if (xp >= 1000) return 'Top 5%';
-  if (xp >= 500) return 'Top 10%';
-  if (xp >= 100) return 'Top 25%';
-  return 'Top 50%';
-}
-
-// The user's own entry is ranked/displayed with LIVE app values: the server row
-// can lag the debounced sync by seconds, so the board must never contradict what
-// the app itself shows for the signed-in learner.
-export const withLiveUserValues = (list: any[], user: any, xp: number, streak: number, level: number) => {
-  if (!user?.id) return list;
-  return list.map(item => (item.id === user?.id ? { ...item, xp: xp ?? item.xp, streak: streak ?? item.streak, level: level ?? item.level } : item));
-};
+import {
+  getActiveStreak,
+  formatXP,
+  getPrestigeInfo,
+  getCompetitiveLeague,
+  getRankDisplay,
+  withLiveUserValues
+} from '../utils/leaderboardUtils';
 
 export default function Leaderboard() {
   const navigate = useNavigate();

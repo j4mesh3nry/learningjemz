@@ -19,7 +19,7 @@ import {
   Crown
 } from 'lucide-react';
 import { updateAvatar, updateName } from '../api/supabase.js';
-import { getPlayedDates } from '../components/StreakScreen';
+import { getPlayedDates } from '../utils/streakStorage';
 import { getLocalDateString } from '../utils/dateUtils';
 import { AvatarIcon } from '../components/AvatarIcon';
 import { CompanionPickerModal } from '../components/companion/CompanionPickerModal';

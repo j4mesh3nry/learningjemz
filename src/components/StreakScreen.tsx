@@ -2,51 +2,9 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Flame, Gem, Sparkles, Calendar as CalendarIcon, X } from 'lucide-react';
 import { getLocalDateString, getCurrentWeekDates } from '../utils/dateUtils';
+import { hasShownStreakToday, markStreakShownToday, getPlayedDates } from '../utils/streakStorage';
 import { useGame } from '../contexts/GameContext';
 import './streak.css';
-
-export function getStreakStorageKey(userId?: string): string {
-  return userId ? `learningjemz_streak_shown_${userId}` : 'learningjemz_streak_shown_guest';
-}
-
-export function getPlayedDatesStorageKey(userId?: string): string {
-  return userId ? `learningjemz_played_dates_${userId}` : 'learningjemz_played_dates_guest';
-}
-
-export function hasShownStreakToday(userId?: string): boolean {
-  try {
-    const today = getLocalDateString(new Date());
-    const key = getStreakStorageKey(userId);
-    return localStorage.getItem(key) === today;
-  } catch {
-    return false;
-  }
-}
-
-export function markStreakShownToday(userId?: string): void {
-  try {
-    const today = getLocalDateString(new Date());
-    const key = getStreakStorageKey(userId);
-    localStorage.setItem(key, today);
-  } catch {}
-}
-
-export function resetStreakShownForUser(userId?: string): void {
-  try {
-    localStorage.removeItem(getStreakStorageKey(userId));
-    localStorage.removeItem(getPlayedDatesStorageKey(userId));
-  } catch {}
-}
-
-export function getPlayedDates(userId?: string): string[] {
-  try {
-    const key = getPlayedDatesStorageKey(userId);
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
 
 export interface StreakScreenProps {
   isOpen: boolean;

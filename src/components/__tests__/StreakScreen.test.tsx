@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import StreakScreen, { hasShownStreakToday, markStreakShownToday, getPlayedDatesStorageKey } from '../StreakScreen';
+import StreakScreen from '../StreakScreen';
+import { hasShownStreakToday, markStreakShownToday, getPlayedDatesStorageKey } from '../../utils/streakStorage';
 import { getLocalDateString } from '../../utils/dateUtils';
 
 describe('StreakScreen', () => {

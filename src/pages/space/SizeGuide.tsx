@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, BookOpen, Brain, Sparkles, Compass, Search,
@@ -142,7 +142,7 @@ export default function SizeGuide() {
   }, [activeDataset, searchQuery]);
 
   // Generate quiz questions
-  const generateQuiz = () => {
+  const generateQuiz = useCallback(() => {
     const dataset = activeDataset;
     const questions: any[] = [];
     const numQuestions = Math.min(5, dataset.length);
@@ -212,13 +212,13 @@ export default function SizeGuide() {
     setSelectedOption(null);
     setScore(0);
     setQuizComplete(false);
-  };
+  }, [activeDataset]);
 
   useEffect(() => {
     if (activeTab === 'practice') {
       generateQuiz();
     }
-  }, [activeTab, difficultyFilter]);
+  }, [activeTab, generateQuiz]);
 
   // Flashcards reset on index/difficulty change
   useEffect(() => {

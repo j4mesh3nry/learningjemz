@@ -177,7 +177,7 @@ export default function ChessPlay() {
       recordActivity();
       setVictoryStats({ xpGained, result: 'draw' });
     }
-  }, [winChessGame, drawChessGame, lossChessGame, recordActivity, streak, playerColor, difficulty, recordChessGame]);
+  }, [winChessGame, drawChessGame, lossChessGame, recordActivity, playerColor, difficulty, recordChessGame]);
 
   const makeAIMove = useCallback(() => {
     if (!game || game.isGameOver() || gameState !== 'playing') return;

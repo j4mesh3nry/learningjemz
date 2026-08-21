@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState, useRef, useCallback } f
 import { supabase } from '../utils/supabase';
 import { useAuth } from './AuthContext';
 import { ACHIEVEMENTS } from '../utils/achievements';
-import { resetStreakShownForUser } from '../components/StreakScreen';
+import { resetStreakShownForUser } from '../utils/streakStorage';
 import { getLocalDateString, backfillPlayedDates, toLocalDateString, pruneFuturePlayedDates, applyDayRollover } from '../utils/dateUtils';
 import { savePendingSync, getPendingSync, hasUnsyncedChanges, clearPendingSync, markSynced, isPristineDefaultState } from '../utils/pendingSync';
 

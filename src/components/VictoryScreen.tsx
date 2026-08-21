@@ -1,7 +1,8 @@
 // src/components/VictoryScreen.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { Flame, Trophy, Sparkles, Gem } from 'lucide-react';
-import StreakScreen, { hasShownStreakToday } from './StreakScreen';
+import StreakScreen from './StreakScreen';
+import { hasShownStreakToday } from '../utils/streakStorage';
 import { useAuth } from '../contexts/AuthContext';
 import { useGame } from '../contexts/GameContext';
 import './victory.css';
