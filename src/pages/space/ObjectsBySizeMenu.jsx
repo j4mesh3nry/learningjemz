@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Lock, Target, Trophy, Zap, Heart, ChevronDown, ChevronUp, Lightbulb, Sparkles, Ruler } from 'lucide-react';
+import { ArrowLeft, Target, Trophy, Zap, Heart, ChevronDown, ChevronUp, Lightbulb, Ruler } from 'lucide-react';
 import { useGame } from '../../contexts/GameContext';
 import './space.css';
 

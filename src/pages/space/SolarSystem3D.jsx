@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Html, useTexture, Preload, useProgress } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, X, Info, Gauge, Flame, Leaf, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap, Circle, Pause, Play, FastForward, ChevronRight, ChevronLeft, ChevronDown, ChevronUp, Rocket } from 'lucide-react';
+import { ArrowLeft, X, Info, Gauge, Flame, Mountain, Globe, Sparkles, RefreshCcw, Wind, Orbit, Zap, Circle, Pause, Play, FastForward, ChevronRight, ChevronLeft, ChevronDown, ChevronUp, Rocket } from 'lucide-react';
 import * as THREE from 'three';
 import { planets, sunData, dwarfPlanets, moons, parkerSolarProbe } from '../../data/space-data.js';
 import JemzLoader from '../../components/JemzLoader';
@@ -209,7 +209,7 @@ function AsteroidBelt({ count = 3500, innerRadius = 21.0, outerRadius = 24.0, si
 
 
 /* ─── Glowing Sun ─── */
-const Sun = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, simSpeed }, ref) => {
+const Sun = React.forwardRef(({ onSelect, labelsHidden, simSpeed }, ref) => {
   const groupRef = useRef();
   React.useImperativeHandle(ref, () => groupRef.current);
   
@@ -262,7 +262,7 @@ function CameraController({ selected, planetRefs, controlsRef }) {
   const currentZoomDist = useRef(7.0);
   const isTransitioning = useRef(false);
 
-  useFrame(({ camera, clock }, delta) => {
+  useFrame(({ camera }, delta) => {
     if (!controlsRef.current) return;
 
     // Detect transition from unselected to selected: save pre-click view state!
@@ -379,7 +379,7 @@ function CameraController({ selected, planetRefs, controlsRef }) {
 }
 
 /* ─── Moon component ─── */
-function Moon({ config, labelsHidden, onSelect, hostPlanet, hostPlanetSize, simTimeRef, simSpeed }) {
+function Moon({ config, labelsHidden, onSelect, hostPlanet, hostPlanetSize, simTimeRef }) {
   const groupRef = useRef();
   const initialAngle = useRef(Math.random() * Math.PI * 2);
   const [hovered, setHovered] = useState(false);
@@ -479,7 +479,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTime
   const texture = useTexture(TEXTURE_PATHS[data.name] || TEXTURE_PATHS.Earth);
   const saturnRingTex = useTexture(TEXTURE_PATHS.SaturnRing);
 
-  useFrame((_, delta) => {
+  useFrame(() => {
     const t = simTimeRef ? simTimeRef.current : 0;
     const angle = initialAngle + (config.phaseOffset || 0) + t * config.speed * 0.15;
     if (groupRef.current) {
@@ -583,7 +583,7 @@ const Planet = React.forwardRef(({ data, config, onSelect, labelsHidden, simTime
    Both bodies orbit the group origin, which IS the barycenter (shared center
    of mass). massRatio = companion mass / primary mass; with Charon at 0.118,
    the barycenter lands outside Pluto's surface, just like the real system. */
-const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, selected, simTimeRef, simSpeed, initialAngle }, ref) => {
+const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, simTimeRef, simSpeed, initialAngle }, ref) => {
   const groupRef = useRef();
   React.useImperativeHandle(ref, () => groupRef.current);
 
@@ -602,7 +602,7 @@ const BinarySystem = React.forwardRef(({ data, config, onSelect, labelsHidden, s
   const primaryOffset = (D * ratio) / (1 + ratio);
   const companionOffset = D / (1 + ratio);
 
-  useFrame((_, delta) => {
+  useFrame(() => {
     const t = simTimeRef ? simTimeRef.current : 0;
     // The whole system orbits the Sun on the primary's orbit path
     const angle = initialAngle + (config.phaseOffset || 0) + t * config.speed * 0.15;
@@ -777,11 +777,10 @@ const PARKER_CONFIG = {
 };
 
 /* ─── Parker Solar Probe Component ─── */
-const ParkerProbe = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, simSpeed, venusInitialAngle }, ref) => {
+const ParkerProbe = React.forwardRef(({ onSelect, labelsHidden, simTimeRef, venusInitialAngle }, ref) => {
   const groupRef = useRef();
   React.useImperativeHandle(ref, () => groupRef.current);
 
-  const meshRef = useRef();
   const trailRef = useRef();
   const [hovered, setHovered] = useState(false);
   const initialAngle = useRef(Math.random() * Math.PI * 2);
@@ -1016,7 +1015,7 @@ const MOON_BADGES = {
 };
 
 /* ─── Info Panel Component ─── */
-function InfoPanel({ planet, onSelect, onClose, selected }) {
+function InfoPanel({ planet, onSelect, onClose }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {

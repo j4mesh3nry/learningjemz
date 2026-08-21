@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, BookOpen, Brain, Sparkles, Compass, Search,
   ChevronDown, ChevronUp, Sun, Globe, Moon, Check, X, RotateCcw,
-  HelpCircle, Info, Ruler, ArrowRight, Lightbulb, Target
+  Info, ArrowRight, Lightbulb
 } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE, MNEMONIC_WORDS_LIST } from '../../data/space-objects';
 import './space.css';

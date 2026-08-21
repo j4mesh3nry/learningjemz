@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CheckCircle, Flame, Star, ArrowLeft, Heart, Clock, Lightbulb, Zap, RefreshCw, Trophy, ArrowRight, X, HelpCircle, Info, Sun, Globe, Moon, Sparkles, Ruler, Compass, Delete } from 'lucide-react';
+import { CheckCircle, ArrowLeft, Heart, Clock, Lightbulb, Zap, Trophy, ArrowRight, X, Sun, Globe, Moon, Sparkles, Ruler, Compass, Delete } from 'lucide-react';
 import { SPACE_OBJECTS_BY_SIZE, getMnemonicUpToIndex, preloadSpaceObjectImages } from '../../data/space-objects';
 import { useGame } from '../../contexts/GameContext';
-import { useAuth } from '../../contexts/AuthContext';
 import VictoryScreen from '../../components/VictoryScreen';
 import './space.css';
 
@@ -57,8 +56,7 @@ function SafeObjectImage({ src, alt, iconType, className, size = 26 }) {
 export default function IlluminateSystem() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { level: userLevel, streak, hasPlayedToday, addXP, addXp, recordActivity, illuminateStats, recordIlluminateTime } = useGame();
-  const { user } = useAuth();
+  const { addXP, addXp, recordActivity, illuminateStats, recordIlluminateTime } = useGame();
 
   useEffect(() => {
     preloadSpaceObjectImages();
@@ -75,7 +73,6 @@ export default function IlluminateSystem() {
     initialLevel ? SPACE_OBJECTS_BY_SIZE.slice(0, DIFFICULTIES[initialLevel].count) : []
   );
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [wrongAttempts, setWrongAttempts] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [isError, setIsError] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
@@ -84,7 +81,6 @@ export default function IlluminateSystem() {
     initialLevel ? DIFFICULTIES[initialLevel].maxLives : 3
   );
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [userUsedHint, setUserUsedHint] = useState(false);
   const [hintsLeft, setHintsLeft] = useState(3);
   const [showHintBubble, setShowHintBubble] = useState(false);
   const [currentObjectHint, setCurrentObjectHint] = useState(null);
@@ -363,15 +359,6 @@ export default function IlluminateSystem() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [level, isComplete, isGameOver, currentIndex, inputValue, gameData]);
-
-  // Derived hint
-  let currentHint = null;
-  if (level && !isComplete && !isGameOver) {
-    const targetName = gameData[currentIndex].name.split(' ')[0];
-    if (userUsedHint || wrongAttempts >= 3) {
-      currentHint = targetName.substring(0, 1) + '...';
-    }
-  }
 
   // Reset hint tracking when index changes
   useEffect(() => {

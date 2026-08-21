@@ -10,7 +10,7 @@ import './chess.css';
 
 function ChessMenu() {
   const navigate = useNavigate();
-  const { level, streak, puzzlesSolved, hasPlayedToday } = useGame();
+  const { level, streak, hasPlayedToday } = useGame();
   const [tab, setTab] = useState<'learn' | 'play'>('play');
 
   return (

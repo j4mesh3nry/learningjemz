@@ -139,7 +139,6 @@ export default function StreakScreen({
 
   const todayDate = new Date();
   const todayIndex = todayDate.getDay(); // 0 = Sun, 1 = Mon...
-  const todayDateStr = getLocalDateString(todayDate);
 
   // Compute dates for current week (Sun-Sat) using local date formatting
   const currentWeekDates = getCurrentWeekDates(todayDate);

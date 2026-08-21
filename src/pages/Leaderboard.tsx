@@ -111,7 +111,6 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState<boolean>(true);
   const [sortBy, setSortBy] = useState<'xp' | 'streak'>('xp');
   const [scope, setScope] = useState<'global' | 'friends'>('global');
-  const [toast, setToast] = useState<string | null>(null);
 
   // Set dark theme attributes on mount, clean up on unmount
   useEffect(() => {
@@ -229,12 +228,6 @@ export default function Leaderboard() {
 
   return (
     <div className="container rank-page-container">
-      {toast && (
-        <div className="toast" role="alert" aria-live="assertive">
-          {toast}
-        </div>
-      )}
-
       <Header />
 
       <div className="rank-title-row">

@@ -21,9 +21,9 @@ puzzles.forEach(p => {
 
   // Audit FEN legality
   try {
-    const c = new Chess(p.fen);
+    new Chess(p.fen);
     fensChecked++;
-  } catch (e) {
+  } catch {
     console.error(`Invalid FEN in puzzle ID ${p.id}:`, p.fen);
     invalidFens++;
   }

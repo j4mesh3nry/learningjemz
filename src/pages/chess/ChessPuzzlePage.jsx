@@ -6,8 +6,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { 
   Puzzle, ArrowLeft, RotateCw, CheckCircle2, XCircle, 
   Trophy, Flame, Clock, Zap, RefreshCw, Timer,
-  Lightbulb, User, Sparkles, BookOpen, Eye, LogOut, SkipForward, List,
-  ShieldAlert, Star
+  Lightbulb, User, BookOpen, LogOut, SkipForward, List,
+  Star
 } from 'lucide-react';
 import VictoryScreen from '../../components/VictoryScreen';
 import rawPuzzleData from '../../data/chess-puzzles.json';
@@ -64,7 +64,7 @@ const getMoveSquares = (fen, sanMove) => {
     if (match) {
       return { from: match.from, to: match.to, san: match.san };
     }
-  } catch (e) {
+  } catch {
     try {
       const temp = createChess(fen);
       const normTarget = normalizeSan(sanMove);
@@ -73,7 +73,7 @@ const getMoveSquares = (fen, sanMove) => {
       if (match) {
         return { from: match.from, to: match.to, san: match.san };
       }
-    } catch (err) {}
+    } catch {}
   }
   return null;
 };
@@ -112,7 +112,7 @@ export default function ChessPuzzlePage() {
     try {
       const saved = localStorage.getItem('learningjemz_recent_puzzles');
       return saved ? JSON.parse(saved) : [];
-    } catch (e) {
+    } catch {
       return [];
     }
   });
@@ -131,7 +131,6 @@ export default function ChessPuzzlePage() {
   };
 
   const [game, setGame] = useState(() => createChess());
-  const [board, setBoard] = useState(() => game.board());
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [legalMoves, setLegalMoves] = useState([]);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -165,8 +164,6 @@ export default function ChessPuzzlePage() {
   // Puzzle History — array of all attempts for this run
   // Each entry: { puzzle, result: 'correct'|'incorrect'|'skipped', xpGained }
   const [sessionHistory, setSessionHistory] = useState([]);
-  // When reviewing a history puzzle, store the puzzle object so back-btn restores victory
-  const [reviewingHistoryPuzzle, setReviewingHistoryPuzzle] = useState(null);
 
 
   // Determine current puzzle difficulty dynamically
@@ -210,7 +207,6 @@ export default function ChessPuzzlePage() {
     const actualTurn = g.turn();
     
     setGame(g);
-    setBoard(g.board());
     setSelectedSquare(null);
     setLegalMoves([]);
     setMoveStepIndex(0);
@@ -241,7 +237,6 @@ export default function ChessPuzzlePage() {
     setMistakeSquare(null);
     setIsReviewing(false);
     setSessionHistory([]);
-    setReviewingHistoryPuzzle(null);
 
     if (mode === 'BLITZ') {
       setTimeLeft(180);
@@ -997,12 +992,7 @@ export default function ChessPuzzlePage() {
         isOpen={showVictory}
         theme="chess"
         isMinimized={isReviewing}
-        onMinimizeChange={(minimized) => {
-          setIsReviewing(minimized);
-          if (!minimized) {
-            setReviewingHistoryPuzzle(null);
-          }
-        }}
+        onMinimizeChange={setIsReviewing}
         title={gameMode === 'SURVIVAL' ? "Sudden Death Over!" : "Blitz Time's Up!"}
         subtitle={
           gameMode === 'SURVIVAL' 
@@ -1014,16 +1004,14 @@ export default function ChessPuzzlePage() {
           setShowVictory(false);
           setGameMode(null);
           setIsReviewing(false);
-          setReviewingHistoryPuzzle(null);
         }}
         onPlayAgain={() => {
           setShowVictory(false);
           startMode(gameMode || 'SURVIVAL');
         }}
         onShowScreen={() => {
-          // "Show Screen" now also enters review mode for the last puzzle
+          // "Show Screen" enters review mode for the last puzzle
           setIsReviewing(true);
-          setReviewingHistoryPuzzle(currentPuzzle);
         }}
         continueText="Back to Menu"
       >

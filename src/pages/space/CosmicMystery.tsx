@@ -16,7 +16,6 @@ import {
   Heart,
   ShieldAlert,
   Flame,
-  Info,
   Crown
 } from 'lucide-react';
 import './space.css';
@@ -385,13 +384,11 @@ export default function CosmicMystery() {
     setElapsedMs(finalElapsed);
     setGameState('FINISHED');
 
-    let newBest = false;
     if (sprintBestTime === null || totalFinalTimeMs < sprintBestTime) {
       setSprintBestTime(totalFinalTimeMs);
       setSprintBestCorrect(finalScore);
       localStorage.setItem(SPRINT_BEST_TIME_KEY, totalFinalTimeMs.toString());
       localStorage.setItem(SPRINT_BEST_CORRECT_KEY, finalScore.toString());
-      newBest = true;
       setIsNewRecord(true);
     } else if (sprintBestCorrect === null) {
       setSprintBestCorrect(finalScore);
@@ -429,11 +426,9 @@ export default function CosmicMystery() {
   const finishSurvivalGame = (finalScore: number) => {
     setGameState('FINISHED');
 
-    let newBest = false;
     if (survivalHighScore === null || finalScore > survivalHighScore) {
       setSurvivalHighScore(finalScore);
       localStorage.setItem(SURVIVAL_HIGH_SCORE_KEY, finalScore.toString());
-      newBest = true;
       setIsNewRecord(true);
     }
 

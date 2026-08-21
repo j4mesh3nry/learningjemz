@@ -604,7 +604,7 @@ async function main() {
   }
 
   // Write output — remove lichessId and rating (debugging only)
-  const output = allPuzzles.map(({ lichessId, rating, ...rest }) => rest);
+  const output = allPuzzles.map(({ lichessId: _lichessId, rating: _rating, ...rest }) => rest);
 
   fs.writeFileSync(CONFIG.outputPath, JSON.stringify(output, null, 2), 'utf-8');
   console.log(`\nWritten to: ${CONFIG.outputPath}`);

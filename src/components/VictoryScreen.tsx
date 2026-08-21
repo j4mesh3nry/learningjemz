@@ -1,5 +1,5 @@
 // src/components/VictoryScreen.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Flame, Trophy, Sparkles, Gem } from 'lucide-react';
 import StreakScreen, { hasShownStreakToday } from './StreakScreen';
 import { useAuth } from '../contexts/AuthContext';
@@ -87,10 +87,10 @@ export default function VictoryScreen({
 
   const activeMinimized = propMinimized !== undefined ? propMinimized : localMinimized;
 
-  const setMinimized = (val: boolean) => {
+  const setMinimized = useCallback((val: boolean) => {
     setLocalMinimized(val);
     onMinimizeChange?.(val);
-  };
+  }, [onMinimizeChange]);
 
   useEffect(() => {
     if (isOpen) {
@@ -105,7 +105,7 @@ export default function VictoryScreen({
       setShowingStreakModal(false);
       setMinimized(false);
     }
-  }, [isOpen, activeStreak, disableDailyStreakModal, userId]);
+  }, [isOpen, activeStreak, disableDailyStreakModal, userId, setMinimized]);
 
   if (!isOpen) return null;
 

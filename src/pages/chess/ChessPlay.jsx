@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chess as ChessJS } from 'chess.js';
 import { useGame } from '../../contexts/GameContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { RotateCw, Flag, Play, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText, Sparkles, Target, LogOut, Zap, Star } from 'lucide-react';
+import { RotateCw, Flag, Bot, BrainCircuit, Cpu, Trophy, ArrowLeft, RefreshCw, ScrollText, Target, LogOut } from 'lucide-react';
 import './chess.css';
 import VictoryScreen from '../../components/VictoryScreen';
 
@@ -30,7 +30,7 @@ const createChess = (pgn) => {
     const C = typeof ChessJS === 'function' ? ChessJS : (ChessJS?.Chess || ChessJS);
     const g = new C();
     if (pgn) {
-      try { g.loadPgn(pgn); } catch (e) { }
+      try { g.loadPgn(pgn); } catch { }
     }
     return g;
   } catch (e) {
@@ -56,9 +56,6 @@ export default function ChessPlay() {
   const [showOverlay, setShowOverlay] = useState(true);
   const [promotionPending, setPromotionPending] = useState(null);
   const [victoryStats, setVictoryStats] = useState(null);
-  const [igniting, setIgniting] = useState(false);
-  const [displayedStreak, setDisplayedStreak] = useState(0);
-  const [selectedOpponent, setSelectedOpponent] = useState(null);
   const [playerColor, setPlayerColor] = useState('w');
   const navigate = useNavigate();
   const historyScrollRef = React.useRef(null);
@@ -71,9 +68,7 @@ export default function ChessPlay() {
     recordChessGame = () => { },
     level = 1,
     streak = 0,
-    recordActivity = () => { },
-    hasPlayedToday = false,
-    botStats = {}
+    recordActivity = () => { }
   } = gameContext;
 
   const authContext = useAuth() || {};
@@ -90,7 +85,7 @@ export default function ChessPlay() {
     }
     return () => {
       if (workerRef.current) {
-        try { workerRef.current.terminate(); } catch (e) { }
+        try { workerRef.current.terminate(); } catch { }
       }
     };
   }, []);
@@ -224,7 +219,7 @@ export default function ChessPlay() {
           if (moveMatch) {
             newGame.move({ from: moveMatch[1], to: moveMatch[2], promotion: moveMatch[3] });
           } else if (moveStr) {
-            try { newGame.move(moveStr); } catch (err) { }
+            try { newGame.move(moveStr); } catch { }
           }
 
           updateGame(newGame);
