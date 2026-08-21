@@ -5,16 +5,20 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-public class ImageCutout {
-    private static bool IsDark(byte[] srcBytes, int width, int x, int y, int darkThreshold) {
+public class ImageCutout2 {
+    private static bool MatchColor(byte[] srcBytes, int width, int x, int y, bool isWhiteBg, int threshold) {
         int idx = (y * width + x) * 4;
         byte b = srcBytes[idx];
         byte g = srcBytes[idx + 1];
         byte r = srcBytes[idx + 2];
-        return (r <= darkThreshold && g <= darkThreshold && b <= darkThreshold);
+        if (isWhiteBg) {
+            return (r >= 255 - threshold && g >= 255 - threshold && b >= 255 - threshold);
+        } else {
+            return (r <= threshold && g <= threshold && b <= threshold);
+        }
     }
 
-    public static void Process(string inputPath, string outputPath, int darkThreshold, int featherRange) {
+    public static void Process(string inputPath, string outputPath, bool isWhiteBg, int threshold, int featherRange) {
         using (Bitmap src = new Bitmap(inputPath)) {
             int width = src.Width;
             int height = src.Height;
@@ -35,12 +39,12 @@ public class ImageCutout {
 
                 // Seed outer borders
                 for (int x = 0; x < width; x++) {
-                    if (IsDark(srcBytes, width, x, 0, darkThreshold)) { queue.Enqueue(x | (0 << 16)); visited[x, 0] = true; }
-                    if (IsDark(srcBytes, width, x, height - 1, darkThreshold)) { queue.Enqueue(x | ((height - 1) << 16)); visited[x, height - 1] = true; }
+                    if (MatchColor(srcBytes, width, x, 0, isWhiteBg, threshold)) { queue.Enqueue(x | (0 << 16)); visited[x, 0] = true; }
+                    if (MatchColor(srcBytes, width, x, height - 1, isWhiteBg, threshold)) { queue.Enqueue(x | ((height - 1) << 16)); visited[x, height - 1] = true; }
                 }
                 for (int y = 0; y < height; y++) {
-                    if (!visited[0, y] && IsDark(srcBytes, width, 0, y, darkThreshold)) { queue.Enqueue(0 | (y << 16)); visited[0, y] = true; }
-                    if (!visited[width - 1, y] && IsDark(srcBytes, width, width - 1, y, darkThreshold)) { queue.Enqueue((width - 1) | (y << 16)); visited[width - 1, y] = true; }
+                    if (!visited[0, y] && MatchColor(srcBytes, width, 0, y, isWhiteBg, threshold)) { queue.Enqueue(0 | (y << 16)); visited[0, y] = true; }
+                    if (!visited[width - 1, y] && MatchColor(srcBytes, width, width - 1, y, isWhiteBg, threshold)) { queue.Enqueue((width - 1) | (y << 16)); visited[width - 1, y] = true; }
                 }
 
                 int[] dx = new int[] { 0, 0, 1, -1 };
@@ -52,7 +56,7 @@ public class ImageCutout {
                     int cy = (packed >> 16) & 0xFFFF;
 
                     int idx = (cy * width + cx) * 4;
-                    dstBytes[idx + 3] = 0; // Set outer background to fully transparent
+                    dstBytes[idx + 3] = 0; // Transparent
 
                     for (int d = 0; d < 4; d++) {
                         int nx = cx + dx[d];
@@ -61,20 +65,25 @@ public class ImageCutout {
                         if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
                             if (!visited[nx, ny]) {
                                 visited[nx, ny] = true;
-                                if (IsDark(srcBytes, width, nx, ny, darkThreshold)) {
+                                if (MatchColor(srcBytes, width, nx, ny, isWhiteBg, threshold)) {
                                     queue.Enqueue(nx | (ny << 16));
-                                } else {
-                                    // Feather edge
+                                } else if (featherRange > 0) {
                                     int nidx = (ny * width + nx) * 4;
                                     byte nb = srcBytes[nidx];
                                     byte ng = srcBytes[nidx + 1];
                                     byte nr = srcBytes[nidx + 2];
-                                    int maxVal = Math.Max(nr, Math.Max(ng, nb));
-                                    if (maxVal < darkThreshold + featherRange) {
-                                        int alpha = (maxVal - darkThreshold) * 255 / featherRange;
-                                        if (alpha < 0) alpha = 0;
-                                        if (alpha > 255) alpha = 255;
-                                        dstBytes[nidx + 3] = (byte)alpha;
+                                    if (isWhiteBg) {
+                                        int minVal = Math.Min(nr, Math.Min(ng, nb));
+                                        if (minVal > 255 - threshold - featherRange) {
+                                            int alpha = (255 - minVal) * 255 / (threshold + featherRange);
+                                            dstBytes[nidx + 3] = (byte)Math.Max(0, Math.Min(255, alpha));
+                                        }
+                                    } else {
+                                        int maxVal = Math.Max(nr, Math.Max(ng, nb));
+                                        if (maxVal < threshold + featherRange) {
+                                            int alpha = (maxVal - threshold) * 255 / featherRange;
+                                            dstBytes[nidx + 3] = (byte)Math.Max(0, Math.Min(255, alpha));
+                                        }
                                     }
                                 }
                             }
@@ -94,24 +103,26 @@ public class ImageCutout {
 
 Add-Type -TypeDefinition $csharpCode -ReferencedAssemblies System.Drawing
 
-# 1. Process Bot Assets
-$botHeroInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_bot_hero_sprite_1787300369245.jpg"
-$botHeroOutput = "C:\projectvc\learningjemz\public\images\characters\bot-pixel.png"
-[ImageCutout]::Process($botHeroInput, $botHeroOutput, 25, 25)
-Write-Host "Generated bot hero: $botHeroOutput"
+# 1. Process Fixed Stone Pedestal
+$pedestalInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_stone_pedestal_1787301408513.jpg"
+$pedestalOutput = "C:\projectvc\learningjemz\public\images\characters\stone-pedestal-pixel.png"
+[ImageCutout2]::Process($pedestalInput, $pedestalOutput, $false, 25, 20)
+Write-Host "Generated stone pedestal: $pedestalOutput"
 
-$botAvatarInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_bot_avatar_token_1787300406175.jpg"
-$botAvatarOutput = "C:\projectvc\learningjemz\public\images\characters\bot-avatar-pixel.png"
-[ImageCutout]::Process($botAvatarInput, $botAvatarOutput, 25, 25)
-Write-Host "Generated bot avatar: $botAvatarOutput"
+# 2. Process Clean Owl Sprite
+$owlInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_owl_character_clean_1787301440170.jpg"
+$owlOutput = "C:\projectvc\learningjemz\public\images\characters\owl-pixel.png"
+[ImageCutout2]::Process($owlInput, $owlOutput, $false, 25, 20)
+Write-Host "Generated clean owl: $owlOutput"
 
-# 2. Process Fox Assets
-$foxHeroInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_fox_hero_sprite_1787300427991.jpg"
-$foxHeroOutput = "C:\projectvc\learningjemz\public\images\characters\fox-pixel.png"
-[ImageCutout]::Process($foxHeroInput, $foxHeroOutput, 25, 25)
-Write-Host "Generated fox hero: $foxHeroOutput"
+# 3. Process Clean Bot Sprite
+$botInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_bot_character_clean_1787301479582.jpg"
+$botOutput = "C:\projectvc\learningjemz\public\images\characters\bot-pixel.png"
+[ImageCutout2]::Process($botInput, $botOutput, $false, 25, 20)
+Write-Host "Generated clean bot: $botOutput"
 
-$foxAvatarInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_fox_avatar_token_1787300452267.jpg"
-$foxAvatarOutput = "C:\projectvc\learningjemz\public\images\characters\fox-avatar-pixel.png"
-[ImageCutout]::Process($foxAvatarInput, $foxAvatarOutput, 25, 25)
-Write-Host "Generated fox avatar: $foxAvatarOutput"
+# 4. Process Clean Fox Sprite
+$foxInput = "C:\Users\user\.gemini\antigravity-ide\brain\ea48cdee-e704-4675-be54-c8b6bbafacf5\pixel_fox_character_clean_1787301513242.jpg"
+$foxOutput = "C:\projectvc\learningjemz\public\images\characters\fox-pixel.png"
+[ImageCutout2]::Process($foxInput, $foxOutput, $true, 25, 20)
+Write-Host "Generated clean fox: $foxOutput"

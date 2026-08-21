@@ -18,12 +18,10 @@ interface SparkleParticle {
 }
 
 /**
- * 32-Bit Pixel Art Hero Companion Rig.
- * Renders Archimedes the Sage Owl perched on a mossy rune pillar on the cliff ledge with:
- * - Subtle pixel breathing idle movement
- * - Occasional curious head/feather micro-tilt
- * - Synchronized stone contact shadow
- * - Interactive tap spring bounce & pixel sparkle motes
+ * 2-Layer Fixed Stone Pillar + Swappable Standing Companion Rig.
+ * - Layer 1 (Base): 1 Fixed, completely stationary stone rune pillar on the cliff with dynamic rune glow.
+ * - Layer 2 (Platform): Pillar top contact shadow.
+ * - Layer 3 (Mounted Creature): Swappable 32-bit pixel spirit guide with isolated breathing, micro-tilt, and tap bounce.
  */
 export function HeroCharacter({
   avatar,
@@ -37,7 +35,7 @@ export function HeroCharacter({
   const [sparkles, setSparkles] = useState<SparkleParticle[]>([]);
   const sparkleIdCounter = useRef(0);
 
-  // ── 1. Subtle Micro-Tilt Engine (Natural Idle Movement) ──
+  // ── 1. Subtle Micro-Tilt Engine (Natural Idle Movement on Character Layer Only) ──
   useEffect(() => {
     let tiltInterval: ReturnType<typeof setTimeout>;
     let returnTimeout: ReturnType<typeof setTimeout>;
@@ -66,13 +64,12 @@ export function HeroCharacter({
     };
   }, [companion.id]);
 
-  // ── 2. Interactive Tap Reactions ──
+  // ── 2. Interactive Tap Reactions (Applies to Creature & Spawns Sparkles) ──
   const handleTap = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setIsBouncing(true);
     setTimeout(() => setIsBouncing(false), 550);
 
-    // Spawn playful magical pixel spark motes
     const rect = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
@@ -87,7 +84,6 @@ export function HeroCharacter({
 
     setSparkles((prev) => [...prev, ...newSparkles]);
 
-    // Clean up sparkles after animation
     setTimeout(() => {
       setSparkles((prev) => prev.filter((p) => !newSparkles.some((ns) => ns.id === p.id)));
     }, 700);
@@ -95,22 +91,46 @@ export function HeroCharacter({
 
   return (
     <div
-      className={`hero-companion-wrapper ${isBouncing ? 'tap-bounce' : ''} ${isTilting ? 'micro-tilt' : ''} ${className}`.trim()}
+      className={`hero-pedestal-container ${className}`.trim()}
       style={{
         ...style,
-        transform: `scale(${companion.scale}) translate(${companion.anchorOffset.x}px, ${companion.anchorOffset.y}px)`,
-      }}
+        '--companion-ambient': companion.ambientColor,
+      } as React.CSSProperties}
       onClick={handleTap}
       role="img"
       aria-label={`${companion.name}, ${companion.title}`}
       title={`${companion.name} (Tap to interact)`}
     >
-      {/* Stone Cliff Contact Shadow under the Pillar */}
-      <div className="hero-companion-shadow" />
+      {/* ── Fixed Stationary Layer: Cliff Contact Base Shadow ── */}
+      <div className="hero-pedestal-ground-shadow" />
 
-      {/* 32-Bit Pixel Character Figure */}
-      <div className="hero-companion-figure">
-        <div className="hero-companion-body">
+      {/* ── Fixed Stationary Layer: The Ancient Stone Rune Pillar ── */}
+      <div className="hero-stone-pedestal">
+        <img
+          src="/images/characters/stone-pedestal-pixel.png"
+          alt="Ancient Stone Rune Pillar"
+          className="hero-pedestal-img hero-pixel-sprite"
+        />
+        {/* Dynamic Rune Ambient Glow Pulse */}
+        <div
+          className="hero-pedestal-rune-glow"
+          style={{
+            boxShadow: `0 0 16px ${companion.ambientColor}44, inset 0 0 12px ${companion.ambientColor}33`,
+          }}
+        />
+      </div>
+
+      {/* ── Fixed Stationary Layer: Top Platform Surface Contact Shadow ── */}
+      <div className="hero-pedestal-top-shadow" />
+
+      {/* ── Living Creature Layer: Mounted on the Pillar Platform ── */}
+      <div
+        className={`hero-companion-creature ${isBouncing ? 'tap-bounce' : ''} ${isTilting ? 'micro-tilt' : ''}`}
+        style={{
+          transform: `scale(${companion.scale}) translate(${companion.anchorOffset.x}px, ${companion.anchorOffset.y}px)`,
+        }}
+      >
+        <div className="hero-creature-body">
           <img
             src={companion.bodySrc}
             alt={companion.name}
@@ -121,7 +141,7 @@ export function HeroCharacter({
           />
         </div>
 
-        {/* Interactive Tap Pixel Sparkles */}
+        {/* Tap Sparkle Particles */}
         {sparkles.map((sp) => (
           <span
             key={sp.id}
