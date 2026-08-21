@@ -388,7 +388,7 @@ describe('GameProvider smoke test', () => {
     await waitFor(() => expect(screen.getByText('streak:2')).toBeInTheDocument());
 
     await captured();
-    expect(mockData.lastUpsert).toBeTruthy();
+    await vi.waitFor(() => expect(mockData.lastUpsert).toBeTruthy());
     expect(mockData.lastUpsert.streak).toBe(2);
   });
 
