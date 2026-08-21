@@ -1,0 +1,227 @@
+/* src/components/companion/living-puppet.css */
+
+/* ── Puppet Root Container ── */
+.living-puppet-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  user-select: none;
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.living-puppet-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform-origin: bottom center;
+}
+
+/* ── Cliff Ledge Contact Shadow & Grounding Occlusion ── */
+.puppet-cliff-contact-shadow {
+  position: absolute;
+  bottom: 0px;
+  width: 85%;
+  height: 12px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 80%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.puppet-ambient-rim-glow {
+  position: absolute;
+  bottom: 8px;
+  width: 90%;
+  height: 60%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--puppet-ambient, #34d399) 0%, transparent 70%);
+  opacity: 0.15;
+  filter: blur(14px);
+  pointer-events: none;
+  z-index: 1;
+  transition: background 0.4s ease, opacity 0.4s ease;
+}
+
+/* ── Vector Puppet Character Canvas ── */
+.puppet-character {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2;
+  transform-origin: bottom center;
+}
+
+.puppet-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.65));
+}
+
+/* ── 1. Core Respiratory Loop (Torso Spine) ── */
+.puppet-torso {
+  transform-origin: 50% 90%;
+  animation: puppetTorsoBreathe 4.2s ease-in-out infinite;
+}
+
+@keyframes puppetTorsoBreathe {
+  0%, 100% {
+    transform: translateY(0px) scale(1, 1);
+  }
+  50% {
+    transform: translateY(-2.5px) scale(1.012, 1.018);
+  }
+}
+
+/* ── 2. Articulated Waving Arm / Wing Keyframes ── */
+.is-waving-arm {
+  transform-origin: 25% 45%;
+  animation: puppetWingWave 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes puppetWingWave {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-35deg) translateY(-8px);
+  }
+  100% {
+    transform: rotate(-18deg) translateY(-4px);
+  }
+}
+
+/* Fox Front Paw Wave */
+.is-waving-paw {
+  transform-origin: 50% 50%;
+  animation: puppetPawWave 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes puppetPawWave {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) scale(1.1);
+  }
+  100% {
+    transform: translateY(-8px) scale(1.05);
+  }
+}
+
+/* ── 3. Fox 3-Tail Undulating Sine Wave ── */
+.puppet-tail-1 {
+  transform-origin: 40% 90%;
+  animation: puppetTailWave1 3.8s ease-in-out infinite;
+}
+
+.puppet-tail-2 {
+  transform-origin: 50% 95%;
+  animation: puppetTailWave2 3.8s ease-in-out 0.4s infinite;
+}
+
+.puppet-tail-3 {
+  transform-origin: 60% 90%;
+  animation: puppetTailWave3 3.8s ease-in-out 0.8s infinite;
+}
+
+@keyframes puppetTailWave1 {
+  0%, 100% { transform: rotate(-3deg) skewY(-1deg); }
+  50% { transform: rotate(5deg) skewY(2deg) translateY(-3px); }
+}
+
+@keyframes puppetTailWave2 {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-4deg) translateY(-4px); }
+}
+
+@keyframes puppetTailWave3 {
+  0%, 100% { transform: rotate(3deg) skewY(1deg); }
+  50% { transform: rotate(-5deg) skewY(-2deg) translateY(-3px); }
+}
+
+/* ── 4. Ear Physics Twitches (Fox) ── */
+.puppet-ear-left {
+  transform-origin: 30% 85%;
+  animation: puppetEarTwitchL 6.5s ease-in-out infinite;
+}
+
+.puppet-ear-right {
+  transform-origin: 70% 85%;
+  animation: puppetEarTwitchR 7.2s ease-in-out 1.2s infinite;
+}
+
+@keyframes puppetEarTwitchL {
+  0%, 90%, 100% { transform: rotate(0deg); }
+  94% { transform: rotate(-8deg); }
+  97% { transform: rotate(4deg); }
+}
+
+@keyframes puppetEarTwitchR {
+  0%, 89%, 100% { transform: rotate(0deg); }
+  93% { transform: rotate(8deg); }
+  96% { transform: rotate(-4deg); }
+}
+
+/* ── 5. Bot Antenna Bobbing ── */
+.puppet-bot-antenna {
+  transform-origin: 50% 100%;
+  animation: botAntennaBob 3.6s ease-in-out infinite;
+}
+
+@keyframes botAntennaBob {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(3deg) scaleY(1.05); }
+}
+
+/* ── 6. Floating Hologram Screen Hover ── */
+.puppet-holo-screen {
+  animation: botHoloScreenHover 3.4s ease-in-out infinite;
+}
+
+@keyframes botHoloScreenHover {
+  0%, 100% { transform: translate(14px, 60px) rotate(0deg); }
+  50% { transform: translate(14px, 55px) rotate(-1.5deg); }
+}
+
+/* ── 7. Interactive Tap Spring Pop ── */
+.living-puppet-root.is-tapped .living-puppet-stage {
+  animation: puppetTapSpring 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes puppetTapSpring {
+  0% { transform: scale(1, 1) translateY(0); }
+  25% { transform: scale(1.12, 0.9) translateY(4px); } /* Squish */
+  50% { transform: scale(0.95, 1.14) translateY(-16px); } /* Pop */
+  75% { transform: scale(1.03, 0.98) translateY(1px); }
+  100% { transform: scale(1, 1) translateY(0); }
+}
+
+
+
+/* ── 9. Tap Sparkle Particle Embers ── */
+.puppet-sparkle-particle {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 10;
+  animation: puppetSparkleFly 0.75s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+@keyframes puppetSparkleFly {
+  0% { transform: translate(0, 0) scale(0.3); opacity: 1; }
+  60% { opacity: 1; transform: translate(calc(var(--sp-vx, 0) * 1px), calc(var(--sp-vy, -24) * 1px)) scale(1.2); }
+  100% { opacity: 0; transform: translate(calc(var(--sp-vx, 0) * 1.5px), calc(var(--sp-vy, -40) * 1.5px)) scale(0.2); }
+}

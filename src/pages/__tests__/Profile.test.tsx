@@ -93,14 +93,16 @@ describe('Profile', () => {
     const avatarContainer = screen.getByTestId('avatar-icon-bot');
     await user.click(avatarContainer);
     
-    expect(screen.getByText('Choose Companion')).toBeInTheDocument();
+    expect(screen.getByText(/Choose Your Companion/i)).toBeInTheDocument();
     
-    // Select new avatar
-    await user.click(screen.getByTitle('Archimedes (Sage Owl)'));
+    // Select new avatar card
+    await user.click(screen.getByRole('button', { name: /Select Archimedes the Sage Owl/i }));
+    // Confirm active companion
+    await user.click(screen.getByRole('button', { name: /Set Active Companion/i }));
     expect(SupabaseApi.updateAvatar).toHaveBeenCalledWith('123', 'owl');
     
     await waitFor(() => {
-      expect(screen.queryByText('Choose Companion')).not.toBeInTheDocument();
+      expect(screen.queryByText(/Choose Your Companion/i)).not.toBeInTheDocument();
     });
     
     // Check if toast appears

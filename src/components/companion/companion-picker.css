@@ -1,0 +1,332 @@
+/* src/components/companion/companion-picker.css */
+
+.companion-picker-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(3, 13, 9, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: pickerBackdropFade 0.25s ease-out;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.companion-picker-backdrop::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes pickerBackdropFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.companion-picker-modal {
+  background: var(--game-surface-card, #05130e);
+  border: 1.5px solid var(--game-border-default, #102d1f);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 92vh;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(52, 211, 153, 0.1);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: pickerModalSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pickerModalSlide {
+  from {
+    transform: translateY(20px) scale(0.97);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ── Modal Header ── */
+.companion-picker-header {
+  padding: 20px 20px 14px 20px;
+  border-bottom: 1px solid rgba(16, 45, 31, 0.7);
+  position: relative;
+  text-align: center;
+}
+
+.companion-picker-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #9ca3af;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.companion-picker-close-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.companion-picker-brand-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #34d399;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.companion-picker-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.3px;
+}
+
+.companion-picker-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* ── Live Preview Stage ── */
+.companion-picker-stage-box {
+  position: relative;
+  height: 145px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(16, 45, 31, 0.85) 0%, #030d09 85%);
+  border-bottom: 1px solid rgba(16, 45, 31, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.companion-picker-stage-living {
+  position: relative;
+  width: 140px;
+  height: 135px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.companion-picker-stage-info {
+  position: absolute;
+  left: 18px;
+  bottom: 14px;
+  z-index: 10;
+  text-align: left;
+}
+
+.companion-picker-stage-name {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.companion-picker-stage-species {
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  color: var(--stage-ambient, #34d399);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ── Companion Cards Grid ── */
+.companion-picker-grid {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.companion-picker-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.companion-card {
+  position: relative;
+  background: #061811;
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.34, 1.3, 0.64, 1);
+  overflow: hidden;
+  text-align: center;
+}
+
+.companion-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.companion-card.is-selected {
+  border-color: var(--card-ambient, #34d399);
+  background: rgba(52, 211, 153, 0.08);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 16px var(--card-ambient-glow, rgba(52, 211, 153, 0.25));
+}
+
+.companion-card-scene-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 8px;
+  background: #030d09;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.companion-card:hover .companion-card-scene-thumb {
+  background: #04140e;
+}
+
+.companion-card-check-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--card-ambient, #34d399);
+  color: #030d09;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.companion-card-name {
+  font-family: var(--font-heading);
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.companion-card-species {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin: 0 0 6px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.companion-card-traits-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+  width: 100%;
+}
+
+.companion-trait-pill {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.companion-card.is-selected .companion-trait-pill {
+  background: rgba(52, 211, 153, 0.12);
+  color: var(--card-ambient, #34d399);
+  border-color: rgba(52, 211, 153, 0.25);
+}
+
+/* ── Modal Footer Actions ── */
+.companion-picker-footer {
+  padding: 14px 18px 18px 18px;
+  border-top: 1px solid rgba(16, 45, 31, 0.7);
+  display: flex;
+  gap: 10px;
+}
+
+.companion-picker-cancel-btn {
+  flex: 1;
+  padding: 13px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.companion-picker-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.companion-picker-confirm-btn {
+  flex: 2;
+  padding: 13px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: 1px solid #34d399;
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transition: all 0.18s ease;
+}
+
+.companion-picker-confirm-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+}

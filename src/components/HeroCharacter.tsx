@@ -1,71 +1,40 @@
 // src/components/HeroCharacter.tsx
 import React from 'react';
-import { getCompanion } from '../data/companions';
-import { CompanionRig } from './companion/CompanionRig';
+import { LivingPuppet } from './companion/LivingPuppet';
 
 interface HeroCharacterProps {
   avatar?: string | null;
-  characterType?: string;
   className?: string;
   style?: React.CSSProperties;
+  scale?: number;
+  onTap?: () => void;
 }
 
 /**
- * 2-Layer Fixed Stone Pillar + Swappable Articulated Living Companion Rig.
- * - Layer 1 (Base): 1 Fixed, completely stationary stone rune pillar on the cliff with dynamic rune glow.
- * - Layer 2 (Platform): Pillar top contact shadow.
- * - Layer 3 (Mounted Creature): Articulated 32-bit pixel spirit guide with skeletal/tween animations,
- *   eye blinking, curiosity glances, special flourishes, and tap interactions.
+ * HeroCharacter Slot on the Scenic Home Cliff Ledge.
+ * Mounts the player's active Articulated Living Companion (Archimedes, Aura, Nexus)
+ * with autonomous living gaze, blinking eyelids, articulated waving arms/wings,
+ * happy tap reactions, and true cliff grounding.
  */
 export function HeroCharacter({
   avatar,
-  characterType = 'owl',
   className = '',
   style = {},
+  scale = 1.0,
+  onTap,
 }: HeroCharacterProps) {
-  const companion = getCompanion(avatar || characterType);
-
   return (
     <div
-      className={`hero-pedestal-container ${className}`.trim()}
-      style={{
-        ...style,
-        '--companion-ambient': companion.ambientColor,
-      } as React.CSSProperties}
+      className={`hero-companion-slot ${className}`.trim()}
+      style={style}
     >
-      {/* ── Fixed Stationary Layer: Cliff Contact Base Shadow ── */}
-      <div className="hero-pedestal-ground-shadow" />
-
-      {/* ── Fixed Stationary Layer: The Ancient Stone Rune Pillar ── */}
-      <div className="hero-stone-pedestal">
-        <img
-          src="/images/characters/stone-pedestal-pixel.png"
-          alt="Ancient Stone Rune Pillar"
-          className="hero-pedestal-img hero-pixel-sprite"
-        />
-        {/* Dynamic Rune Ambient Glow Pulse */}
-        <div
-          className="hero-pedestal-rune-glow"
-          style={{
-            boxShadow: `0 0 16px ${companion.ambientColor}44, inset 0 0 12px ${companion.ambientColor}33`,
-          }}
-        />
-      </div>
-
-      {/* ── Fixed Stationary Layer: Top Platform Surface Contact Shadow ── */}
-      <div className="hero-pedestal-top-shadow" />
-
-      {/* ── Living Articulated Creature Rig: Mounted on the Pillar Platform ── */}
-      <div className="hero-companion-creature">
-        <CompanionRig
-          avatar={avatar}
-          characterType={characterType}
-          enableDrowse={true}
-        />
-      </div>
+      <LivingPuppet
+        avatar={avatar}
+        scale={scale}
+        onTap={onTap}
+      />
     </div>
   );
 }
 
 export default HeroCharacter;
-

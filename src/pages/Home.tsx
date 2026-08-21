@@ -5,9 +5,11 @@ import { useGame } from '../contexts/GameContext.jsx';
 import { Header } from '../components/Header';
 import { SectionDivider, GameModuleCard, StatTile, HeroCharacter, HeroDioramaCanvas } from '../components/game';
 import {
-  Lock, Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem, Sparkles, Globe,
+  Lock, Swords, Orbit, Flame, Trophy, Award, Target, Gift, Gem, Globe,
 } from 'lucide-react';
 import '../index.css';
+
+import { getCompanion } from '../data/companions';
 
 /* ──────────────────────────────────────────────────────────────
    Locked Modules Data
@@ -76,6 +78,7 @@ export default function Home() {
 
   // Universal Scenic Cliff Hero: Standard landscape background + dynamic companion overlay
   const avatar = user?.user_metadata?.avatar || 'owl';
+  const companion = getCompanion(avatar);
 
   return (
     <div className="container home-page-container">
@@ -85,7 +88,7 @@ export default function Home() {
       {/* ── 1. Hero Quest Scene (Living Diorama + Character Companion Overlay) ── */}
       <div className="home-hero-scene">
         {/* Ambient Living Environment Canvas (floating spores, light dust) */}
-        <HeroDioramaCanvas ambientColor="#34d399" particleCount={10} />
+        <HeroDioramaCanvas ambientColor={companion.ambientColor} particleCount={10} />
 
         <div className="home-hero-overlay" />
         <div className="home-hero-content">
@@ -102,7 +105,7 @@ export default function Home() {
         </div>
 
         {/* Dynamic Character Companion on the cliff ledge */}
-        <HeroCharacter avatar={avatar} characterType="owl" />
+        <HeroCharacter avatar={avatar} />
 
         {/* Bottom soft gradient fade into the page canvas */}
         <div className="home-hero-fade-bottom" />

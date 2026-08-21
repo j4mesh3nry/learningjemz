@@ -21,7 +21,8 @@ import {
 import { updateAvatar, updateName } from '../api/supabase.js';
 import { getPlayedDates } from '../components/StreakScreen';
 import { getLocalDateString } from '../utils/dateUtils';
-import { AvatarIcon, AVATAR_OPTIONS } from '../components/AvatarIcon';
+import { AvatarIcon } from '../components/AvatarIcon';
+import { CompanionPickerModal } from '../components/companion/CompanionPickerModal';
 import '../index.css';
 
 const ACHIEVEMENT_ICON_MAP: Record<string, React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>> = {
@@ -100,7 +101,6 @@ export default function Profile() {
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const monthName = todayDate.toLocaleString('default', { month: 'long' });
-  const todayDateStr = todayDate.toISOString().split('T')[0];
 
   return (
     <div className="container" style={{ paddingBottom: '100px' }}>
@@ -468,108 +468,13 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Avatar Selection Modal */}
+      {/* Immersive Living Companion Picker Modal */}
       {isEditingAvatar && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.75)',
-            zIndex: 1000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onClick={() => setIsEditingAvatar(false)}
-        >
-          <div
-            style={{
-              background: 'var(--game-surface-card, #05130e)',
-              border: '1.5px solid var(--game-border-default, #102d1f)',
-              padding: 24,
-              borderRadius: 24,
-              width: '90%',
-              maxWidth: 420,
-              boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
-              color: '#ffffff',
-            }}
-            onClick={e => e.stopPropagation()}
-          >
-            <h3 style={{ fontFamily: 'var(--font-heading)', textAlign: 'center', margin: '0 0 6px 0', fontSize: '1.4rem' }}>
-              Choose Companion
-            </h3>
-            <p style={{ textAlign: 'center', fontSize: '0.85rem', color: '#9ca3af', margin: '0 0 20px 0' }}>
-              Select your mythic spirit guide for your journey
-            </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, justifyContent: 'center' }}>
-              {AVATAR_OPTIONS.map(opt => {
-                const isSelected = avatar === opt.id || (opt.id === 'owl' && (!avatar || avatar === 'user'));
-                return (
-                  <div
-                    key={opt.id}
-                    onClick={() => handleSelectAvatar(opt.id)}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      padding: '14px 8px',
-                      borderRadius: 16,
-                      background: isSelected ? 'rgba(52, 211, 153, 0.12)' : 'rgba(255, 255, 255, 0.03)',
-                      border: isSelected ? `2px solid ${opt.color}` : '1.5px solid rgba(255, 255, 255, 0.08)',
-                      cursor: 'pointer',
-                      transition: 'all 0.18s ease',
-                      transform: isSelected ? 'scale(1.04)' : 'scale(1)',
-                      boxShadow: isSelected ? `0 6px 20px ${opt.color}33` : 'none',
-                    }}
-                    title={opt.label}
-                  >
-                    <AvatarIcon avatar={opt.id} size={58} bordered={isSelected} />
-                    <span style={{
-                      marginTop: 10,
-                      fontSize: '0.85rem',
-                      fontWeight: 700,
-                      color: isSelected ? opt.color : '#e5e7eb',
-                      textAlign: 'center',
-                      fontFamily: 'var(--font-heading)',
-                    }}>
-                      {opt.label.split(' ')[0]}
-                    </span>
-                    <span style={{
-                      fontSize: '0.68rem',
-                      color: '#9ca3af',
-                      textAlign: 'center',
-                      marginTop: 2,
-                    }}>
-                      {opt.label.includes('(') ? opt.label.match(/\((.*?)\)/)?.[1] : ''}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            <button
-              onClick={() => setIsEditingAvatar(false)}
-              style={{
-                width: '100%',
-                marginTop: 24,
-                padding: 14,
-                borderRadius: 14,
-                background: 'rgba(255, 255, 255, 0.07)',
-                color: '#e5e7eb',
-                fontWeight: 600,
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                cursor: 'pointer',
-                transition: 'background 0.2s ease',
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        <CompanionPickerModal
+          currentAvatar={avatar}
+          onSelect={handleSelectAvatar}
+          onClose={() => setIsEditingAvatar(false)}
+        />
       )}
 
       {/* Name Edit Modal */}

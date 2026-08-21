@@ -5,9 +5,7 @@ export interface CompanionConfig {
   name: string;
   species: string;
   title: string;
-  avatarSrc: string;
-  scale: number;
-  anchorOffset: { x: number; y: number };
+  traits: [string, string, string];
   ambientColor: string;
   description: string;
 }
@@ -18,58 +16,39 @@ export const COMPANION_REGISTRY: Record<string, CompanionConfig> = {
     name: 'Archimedes',
     species: 'Sage Owl',
     title: 'The Wise Scholar',
-    avatarSrc: '/images/characters/owl-avatar-pixel.png',
-    scale: 1.0,
-    anchorOffset: { x: 0, y: 0 },
+    traits: ['Wise', 'Calm', 'Curious'],
     ambientColor: '#34d399',
-    description: 'A 32-bit scholarly companion perched on a mossy rune pillar, carrying ancient scrolls.',
-  },
-  bot: {
-    id: 'bot',
-    name: 'Nexus',
-    species: 'Chrono-Bot',
-    title: 'The Arcane Automaton',
-    avatarSrc: '/images/characters/bot-avatar-pixel.png',
-    scale: 1.0,
-    anchorOffset: { x: 0, y: 0 },
-    ambientColor: '#38bdf8',
-    description: 'An ancient arcane robot spirit guide with glowing sapphire visor and runic circuits.',
-  },
-  robot: {
-    id: 'robot',
-    name: 'Nexus',
-    species: 'Chrono-Bot',
-    title: 'The Arcane Automaton',
-    avatarSrc: '/images/characters/bot-avatar-pixel.png',
-    scale: 1.0,
-    anchorOffset: { x: 0, y: 0 },
-    ambientColor: '#38bdf8',
-    description: 'An ancient arcane robot spirit guide with glowing sapphire visor and runic circuits.',
+    description: 'A scholarly mystic guide carrying ancient glowing tomes and observing the realm with quiet wisdom.',
   },
   fox: {
     id: 'fox',
     name: 'Aura',
     species: 'Stellar Fox',
     title: 'The Celestial Guide',
-    avatarSrc: '/images/characters/fox-avatar-pixel.png',
-    scale: 1.0,
-    anchorOffset: { x: 0, y: 0 },
+    traits: ['Playful', 'Brave', 'Energetic'],
     ambientColor: '#f59e0b',
-    description: 'A mystical spirit fox with stardust fur, three celestial tails, and ancient gold runes.',
+    description: 'A mystical spirit fox with stardust fur, three celestial glowing tails, and a sunburst amulet.',
   },
-  user: {
-    id: 'user',
-    name: 'Archimedes',
-    species: 'Sage Owl',
-    title: 'The Wise Scholar',
-    avatarSrc: '/images/characters/owl-avatar-pixel.png',
-    scale: 1.0,
-    anchorOffset: { x: 0, y: 0 },
-    ambientColor: '#34d399',
-    description: 'A 32-bit scholarly companion perched on a mossy rune pillar, carrying ancient scrolls.',
+  bot: {
+    id: 'bot',
+    name: 'Nexus',
+    species: 'Chrono-Bot',
+    title: 'The Arcane Automaton',
+    traits: ['Techy', 'Friendly', 'Helpful'],
+    ambientColor: '#38bdf8',
+    description: 'An ancient arcane robot with a glowing sapphire visor screen, leaf sprout antenna, and runic holographic display.',
   },
 };
 
+// Aliases mapping
+const ALIAS_MAP: Record<string, string> = {
+  user: 'owl',
+  robot: 'bot',
+  '🦉': 'owl',
+  '🦊': 'fox',
+  '🤖': 'bot',
+  'cat': 'fox',
+};
 
 /**
  * Resolves a companion config by avatar ID or falls back to default Archimedes the Sage Owl.
@@ -77,5 +56,12 @@ export const COMPANION_REGISTRY: Record<string, CompanionConfig> = {
 export function getCompanion(avatarKey?: string | null): CompanionConfig {
   if (!avatarKey) return COMPANION_REGISTRY.owl;
   const key = avatarKey.toLowerCase().trim();
-  return COMPANION_REGISTRY[key] || COMPANION_REGISTRY.owl;
+  const resolvedKey = ALIAS_MAP[key] || key;
+  return COMPANION_REGISTRY[resolvedKey] || COMPANION_REGISTRY.owl;
 }
+
+export const COMPANION_LIST: CompanionConfig[] = [
+  COMPANION_REGISTRY.owl,
+  COMPANION_REGISTRY.fox,
+  COMPANION_REGISTRY.bot,
+];

@@ -39,16 +39,6 @@ export const AVATAR_OPTIONS: AvatarOption[] = [
   { id: 'fox', label: 'Aura (Stellar Fox)', icon: Cat, color: '#f59e0b', bg: '#261404' },
 ];
 
-const PIXEL_AVATARS: Record<string, { src: string; alt: string; border: string }> = {
-  owl: { src: '/images/characters/owl-avatar-pixel.png', alt: 'Archimedes the Sage Owl', border: '#34d399' },
-  '🦉': { src: '/images/characters/owl-avatar-pixel.png', alt: 'Archimedes the Sage Owl', border: '#34d399' },
-  bot: { src: '/images/characters/bot-avatar-pixel.png', alt: 'Nexus the Chrono-Bot', border: '#38bdf8' },
-  robot: { src: '/images/characters/bot-avatar-pixel.png', alt: 'Nexus the Chrono-Bot', border: '#38bdf8' },
-  '🤖': { src: '/images/characters/bot-avatar-pixel.png', alt: 'Nexus the Chrono-Bot', border: '#38bdf8' },
-  fox: { src: '/images/characters/fox-avatar-pixel.png', alt: 'Aura the Stellar Fox', border: '#f59e0b' },
-  '🦊': { src: '/images/characters/fox-avatar-pixel.png', alt: 'Aura the Stellar Fox', border: '#f59e0b' },
-};
-
 const AVATAR_ICON_MAP: Record<string, { icon: LucideIcon; color: string; bg: string }> = {
   user: { icon: User, color: '#16653e', bg: '#e1f0e2' },
   bot: { icon: Bot, color: '#2563eb', bg: '#dbeafe' },
@@ -116,44 +106,7 @@ export function AvatarIcon({
 }: AvatarIconProps) {
   const key = (avatar || 'user').toLowerCase().trim();
 
-  // If avatar is one of our 32-bit pixel mythic companions, render the rich medallion
-  const pixelMedallion = PIXEL_AVATARS[key] || (key === 'user' ? PIXEL_AVATARS.owl : undefined);
-  if (pixelMedallion) {
-    return (
-      <div
-        data-testid={`avatar-icon-${key}`}
-        aria-label={`Avatar: ${key}`}
-        className={`avatar-icon-container avatar-icon-pixel ${className}`.trim()}
-        style={{
-          width: size,
-          height: size,
-          minWidth: size,
-          minHeight: size,
-          borderRadius: '50%',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          flexShrink: 0,
-          background: '#041d13',
-          border: bordered ? `2px solid ${pixelMedallion.border}` : 'none',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
-          ...style,
-        }}
-      >
-        <img
-          src={pixelMedallion.src}
-          alt={pixelMedallion.alt}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            imageRendering: 'pixelated',
-          }}
-        />
-      </div>
-    );
-  }
+
 
   const config = AVATAR_ICON_MAP[key] || AVATAR_ICON_MAP[avatar || ''] || AVATAR_ICON_MAP.user;
   const IconComponent = config.icon;
