@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Header } from '../components/Header';
 import { useGame } from '../contexts/GameContext';
-import { Gem, Lock, ShoppingBag, Check, Shield, Zap, Crown, Sparkles } from 'lucide-react';
+import { Gem, ShoppingBag, Shield, Zap, Crown, Sparkles } from 'lucide-react';
 import '../index.css';
 
 const STORE_ITEMS = [
@@ -50,7 +50,8 @@ export default function Store() {
 
   return (
     <div className="container" style={{
-      minHeight: '100vh', background: 'var(--color-bg-page)',
+      minHeight: '100vh',
+      background: 'var(--game-bg-canvas, #030d09)',
       paddingBottom: 90,
       position: 'relative'
     }}>
@@ -65,38 +66,38 @@ export default function Store() {
         width: 'calc(100% - 32px)',
         maxWidth: 460,
         zIndex: 50,
-        background: '#ffffff',
-        border: '3px solid #1c7c54',
-        boxShadow: '0 6px 0 #125538',
+        background: 'var(--game-surface-card, #05130e)',
+        border: '1.5px solid var(--game-border-default, #102d1f)',
+        boxShadow: '0 12px 32px rgba(0, 0, 0, 0.8)',
         borderRadius: 24,
         padding: '32px 24px',
         textAlign: 'center',
-        color: '#0e3d26'
+        color: '#ffffff'
       }}>
         <div style={{
-          width: 56, height: 56, background: '#e1f0e2', borderRadius: '50%',
+          width: 56, height: 56, background: 'rgba(52, 211, 153, 0.12)', borderRadius: '50%',
           display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto'
         }}>
-          <ShoppingBag size={28} color="#16653e" />
+          <ShoppingBag size={28} color="var(--game-accent-emerald, #34d399)" strokeWidth={2.2} />
         </div>
-        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', margin: 0, fontWeight: 800 }}>
+        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', margin: 0, fontWeight: 800, color: '#ffffff' }}>
           Store Opening Soon!
         </h3>
-        <p style={{ fontSize: '0.85rem', color: '#4e7361', marginTop: 8, lineHeight: 1.4, fontWeight: 500 }}>
-          We're working on exciting new items and features for the Jemz Store! Check back soon for updates.
+        <p style={{ fontSize: '0.88rem', color: 'var(--game-text-secondary, #cbe0d4)', marginTop: 8, lineHeight: 1.4, fontWeight: 500 }}>
+          We're crafting exclusive companions, streak protections, and badges for the Jemz Store! Check back soon for updates.
         </p>
         <button
           onClick={() => window.history.back()}
           style={{
             marginTop: 16,
-            background: '#16653e',
-            color: '#ffffff',
+            background: 'var(--game-accent-emerald, #34d399)',
+            color: '#030d09',
             fontWeight: 800,
             fontSize: '0.9rem',
-            padding: '10px 24px',
+            padding: '12px 24px',
             borderRadius: 16,
             border: 'none',
-            boxShadow: '0 3px 0 #0e4329',
+            boxShadow: '0 3px 0 #064e3b',
             cursor: 'pointer'
           }}
         >
@@ -105,41 +106,42 @@ export default function Store() {
       </div>
 
       {/* Background Dimmed Store Preview */}
-      <div style={{ filter: 'blur(5px) opacity(0.4)', pointerEvents: 'none', userSelect: 'none' }}>
+      <div style={{ filter: 'blur(5px) opacity(0.35)', pointerEvents: 'none', userSelect: 'none' }}>
         {/* Banner */}
         <div style={{
-          background: 'linear-gradient(135deg, #16653e 0%, #0e4329 100%)',
+          background: 'linear-gradient(135deg, #05130e 0%, #081d15 100%)',
           borderRadius: 22,
           padding: '20px',
           color: '#ffffff',
           marginBottom: 16,
-          boxShadow: '0 6px 0 #0b3420',
+          border: '1.5px solid var(--game-border-default, #102d1f)',
+          boxShadow: '0 6px 14px rgba(0, 0, 0, 0.4)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{
-              width: 44, height: 44, borderRadius: 14, background: 'rgba(255,255,255,0.15)',
+              width: 44, height: 44, borderRadius: 14, background: 'rgba(52, 211, 153, 0.12)',
               display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}>
-              <ShoppingBag size={24} color="#ffffff" />
+              <ShoppingBag size={24} color="#34d399" strokeWidth={2.2} />
             </div>
             <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', margin: 0, fontWeight: 800 }}>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', margin: 0, fontWeight: 800, color: '#ffffff' }}>
                 Jemz Store
               </h2>
-              <div style={{ fontSize: '0.75rem', opacity: 0.85, fontWeight: 500 }}>
+              <div style={{ fontSize: '0.75rem', color: '#6b8f7b', fontWeight: 500 }}>
                 Power up your learning!
               </div>
             </div>
           </div>
 
           <div style={{
-            background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
+            background: 'rgba(52, 211, 153, 0.12)', border: '1px solid rgba(52, 211, 153, 0.3)',
             padding: '6px 12px', borderRadius: 16, display: 'flex', alignItems: 'center', gap: 6
           }}>
-            <Gem size={18} color="#38d989" fill="#38d989" />
+            <Gem size={18} color="#34d399" fill="#34d399" />
             <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#ffffff' }}>{jemz}</span>
           </div>
         </div>
@@ -152,10 +154,10 @@ export default function Store() {
               <div
                 key={item.id}
                 style={{
-                  background: '#ffffff',
+                  background: 'var(--game-surface-card, #05130e)',
                   borderRadius: 20,
-                  border: '2px solid #cce3d7',
-                  boxShadow: '0 5px 0 #b7d6c5',
+                  border: '1.5px solid var(--game-border-default, #102d1f)',
+                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
                   padding: '16px',
                   display: 'flex',
                   alignItems: 'center',
@@ -166,57 +168,56 @@ export default function Store() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{
                     width: 50, height: 50,
-                    background: '#e8f3ed', borderRadius: 14,
+                    background: 'rgba(52, 211, 153, 0.1)', borderRadius: 14,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0
                   }}>
-                    <ItemIcon size={26} color="#16653e" strokeWidth={2.2} />
+                    <ItemIcon size={26} color="#34d399" strokeWidth={2.2} />
                   </div>
                   <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <h3 style={{
-                      fontFamily: 'var(--font-heading)', fontSize: '1.05rem',
-                      margin: 0, fontWeight: 800, color: '#0e3d26'
-                    }}>{item.name}</h3>
-                    <span style={{
-                      background: '#dcf0e5', color: '#165e3d',
-                      fontSize: '0.65rem', fontWeight: 800,
-                      padding: '2px 6px', borderRadius: 8
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <h3 style={{
+                        fontFamily: 'var(--font-heading)', fontSize: '1.05rem',
+                        margin: 0, fontWeight: 800, color: '#ffffff'
+                      }}>{item.name}</h3>
+                      <span style={{
+                        background: '#102d1f', color: '#34d399',
+                        fontSize: '0.65rem', fontWeight: 800,
+                        padding: '2px 6px', borderRadius: 8
+                      }}>
+                        {item.badge}
+                      </span>
+                    </div>
+                    <p style={{
+                      margin: '3px 0 0', fontSize: '0.78rem', color: '#6b8f7b', fontWeight: 500,
+                      maxWidth: 200
                     }}>
-                      {item.badge}
-                    </span>
+                      {item.description}
+                    </p>
                   </div>
-                  <p style={{
-                    margin: '3px 0 0', fontSize: '0.78rem', color: '#496c5b', fontWeight: 500,
-                    maxWidth: 200
-                  }}>
-                    {item.description}
-                  </p>
                 </div>
-              </div>
 
-              <button
-                disabled
-                style={{
-                  background: 'var(--color-primary)',
-                  color: '#ffffff',
-                  fontWeight: 800,
-                  fontSize: '0.85rem',
-                  padding: '10px 14px',
-                  borderRadius: 14,
-                  border: 'none',
-                  boxShadow: '0 4px 0 #0e3d26',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 4,
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                <Gem size={14} color="#ffffff" /> {item.price}
-              </button>
-            </div>
-          );
-        })}
+                <button
+                  disabled
+                  style={{
+                    background: '#102d1f',
+                    color: '#34d399',
+                    fontWeight: 800,
+                    fontSize: '0.85rem',
+                    padding: '10px 14px',
+                    borderRadius: 14,
+                    border: '1px solid #1a452f',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  <Gem size={14} color="#34d399" /> {item.price}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

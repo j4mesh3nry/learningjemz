@@ -1,5 +1,5 @@
 /* src/App.jsx */
-import { BrowserRouter as Router, Routes, Route, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useAuth, AuthProvider } from './contexts/AuthContext.jsx';
 import { GameProvider } from './contexts/GameContext.jsx';
@@ -73,17 +73,25 @@ function ScrollToTop() {
 
 function Layout() {
   const location = useLocation();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const showNavPaths = ['/', '/leaderboards', '/store', '/profile'];
   const showNav = user && showNavPaths.includes(location.pathname);
 
   useEffect(() => {
-    const theme = location.pathname.startsWith('/chess') ? 'chess' :
-                  location.pathname.startsWith('/space') ? 'space' :
-                  (location.pathname === '/' || location.pathname === '/leaderboards') ? 'home' : 'main';
+    const isChess = location.pathname.startsWith('/chess');
+    const isSpace = location.pathname.startsWith('/space');
+    const theme = isChess ? 'chess' : isSpace ? 'space' : 'home';
+
     document.body.dataset.moduleTheme = theme;
     document.documentElement.dataset.moduleTheme = theme;
+
+    if (!isChess && !isSpace) {
+      document.body.dataset.homeDark = 'true';
+      document.documentElement.dataset.homeDark = 'true';
+    } else {
+      delete document.body.dataset.homeDark;
+      delete document.documentElement.dataset.homeDark;
+    }
   }, [location.pathname]);
 
 
