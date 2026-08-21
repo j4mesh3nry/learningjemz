@@ -5,7 +5,6 @@ export interface CompanionConfig {
   name: string;
   species: string;
   title: string;
-  bodySrc: string;
   avatarSrc: string;
   scale: number;
   anchorOffset: { x: number; y: number };
@@ -19,7 +18,6 @@ export const COMPANION_REGISTRY: Record<string, CompanionConfig> = {
     name: 'Archimedes',
     species: 'Sage Owl',
     title: 'The Wise Scholar',
-    bodySrc: '/images/characters/owl-pixel.png',
     avatarSrc: '/images/characters/owl-avatar-pixel.png',
     scale: 1.0,
     anchorOffset: { x: 0, y: 0 },
@@ -31,7 +29,6 @@ export const COMPANION_REGISTRY: Record<string, CompanionConfig> = {
     name: 'Nexus',
     species: 'Chrono-Bot',
     title: 'The Arcane Automaton',
-    bodySrc: '/images/characters/bot-pixel.png',
     avatarSrc: '/images/characters/bot-avatar-pixel.png',
     scale: 1.0,
     anchorOffset: { x: 0, y: 0 },
@@ -43,7 +40,6 @@ export const COMPANION_REGISTRY: Record<string, CompanionConfig> = {
     name: 'Nexus',
     species: 'Chrono-Bot',
     title: 'The Arcane Automaton',
-    bodySrc: '/images/characters/bot-pixel.png',
     avatarSrc: '/images/characters/bot-avatar-pixel.png',
     scale: 1.0,
     anchorOffset: { x: 0, y: 0 },
@@ -55,7 +51,6 @@ export const COMPANION_REGISTRY: Record<string, CompanionConfig> = {
     name: 'Aura',
     species: 'Stellar Fox',
     title: 'The Celestial Guide',
-    bodySrc: '/images/characters/fox-pixel.png',
     avatarSrc: '/images/characters/fox-avatar-pixel.png',
     scale: 1.0,
     anchorOffset: { x: 0, y: 0 },
@@ -67,7 +62,6 @@ export const COMPANION_REGISTRY: Record<string, CompanionConfig> = {
     name: 'Archimedes',
     species: 'Sage Owl',
     title: 'The Wise Scholar',
-    bodySrc: '/images/characters/owl-pixel.png',
     avatarSrc: '/images/characters/owl-avatar-pixel.png',
     scale: 1.0,
     anchorOffset: { x: 0, y: 0 },
@@ -75,6 +69,7 @@ export const COMPANION_REGISTRY: Record<string, CompanionConfig> = {
     description: 'A 32-bit scholarly companion perched on a mossy rune pillar, carrying ancient scrolls.',
   },
 };
+
 
 /**
  * Resolves a companion config by avatar ID or falls back to default Archimedes the Sage Owl.
