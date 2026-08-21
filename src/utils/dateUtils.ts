@@ -2,7 +2,7 @@
  * Formats a Date or date-like value into a local date string (YYYY-MM-DD)
  * using local year, month, and date (preventing UTC timezone shift bugs).
  */
-export function getLocalDateString(inputDate = new Date()) {
+export function getLocalDateString(inputDate: Date | string | number = new Date()): string {
   const d = inputDate instanceof Date ? inputDate : new Date(inputDate);
   if (isNaN(d.getTime())) {
     const fallback = new Date();
@@ -21,10 +21,8 @@ export function getLocalDateString(inputDate = new Date()) {
  * Parses a YYYY-MM-DD string as a LOCAL calendar date (never UTC), avoiding
  * the one-day shift caused by `new Date('YYYY-MM-DD')` (UTC midnight).
  * Accepts Date objects / ISO timestamps as fallback. Returns null if invalid.
- * @param {string | Date | null | undefined} input
- * @returns {Date | null}
  */
-export function fromLocalDateString(input) {
+export function fromLocalDateString(input?: string | Date | null): Date | null {
   if (input == null || input === '') return null;
   if (input instanceof Date) {
     return isNaN(input.getTime()) ? null : new Date(input.getTime());
@@ -41,10 +39,8 @@ export function fromLocalDateString(input) {
 /**
  * Normalizes any stored value (YYYY-MM-DD string, Date, or ISO timestamp)
  * into a local YYYY-MM-DD string without UTC shifts. Returns null if unparseable.
- * @param {string | Date | null | undefined} input
- * @returns {string | null}
  */
-export function toLocalDateString(input) {
+export function toLocalDateString(input?: string | Date | null): string | null {
   const date = fromLocalDateString(input);
   return date ? getLocalDateString(date) : null;
 }
@@ -52,11 +48,8 @@ export function toLocalDateString(input) {
 /**
  * Drops played dates that fall strictly AFTER the last visit date.
  * Such dates are artifacts of fabricating a streak forward from "today".
- * @param {string[]} playedDates
- * @param {string | null} [lastVisitStr]
- * @returns {string[]}
  */
-export function pruneFuturePlayedDates(playedDates = [], lastVisitStr = null) {
+export function pruneFuturePlayedDates(playedDates: string[] = [], lastVisitStr?: string | null): string[] {
   if (!lastVisitStr) return playedDates;
   return (Array.isArray(playedDates) ? playedDates : []).filter(d => d <= lastVisitStr);
 }
@@ -67,7 +60,11 @@ export function pruneFuturePlayedDates(playedDates = [], lastVisitStr = null) {
  * fabricated future played dates are pruned. If yesterday WAS played or today
  * was already recorded, state is returned unchanged (streak survives).
  */
-export function applyDayRollover(state, todayStr, yesterdayStr) {
+export function applyDayRollover(
+  state: any,
+  todayStr: string,
+  yesterdayStr: string
+): any {
   if (!state) return state;
   const lastVisitStr = toLocalDateString(state.lastVisit);
   if (!lastVisitStr || lastVisitStr === todayStr || lastVisitStr === yesterdayStr) {
@@ -85,9 +82,9 @@ export function applyDayRollover(state, todayStr, yesterdayStr) {
 /**
  * Returns an array of YYYY-MM-DD date strings for the current week (Sun-Sat).
  */
-export function getCurrentWeekDates(today = new Date()) {
+export function getCurrentWeekDates(today: Date = new Date()): string[] {
   const todayIndex = today.getDay(); // 0 = Sun ... 6 = Sat
-  const dates = [];
+  const dates: string[] = [];
   for (let i = 0; i < 7; i++) {
     const d = new Date(today);
     d.setDate(d.getDate() - (todayIndex - i));
@@ -99,11 +96,12 @@ export function getCurrentWeekDates(today = new Date()) {
 /**
  * Automatically reconstructs/backfills played date strings (YYYY-MM-DD)
  * for a user's active streak based on their streak count and last visit date.
- * @param {number} [streak]
- * @param {string | Date | null} [lastVisit]
- * @param {string[]} [existingPlayedDates]
  */
-export function backfillPlayedDates(streak = 0, lastVisit = null, existingPlayedDates = []) {
+export function backfillPlayedDates(
+  streak: number = 0,
+  lastVisit?: string | Date | null,
+  existingPlayedDates: string[] = []
+): string[] {
   const dateSet = new Set(Array.isArray(existingPlayedDates) ? existingPlayedDates : []);
   
   if (streak > 0) {

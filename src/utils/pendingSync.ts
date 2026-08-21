@@ -9,14 +9,19 @@
  * session failures lossless instead of silently dropping XP/streak updates.
  */
 
+export interface PendingSyncData {
+  savedAt: number;
+  state: any;
+}
+
 const PENDING_SYNC_PREFIX = 'learningjemz_pending_sync_';
 const LAST_SYNCED_PREFIX = 'learningjemz_last_synced_';
 
-export function getPendingSyncKey(userId) {
+export function getPendingSyncKey(userId: string): string {
   return `${PENDING_SYNC_PREFIX}${userId}`;
 }
 
-export function getLastSyncedKey(userId) {
+export function getLastSyncedKey(userId: string): string {
   return `${LAST_SYNCED_PREFIX}${userId}`;
 }
 
@@ -24,7 +29,7 @@ export function getLastSyncedKey(userId) {
  * Stores a full state snapshot as "pending upload". Overwrites any older pending
  * snapshot for the same user (newest wins).
  */
-export function savePendingSync(userId, state) {
+export function savePendingSync(userId?: string | null, state?: any): void {
   if (!userId || !state) return;
   try {
     localStorage.setItem(
@@ -37,7 +42,7 @@ export function savePendingSync(userId, state) {
 /**
  * Returns the pending snapshot { savedAt, state } or null when nothing is queued.
  */
-export function getPendingSync(userId) {
+export function getPendingSync(userId?: string | null): PendingSyncData | null {
   if (!userId) return null;
   try {
     const raw = localStorage.getItem(getPendingSyncKey(userId));
@@ -50,7 +55,7 @@ export function getPendingSync(userId) {
   }
 }
 
-export function clearPendingSync(userId) {
+export function clearPendingSync(userId?: string | null): void {
   if (!userId) return;
   try {
     localStorage.removeItem(getPendingSyncKey(userId));
@@ -60,14 +65,14 @@ export function clearPendingSync(userId) {
 /**
  * Records the timestamp of a successful cloud upsert.
  */
-export function markSynced(userId, savedAt = Date.now()) {
+export function markSynced(userId?: string | null, savedAt: number = Date.now()): void {
   if (!userId) return;
   try {
     localStorage.setItem(getLastSyncedKey(userId), String(savedAt));
   } catch {}
 }
 
-export function getLastSynced(userId) {
+export function getLastSynced(userId?: string | null): number | null {
   if (!userId) return null;
   try {
     const raw = localStorage.getItem(getLastSyncedKey(userId));
@@ -81,7 +86,8 @@ export function getLastSynced(userId) {
  * True when a pending snapshot exists that was saved AFTER the last successful
  * sync (i.e., local progress the server does not have yet).
  */
-export function hasUnsyncedChanges(userId) {
+export function hasUnsyncedChanges(userId?: string | null): boolean {
+  if (!userId) return false;
   const pending = getPendingSync(userId);
   if (!pending) return false;
   const lastSynced = getLastSynced(userId);
@@ -94,7 +100,7 @@ export function hasUnsyncedChanges(userId) {
  * fallback on a new device — hold nothing to upload, so flushes and the init
  * restore must never let them override real server data.
  */
-export function isPristineDefaultState(s) {
+export function isPristineDefaultState(s?: any): boolean {
   if (!s) return true;
   const played = Array.isArray(s.playedDates) ? s.playedDates : [];
   return (s.xp || 0) === 0

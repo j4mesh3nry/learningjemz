@@ -1,8 +1,13 @@
-// src/api/supabase.js
+// src/api/supabase.ts
 // Centralized Supabase helper functions for avatar, name, and progress updates.
-import { supabase } from '../utils/supabase.js';
+import { supabase } from '../utils/supabase';
 
-export async function updateAvatar(userId, avatar) {
+export interface SupabaseApiResult {
+  success: boolean;
+  error?: any;
+}
+
+export async function updateAvatar(userId: string, avatar: string): Promise<SupabaseApiResult> {
   try {
     // Update auth profile
     await supabase.auth.updateUser({ data: { avatar } });
@@ -15,7 +20,7 @@ export async function updateAvatar(userId, avatar) {
   }
 }
 
-export async function updateName(userId, name) {
+export async function updateName(userId: string, name: string): Promise<SupabaseApiResult> {
   try {
     await supabase.auth.updateUser({ data: { name } });
     await supabase.from('game_progress').update({ name }).eq('id', userId);
@@ -26,8 +31,7 @@ export async function updateName(userId, name) {
   }
 }
 
-export async function updateProgress(userId, updates) {
-  // updates is an object with fields to merge into game_progress row.
+export async function updateProgress(userId: string, updates: Record<string, any>): Promise<SupabaseApiResult> {
   try {
     await supabase.from('game_progress').update(updates).eq('id', userId);
     return { success: true };
